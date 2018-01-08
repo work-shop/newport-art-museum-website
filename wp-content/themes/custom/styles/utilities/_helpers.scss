@@ -1,0 +1,91 @@
+
+/* Helpers and miscellaneous reusable styles */
+
+.jank{
+	//border: 3px solid red;
+}
+
+.debug{
+	outline: 1px solid black;
+}
+
+.block{
+	position: relative;
+	width: 100%;
+	display: block;
+	//z-index: 1;
+}
+
+.vertical-center{
+	position: relative;
+	top: 50%;
+	@include transform(translateY(-50%));
+}
+
+
+.overflow-hidden{
+	overflow: hidden;
+}
+
+.display-block{
+	display: block;
+}
+
+.float-left{
+	float: left;
+}
+
+.float-right{
+	float: right;
+}
+
+.hidden,.display-none{
+	display: none !important;
+}
+
+.clearfix{
+  &:before,
+  &:after {
+    content: " ";
+    display: table;
+  }
+  &:after {
+    clear: both;
+  }
+}
+
+
+//style the unloaded and loaded states of the page
+.loading{
+	opacity: 0;
+	@include transition(opacity .5s);
+}
+
+.loaded{
+	opacity: 1;
+}
+
+
+//visualize container-fluid extents
+// body:after{
+// 	content: '';
+// 	width: 3px;
+// 	background: transparentize($yellow,.5);
+// 	position: fixed;
+// 	top: 0;
+// 	z-index: 9999;
+// 	right: $container-fluid-padding;
+// 	height: 100vh;
+// }
+
+// body:before{
+// 	content: '';
+// 	width: 3px;
+// 	padding: 0;
+// 	background: transparentize($yellow,.5);
+// 	position: fixed;
+// 	top: 0;
+// 	z-index: 9999;
+// 	left: $container-fluid-padding;
+// 	height: 100vh;
+// }

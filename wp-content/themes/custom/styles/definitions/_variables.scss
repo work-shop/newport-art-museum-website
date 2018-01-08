@@ -1,0 +1,64 @@
+
+/* Variables */
+
+//brand colors
+$brand: #00929f;
+$brand-bright: lighten($brand, 15%);
+$brand-ultra-light: lighten($brand, 30%);
+
+
+//grays
+$ultra-light: #F5F5F5;
+$light: #D8D8D8;
+$medium-light: #9B9B9B;
+$medium: #828282;
+$medium-dark: #555555;
+$dark: #222222;
+
+
+//utility colors
+$error: #ff4a4a;
+
+
+//sizes
+$nav-height: 75px;
+$nav-drop: $nav-height;
+$nav-drop-after: $nav-height - 1px;
+$nav-height-mobile: 50px;
+$container-fluid-max-width: none;
+$container-fluid-padding: 50px;
+$container-fluid-padding-md: $container-fluid-padding / 2;
+$container-fluid-padding-mobile: 15px;
+$container-fluid-sum: $container-fluid-padding * 2;
+$container-fluid-sum-mobile: $container-fluid-padding-mobile * 2;
+
+
+//transitions
+$modal-transition: .35s;
+
+
+//breakpoints
+$xs: 575px;
+$sm: 767px;
+$md: 991px;
+$lg: 1199px;
+
+
+//site
+$body-background-color: white;
+$yellow: #FDBA44;
+$yellow: #FFCB45;
+$yellow-darker: darken($yellow, 16%);
+
+$font-main: 'Founders-Regular', Helvetica, Arial, Sans-serif;
+$font-italic: 'Founders-Regular-Italic', Helvetica, Arial, Sans-serif;
+$font-bold: 'Founders-Semibold', Helvetica, Arial, Sans-serif;
+$font-bold-italic: 'Founders-Semibold-Italic', Helvetica, Arial, Sans-serif;
+$font-medium: 'Founders-Medium', Helvetica, Arial, Sans-serif;
+$font-medium-italic: 'Founders-Medium-Italic', Helvetica, Arial, Sans-serif;
+$font-light: 'Founders-Light', Helvetica, Arial, Sans-serif;
+$font-light-italic: 'Founders-Light-Italic', Helvetica, Arial, Sans-serif;
+$font-serif: Georgia, Times New Roman, Serif;
+$font-serif-italic: Georgia, Times New Roman, Serif;
+$font-serif-bold: Georgia, Times New Roman, Serif;
+$font-serif-bold-italic: Georgia, Times New Roman, Serif;
