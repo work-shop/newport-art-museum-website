@@ -21,12 +21,18 @@ class NAM_Site {
     public function register_post_types_and_taxonomies() {
 
         NAM_Group::register();
+        NAM_News_Category::register();
+        NAM_Events_Category::register();
+        NAM_Classes_Category::register();
+        NAM_Exhibitions_Category::register();
+
         NAM_Shop_Product::register();
         NAM_Membership_Tier::register();
         NAM_Donation_Tier::register();
         NAM_Exhibition::register();
         NAM_Event::register();
         NAM_Class::register();
+        NAM_News::register();
 
     }
 

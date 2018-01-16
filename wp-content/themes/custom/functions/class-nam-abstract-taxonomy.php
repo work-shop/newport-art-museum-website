@@ -2,7 +2,7 @@
 
 abstract class NAM_Taxonomy {
 
-    protected static function register($slug, $singular_name, $plural_name, $post_types = array()) {
+    protected static function register($slug, $singular_name, $plural_name, $post_types = array(), $public = true) {
         if ( function_exists('register_taxonomy') ) {
             register_taxonomy(
                 $slug,
@@ -25,9 +25,9 @@ abstract class NAM_Taxonomy {
                         'separate_items_with_commas'        => 'Separate ' . $plural_name . ' with commas',
                         'add_or_remove_items'               => 'Add or Remove ' . $plural_name,
                         'choose_from_most_used'             => 'Choose from the most frequently used ' . $plural_name,
-                        'not_found'                         => 'No ' . $plural_name . 'found.'
+                        'not_found'                         => 'No ' . $plural_name . ' found.'
                     ),
-                    'public' => true,
+                    'public' => $public,
                     'show_in_rest' => true,
                     'show_tag_cloud' => false,
                     'show_in_quick_edit' => false,
