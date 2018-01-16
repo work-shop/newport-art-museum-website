@@ -82,3 +82,7 @@
 1. Head to the staging environment, log in, and use WP-Migrate-DB to generate a new, string-replaced database file.
 
 2. Run `./.pull-database.sh <path-to-mysql-export>` from the project directory. This script will import this file into the docker mysql instance you have running locally.
+
+## Resources
+
+- Information on Wordpress Gutenburg, and making sure to future-proof for it is available [here](https://deliciousbrains.com/wordpress-gutenberg/). The Gutenberg plugin (which is being merged into Core in release 5.0.0) is installed for prototyping.
