@@ -3,6 +3,9 @@
     /** Theme-specific global constants for NAM */
     define( '__ROOT__', dirname( __FILE__ ) );
 
+    require_once( __ROOT__ . '/functions/class-nam-abstract-taxonomy.php' );
+    require_once( __ROOT__ . '/functions/class-nam-abstract-custom-post-type.php' );
+
     require_once( __ROOT__ . '/functions/library/class-ws-cdn-url.php');
 
     require_once( __ROOT__ . '/functions/groups/class-nam-group.php');
