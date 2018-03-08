@@ -8,7 +8,7 @@ class NAM_Shop_Product extends NAM_Custom_Post_Type {
 
     public static $plural_name = 'Shop Products';
 
-    protected static $options = array(
+    public static $post_options = array(
         'menu_icon'                 => 'dashicons-products',
         'hierarchical'              => false,
         'has_archive'               => true,
@@ -27,17 +27,26 @@ class NAM_Shop_Product extends NAM_Custom_Post_Type {
 
     );
 
+    public static $query_options = array(
+
+    );
+
+
     /**
-     * Static method that registers the Shop Product custom post type
-     * for user management on the back end.
+     * ==== Instance Members and Methods ====
      */
-    public static function register() {
-        parent::register( NAM_Shop_Product::$slug, NAM_Shop_Product::$singular_name, NAM_Shop_Product::$plural_name, NAM_Shop_Product::$options );
+
+    public function __construct( $id ) {
+
+        $this->id = $id;
+
     }
 
+    public function validate() {
 
+    }
 
-    public function __construct() {
+    public function create() {
 
     }
 

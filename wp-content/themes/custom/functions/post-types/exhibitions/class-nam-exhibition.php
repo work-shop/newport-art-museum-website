@@ -8,7 +8,7 @@ class NAM_Exhibition extends NAM_Custom_Post_Type {
 
     public static $plural_name = 'Exhibitions';
 
-    protected static $options = array(
+    public static $post_options = array(
         'menu_icon'                 => 'dashicons-images-alt',
         'hierarchical'              => false,
         'has_archive'               => true,
@@ -28,17 +28,26 @@ class NAM_Exhibition extends NAM_Custom_Post_Type {
 
     );
 
+    public static $query_options = array(
 
-    public function __construct() {
+    );
+
+    /**
+     * ==== Instance Members and Methods ====
+     */
+
+    public function __construct( $id ) {
+
+        $this->id = $id;
 
     }
 
-    /**
-     * Static method that registers the Shop Product custom post type
-     * for user management on the back end.
-     */
-    public static function register() {
-        parent::register( NAM_Exhibition::$slug, NAM_Exhibition::$singular_name, NAM_Exhibition::$plural_name, NAM_Exhibition::$options );
+    public function validate() {
+
+    }
+
+    public function create() {
+
     }
 
 }

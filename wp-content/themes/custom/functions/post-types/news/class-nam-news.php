@@ -8,7 +8,7 @@ class NAM_News extends NAM_Custom_Post_Type {
 
     public static $plural_name = 'News';
 
-    protected static $options = array(
+    public static $post_options = array(
         'menu_icon'                 => 'dashicons-media-text',
         'hierarchical'              => false,
         'has_archive'               => true,
@@ -29,17 +29,25 @@ class NAM_News extends NAM_Custom_Post_Type {
 
     );
 
+    public static $query_options = array(
 
-    public function __construct() {
+    );
+
+    /**
+     * ==== Instance Members and Methods ====
+     */
+    public function __construct( $id ) {
+
+        $this->id = $id;
 
     }
 
-    /**
-     * Static method that registers the Shop Product custom post type
-     * for user management on the back end.
-     */
-    public static function register() {
-        parent::register( NAM_News::$slug, NAM_News::$singular_name, NAM_News::$plural_name, NAM_News::$options );
+    public function validate() {
+
+    }
+
+    public function create() {
+
     }
 
 }
