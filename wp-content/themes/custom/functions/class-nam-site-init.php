@@ -21,7 +21,7 @@ class NAM_Site {
     public function register_post_types_and_taxonomies() {
 
         NAM_Group::register();
-        NAM_News_Category::register();
+        //NAM_News_Category::register();//leaving out news categories for initial round of development
         NAM_Events_Category::register();
         NAM_Classes_Category::register();
         NAM_Exhibitions_Category::register();
