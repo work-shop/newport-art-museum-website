@@ -1,35 +1,34 @@
 [
     {
-        "name": "pippinsplugins/wp-logging",
+        "name": "a5hleyrich/wp-background-processing",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/pippinsplugins/wp-logging.git",
-            "reference": "766d745886093fae88788107e190aff41b1db61b"
+            "url": "https://github.com/A5hleyRich/wp-background-processing",
+            "reference": "1f070aab5058dbaf45d5435a343033ddd8a641b1"
         },
         "require": {
-            "php": ">=5.2.0"
+            "php": ">=5.2"
         },
-        "time": "2016-04-08T18:01:49+00:00",
+        "time": "2018-02-12T09:24:05+00:00",
         "type": "library",
         "installation-source": "source",
+        "autoload": {
+            "classmap": [
+                "classes/"
+            ]
+        },
         "license": [
-            "GPL-2.0+"
+            "GPL-2.0-only"
         ],
         "authors": [
             {
-                "name": "Pippin Williamson"
+                "name": "Ashley Rich",
+                "email": "hello@ashleyrich.com"
             }
         ],
-        "description": "A WordPress class that provides a general logging system.",
-        "homepage": "https://github.com/pippinsplugins/WP-Logging",
-        "keywords": [
-            "log",
-            "logger",
-            "logging",
-            "wordpress"
-        ]
+        "description": "WP Background Processing can be used to fire off non-blocking asynchronous requests or as a background processing tool, allowing you to queue tasks."
     },
     {
         "name": "developerforce/force.com-toolkit-for-php",
@@ -66,34 +65,35 @@
         "description": "A wrapper for the Force.com Web Services SOAP API"
     },
     {
-        "name": "a5hleyrich/wp-background-processing",
+        "name": "pippinsplugins/wp-logging",
         "version": "dev-master",
         "version_normalized": "9999999-dev",
         "source": {
             "type": "git",
-            "url": "https://github.com/A5hleyRich/wp-background-processing",
-            "reference": "fbbc56f2480910d7959972ec9ec0819a13c6150a"
+            "url": "https://github.com/pippinsplugins/wp-logging.git",
+            "reference": "766d745886093fae88788107e190aff41b1db61b"
         },
         "require": {
-            "php": ">=5.2"
+            "php": ">=5.2.0"
         },
-        "time": "2016-09-13T12:24:02+00:00",
+        "time": "2016-04-08T18:01:49+00:00",
         "type": "library",
         "installation-source": "source",
-        "autoload": {
-            "classmap": [
-                "classes/"
-            ]
-        },
         "license": [
-            "GPLv2+"
+            "GPL-2.0+"
         ],
         "authors": [
             {
-                "name": "Ashley Rich",
-                "email": "hello@ashleyrich.com"
+                "name": "Pippin Williamson"
             }
         ],
-        "description": "WP Background Processing can be used to fire off non-blocking asynchronous requests or as a background processing tool, allowing you to queue tasks."
+        "description": "A WordPress class that provides a general logging system.",
+        "homepage": "https://github.com/pippinsplugins/WP-Logging",
+        "keywords": [
+            "log",
+            "logger",
+            "logging",
+            "wordpress"
+        ]
     }
 ]

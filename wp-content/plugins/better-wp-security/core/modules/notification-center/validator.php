@@ -30,8 +30,7 @@ class ITSEC_Notification_Center_Validator extends ITSEC_Validator {
 			$config = ITSEC_Core::get_notification_center()->get_notification( $notification );
 
 			if ( ! $config ) {
-				$notifications[ $notification ] = array();
-				break;
+				continue;
 			}
 
 			$strings = ITSEC_Core::get_notification_center()->get_notification_strings( $notification );

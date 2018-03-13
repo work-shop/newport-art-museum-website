@@ -99,12 +99,12 @@ class ITSEC_Notification_Center_Settings_Page extends ITSEC_Module_Settings_Page
 		<div class="itsec-notification-center-mail-errors-container">
 			<?php foreach ( $errors as $id => $error ):
 				$strings = ITSEC_Core::get_notification_center()->get_notification_strings( $error['notification'] );
-				$error = $error['error'];
+				$details = $error['error'];
 
-				if ( is_wp_error( $error ) ) {
-					$message = $error->get_error_message();
-				} elseif ( is_array( $error ) && isset( $error['message'] ) && is_string( $error['message'] ) ) {
-					$message = $error['message'];
+				if ( is_wp_error( $details ) ) {
+					$message = $details->get_error_message();
+				} elseif ( is_array( $error ) && isset( $details['message'] ) && is_string( $details['message'] ) ) {
+					$message = $details['message'];
 				} else {
 					$message = __( 'Unknown error encountered while sending.', 'better-wp-security' );
 				}

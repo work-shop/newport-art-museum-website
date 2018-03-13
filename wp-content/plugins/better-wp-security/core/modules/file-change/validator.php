@@ -18,7 +18,8 @@ class ITSEC_File_Change_Validator extends ITSEC_Validator {
 			$this->settings['show_warning'] = $previous_settings['show_warning'];
 		}
 
-		$this->set_previous_if_empty( array( 'latest_changes', 'email' ) );
+		$this->set_previous_if_empty( array( 'latest_changes' ) );
+		$this->preserve_setting_if_exists( array( 'email' ) );
 		$this->vars_to_skip_validate_matching_types[] = 'last_chunk';
 		$this->vars_to_skip_validate_matching_fields[] = 'email';
 

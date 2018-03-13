@@ -26,14 +26,19 @@ class Object_Sync_Sf_Deactivate {
 	*
 	*/
 	public function __construct( $wpdb, $version, $slug, $schedulable_classes ) {
-		$this->wpdb = $wpdb;
-		$this->version = $version;
+		$this->wpdb                = $wpdb;
+		$this->version             = $version;
 		$this->schedulable_classes = $schedulable_classes;
-		register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'wordpress_salesforce_drop_tables' ) );
-		register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'clear_schedule' ) );
-		register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'delete_log_post_type' ) );
-		register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'remove_roles_capabilities' ) );
-		register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'flush_plugin_cache' ) );
+		$delete_data               = (int) get_option( 'object_sync_for_salesforce_delete_data_on_uninstall', 0 );
+		if ( 1 === $delete_data ) {
+			register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'wordpress_salesforce_drop_tables' ) );
+			register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'clear_schedule' ) );
+			register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'delete_log_post_type' ) );
+			register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'remove_roles_capabilities' ) );
+			register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'flush_plugin_cache' )
+			);
+			register_deactivation_hook( dirname( __DIR__ ) . '/' . $slug . '.php', array( $this, 'delete_plugin_options' ) );
+		}
 	}
 
 	/**
@@ -42,7 +47,7 @@ class Object_Sync_Sf_Deactivate {
 	*
 	*/
 	public function wordpress_salesforce_drop_tables() {
-		$field_map_table = $this->wpdb->prefix . 'object_sync_sf_field_map';
+		$field_map_table  = $this->wpdb->prefix . 'object_sync_sf_field_map';
 		$object_map_table = $this->wpdb->prefix . 'object_sync_sf_object_map';
 		$this->wpdb->query( 'DROP TABLE IF EXISTS ' . $field_map_table );
 		$this->wpdb->query( 'DROP TABLE IF EXISTS ' . $object_map_table );
@@ -101,6 +106,18 @@ class Object_Sync_Sf_Deactivate {
 	public function flush_plugin_cache() {
 		$sfwp_transients = new Object_Sync_Sf_WordPress_Transient( 'sfwp_transients' );
 		$sfwp_transients->flush();
+	}
+
+	/**
+	* Clear the plugin options
+	*
+	*/
+	public function delete_plugin_options() {
+		$table          = $this->wpdb->prefix . 'options';
+		$plugin_options = $this->wpdb->get_results( 'SELECT option_name FROM ' . $table . ' WHERE option_name LIKE "object_sync_for_salesforce_%"', ARRAY_A );
+		foreach ( $plugin_options as $option ) {
+			delete_option( $option['option_name'] );
+		}
 	}
 
 }

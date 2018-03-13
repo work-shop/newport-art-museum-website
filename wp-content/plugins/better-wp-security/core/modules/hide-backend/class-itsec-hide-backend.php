@@ -24,9 +24,11 @@ class ITSEC_Hide_Backend {
 
 		add_action( 'init', array( $this, 'handle_specific_page_requests' ), 1000 );
 		add_action( 'signup_hidden_fields', array( $this, 'add_token_to_registration_form' ) );
+		add_action( 'login_enqueue_scripts', array( $this, 'login_enqueue' ) );
 
 		add_filter( 'site_url', array( $this, 'filter_generated_url' ), 100, 2 );
 		add_filter( 'network_site_url', array( $this, 'filter_generated_url' ), 100, 2 );
+		add_filter( 'admin_url', array( $this, 'filter_admin_url' ), 100, 2 );
 		add_filter( 'wp_redirect', array( $this, 'filter_redirect' ) );
 		add_filter( 'comment_moderation_text', array( $this, 'filter_comment_moderation_text' ) );
 		add_filter( 'itsec_notify_admin_page_url', array( $this, 'filter_notify_admin_page_urls' ) );
@@ -48,7 +50,7 @@ class ITSEC_Hide_Backend {
 	 */
 	public function filter_comment_moderation_text( $text ) {
 		if ( $this->disable_filters ) {
-			return $location;
+			return $text;
 		}
 
 		// The email is plain text and the links are at the end of lines, so a lazy match can be used.
@@ -86,10 +88,7 @@ class ITSEC_Hide_Backend {
 			$this->handle_canonical_login_page();
 		} else if ( 'wp-admin' === $request_path || 'wp-admin/' === substr( $request_path, 0, 9 ) ) {
 			$this->handle_wp_admin_page();
-		} else if ( 'wp-signup.php' === $this->settings['register'] ) {
-			// Only "hide" the signup page if a different slug was chosen for it.
-			return;
-		} else if ( $request_path === $this->settings['register'] ) {
+		} else if ( $request_path === $this->settings['register'] && $this->allow_access_to_wp_signup() ) {
 			$this->handle_registration_alias();
 		} else if ( 'wp-signup.php' === $request_path ) {
 			$this->handle_canonical_signup_page();
@@ -143,6 +142,11 @@ class ITSEC_Hide_Backend {
 	 * @return void
 	 */
 	private function handle_registration_alias() {
+
+		if ( 'wp-signup.php' === $this->settings['register'] ) {
+			return;
+		}
+
 		if ( get_option( 'users_can_register' ) ) {
 			if ( is_multisite() ) {
 				$this->do_redirect_with_token( 'register', 'wp-signup.php' );
@@ -248,16 +252,36 @@ class ITSEC_Hide_Backend {
 		list( $clean_path ) = explode( '?', $path );
 
 		if ( 'wp-login.php' === $clean_path && 'wp-login.php' !== $this->settings['slug'] ) {
+
+			$request_path = ITSEC_Lib::get_request_path();
+
 			if ( false !== strpos( $path, 'action=postpass' ) ) {
 				// No special handling is needed for a password-protected post.
 				return $url;
 			} else if ( false !== strpos( $path, 'action=register' ) ) {
 				$url = $this->add_token_to_url( $url, 'register' );
-			} else {
+			} elseif ( 'wp-login.php' !== $request_path || empty( $_GET['action'] ) || 'register' !== $_GET['action'] ) {
 				$url = $this->add_token_to_url( $url, 'login' );
 			}
 		} else if ( 'wp-signup.php' === $clean_path && 'wp-signup.php' !== $this->settings['register'] ) {
 			$url = $this->add_token_to_url( $url, 'register' );
+		}
+
+		return $url;
+	}
+
+	/**
+	 * Filter the admin URL to include hide backend tokens when necessary.
+	 *
+	 * @param string $url Complete admin URL.
+	 * @param string $path Path passed to the admin_url function.
+	 *
+	 * @return string
+	 */
+	public function filter_admin_url( $url, $path ) {
+
+		if ( 0 === strpos( $path, 'profile.php?newuseremail=' ) ) {
+			$url = $this->add_token_to_url( $url, 'login' );
 		}
 
 		return $url;
@@ -317,6 +341,18 @@ class ITSEC_Hide_Backend {
 	public function add_token_to_registration_form( $context ) {
 		if ( 'validate-user' === $context ) {
 			echo '<input type="hidden" name="' . esc_attr( $this->token_var ) . '" value="' . esc_attr( $this->get_access_token( 'register' ) ) . '" />' . "\n";
+		}
+	}
+
+	/**
+	 * Hide the navigation links on the registration page.
+	 *
+	 * These links have their security tokens removed in PHP. We only hide them for UX purposes as they would
+	 * lead to a 404 page.
+	 */
+	public function login_enqueue() {
+		if ( ! empty( $_GET['action'] ) && 'register' === $_GET['action'] ) {
+			wp_enqueue_style( 'itsec-hide-backend-login-page', plugins_url( 'css/login-page.css', __FILE__ ) );
 		}
 	}
 
@@ -408,5 +444,19 @@ class ITSEC_Hide_Backend {
 		}
 
 		return $this->settings['slug'];
+	}
+
+	private function allow_access_to_wp_signup() {
+
+		if ( is_multisite() ) {
+			// Multisite will show its own error message and without links if signups are disabled.
+			return true;
+		}
+
+		if ( get_option( 'users_can_register' ) ) {
+			return true;
+		}
+
+		return false;
 	}
 }

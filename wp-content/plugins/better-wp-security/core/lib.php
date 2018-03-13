@@ -52,84 +52,14 @@ final class ITSEC_Lib {
 	/**
 	 * Creates appropriate database tables.
 	 *
-	 * Uses dbdelta to create database tables either on activation or in the event that one is missing.
-	 *
 	 * @since 4.0.0
 	 *
 	 * @return void
 	 */
 	public static function create_database_tables() {
+		require_once( ITSEC_Core::get_core_dir() . '/lib/schema.php' );
 
-		global $wpdb;
-
-		$charset_collate = '';
-
-		if ( ! empty( $wpdb->charset ) ) {
-			$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-		}
-
-		if ( ! empty( $wpdb->collate ) ) {
-			$charset_collate .= " COLLATE $wpdb->collate";
-		}
-
-		//Set up log table
-		$tables = "CREATE TABLE " . $wpdb->base_prefix . "itsec_log (
-				log_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-				log_type varchar(20) NOT NULL DEFAULT '',
-				log_function varchar(255) NOT NULL DEFAULT '',
-				log_priority int(2) NOT NULL DEFAULT 1,
-				log_date datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
-				log_date_gmt datetime NOT NULL DEFAULT '1000-01-01 00:00:00',
-				log_host varchar(40),
-				log_username varchar(60),
-				log_user bigint(20) UNSIGNED,
-				log_url varchar(255),
-				log_referrer varchar(255),
-				log_data longtext NOT NULL,
-				PRIMARY KEY  (log_id),
-				KEY log_type (log_type),
-				KEY log_date_gmt (log_date_gmt)
-				) " . $charset_collate . ";";
-
-		//set up lockout table
-		$tables .= "CREATE TABLE " . $wpdb->base_prefix . "itsec_lockouts (
-				lockout_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-				lockout_type varchar(20) NOT NULL,
-				lockout_start datetime NOT NULL,
-				lockout_start_gmt datetime NOT NULL,
-				lockout_expire datetime NOT NULL,
-				lockout_expire_gmt datetime NOT NULL,
-				lockout_host varchar(40),
-				lockout_user bigint(20) UNSIGNED,
-				lockout_username varchar(60),
-				lockout_active int(1) NOT NULL DEFAULT 1,
-				PRIMARY KEY  (lockout_id),
-				KEY lockout_expire_gmt (lockout_expire_gmt),
-				KEY lockout_host (lockout_host),
-				KEY lockout_user (lockout_user),
-				KEY lockout_username (lockout_username),
-				KEY lockout_active (lockout_active)
-				) " . $charset_collate . ";";
-
-		//set up temp table
-		$tables .= "CREATE TABLE " . $wpdb->base_prefix . "itsec_temp (
-				temp_id bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-				temp_type varchar(20) NOT NULL,
-				temp_date datetime NOT NULL,
-				temp_date_gmt datetime NOT NULL,
-				temp_host varchar(40),
-				temp_user bigint(20) UNSIGNED,
-				temp_username varchar(60),
-				PRIMARY KEY  (temp_id),
-				KEY temp_date_gmt (temp_date_gmt),
-				KEY temp_host (temp_host),
-				KEY temp_user (temp_user),
-				KEY temp_username (temp_username)
-				) " . $charset_collate . ";";
-
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		@dbDelta( $tables );
-
+		ITSEC_Schema::create_database_tables();
 	}
 
 	/**
@@ -703,6 +633,12 @@ final class ITSEC_Lib {
 	 * @param string $username
 	 */
 	public static function handle_wp_login_failed( $username ) {
+		$details = self::get_login_details();
+
+		do_action( 'itsec-handle-failed-login', $username, $details );
+	}
+
+	public static function get_login_details() {
 		$authentication_types = array();
 
 		if ( isset( $_SERVER['HTTP_AUTHORIZATION'] ) ) {
@@ -739,9 +675,8 @@ final class ITSEC_Lib {
 		}
 
 		$details = compact( 'source', 'authentication_types' );
-		$details = apply_filters( 'itsec-filter-failed-login-details', $details );
 
-		do_action( 'itsec-handle-failed-login', $username, $details );
+		return apply_filters( 'itsec-filter-failed-login-details', $details );
 	}
 
 	/**
@@ -1024,6 +959,37 @@ final class ITSEC_Lib {
 		return date_i18n( $format, strtotime( get_date_from_gmt( date( 'Y-m-d H:i:s', $timestamp ) ) ) );
 	}
 
+	/**
+	 * Get the value of an option directly from the database, bypassing any caching.
+	 *
+	 * @param string $option
+	 *
+	 * @return array|mixed
+	 */
+	public static function get_uncached_option( $option ) {
+		/** @var $wpdb \wpdb */
+		global $wpdb;
+
+		$storage = array();
+
+		if ( is_multisite() ) {
+			$network_id = get_current_site()->id;
+			$row        = $wpdb->get_row( $wpdb->prepare( "SELECT meta_value FROM $wpdb->sitemeta WHERE meta_key = %s AND site_id = %d", $option, $network_id ) );
+
+			if ( is_object( $row ) ) {
+				$storage = maybe_unserialize( $row->meta_value );
+			}
+		} else {
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT option_value FROM $wpdb->options WHERE option_name = %s LIMIT 1", $option ) );
+
+			if ( is_object( $row ) ) {
+				$storage = maybe_unserialize( $row->option_value );
+			}
+		}
+
+		return $storage;
+	}
+
 	public static function array_get( $array, $key, $default = null ) {
 
 		if ( ! is_array( $array ) ) {
@@ -1051,5 +1017,60 @@ final class ITSEC_Lib {
 		}
 
 		return $array;
+	}
+
+	public static function print_r( $data, $args = array() ) {
+		require_once( ITSEC_Core::get_core_dir() . '/lib/debug.php' );
+
+		ITSEC_Debug::print_r( $data, $args );
+	}
+
+	public static function get_print_r( $data, $args = array() ) {
+		require_once( ITSEC_Core::get_core_dir() . '/lib/debug.php' );
+
+		return ITSEC_Debug::get_print_r( $data, $args );
+	}
+
+	/**
+	 * Check if WP Cron appears to be running properly.
+	 *
+	 * @return bool
+	 */
+	public static function is_cron_working() {
+		$working = ITSEC_Modules::get_setting( 'global', 'cron_status' );
+
+		return $working === 1;
+	}
+
+	/**
+	 * Should we be using Cron.
+	 *
+	 * @return bool
+	 */
+	public static function use_cron() {
+		return ITSEC_Modules::get_setting( 'global', 'use_cron' );
+	}
+
+	/**
+	 * Schedule a test to see if a user should be suggested to enable the Cron scheduler.
+	 */
+	public static function schedule_cron_test() {
+
+		if ( defined( 'ITSEC_DISABLE_CRON_TEST' ) && ITSEC_DISABLE_CRON_TEST ) {
+			return;
+		}
+
+		$crons = _get_cron_array();
+
+		foreach ( $crons as $timestamp => $cron ) {
+			if ( isset( $cron['itsec_cron_test'] ) ) {
+				return;
+			}
+		}
+
+		// Get a random time in the next 6-18 hours on a random minute.
+		$time = ITSEC_Core::get_current_time_gmt() + mt_rand( 6, 18 ) * HOUR_IN_SECONDS + mt_rand( 1, 60 ) * MINUTE_IN_SECONDS;
+		wp_schedule_single_event( $time, 'itsec_cron_test', array( $time ) );
+		ITSEC_Modules::set_setting( 'global', 'cron_test_time', $time );
 	}
 }

@@ -598,3 +598,57 @@
 	Bug Fix: Fixed source of the following warning: "mysql_real_escape_string() expects parameter 1 to be string, object given".
 3.9.4 - 2017-11-06 - Chris Jean & Timothy Jacobs
 	Bug Fix: Don't display file change admin notifications if the Notify Admin setting is not enabled.
+3.9.5 - 2017-11-27 - Chris Jean & Timothy Jacobs
+	Enhancement: Preserve notification settings when the responsible module is deactivated.
+	Bug Fix: Process 404 lockouts on the 'wp' hook to prevent a headers have already been sent warning message.
+	Bug Fix: Ensure Hide Backend emails are properly sent when activating Hide Backend before saving the Notification Center for the first time.
+	Bug Fix: Prevent warning from being issued on new installs by allowing previous settings to be preserved if they exist.
+	Bug Fix: Better handle WP_Error objects in mail errors that occurred before updating to first patch release.
+	Bug Fix: A non static method was being called statically.
+4.0.0 - 2017-12-07 - Chris Jean & Timothy Jacobs
+	New Feature: Introduces a scheduling framework for handling events. Cron is now used by default, and will switch to using an alternate scheduling system if it detects an error. To disable this detection set ITSEC_DISABLE_CRON_TEST in your wp-config.php file.
+	Important: The ITSEC_FILE_CHECK_CRON and ITSEC_BACKUP_CRON constants have been deprecated. Use ITSEC_USE_CRON instead.
+	Bug Fix: Fix occasional duplicate backups and file scans.
+4.0.1 - 2017-12-11 - Chris Jean & Timothy Jacobs
+	Bug Fix: Fixed issue where scheduled events could repeat on sites that do not properly support WordPress's cron system.
+4.0.2 - 2017-12-28 - Chris Jean & Timothy Jacobs
+	Bug Fix: Make Cron scheduler available in more circumstances.
+	Bug Fix: Events with the Twice Daily schedule would not be carried over when switching scheduler strategies.
+	Bug Fix: Backup schedules respect the interval chosen.
+	Bug Fix: Prevent multiple cron tests from being scheduled at once.
+	Bug Fix: Cron test being stuck in a loop preventing a site from switching back to the cron scheduler.
+	Bug Fix: Prevent warnings when a single and recurring event were scheduled at the same time.
+4.0.3 - 2018-01-04 - Chris Jean & Timothy Jacobs
+	Bug Fix: Fix scheduling retries for Malware Scans on sites that don't fully support WordPress's cron system.
+	Bug Fix: Reactivating Away Mode now replaces the active file if you had previously removed it.
+	Bug Fix: Ensure lockouts take effect immediately, even on systems where changes to server configuration files do not take effect immediately.
+4.0.4 - 2018-01-29 - Chris Jean & Timothy Jacobs
+	Enhancement: Display user lockouts in Lockout Sidebar.
+	Bug Fix: Load translations on the plugins_loaded hook.
+	Bug Fix: Fixed method that could be used to discover hidden login slug on some sites.
+	Bug Fix: Fixed issue that could prevent Sync from loading Malware Scan results if a scan previously failed.
+	Bug Fix: Update to the REST API "Restricted Access" feature to protect against methods to work around the restricted access.
+	Bug Fix: Prevent login page being hidden when following the "Confirm Email Address" notification URL.
+	Bug Fix: Hide Backend notifications not being properly sent when first enabled.
+4.1.0 - 2018-02-08 - Chris Jean & Timothy Jacobs
+	Enhancement: Updated logging system to keep track of more information and have more options to filter and sort log entries.
+	Enhancement: Improved efficiency of File Change Detection scanning.
+	Bug Fix: Fixed issue that could register loading the logging page as a failed login attempt on some sites.
+4.1.1 - 2018-02-08 - Chris Jean & Timothy Jacobs
+	Bug Fix: Fixed schema issue with new logs table.
+4.1.2 - 2018-02-12 - Chris Jean & Timothy Jacobs
+	Bug Fix: Fixed "undefined offset" error when displaying specific migrated old log entries.
+4.1.3 - 2018-02-21 - Chris Jean & Timothy Jacobs
+	Enhancement: Cleaned up styling in settings to make some settings stand out better.
+	Minor: Use plugin build for cache busting assets.
+	Minor: Extract scheduling loop system to iThemes Security Core for future development.
+	Bug Fix: Cannot use object of type WP_Error as array in Malware Scanner.
+	Bug Fix: Reordered loading of logging class to allow for logging earlier.
+4.1.4 - 2018-03-01 - Chris Jean & Timothy Jacobs
+	Security Fix: Fixed display of unescaped data on logs page. Thanks to Paweł Kuryłowicz from SecuRing for finding and reporting this issue.
+	Enhancement: The logging system now differentiates between WP-CLI commands, WP-Cron scheduled events, and normal page requests.
+	Bug Fix: Fixed the File Change scanner in that it previously could fail to exclude selected directories on some systems.
+4.1.5 - 2018-03-06 - Chris Jean & Timothy Jacobs
+	Bug Fix: Fixed situation that could cause lockout notifications being sent for whitelisted IPs.
+	Bug Fix: Fixed issue where saving Global Settings would be blocked by an unwritable "Path to Log Files" path when the "Log Type" is set to "Database Only".
+	Bug Fix: Fixed issue that prevented log database entries from purging and log file entries from rotating on a schedule.

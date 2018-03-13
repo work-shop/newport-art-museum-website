@@ -28,7 +28,7 @@ Most users should install the plugin from the [WordPress plugin directory](https
 4. Run `composer install`
 5. This will take a little while as Composer installs third-party libraries the plugin needs. You can then activate the plugin as you would a normal WordPress plugin.
 6. If you are doing interface or translation work, as defined above, run `npm install` to install the Gulp plugins. Run `gulp` when you make changes to Sass, JavaScript, or when you create new translations.
-7. If you intend to contribute PHP work, you may want to install [apigen](http://www.apigen.org/) to generate code documentation. You can use [this link](http://www.apigen.org/) to set it up. Run `apigen generate` when you make relevant changes. You can check these in to the Git repository.
+7. If you intend to contribute PHP work, you may want to use [apigen](http://www.apigen.org/) to generate code documentation. Version 4.1.2 is included with this plugin as a composer library, at least until version 5 is released. Run `vendor/bin/apigen generate` when you make relevant changes. You can check these in to the Git repository.
 
 ### Activate the plugin
 
@@ -107,12 +107,12 @@ Supported constant names are:
 
 Set them in `wp-config.php` like this:
 
-```
+```php
 define('OBJECT_SYNC_SF_SALESFORCE_CONSUMER_KEY', 'valuefromsalesforce');
 define('OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET', 'valuefromsalesforce');
 define('OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL', 'https://<your site>/wp-admin/options-general.php?page=object-sync-salesforce-admin&tab=authorize');
 define('OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL', 'https://test.salesforce.com');
-define('OBJECT_SYNC_SF_SALESFORCE_API_VERSION', '38.0');
+define('OBJECT_SYNC_SF_SALESFORCE_API_VERSION', '42.0');
 define('OBJECT_SYNC_SF_SALESFORCE_AUTHORIZE_URL_PATH', '/services/oauth2/authorize');
 define('OBJECT_SYNC_SF_SALESFORCE_TOKEN_URL_PATH', '/services/oauth2/token');
 ```

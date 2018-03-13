@@ -173,6 +173,10 @@ function wc_get_account_endpoint_url( $endpoint ) {
 		return wc_get_page_permalink( 'myaccount' );
 	}
 
+	if ( 'customer-logout' === $endpoint ) {
+		return wc_logout_url();
+	}
+
 	return wc_get_endpoint_url( $endpoint, '', wc_get_page_permalink( 'myaccount' ) );
 }
 
@@ -295,7 +299,8 @@ function wc_get_account_orders_actions( $order ) {
  * @return string
  */
 function wc_get_account_formatted_address( $address_type = 'billing', $customer_id = 0 ) {
-	$getter = "get_{$address_type}";
+	$getter  = "get_{$address_type}";
+	$address = array();
 
 	if ( 0 === $customer_id ) {
 		$customer_id = get_current_user_id();

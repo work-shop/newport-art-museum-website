@@ -17,9 +17,6 @@ final class ITSEC_Modules {
 	private $_settings_files_loaded = false;
 
 	protected function __construct() {
-		require_once( dirname( __FILE__ ) . '/lib/settings.php' );
-		require_once( dirname( __FILE__ ) . '/lib/storage.php' );
-
 		// Action triggered from another part of Security which runs when the settings page is loaded.
 		add_action( 'itsec-settings-page-init', array( $this, 'load_settings_page' ) );
 		add_action( 'itsec-logs-page-init', array( $this, 'load_settings_page' ) );

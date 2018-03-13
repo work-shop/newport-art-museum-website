@@ -59,6 +59,15 @@ if ( ! class_exists( 'WC_Connect_Compatibility' ) ) {
 		abstract public function get_order_id( WC_Order $order );
 
 		/**
+		 * Get the payment method for a given Order.
+		 *
+		 * @param WC_Order $order
+		 *
+		 * @return string
+		 */
+		abstract public function get_payment_method( WC_Order $order );
+
+		/**
 		 * Retrieve the corresponding Product for the given Order Item.
 		 *
 		 * @param WC_Order $order
@@ -110,6 +119,15 @@ if ( ! class_exists( 'WC_Connect_Compatibility' ) ) {
 		 * @return string The product (or variation) name, ready to print
 		 */
 		abstract public function get_product_name_from_order( $product_id, $order );
+
+		/**
+		 * For a given product, return it's name. In supported versions, variable
+		 * products will include their attributes.
+		 *
+		 * @param WC_Product $product Product (variable, simple, etc)
+		 * @return string The product (or variation) name, ready to print
+		 */
+		abstract public function get_product_name( WC_Product $product );
 	}
 
 }

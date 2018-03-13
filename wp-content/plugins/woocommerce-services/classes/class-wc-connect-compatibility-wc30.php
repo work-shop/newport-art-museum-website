@@ -24,6 +24,17 @@ if ( ! class_exists( 'WC_Connect_Compatibility_WC30' ) ) {
 		}
 
 		/**
+		 * Get the payment method for a given Order.
+		 *
+		 * @param WC_Order $order
+		 *
+		 * @return string
+		 */
+		public function get_payment_method( WC_Order $order ) {
+			return $order->get_payment_method();
+		}
+
+		/**
 		 * Retrieve the corresponding Product for the given Order Item.
 		 *
 		 * @param WC_Order $order
@@ -106,6 +117,17 @@ if ( ! class_exists( 'WC_Connect_Compatibility_WC30' ) ) {
 
 			/* translators: %d: Deleted Product ID */
 			return sprintf( __( '#%d - [Deleted product]', 'woocommerce-services' ), $product_id );
+		}
+
+		/**
+		 * For a given product, return it's name. In supported versions, variable
+		 * products will include their attributes.
+		 *
+		 * @param WC_Product $product Product (variable, simple, etc)
+		 * @return string The product (or variation) name, ready to print
+		 */
+		public function get_product_name( WC_Product $product ) {
+			return $product->get_name();
 		}
 	}
 

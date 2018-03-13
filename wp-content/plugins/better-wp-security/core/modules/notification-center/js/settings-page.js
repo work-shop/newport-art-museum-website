@@ -7,7 +7,7 @@ jQuery( function ( $ ) {
 	$( document ).on( 'itsec-dismiss-notice', '.itsec-notification-center-mail-errors-container .notice.itsec-is-dismissible', function () {
 		var errorId = $( this ).data( 'id' );
 
-		itsecSettingsPage.sendModuleAJAXRequest( 'notification-center', { method: 'dismiss-mail-error', mail_error: errorId }, function ( r ) {
+		itsecUtil.sendModuleAJAXRequest( 'notification-center', { method: 'dismiss-mail-error', mail_error: errorId }, function ( r ) {
 			if ( r.response && r.response.status === 'all-cleared' ) {
 				jQuery( '#itsec-module-card-notification-center' ).removeClass( 'itsec-module-status--warning' );
 			}

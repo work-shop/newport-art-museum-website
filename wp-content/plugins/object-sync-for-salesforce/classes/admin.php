@@ -83,16 +83,16 @@ class Object_Sync_Sf_Admin {
 	* @throws \Exception
 	*/
 	public function __construct( $wpdb, $version, $login_credentials, $slug, $wordpress, $salesforce, $mappings, $push, $pull, $logging, $schedulable_classes ) {
-		$this->wpdb = $wpdb;
-		$this->version = $version;
-		$this->login_credentials = $login_credentials;
-		$this->slug = $slug;
-		$this->wordpress = $wordpress;
-		$this->salesforce = $salesforce;
-		$this->mappings = $mappings;
-		$this->push = $push;
-		$this->pull = $pull;
-		$this->logging = $logging;
+		$this->wpdb                = $wpdb;
+		$this->version             = $version;
+		$this->login_credentials   = $login_credentials;
+		$this->slug                = $slug;
+		$this->wordpress           = $wordpress;
+		$this->salesforce          = $salesforce;
+		$this->mappings            = $mappings;
+		$this->push                = $push;
+		$this->pull                = $pull;
+		$this->logging             = $logging;
 		$this->schedulable_classes = $schedulable_classes;
 
 		$this->sfwp_transients = $this->wordpress->sfwp_transients;
@@ -102,13 +102,15 @@ class Object_Sync_Sf_Admin {
 		// default token url path
 		$this->default_token_url_path = '/services/oauth2/token';
 		// what Salesforce API version to start the settings with. This is only used in the settings form
-		$this->default_api_version = '41.0';
+		$this->default_api_version = '42.0';
 		// default pull throttle for avoiding going over api limits
 		$this->default_pull_throttle = 5;
 		// default setting for triggerable items
 		$this->default_triggerable = true;
 		// default setting for updateable items
 		$this->default_updateable = true;
+		// default option prefix
+		$this->option_prefix = 'object_sync_for_salesforce_';
 
 		$this->add_actions();
 
@@ -139,6 +141,10 @@ class Object_Sync_Sf_Admin {
 		add_action( 'admin_post_delete_object_map', array( $this, 'delete_object_map' ) );
 		add_action( 'admin_post_post_object_map', array( $this, 'prepare_object_map_data' ) );
 
+		// import and export plugin data
+		add_action( 'admin_post_object_sync_for_salesforce_import', array( $this, 'import_json_file' ) );
+		add_action( 'admin_post_object_sync_for_salesforce_export', array( $this, 'export_json_file' ) );
+
 	}
 
 	/**
@@ -166,19 +172,20 @@ class Object_Sync_Sf_Admin {
 			return;
 		}
 		$tabs = array(
-			'settings' => 'Settings',
-			'authorize' => 'Authorize',
-			'fieldmaps' => 'Fieldmaps',
-			'schedule' => 'Scheduling',
+			'settings'      => __( 'Settings', 'object-sync-for-salesforce' ),
+			'authorize'     => __( 'Authorize', 'object-sync-for-salesforce' ),
+			'fieldmaps'     => __( 'Fieldmaps', 'object-sync-for-salesforce' ),
+			'schedule'      => __( 'Scheduling', 'object-sync-for-salesforce' ),
+			'import-export' => __( 'Import &amp; Export', 'object-sync-for-salesforce' ),
 		); // this creates the tabs for the admin
 
 		// optionally make tab(s) for logging and log settings
-		$logging_enabled = get_option( 'object_sync_for_salesforce_enable_logging', false );
-		$tabs['log_settings'] = 'Log Settings';
+		$logging_enabled      = get_option( $this->option_prefix . 'enable_logging', false );
+		$tabs['log_settings'] = __( 'Log Settings', 'object-sync-for-salesforce' );
 
 		$mapping_errors = $this->mappings->get_failed_object_maps();
 		if ( ! empty( $mapping_errors ) ) {
-			$tabs['mapping_errors'] = 'Mapping Errors';
+			$tabs['mapping_errors'] = __( 'Mapping Errors', 'object-sync-for-salesforce' );
 		}
 
 		// filter for extending the tabs available on the page
@@ -188,32 +195,32 @@ class Object_Sync_Sf_Admin {
 		$tab = isset( $get_data['tab'] ) ? sanitize_key( $get_data['tab'] ) : 'settings';
 		$this->tabs( $tabs, $tab );
 
-		$consumer_key = $this->login_credentials['consumer_key'];
+		$consumer_key    = $this->login_credentials['consumer_key'];
 		$consumer_secret = $this->login_credentials['consumer_secret'];
-		$callback_url = $this->login_credentials['callback_url'];
+		$callback_url    = $this->login_credentials['callback_url'];
 
 		if ( true !== $this->salesforce['is_authorized'] ) {
-			$url = esc_url( $callback_url );
-			$anchor = esc_html__( 'Authorize tab', 'object-sync-for-salesforce' );
+			$url     = esc_url( $callback_url );
+			$anchor  = esc_html__( 'Authorize tab', 'object-sync-for-salesforce' );
 			$message = sprintf( 'Salesforce needs to be authorized to connect to this website. Use the <a href="%s">%s</a> to connect.', $url, $anchor );
 			require( plugin_dir_path( __FILE__ ) . '/../templates/admin/error.php' );
 		}
 
 		if ( 0 === count( $this->mappings->get_fieldmaps() ) ) {
-			$url = esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=fieldmaps' ) );
-			$anchor = esc_html__( 'Fieldmaps tab', 'object-sync-for-salesforce' );
+			$url     = esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=fieldmaps' ) );
+			$anchor  = esc_html__( 'Fieldmaps tab', 'object-sync-for-salesforce' );
 			$message = sprintf( 'No fieldmaps exist yet. Use the <a href="%s">%s</a> to map WordPress and Salesforce objects to each other.', $url, $anchor );
 			require( plugin_dir_path( __FILE__ ) . '/../templates/admin/error.php' );
 		}
 
-		$push_schedule_number = get_option( 'object_sync_for_salesforce_salesforce_push_schedule_number', '' );
-		$push_schedule_unit = get_option( 'object_sync_for_salesforce_salesforce_push_schedule_unit', '' );
-		$pull_schedule_number = get_option( 'object_sync_for_salesforce_salesforce_pull_schedule_number', '' );
-		$pull_schedule_unit = get_option( 'object_sync_for_salesforce_salesforce_pull_schedule_unit', '' );
+		$push_schedule_number = get_option( $this->option_prefix . 'salesforce_push_schedule_number', '' );
+		$push_schedule_unit   = get_option( $this->option_prefix . 'salesforce_push_schedule_unit', '' );
+		$pull_schedule_number = get_option( $this->option_prefix . 'salesforce_pull_schedule_number', '' );
+		$pull_schedule_unit   = get_option( $this->option_prefix . 'salesforce_pull_schedule_unit', '' );
 
 		if ( '' === $push_schedule_number && '' === $push_schedule_unit && '' === $pull_schedule_number && '' === $pull_schedule_unit ) {
-			$url = esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=schedule' ) );
-			$anchor = esc_html__( 'Scheduling tab', 'object-sync-for-salesforce' );
+			$url     = esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=schedule' ) );
+			$anchor  = esc_html__( 'Scheduling tab', 'object-sync-for-salesforce' );
 			$message = sprintf( 'Because the plugin schedule has not been saved, the plugin cannot run automatic operations. Use the <a href="%s">%s</a> to create schedules to run.', $url, $anchor );
 			require( plugin_dir_path( __FILE__ ) . '/../templates/admin/error.php' );
 		}
@@ -223,7 +230,7 @@ class Object_Sync_Sf_Admin {
 				case 'authorize':
 					if ( isset( $get_data['code'] ) ) {
 						// this string is an oauth token
-						$data = esc_html( wp_unslash( $get_data['code'] ) );
+						$data          = esc_html( wp_unslash( $get_data['code'] ) );
 						$is_authorized = $this->salesforce['sfapi']->request_token( $data );
 						?>
 						<script>window.location = '<?php echo esc_url_raw( $callback_url ); ?>'</script>
@@ -236,7 +243,7 @@ class Object_Sync_Sf_Admin {
 						<p><a class="button button-primary" href="<?php echo esc_url( $this->salesforce['sfapi']->get_authorization_code() ); ?>"><?php echo esc_html__( 'Connect to Salesforce', 'object-sync-for-salesforce' ); ?></a></p>
 						<?php
 					} else {
-						$url = esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=settings' ) );
+						$url    = esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=settings' ) );
 						$anchor = esc_html__( 'Settings', 'object-sync-for-salesforce' );
 						// translators: placeholders are for the settings tab link: 1) the url, and 2) the anchor text
 						$message = sprintf( esc_html__( 'Salesforce needs to be authorized to connect to this website but the credentials are missing. Use the <a href="%1$s">%2$s</a> tab to add them.', 'object-sync-salesforce' ), $url, $anchor );
@@ -246,13 +253,13 @@ class Object_Sync_Sf_Admin {
 				case 'fieldmaps':
 					if ( isset( $get_data['method'] ) ) {
 
-						$method = sanitize_key( $get_data['method'] );
-						$error_url = get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=fieldmaps&method=' . $method );
+						$method      = sanitize_key( $get_data['method'] );
+						$error_url   = get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=fieldmaps&method=' . $method );
 						$success_url = get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=fieldmaps' );
 
 						if ( isset( $get_data['transient'] ) ) {
 							$transient = sanitize_key( $get_data['transient'] );
-							$posted = $this->sfwp_transients->get( $transient );
+							$posted    = $this->sfwp_transients->get( $transient );
 						}
 
 						if ( isset( $posted ) && is_array( $posted ) ) {
@@ -262,17 +269,17 @@ class Object_Sync_Sf_Admin {
 						}
 
 						if ( isset( $map ) && is_array( $map ) ) {
-							$label = $map['label'];
-							$salesforce_object = $map['salesforce_object'];
+							$label                           = $map['label'];
+							$salesforce_object               = $map['salesforce_object'];
 							$salesforce_record_types_allowed = maybe_unserialize( $map['salesforce_record_types_allowed'] );
-							$salesforce_record_type_default = $map['salesforce_record_type_default'];
-							$wordpress_object = $map['wordpress_object'];
-							$pull_trigger_field = $map['pull_trigger_field'];
-							$fieldmap_fields = $map['fields'];
-							$sync_triggers = $map['sync_triggers'];
-							$push_async = $map['push_async'];
-							$push_drafts = $map['push_drafts'];
-							$weight = $map['weight'];
+							$salesforce_record_type_default  = $map['salesforce_record_type_default'];
+							$wordpress_object                = $map['wordpress_object'];
+							$pull_trigger_field              = $map['pull_trigger_field'];
+							$fieldmap_fields                 = $map['fields'];
+							$sync_triggers                   = $map['sync_triggers'];
+							$push_async                      = $map['push_async'];
+							$push_drafts                     = $map['push_drafts'];
+							$weight                          = $map['weight'];
 						}
 
 						if ( 'add' === $method || 'edit' === $method || 'clone' === $method ) {
@@ -303,13 +310,13 @@ class Object_Sync_Sf_Admin {
 				case 'mapping_errors':
 					if ( isset( $get_data['method'] ) ) {
 
-						$method = sanitize_key( $get_data['method'] );
-						$error_url = get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=mapping_errors&method=' . $method );
+						$method      = sanitize_key( $get_data['method'] );
+						$error_url   = get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=mapping_errors&method=' . $method );
 						$success_url = get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=mapping_errors' );
 
 						if ( isset( $get_data['map_transient'] ) ) {
 							$transient = sanitize_key( $get_data['map_transient'] );
-							$posted = $this->sfwp_transients->get( $transient );
+							$posted    = $this->sfwp_transients->get( $transient );
 						}
 
 						if ( isset( $posted ) && is_array( $posted ) ) {
@@ -320,7 +327,7 @@ class Object_Sync_Sf_Admin {
 
 						if ( isset( $map_row ) && is_array( $map_row ) ) {
 							$salesforce_id = $map_row['salesforce_id'];
-							$wordpress_id = $map_row['wordpress_id'];
+							$wordpress_id  = $map_row['wordpress_id'];
 						}
 
 						if ( 'edit' === $method ) {
@@ -332,10 +339,13 @@ class Object_Sync_Sf_Admin {
 						require_once( plugin_dir_path( __FILE__ ) . '/../templates/admin/mapping-errors.php' );
 					}
 					break;
+				case 'import-export':
+					require_once( plugin_dir_path( __FILE__ ) . '/../templates/admin/import-export.php' );
+					break;
 				default:
 					$include_settings = apply_filters( 'object_sync_for_salesforce_settings_tab_include_settings', true, $tab );
-					$content_before = apply_filters( 'object_sync_for_salesforce_settings_tab_content_before', null, $tab );
-					$content_after = apply_filters( 'object_sync_for_salesforce_settings_tab_content_after', null, $tab );
+					$content_before   = apply_filters( 'object_sync_for_salesforce_settings_tab_content_before', null, $tab );
+					$content_after    = apply_filters( 'object_sync_for_salesforce_settings_tab_content_after', null, $tab );
 					if ( null !== $content_before ) {
 						echo esc_html( $content_before );
 					}
@@ -368,19 +378,19 @@ class Object_Sync_Sf_Admin {
 	*/
 	public function salesforce_settings_forms() {
 		$get_data = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
-		$page = isset( $get_data['tab'] ) ? sanitize_key( $get_data['tab'] ) : 'settings';
-		$section = isset( $get_data['tab'] ) ? sanitize_key( $get_data['tab'] ) : 'settings';
+		$page     = isset( $get_data['tab'] ) ? sanitize_key( $get_data['tab'] ) : 'settings';
+		$section  = isset( $get_data['tab'] ) ? sanitize_key( $get_data['tab'] ) : 'settings';
 
-		$input_callback_default = array( $this, 'display_input_field' );
+		$input_callback_default   = array( $this, 'display_input_field' );
 		$input_checkboxes_default = array( $this, 'display_checkboxes' );
-		$input_select_default = array( $this, 'display_select' );
-		$link_default = array( $this, 'display_link' );
+		$input_select_default     = array( $this, 'display_select' );
+		$link_default             = array( $this, 'display_link' );
 
 		$all_field_callbacks = array(
-			'text' => $input_callback_default,
+			'text'       => $input_callback_default,
 			'checkboxes' => $input_checkboxes_default,
-			'select' => $input_select_default,
-			'link' => $link_default,
+			'select'     => $input_select_default,
+			'link'       => $link_default,
 		);
 
 		$this->fields_settings( 'settings', 'settings', $all_field_callbacks );
@@ -400,141 +410,157 @@ class Object_Sync_Sf_Admin {
 	private function fields_settings( $page, $section, $callbacks ) {
 		add_settings_section( $page, ucwords( $page ), null, $page );
 		$salesforce_settings = array(
-			'consumer_key' => array(
-				'title' => 'Consumer Key',
+			'consumer_key'             => array(
+				'title'    => __( 'Consumer Key', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'text',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'text',
 					'validate' => 'sanitize_text_field',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_KEY',
 				),
 
 			),
-			'consumer_secret' => array(
-				'title' => 'Consumer Secret',
+			'consumer_secret'          => array(
+				'title'    => __( 'Consumer Secret', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'text',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'text',
 					'validate' => 'sanitize_text_field',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET',
 				),
 			),
-			'callback_url' => array(
-				'title' => 'Callback URL',
+			'callback_url'             => array(
+				'title'    => __( 'Callback URL', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'url',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'url',
 					'validate' => 'sanitize_text_field',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL',
 				),
 			),
-			'login_base_url' => array(
-				'title' => 'Login Base URL',
+			'login_base_url'           => array(
+				'title'    => __( 'Login Base URL', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'url',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'url',
 					'validate' => 'sanitize_text_field',
-					'desc' => '',
+					// translators: 1) production salesforce login, 2) sandbox salesforce login
+					'desc'     => sprintf( __( 'For most Salesforce setups, you should use %1$s for production and %2$s for sandbox.', 'object-sync-for-salesforce' ),
+						esc_url( 'https://login.salesforce.com' ),
+						esc_url( 'https://test.salesforce.com' )
+					),
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL',
 				),
 			),
-			'authorize_url_path' => array(
-				'title' => 'Authorize URL Path',
+			'authorize_url_path'       => array(
+				'title'    => __( 'Authorize URL Path', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'text',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'text',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'For most Salesforce installs, this should not be changed.',
+					'desc'     => __( 'For most Salesforce installs, this should not be changed.', 'object-sync-for-salesforce' ),
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_AUTHORIZE_URL_PATH',
-					'default' => $this->default_authorize_url_path,
+					'default'  => $this->default_authorize_url_path,
 				),
 			),
-			'token_url_path' => array(
-				'title' => 'Token URL Path',
+			'token_url_path'           => array(
+				'title'    => 'Token URL Path',
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'text',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'text',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'For most Salesforce installs, this should not be changed.',
+					'desc'     => __( 'For most Salesforce installs, this should not be changed.', 'object-sync-for-salesforce' ),
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_TOKEN_URL_PATH',
-					'default' => $this->default_token_url_path,
+					'default'  => $this->default_token_url_path,
 				),
 			),
-			'api_version' => array(
-				'title' => 'Salesforce API Version',
+			'api_version'              => array(
+				'title'    => 'Salesforce API Version',
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'text',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'text',
 					'validate' => 'sanitize_text_field',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_API_VERSION',
-					'default' => $this->default_api_version,
+					'default'  => $this->default_api_version,
 				),
 			),
-			'object_filters' => array(
-				'title' => 'Limit Salesforce Objects',
+			'object_filters'           => array(
+				'title'    => 'Limit Salesforce Objects',
 				'callback' => $callbacks['checkboxes'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'checkboxes',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkboxes',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'Allows you to limit which Salesforce objects can be mapped',
-					'items' => array(
+					'desc'     => __( 'Allows you to limit which Salesforce objects can be mapped', 'object-sync-for-salesforce' ),
+					'items'    => array(
 						'triggerable' => array(
-							'text' => 'Only Triggerable objects',
-							'id' => 'triggerable',
-							'desc' => '',
+							'text'    => 'Only Triggerable objects',
+							'id'      => 'triggerable',
+							'desc'    => '',
 							'default' => $this->default_triggerable,
 						),
-						'updateable' => array(
-							'text' => 'Only Updateable objects',
-							'id' => 'updateable',
-							'desc' => '',
+						'updateable'  => array(
+							'text'    => 'Only Updateable objects',
+							'id'      => 'updateable',
+							'desc'    => '',
 							'default' => $this->default_updateable,
 						),
 					),
 				),
 			),
-			'pull_throttle' => array(
-				'title' => 'Pull throttle (seconds)',
+			'pull_throttle'            => array(
+				'title'    => 'Pull throttle (seconds)',
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'number',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'number',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'Number of seconds to wait between repeated salesforce pulls. Prevents the webserver from becoming overloaded in case of too many cron runs, or webhook usage.',
+					'desc'     => __( 'Number of seconds to wait between repeated salesforce pulls. Prevents the webserver from becoming overloaded in case of too many cron runs, or webhook usage.', 'object-sync-for-salesforce' ),
 					'constant' => '',
-					'default' => $this->default_pull_throttle,
+					'default'  => $this->default_pull_throttle,
 				),
 			),
-			'debug_mode' => array(
-				'title' => 'Debug mode?',
+			'debug_mode'               => array(
+				'title'    => 'Debug mode?',
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'checkbox',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkbox',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'Debug mode can, combined with the Log Settings, log things like Salesforce API requests. It can create a lot of entries if enabled; it is not recommended to use it in a production environment.',
+					'desc'     => __( 'Debug mode can, combined with the Log Settings, log things like Salesforce API requests. It can create a lot of entries if enabled; it is not recommended to use it in a production environment.', 'object-sync-for-salesforce' ),
+					'constant' => '',
+				),
+			),
+			'delete_data_on_uninstall' => array(
+				'title'    => 'Delete plugin data on uninstall?',
+				'callback' => $callbacks['text'],
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkbox',
+					'validate' => 'sanitize_text_field',
+					'desc'     => __( 'If checked, the plugin will delete the tables and other data it creates when you uninstall it. Unchecking this field can be useful if you need to reactivate the plugin for any reason without losing data.', 'object-sync-for-salesforce' ),
 					'constant' => '',
 				),
 			),
@@ -542,35 +568,35 @@ class Object_Sync_Sf_Admin {
 
 		if ( true === is_object( $this->salesforce['sfapi'] ) && true === $this->salesforce['sfapi']->is_authorized() ) {
 			$salesforce_settings['api_version'] = array(
-				'title' => 'Salesforce API Version',
+				'title'    => 'Salesforce API Version',
 				'callback' => $callbacks['select'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'select',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'select',
 					'validate' => 'sanitize_text_field',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_API_VERSION',
-					'items' => $this->version_options(),
+					'items'    => $this->version_options(),
 				),
 			);
 		}
 
 		foreach ( $salesforce_settings as $key => $attributes ) {
-			$id = 'object_sync_for_salesforce_' . $key;
-			$name = 'object_sync_for_salesforce_' . $key;
-			$title = $attributes['title'];
+			$id       = $this->option_prefix . $key;
+			$name     = $this->option_prefix . $key;
+			$title    = $attributes['title'];
 			$callback = $attributes['callback'];
 			$validate = $attributes['args']['validate'];
-			$page = $attributes['page'];
-			$section = $attributes['section'];
-			$args = array_merge(
+			$page     = $attributes['page'];
+			$section  = $attributes['section'];
+			$args     = array_merge(
 				$attributes['args'],
 				array(
-					'title' => $title,
-					'id' => $id,
+					'title'     => $title,
+					'id'        => $id,
 					'label_for' => $id,
-					'name' => $name,
+					'name'      => $name,
 				)
 			);
 
@@ -609,70 +635,70 @@ class Object_Sync_Sf_Admin {
 			add_settings_section( $key, $value['label'], null, $page );
 			$schedule_settings = array(
 				$key . '_schedule_number' => array(
-					'title' => __( 'Run schedule every', 'object-sync-for-salesforce' ),
+					'title'    => __( 'Run schedule every', 'object-sync-for-salesforce' ),
 					'callback' => $callbacks['text'],
-					'page' => $page,
-					'section' => $key,
-					'args' => array(
-						'type' => 'number',
+					'page'     => $page,
+					'section'  => $key,
+					'args'     => array(
+						'type'     => 'number',
 						'validate' => 'absint',
-						'desc' => '',
+						'desc'     => '',
 						'constant' => '',
 					),
 				),
-				$key . '_schedule_unit' => array(
-					'title' => __( 'Time unit', 'object-sync-for-salesforce' ),
+				$key . '_schedule_unit'   => array(
+					'title'    => __( 'Time unit', 'object-sync-for-salesforce' ),
 					'callback' => $callbacks['select'],
-					'page' => $page,
-					'section' => $key,
-					'args' => array(
-						'type' => 'select',
+					'page'     => $page,
+					'section'  => $key,
+					'args'     => array(
+						'type'     => 'select',
 						'validate' => 'sanitize_text_field',
-						'desc' => '',
-						'items' => array(
+						'desc'     => '',
+						'items'    => array(
 							'minutes' => array(
-								'text' => 'Minutes',
+								'text'  => 'Minutes',
 								'value' => 'minutes',
 							),
-							'hours' => array(
-								'text' => 'Hours',
+							'hours'   => array(
+								'text'  => 'Hours',
 								'value' => 'hours',
 							),
-							'days' => array(
-								'text' => 'Days',
+							'days'    => array(
+								'text'  => 'Days',
 								'value' => 'days',
 							),
 						),
 					),
 				),
-				$key . '_clear_button' => array(
+				$key . '_clear_button'    => array(
 					// translators: $this->get_schedule_count is an integer showing how many items are in the current queue
-					'title' => sprintf( 'This queue has ' . _n( '%s item', '%s items', $this->get_schedule_count( $key ), 'object-sync-for-salesforce' ), $this->get_schedule_count( $key ) ),
+					'title'    => sprintf( 'This queue has ' . _n( '%s item', '%s items', $this->get_schedule_count( $key ), 'object-sync-for-salesforce' ), $this->get_schedule_count( $key ) ),
 					'callback' => $callbacks['link'],
-					'page' => $page,
-					'section' => $key,
-					'args' => array(
-						'label' => 'Clear this queue',
-						'desc' => '',
-						'url' => esc_url( '?page=object-sync-salesforce-admin&amp;tab=clear_schedule&amp;schedule_name=' . $key ),
+					'page'     => $page,
+					'section'  => $key,
+					'args'     => array(
+						'label'      => 'Clear this queue',
+						'desc'       => '',
+						'url'        => esc_url( '?page=object-sync-salesforce-admin&amp;tab=clear_schedule&amp;schedule_name=' . $key ),
 						'link_class' => 'button button-secondary',
 					),
 				),
 			);
 			foreach ( $schedule_settings as $key => $attributes ) {
-				$id = 'object_sync_for_salesforce_' . $key;
-				$name = 'object_sync_for_salesforce_' . $key;
-				$title = $attributes['title'];
+				$id       = $this->option_prefix . $key;
+				$name     = $this->option_prefix . $key;
+				$title    = $attributes['title'];
 				$callback = $attributes['callback'];
-				$page = $attributes['page'];
-				$section = $attributes['section'];
-				$args = array_merge(
+				$page     = $attributes['page'];
+				$section  = $attributes['section'];
+				$args     = array_merge(
 					$attributes['args'],
 					array(
-						'title' => $title,
-						'id' => $id,
+						'title'     => $title,
+						'id'        => $id,
 						'label_for' => $id,
-						'name' => $name,
+						'name'      => $name,
 					)
 				);
 				add_settings_field( $id, $title, $callback, $page, $section, $args );
@@ -692,152 +718,152 @@ class Object_Sync_Sf_Admin {
 	private function fields_log_settings( $page, $section, $callbacks ) {
 		add_settings_section( $page, ucwords( str_replace( '_', ' ', $page ) ), null, $page );
 		$log_settings = array(
-			'enable_logging' => array(
-				'title' => 'Enable Logging?',
+			'enable_logging'        => array(
+				'title'    => __( 'Enable Logging?', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'checkbox',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkbox',
 					'validate' => 'absint',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => '',
 				),
 			),
-			'statuses_to_log' => array(
-				'title' => 'Statuses to log',
+			'statuses_to_log'       => array(
+				'title'    => __( 'Statuses to log', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['checkboxes'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'checkboxes',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkboxes',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'these are the statuses to log',
-					'items' => array(
-						'error' => array(
-							'text' => 'Error',
-							'id' => 'error',
+					'desc'     => __( 'these are the statuses to log', 'object-sync-for-salesforce' ),
+					'items'    => array(
+						'error'   => array(
+							'text' => __( 'Error', 'object-sync-for-salesforce' ),
+							'id'   => 'error',
 							'desc' => '',
 						),
 						'success' => array(
-							'text' => 'Success',
-							'id' => 'success',
+							'text' => __( 'Success', 'object-sync-for-salesforce' ),
+							'id'   => 'success',
 							'desc' => '',
 						),
-						'notice' => array(
-							'text' => 'Notice',
-							'id' => 'notice',
+						'notice'  => array(
+							'text' => __( 'Notice', 'object-sync-for-salesforce' ),
+							'id'   => 'notice',
 							'desc' => '',
 						),
-						'debug' => array(
-							'text' => 'Debug',
-							'id' => 'debug',
+						'debug'   => array(
+							'text' => __( 'Debug', 'object-sync-for-salesforce' ),
+							'id'   => 'debug',
 							'desc' => '',
 						),
 					),
 				),
 			),
-			'prune_logs' => array(
-				'title' => 'Automatically delete old log entries?',
+			'prune_logs'            => array(
+				'title'    => __( 'Automatically delete old log entries?', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'checkbox',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkbox',
 					'validate' => 'absint',
-					'desc' => '',
+					'desc'     => '',
 					'constant' => '',
 				),
 			),
-			'logs_how_old' => array(
-				'title' => 'Age to delete log entries',
+			'logs_how_old'          => array(
+				'title'    => __( 'Age to delete log entries', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'text',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'text',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'If automatic deleting is enabled, it will affect logs this old.',
-					'default' => '2 weeks',
+					'desc'     => __( 'If automatic deleting is enabled, it will affect logs this old.', 'object-sync-for-salesforce' ),
+					'default'  => '2 weeks',
 					'constant' => '',
 				),
 			),
 			'logs_how_often_number' => array(
-				'title' => __( 'Check for old logs every', 'object-sync-for-salesforce' ),
+				'title'    => __( 'Check for old logs every', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'number',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'number',
 					'validate' => 'absint',
-					'desc' => '',
-					'default' => '1',
+					'desc'     => '',
+					'default'  => '1',
 					'constant' => '',
 				),
 			),
-			'logs_how_often_unit' => array(
-				'title' => __( 'Time unit', 'object-sync-for-salesforce' ),
+			'logs_how_often_unit'   => array(
+				'title'    => __( 'Time unit', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['select'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'select',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'select',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'These two fields are how often the site will check for logs to delete.',
-					'items' => array(
+					'desc'     => __( 'These two fields are how often the site will check for logs to delete.', 'object-sync-for-salesforce' ),
+					'items'    => array(
 						'minutes' => array(
-							'text' => 'Minutes',
+							'text'  => __( 'Minutes', 'object-sync-for-salesforce' ),
 							'value' => 'minutes',
 						),
-						'hours' => array(
-							'text' => 'Hours',
+						'hours'   => array(
+							'text'  => __( 'Hours', 'object-sync-for-salesforce' ),
 							'value' => 'hours',
 						),
-						'days' => array(
-							'text' => 'Days',
+						'days'    => array(
+							'text'  => __( 'Days', 'object-sync-for-salesforce' ),
 							'value' => 'days',
 						),
 					),
 				),
 			),
-			'triggers_to_log' => array(
-				'title' => 'Triggers to log',
+			'triggers_to_log'       => array(
+				'title'    => __( 'Triggers to log', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['checkboxes'],
-				'page' => $page,
-				'section' => $section,
-				'args' => array(
-					'type' => 'checkboxes',
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'checkboxes',
 					'validate' => 'sanitize_text_field',
-					'desc' => 'these are the triggers to log',
-					'items' => array(
+					'desc'     => __( 'these are the triggers to log', 'object-sync-for-salesforce' ),
+					'items'    => array(
 						$this->mappings->sync_wordpress_create => array(
-							'text' => 'WordPress create',
-							'id' => 'wordpress_create',
+							'text' => __( 'WordPress create', 'object-sync-for-salesforce' ),
+							'id'   => 'wordpress_create',
 							'desc' => '',
 						),
 						$this->mappings->sync_wordpress_update => array(
-							'text' => 'WordPress update',
-							'id' => 'wordpress_update',
+							'text' => __( 'WordPress update', 'object-sync-for-salesforce' ),
+							'id'   => 'wordpress_update',
 							'desc' => '',
 						),
 						$this->mappings->sync_wordpress_delete => array(
-							'text' => 'WordPress delete',
-							'id' => 'wordpress_delete',
+							'text' => __( 'WordPress delete', 'object-sync-for-salesforce' ),
+							'id'   => 'wordpress_delete',
 							'desc' => '',
 						),
 						$this->mappings->sync_sf_create => array(
-							'text' => 'Salesforce create',
-							'id' => 'sf_create',
+							'text' => __( 'Salesforce create', 'object-sync-for-salesforce' ),
+							'id'   => 'sf_create',
 							'desc' => '',
 						),
 						$this->mappings->sync_sf_update => array(
-							'text' => 'Salesforce update',
-							'id' => 'sf_update',
+							'text' => __( 'Salesforce update', 'object-sync-for-salesforce' ),
+							'id'   => 'sf_update',
 							'desc' => '',
 						),
 						$this->mappings->sync_sf_delete => array(
-							'text' => 'Salesforce delete',
-							'id' => 'sf_delete',
+							'text' => __( 'Salesforce delete', 'object-sync-for-salesforce' ),
+							'id'   => 'sf_delete',
 							'desc' => '',
 						),
 					),
@@ -845,19 +871,19 @@ class Object_Sync_Sf_Admin {
 			),
 		);
 		foreach ( $log_settings as $key => $attributes ) {
-			$id = 'object_sync_for_salesforce_' . $key;
-			$name = 'object_sync_for_salesforce_' . $key;
-			$title = $attributes['title'];
+			$id       = $this->option_prefix . $key;
+			$name     = $this->option_prefix . $key;
+			$title    = $attributes['title'];
 			$callback = $attributes['callback'];
-			$page = $attributes['page'];
-			$section = $attributes['section'];
-			$args = array_merge(
+			$page     = $attributes['page'];
+			$section  = $attributes['section'];
+			$args     = array_merge(
 				$attributes['args'],
 				array(
-					'title' => $title,
-					'id' => $id,
+					'title'     => $title,
+					'id'        => $id,
 					'label_for' => $id,
-					'name' => $name,
+					'name'      => $name,
 				)
 			);
 			add_settings_field( $id, $title, $callback, $page, $section, $args );
@@ -875,22 +901,34 @@ class Object_Sync_Sf_Admin {
 		require_once plugin_dir_path( __FILE__ ) . '../classes/admin-notice.php';
 
 		$notices = array(
-			'permission' => array(
-				'condition' => false === $this->check_wordpress_admin_permissions(),
-				'message' => "Your account does not have permission to edit the Salesforce REST API plugin's settings.",
-				'type' => 'error',
+			'permission'      => array(
+				'condition'   => false === $this->check_wordpress_admin_permissions(),
+				'message'     => __( "Your account does not have permission to edit the Salesforce REST API plugin's settings.", 'object-sync-for-salesforce' ),
+				'type'        => 'error',
 				'dismissible' => false,
 			),
-			'fieldmap' => array(
-				'condition' => isset( $get_data['transient'] ),
-				'message' => 'Errors kept this fieldmap from being saved.',
-				'type' => 'error',
+			'fieldmap'        => array(
+				'condition'   => isset( $get_data['transient'] ),
+				'message'     => __( 'Errors kept this fieldmap from being saved.', 'object-sync-for-salesforce' ),
+				'type'        => 'error',
 				'dismissible' => true,
 			),
-			'object_map' => array(
-				'condition' => isset( $get_data['map_transient'] ),
-				'message' => 'Errors kept this object map from being saved.',
-				'type' => 'error',
+			'object_map'      => array(
+				'condition'   => isset( $get_data['map_transient'] ),
+				'message'     => __( 'Errors kept this object map from being saved.', 'object-sync-for-salesforce' ),
+				'type'        => 'error',
+				'dismissible' => true,
+			),
+			'data_saved'      => array(
+				'condition'   => isset( $get_data['data_saved'] ) && 'true' === $get_data['data_saved'],
+				'message'     => __( 'This data was successfully saved.', 'object-sync-for-salesforce' ),
+				'type'        => 'success',
+				'dismissible' => true,
+			),
+			'data_save_error' => array(
+				'condition'   => isset( $get_data['data_saved'] ) && 'false' === $get_data['data_saved'],
+				'message'     => __( 'This data was not successfully saved. Try again.', 'object-sync-for-salesforce' ),
+				'type'        => 'error',
 				'dismissible' => true,
 			),
 		);
@@ -898,7 +936,7 @@ class Object_Sync_Sf_Admin {
 		foreach ( $notices as $key => $value ) {
 
 			$condition = $value['condition'];
-			$message = $value['message'];
+			$message   = $value['message'];
 
 			if ( isset( $value['dismissible'] ) ) {
 				$dismissible = $value['dismissible'];
@@ -944,7 +982,7 @@ class Object_Sync_Sf_Admin {
 		if ( ! empty( $data['salesforce_object'] ) ) {
 			$object = $this->salesforce['sfapi']->object_describe( esc_attr( $data['salesforce_object'] ) );
 
-			$object_fields = array();
+			$object_fields        = array();
 			$include_record_types = array();
 
 			// these can come from ajax
@@ -989,9 +1027,9 @@ class Object_Sync_Sf_Admin {
 	public function get_salesforce_object_fields( $data = array() ) {
 
 		if ( ! empty( $data['salesforce_object'] ) ) {
-			$object = $this->salesforce['sfapi']->object_describe( esc_attr( $data['salesforce_object'] ) );
-			$object_fields = array();
-			$type = isset( $data['type'] ) ? esc_attr( $data['type'] ) : '';
+			$object               = $this->salesforce['sfapi']->object_describe( esc_attr( $data['salesforce_object'] ) );
+			$object_fields        = array();
+			$type                 = isset( $data['type'] ) ? esc_attr( $data['type'] ) : '';
 			$include_record_types = isset( $data['include_record_types'] ) ? esc_attr( $data['include_record_types'] ) : false;
 			foreach ( $object['data']['fields'] as $key => $value ) {
 				if ( '' === $type || $type === $value['type'] ) {
@@ -1020,11 +1058,11 @@ class Object_Sync_Sf_Admin {
 	* @return array $object_fields
 	*/
 	public function get_wordpress_object_fields( $wordpress_object = '' ) {
-		$ajax = false;
+		$ajax      = false;
 		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
 		if ( empty( $wordpress_object ) ) {
 			$wordpress_object = isset( $post_data['wordpress_object'] ) ? sanitize_text_field( wp_unslash( $post_data['wordpress_object'] ) ) : '';
-			$ajax = true;
+			$ajax             = true;
 		}
 
 		$object_fields = $this->wordpress->get_wordpress_object_fields( $wordpress_object );
@@ -1053,7 +1091,7 @@ class Object_Sync_Sf_Admin {
 			$salesforce_object = isset( $post_data['salesforce_object'] ) ? sanitize_text_field( wp_unslash( $post_data['salesforce_object'] ) ) : '';
 		}
 
-		$object_fields['wordpress'] = $this->get_wordpress_object_fields( $wordpress_object );
+		$object_fields['wordpress']  = $this->get_wordpress_object_fields( $wordpress_object );
 		$object_fields['salesforce'] = $this->get_salesforce_object_fields(
 			array(
 				'salesforce_object' => $salesforce_object,
@@ -1078,9 +1116,9 @@ class Object_Sync_Sf_Admin {
 		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
 		if ( empty( $wordpress_object ) && empty( $wordpress_id ) ) {
 			$wordpress_object = isset( $post_data['wordpress_object'] ) ? sanitize_text_field( wp_unslash( $post_data['wordpress_object'] ) ) : '';
-			$wordpress_id = isset( $post_data['wordpress_id'] ) ? absint( $post_data['wordpress_id'] ) : '';
+			$wordpress_id     = isset( $post_data['wordpress_id'] ) ? absint( $post_data['wordpress_id'] ) : '';
 		}
-		$data = $this->wordpress->get_wordpress_object_data( $wordpress_object, $wordpress_id );
+		$data   = $this->wordpress->get_wordpress_object_data( $wordpress_object, $wordpress_id );
 		$result = $this->push->manual_object_update( $data, $wordpress_object );
 
 		if ( ! empty( $post_data['wordpress_object'] ) && ! empty( $post_data['wordpress_id'] ) ) {
@@ -1102,9 +1140,9 @@ class Object_Sync_Sf_Admin {
 		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
 		if ( empty( $wordpress_object ) && empty( $salesforce_id ) ) {
 			$wordpress_object = isset( $post_data['wordpress_object'] ) ? sanitize_text_field( wp_unslash( $post_data['wordpress_object'] ) ) : '';
-			$salesforce_id = isset( $post_data['salesforce_id'] ) ? sanitize_text_field( wp_unslash( $post_data['salesforce_id'] ) ) : '';
+			$salesforce_id    = isset( $post_data['salesforce_id'] ) ? sanitize_text_field( wp_unslash( $post_data['salesforce_id'] ) ) : '';
 		}
-		$type = $this->salesforce['sfapi']->get_sobject_type( $salesforce_id );
+		$type   = $this->salesforce['sfapi']->get_sobject_type( $salesforce_id );
 		$result = $this->pull->manual_pull( $type, $salesforce_id, $wordpress_object ); // we want the wp object to make sure we get the right fieldmap
 		if ( ! empty( $post_data ) ) {
 			wp_send_json_success( $result );
@@ -1145,9 +1183,9 @@ class Object_Sync_Sf_Admin {
 	*
 	*/
 	public function prepare_fieldmap_data() {
-		$error = false;
+		$error     = false;
 		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
-		$cachekey = md5( wp_json_encode( $post_data ) );
+		$cachekey  = md5( wp_json_encode( $post_data ) );
 
 		if ( ! isset( $post_data['label'] ) || ! isset( $post_data['salesforce_object'] ) || ! isset( $post_data['wordpress_object'] ) ) {
 			$error = true;
@@ -1160,17 +1198,17 @@ class Object_Sync_Sf_Admin {
 		} else { // there are no errors
 			// send the row to the fieldmap class
 			// if it is add or clone, use the create method
-			$method = esc_attr( $post_data['method'] );
+			$method            = esc_attr( $post_data['method'] );
 			$salesforce_fields = $this->get_salesforce_object_fields(
 				array(
 					'salesforce_object' => $post_data['salesforce_object'],
 				)
 			);
-			$wordpress_fields = $this->get_wordpress_object_fields( $post_data['wordpress_object'] );
+			$wordpress_fields  = $this->get_wordpress_object_fields( $post_data['wordpress_object'] );
 			if ( 'add' === $method || 'clone' === $method ) {
 				$result = $this->mappings->create_fieldmap( $post_data, $wordpress_fields, $salesforce_fields );
 			} elseif ( 'edit' === $method ) { // if it is edit, use the update method
-				$id = esc_attr( $post_data['id'] );
+				$id     = esc_attr( $post_data['id'] );
 				$result = $this->mappings->update_fieldmap( $post_data, $wordpress_fields, $salesforce_fields, $id );
 			}
 			if ( false === $result ) { // if the database didn't save, it's still an error
@@ -1220,9 +1258,9 @@ class Object_Sync_Sf_Admin {
 	*
 	*/
 	public function prepare_object_map_data() {
-		$error = false;
+		$error     = false;
 		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
-		$cachekey = md5( wp_json_encode( $post_data ) );
+		$cachekey  = md5( wp_json_encode( $post_data ) );
 
 		if ( ! isset( $post_data['wordpress_id'] ) || ! isset( $post_data['salesforce_id'] ) ) {
 			$error = true;
@@ -1236,7 +1274,7 @@ class Object_Sync_Sf_Admin {
 			// send the row to the object map class
 			$method = esc_attr( $post_data['method'] );
 			if ( 'edit' === $method ) { // if it is edit, use the update method
-				$id = esc_attr( $post_data['id'] );
+				$id     = esc_attr( $post_data['id'] );
 				$result = $this->mappings->update_object_map( $post_data, $id );
 			}
 			if ( false === $result ) { // if the database didn't save, it's still an error
@@ -1278,15 +1316,133 @@ class Object_Sync_Sf_Admin {
 	}
 
 	/**
+	* Import a json file and use it for plugin data
+	*
+	*/
+	public function import_json_file() {
+
+		if ( ! wp_verify_nonce( $_POST['object_sync_for_salesforce_nonce_import'], 'object_sync_for_salesforce_nonce_import' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$path      = $_FILES['import_file']['name'];
+		$extension = pathinfo( $path, PATHINFO_EXTENSION );
+		if ( 'json' !== $extension ) {
+			wp_die( __( 'Please upload a valid .json file' ) );
+		}
+
+		$import_file = $_FILES['import_file']['tmp_name'];
+		if ( empty( $import_file ) ) {
+			wp_die( __( 'Please upload a file to import' ) );
+		}
+
+		// Retrieve the data from the file and convert the json object to an array.
+		$data = (array) json_decode( file_get_contents( $import_file ), true );
+
+		$overwrite = isset( $_POST['overwrite'] ) ? esc_attr( $_POST['overwrite'] ) : '';
+		if ( '1' === $overwrite ) {
+			if ( isset( $data['fieldmaps'] ) ) {
+				$fieldmaps = $this->mappings->get_fieldmaps();
+				foreach ( $fieldmaps as $fieldmap ) {
+					$id     = $fieldmap['id'];
+					$delete = $this->mappings->delete_fieldmap( $id );
+				}
+			}
+			if ( isset( $data['object_maps'] ) ) {
+				$fieldmaps = $this->mappings->get_object_maps();
+				foreach ( $fieldmaps as $fieldmap ) {
+					$id     = $fieldmap['id'];
+					$delete = $this->mappings->delete_object_map( $id );
+				}
+			}
+			if ( isset( $data['plugin_settings'] ) ) {
+				foreach ( $data['plugin_settings'] as $key => $value ) {
+					delete_option( $value['option_name'] );
+				}
+			}
+		}
+
+		$success = true;
+
+		if ( isset( $data['fieldmaps'] ) ) {
+			foreach ( $data['fieldmaps'] as $fieldmap ) {
+				unset( $fieldmap['id'] );
+				$create = $this->mappings->create_fieldmap( $fieldmap );
+				if ( false === $create ) {
+					$success = false;
+				}
+			}
+		}
+
+		if ( isset( $data['object_maps'] ) ) {
+			foreach ( $data['object_maps'] as $object_map ) {
+				unset( $object_map['id'] );
+				$create = $this->mappings->create_object_map( $object_map );
+				if ( false === $create ) {
+					$success = false;
+				}
+			}
+		}
+
+		if ( isset( $data['plugin_settings'] ) ) {
+			foreach ( $data['plugin_settings'] as $key => $value ) {
+				update_option( $value['option_name'], maybe_unserialize( $value['option_value'] ), $value['autoload'] );
+			}
+		}
+
+		if ( true === $success ) {
+			wp_safe_redirect( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=import-export&data_saved=true' ) );
+			exit;
+		} else {
+			wp_safe_redirect( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=import-export&data_saved=false' ) );
+			exit;
+		}
+
+	}
+
+	/**
+	* Create a json file for exporting
+	*
+	*/
+	public function export_json_file() {
+
+		if ( ! wp_verify_nonce( $_POST['object_sync_for_salesforce_nonce_export'], 'object_sync_for_salesforce_nonce_export' ) ) {
+			return;
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
+		$export    = array();
+		if ( in_array( 'fieldmaps', $post_data['export'] ) ) {
+			$export['fieldmaps'] = $this->mappings->get_fieldmaps();
+		}
+		if ( in_array( 'object_maps', $post_data['export'] ) ) {
+			$export['object_maps'] = $this->mappings->get_object_maps();
+		}
+		if ( in_array( 'plugin_settings', $post_data['export'] ) ) {
+			$export['plugin_settings'] = $this->wpdb->get_results( 'SELECT * FROM ' . $this->wpdb->prefix . 'options' . ' WHERE option_name like "' . $this->option_prefix . '%"', ARRAY_A );
+		}
+		nocache_headers();
+		header( 'Content-Type: application/json; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename=object-sync-for-salesforce-data-export-' . date( 'm-d-Y' ) . '.json' );
+		header( 'Expires: 0' );
+		echo wp_json_encode( $export );
+		exit;
+	}
+
+	/**
 	* Default display for <input> fields
 	*
 	* @param array $args
 	*/
 	public function display_input_field( $args ) {
-		$type   = $args['type'];
-		$id     = $args['label_for'];
-		$name   = $args['name'];
-		$desc   = $args['desc'];
+		$type    = $args['type'];
+		$id      = $args['label_for'];
+		$name    = $args['name'];
+		$desc    = $args['desc'];
 		$checked = '';
 
 		$class = 'regular-text';
@@ -1296,7 +1452,7 @@ class Object_Sync_Sf_Admin {
 		}
 
 		if ( ! isset( $args['constant'] ) || ! defined( $args['constant'] ) ) {
-			$value  = esc_attr( get_option( $id, '' ) );
+			$value = esc_attr( get_option( $id, '' ) );
 			if ( 'checkbox' === $type ) {
 				if ( '1' === $value ) {
 					$checked = 'checked ';
@@ -1334,13 +1490,13 @@ class Object_Sync_Sf_Admin {
 	* @param array $args
 	*/
 	public function display_checkboxes( $args ) {
-		$type = 'checkbox';
-		$name = $args['name'];
+		$type    = 'checkbox';
+		$name    = $args['name'];
 		$options = get_option( $name, array() );
 		foreach ( $args['items'] as $key => $value ) {
-			$text = $value['text'];
-			$id = $value['id'];
-			$desc = $value['desc'];
+			$text    = $value['text'];
+			$id      = $value['id'];
+			$desc    = $value['desc'];
 			$checked = '';
 			if ( is_array( $options ) && in_array( (string) $key, $options, true ) ) {
 				$checked = 'checked';
@@ -1371,21 +1527,21 @@ class Object_Sync_Sf_Admin {
 	* @param array $args
 	*/
 	public function display_select( $args ) {
-		$type   = $args['type'];
-		$id     = $args['label_for'];
-		$name   = $args['name'];
-		$desc   = $args['desc'];
+		$type = $args['type'];
+		$id   = $args['label_for'];
+		$name = $args['name'];
+		$desc = $args['desc'];
 		if ( ! isset( $args['constant'] ) || ! defined( $args['constant'] ) ) {
 			$current_value = get_option( $name );
 
-			echo sprintf( '<div class="select"><select id="%1$s" name="%2$s"><option value="">- Select one -</option>',
+			echo sprintf( '<div class="select"><select id="%1$s" name="%2$s"><option value="">- ' . __( 'Select one', 'object-sync-for-salesforce' ) . ' -</option>',
 				esc_attr( $id ),
 				esc_attr( $name )
 			);
 
 			foreach ( $args['items'] as $key => $value ) {
-				$text = $value['text'];
-				$value = $value['value'];
+				$text     = $value['text'];
+				$value    = $value['value'];
 				$selected = '';
 				if ( $key === $current_value || $value === $current_value ) {
 					$selected = ' selected';
@@ -1419,11 +1575,11 @@ class Object_Sync_Sf_Admin {
 	*/
 	private function version_options() {
 		$versions = $this->salesforce['sfapi']->get_api_versions();
-		$args = array();
+		$args     = array();
 		foreach ( $versions['data'] as $key => $value ) {
 			$args[] = array(
 				'value' => $value['version'],
-				'text' => $value['label'] . ' (' . $value['version'] . ')',
+				'text'  => $value['label'] . ' (' . $value['version'] . ')',
 			);
 		}
 		return $args;
@@ -1435,9 +1591,9 @@ class Object_Sync_Sf_Admin {
 	* @param array $args
 	*/
 	public function display_link( $args ) {
-		$label   = $args['label'];
-		$desc   = $args['desc'];
-		$url = $args['url'];
+		$label = $args['label'];
+		$desc  = $args['desc'];
+		$url   = $args['url'];
 		if ( isset( $args['link_class'] ) ) {
 			echo sprintf( '<p><a class="%1$s" href="%2$s">%3$s</a></p>',
 				esc_attr( $args['link_class'] ),
@@ -1470,7 +1626,7 @@ class Object_Sync_Sf_Admin {
 
 		// format this array into text so users can see the versions
 		if ( true === $versions['cached'] ) {
-			$versions_is_cached = esc_html__( 'This list is cached, and' , 'object-sync-salesforce' );
+			$versions_is_cached = esc_html__( 'This list is cached, and', 'object-sync-salesforce' );
 		} else {
 			$versions_is_cached = esc_html__( 'This list is not cached, but', 'object-sync-salesforce' );
 		}
@@ -1491,7 +1647,7 @@ class Object_Sync_Sf_Admin {
 
 		// format this array into html so users can see the contacts
 		if ( true === $contacts['cached'] ) {
-			$contacts_is_cached = esc_html__( 'They are cached, and' , 'object-sync-salesforce' );
+			$contacts_is_cached = esc_html__( 'They are cached, and', 'object-sync-salesforce' );
 		} else {
 			$contacts_is_cached = esc_html__( 'They are not cached, but', 'object-sync-salesforce' );
 		}
@@ -1527,9 +1683,9 @@ class Object_Sync_Sf_Admin {
 	* For this plugin at this time, that is the decision we are making: don't do any kind of authorization stuff inside Salesforce
 	*/
 	private function logout() {
-		$this->access_token = delete_option( 'object_sync_for_salesforce_access_token' );
-		$this->instance_url = delete_option( 'object_sync_for_salesforce_instance_url' );
-		$this->refresh_token = delete_option( 'object_sync_for_salesforce_refresh_token' );
+		$this->access_token  = delete_option( $this->option_prefix . 'access_token' );
+		$this->instance_url  = delete_option( $this->option_prefix . 'instance_url' );
+		$this->refresh_token = delete_option( $this->option_prefix . 'refresh_token' );
 		echo sprintf( '<p>You have been logged out. You can use the <a href="%1$s">%2$s</a> tab to log in again.</p>',
 			esc_url( get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=authorize' ) ),
 			esc_html__( 'Authorize', 'object-sync-for-salesforce' )
@@ -1540,7 +1696,7 @@ class Object_Sync_Sf_Admin {
 	* Ajax call to clear the plugin cache.
 	*/
 	public function clear_sfwp_cache() {
-		$result = $this->clear_cache( true );
+		$result   = $this->clear_cache( true );
 		$response = array(
 			'message' => $result['message'],
 			'success' => $result['success'],
@@ -1553,11 +1709,11 @@ class Object_Sync_Sf_Admin {
 	* This uses the flush method contained in the WordPress cache to clear all of this plugin's cached data.
 	*/
 	private function clear_cache( $ajax = false ) {
-		$result = $this->wordpress->sfwp_transients->flush();
+		$result = (bool) $this->wordpress->sfwp_transients->flush();
 		if ( true === $result ) {
-			$message = 'The plugin cache has been cleared.';
+			$message = __( 'The plugin cache has been cleared.', 'object-sync-for-salesforce' );
 		} else {
-			$message = 'There was an error clearing the plugin cache. Try refreshing this page.';
+			$message = __( 'There was an error clearing the plugin cache. Try refreshing this page.', 'object-sync-for-salesforce' );
 		}
 		if ( false === $ajax ) {
 			// translators: parameter 1 is the result message
@@ -1600,7 +1756,7 @@ class Object_Sync_Sf_Admin {
 	public function show_salesforce_user_fields( $user ) {
 		$get_data = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
 		if ( true === $this->check_wordpress_admin_permissions() ) {
-			$mapping = $this->mappings->load_by_wordpress( 'user', $user->ID );
+			$mapping  = $this->mappings->load_by_wordpress( 'user', $user->ID );
 			$fieldmap = $this->mappings->get_fieldmaps(
 				null, // id field must be null for multiples
 				array(
@@ -1627,13 +1783,14 @@ class Object_Sync_Sf_Admin {
 	public function save_salesforce_user_fields( $user_id ) {
 		$post_data = filter_input_array( INPUT_POST, FILTER_SANITIZE_STRING );
 		if ( isset( $post_data['salesforce_update_mapped_user'] ) && '1' === rawurlencode( $post_data['salesforce_update_mapped_user'] ) ) {
-			$mapping_object = $this->mappings->get_object_maps(
+			$mapping_object                  = $this->mappings->get_object_maps(
 				array(
-					'wordpress_id' => $user_id,
+					'wordpress_id'     => $user_id,
 					'wordpress_object' => 'user',
 				)
 			);
 			$mapping_object['salesforce_id'] = $post_data['salesforce_id'];
+
 			$result = $this->mappings->update_object_map( $mapping_object, $mapping_object['id'] );
 		} elseif ( isset( $post_data['salesforce_create_mapped_user'] ) && '1' === rawurlencode( $post_data['salesforce_create_mapped_user'] ) ) {
 			// if a Salesforce ID was entered
@@ -1653,10 +1810,10 @@ class Object_Sync_Sf_Admin {
 	*/
 	private function tabs( $tabs, $tab = '' ) {
 
-		$get_data = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
-		$consumer_key = $this->login_credentials['consumer_key'];
+		$get_data        = filter_input_array( INPUT_GET, FILTER_SANITIZE_STRING );
+		$consumer_key    = $this->login_credentials['consumer_key'];
 		$consumer_secret = $this->login_credentials['consumer_secret'];
-		$callback_url = $this->login_credentials['callback_url'];
+		$callback_url    = $this->login_credentials['callback_url'];
 
 		$current_tab = $tab;
 		echo '<h2 class="nav-tab-wrapper">';
@@ -1711,7 +1868,7 @@ class Object_Sync_Sf_Admin {
 			require_once plugin_dir_path( __FILE__ ) . '../vendor/autoload.php';
 			require_once plugin_dir_path( __FILE__ ) . '../classes/schedule.php';
 		}
-		$schedule = new Object_Sync_Sf_Schedule( $this->wpdb, $this->version, $this->login_credentials, $this->slug, $this->wordpress, $this->salesforce, $this->mappings, $schedule_name, $this->logging, $this->schedulable_classes );
+		$schedule       = new Object_Sync_Sf_Schedule( $this->wpdb, $this->version, $this->login_credentials, $this->slug, $this->wordpress, $this->salesforce, $this->mappings, $schedule_name, $this->logging, $this->schedulable_classes );
 		$this->schedule = $schedule;
 		return $schedule;
 	}
@@ -1736,12 +1893,12 @@ class Object_Sync_Sf_Admin {
 		// Create object map and save it
 		$mapping_object = $this->mappings->create_object_map(
 			array(
-				'wordpress_id' => $wordpress_id, // wordpress unique id
-				'salesforce_id' => $salesforce_id, // salesforce unique id. we don't care what kind of object it is at this point
-				'wordpress_object' => $wordpress_object, // keep track of what kind of wp object this is
-				'last_sync' => current_time( 'mysql' ),
-				'last_sync_action' => $action,
-				'last_sync_status' => $this->mappings->status_success,
+				'wordpress_id'      => $wordpress_id, // wordpress unique id
+				'salesforce_id'     => $salesforce_id, // salesforce unique id. we don't care what kind of object it is at this point
+				'wordpress_object'  => $wordpress_object, // keep track of what kind of wp object this is
+				'last_sync'         => current_time( 'mysql' ),
+				'last_sync_action'  => $action,
+				'last_sync_status'  => $this->mappings->status_success,
 				'last_sync_message' => __( 'Mapping object updated via function: ', 'object-sync-for-salesforce' ) . __FUNCTION__,
 			)
 		);

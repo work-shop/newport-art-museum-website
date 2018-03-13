@@ -7,24 +7,24 @@ This page lists all developer hooks available in this plugin, with links to wher
 - `object_sync_for_salesforce_roles_configure_salesforce`:
     - description: allow other plugins to give the `configure_salesforce` capability to WordPress roles in addition to the `administrator` role.
     - code: [classes/activate.php](../classes/activate.php) and [classes/deactivate.php](../classes/deactivate.php)
-    - documentation: [extending roles](./docs/extending-roles.md)
+    - documentation: [extending roles](extending-roles.md)
 - `object_sync_for_salesforce_logging_post_type_args`:
 	- description: allow other plugins to modify the `post_type` arguments used to create the Log post type.
 	- code: [classes/logging.php](../classes/logging.php)
-	- documentation: [extending roles](./docs/extending-logging.md)
+	- documentation: [extending roles](extending-logging.md)
 - `object_sync_for_salesforce_push_object_allowed`:
     - description: prevent a push per-mapping.
-    - code: (should document with push stuff)
-    - documentation: [classes/salesforce_push.php](../classes/salesforce_push.php)
+    - code: [classes/salesforce_push.php](../classes/salesforce_push.php)
+    - documentation: [extending sync allowed](extending-sync-allowed.md#push)
 - `object_sync_for_salesforce_pull_object_allowed`:
     - description: prevent a pull per-mapping.
     - code: [classes/salesforce_pull.php](../classes/salesforce_pull.php)
-    - documentation: (should document with pull stuff)
+    - documentation: [extending sync allowed](extending-sync-allowed.md#pull)
 - `object_sync_for_salesforce_pull_params_modify`:
     - description: change what parameters are being sent to WordPress before syncing occurs
     - code: [classes/salesforce_pull.php](../classes/salesforce_pull.php)
     - documentation: [extend parameters](extending-parameters.md#salesforce-push)
-- `salesforce_pull_mapping_object`:
+- `object_sync_for_salesforce_pull_mapping_object`:
     - description: define or alter the mapping object connecting a Salesforce and WordPress object
     - code: [classes/salesforce_pull.php](../classes/salesforce_pull.php)
     - documentation: [extend mapping object](./extending-mapping-object.md#salesforce-pull)
@@ -36,7 +36,11 @@ This page lists all developer hooks available in this plugin, with links to wher
     - description: change what parameters are being sent to Salesforce before syncing occurs
     - code: [classes/salesforce_push.php](../classes/salesforce_push.php)
     - documentation: [extend parameters](extending-parameters.md#salesforce-push)
-- `salesforce_push_mapping_object`:
+- `object_sync_for_salesforce_push_update_params_modify`:
+    - description: change what parameters are being sent to Salesforce before syncing occurs, after checking to see if there is already an existing match in Salesforce.
+    - code: [classes/salesforce_push.php](../classes/salesforce_push.php)
+    - documentation: [extend parameters](extending-parameters.md#salesforce-push)
+- `object_sync_for_salesforce_push_mapping_object`:
     - description: define or alter the mapping object connecting a Salesforce and WordPress object
     - code: [classes/salesforce_push.php](../classes/salesforce_push.php)
     - documentation: [extend mapping object](./extending-mapping-object.md#salesforce-push)
