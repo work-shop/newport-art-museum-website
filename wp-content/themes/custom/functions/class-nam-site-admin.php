@@ -1,6 +1,5 @@
 <?php
 
-
 class NAM_Site_Admin {
 
     public function __construct() {
@@ -10,6 +9,8 @@ class NAM_Site_Admin {
 
         add_action('wp_dashboard_setup', array($this, 'remove_dashboard_widgets') );
         add_action('wp_before_admin_bar_render', array($this, 'remove_admin_bar_items'));
+
+        add_filter( 'get_user_metadata', array( $this, 'pages_per_page_wpse_23503'), 10, 4 );
 
     }
 
@@ -61,6 +62,12 @@ class NAM_Site_Admin {
                 "icon_url" => "dashicons-admin-home"
             ));
         }
+    }
+
+    public function pages_per_page_wpse_23503( $check, $object_id, $meta_key, $single ) { 
+        if( 'edit_page_per_page' == $meta_key )
+            return 100;
+        return $check;
     }
 
     /**
