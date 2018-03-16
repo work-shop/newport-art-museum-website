@@ -38,8 +38,8 @@ abstract class NAM_Custom_Post_Type {
                         'attributes'                    => static::$singular_name . ' Attributes',
                         'insert_into_item'              => 'Insert into ' . static::$singular_name,
                         'uploaded_to_this_item'         => 'Uploaded to this ' . static::$singular_name,
-                        'featured_image'                => static::$singular_name . ' Image',
-                        'set_featured_image'            => 'Set ' . static::$singular_name . 'Image',
+                        'featured_image'                => static::$singular_name . ' Featured Image',
+                        'set_featured_image'            => 'Set Featured Image',
                         'remove_featured_image'         => 'Remove ' . static::$singular_name . ' Image',
                         'use_featured_image'            => 'Use as ' . static::$singular_name . ' Image',
                         'menu_name'                     => static::$plural_name // Default

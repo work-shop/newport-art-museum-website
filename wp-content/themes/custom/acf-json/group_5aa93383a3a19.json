@@ -1,0 +1,204 @@
+{
+    "key": "group_5aa93383a3a19",
+    "title": "End of Page Info Section",
+    "fields": [
+        {
+            "key": "field_5aa933906f5ea",
+            "label": "Show End of Page Info Section?",
+            "name": "show_end_of_page_info_section",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_5aa933a56f5eb",
+            "label": "End of Page Info Heading",
+            "name": "end_of_page_info_heading",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_5aa933906f5ea",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        },
+        {
+            "key": "field_5aa9343c2987f",
+            "label": "End of Page Info Image",
+            "name": "end_of_page_info_image",
+            "type": "image",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_5aa933906f5ea",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "50",
+                "class": "",
+                "id": ""
+            },
+            "return_format": "array",
+            "preview_size": "acf_preview",
+            "library": "all",
+            "min_width": "",
+            "min_height": "",
+            "min_size": "",
+            "max_width": "",
+            "max_height": "",
+            "max_size": "",
+            "mime_types": ""
+        },
+        {
+            "key": "field_5aa934ad29880",
+            "label": "End of Page Info Links",
+            "name": "end_of_page_info_links",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_5aa933906f5ea",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_5aaa8256f108d",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Link",
+            "sub_fields": [
+                {
+                    "key": "field_5aaa8256f108d",
+                    "label": "",
+                    "name": "",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array"
+                }
+            ]
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "46"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "42"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "76"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "74"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "40"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "70"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "66"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "23"
+            }
+        ],
+        [
+            {
+                "param": "page",
+                "operator": "==",
+                "value": "95"
+            }
+        ]
+    ],
+    "menu_order": 4,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "left",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": 1,
+    "description": "",
+    "modified": 1521210854
+}

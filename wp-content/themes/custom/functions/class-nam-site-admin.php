@@ -6,11 +6,13 @@ class NAM_Site_Admin {
 
         add_action('admin_menu', array( $this, 'manage_admin_menu_options' ) );
         add_action('acf/init', array($this, 'add_options_pages'));
+        add_action( 'admin_head', array( $this, 'admin_css'));
 
         add_action('wp_dashboard_setup', array($this, 'remove_dashboard_widgets') );
         add_action('wp_before_admin_bar_render', array($this, 'remove_admin_bar_items'));
 
         add_filter( 'get_user_metadata', array( $this, 'pages_per_page_wpse_23503'), 10, 4 );
+
 
     }
 
@@ -56,7 +58,7 @@ class NAM_Site_Admin {
     public function add_options_pages() {
         if ( function_exists('acf_add_options_page') ) {
             acf_add_options_page(array(
-                "page_title" => "Site",
+                "page_title" => "Site Options & Menus",
                 "capability" => "edit_posts",
                 "position" => 10,
                 "icon_url" => "dashicons-admin-home"
@@ -69,6 +71,11 @@ class NAM_Site_Admin {
             return 100;
         return $check;
     }
+
+    public function admin_css( ) { 
+        wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/compiled/styles/wp-admin/admin.css' );
+    }
+    
 
     /**
      * Removes comments icon from the admin bar.

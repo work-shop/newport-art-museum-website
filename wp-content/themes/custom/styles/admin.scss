@@ -1,0 +1,12 @@
+
+//hide background flexible content option from singles
+.post-type-events, .post-type-news, .post-type-exhibitions, .post-type-classes{
+	.acf-fc-popup a[data-layout="background"] {
+		display: none;
+	}
+}
+
+//darken acf accordian labels to make structure more clear
+.acf-label.acf-accordion-title{
+	background: lighten(#98A2B1, 15%);
+}

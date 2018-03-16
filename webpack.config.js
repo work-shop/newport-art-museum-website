@@ -179,7 +179,7 @@ const image = {
         entry: {
             'scripts/bundle.js': './scripts/main.js',
             'styles/bundle.css': './styles/main.scss',
-            'styles/admin.css': './styles/admin.scss'
+            'styles/wp-admin/admin.css': './styles/admin.scss'
         },
         output: {
             path: path.resolve(__dirname, paths.dest),

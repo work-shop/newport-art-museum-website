@@ -1,0 +1,18 @@
+
+.post-type-events .acf-fc-popup a[data-layout="background"] {
+  display: none;
+}
+.post-type-news .acf-fc-popup a[data-layout="background"] {
+  display: none;
+}
+.post-type-exhibitions .acf-fc-popup a[data-layout="background"] {
+  display: none;
+}
+.post-type-classes .acf-fc-popup a[data-layout="background"] {
+  display: none;
+}
+
+/* lighten this */
+.acf-label.acf-accordion-title{
+	background: #98A2B1;
+}

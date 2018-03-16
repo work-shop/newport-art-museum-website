@@ -1,0 +1,124 @@
+{
+    "key": "group_5aa93b83eebe4",
+    "title": "Page Introduction Section",
+    "fields": [
+        {
+            "key": "field_5aa932bf6a369",
+            "label": "Show Page Introduction Section?",
+            "name": "show_page_introduction_section",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 1,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
+            "key": "field_5aa9324d7cc18",
+            "label": "Page Introduction Section",
+            "name": "page_introduction_section",
+            "type": "text",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "100",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
+        }
+    ],
+    "location": [
+        [
+            {
+                "param": "post_type",
+                "operator": "==",
+                "value": "page"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "5"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "6"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "78"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "74"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "40"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "90"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "7"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "64"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "4"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "4"
+            },
+            {
+                "param": "page",
+                "operator": "!=",
+                "value": "42"
+            },
+            {
+                "param": "page_parent",
+                "operator": "!=",
+                "value": "42"
+            }
+        ]
+    ],
+    "menu_order": 1,
+    "position": "acf_after_title",
+    "style": "default",
+    "label_placement": "left",
+    "instruction_placement": "label",
+    "hide_on_screen": [
+        "the_content"
+    ],
+    "active": 1,
+    "description": "",
+    "modified": 1521211265
+}
