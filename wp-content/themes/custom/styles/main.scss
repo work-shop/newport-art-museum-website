@@ -22,13 +22,22 @@
 //site components
 @import "site/typography";
 @import "site/general";
-@import "utilities/forms";
+//@import "utilities/forms";
 @import "site/nav";
 @import "site/footer";
 @import "site/wysiwyg";
 
 //site pages
-@import "site/home";
 @import "site/page";
+@import "site/home";
+@import "site/visit";
 @import "site/about";
-@import "site/contact";
+@import "site/exhibitions";
+@import "site/collection";
+@import "site/events";
+@import "site/education";
+@import "site/classes";
+@import "site/join";
+@import "site/support";
+@import "site/shop";
+

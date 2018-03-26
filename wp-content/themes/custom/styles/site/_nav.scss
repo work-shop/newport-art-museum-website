@@ -1,69 +1,157 @@
 
 $text-nav: (
-	xs: (16px, 53px),
-	sm: (14px, 53px),
-	md: (16px, 53px),
-	lg: (18px, 53px),
-	xl: (19px, 53px)
+	xs: (13px, 53px),
+	sm: (12px, 60px),
+	md: (14px, 53px),
+	lg: (16px, 53px),
+	xl: (17px, 53px)
 	);
+
 
 #nav{
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: $nav-height;
-	background: $ultra-light;
+	overflow: hidden;
+	background: lighten($brand,5%);
 	z-index: 7;
-	padding-top: 15px;
 
 	&.fixed{
 		position: fixed;
+	}
+
+	@media screen and (max-width: $md) {
+		height: $nav-height-md;
 	}
 
 	@media screen and (max-width: $sm) {
 		height: $nav-height-mobile;
 	}
 
-	.menu ul{
+}
+
+#nav-menus{
+	float: right;
+	padding-right: 10px;
+	height: $nav-height;
+}
+
+
+
+//UPPER
+#nav-menu-upper{
+
+	@extend .clearfix;
+	margin-top: 15px;
+	margin-bottom: 10px;
+
+	@media screen and (max-width: $md) {
+		margin-bottom: 2px;
+	}
+	
+	ul{
 		float: right;
 		position: relative;
-		right: -9px;
+		left: 5px;
 	}
 
 	li{
 		display: inline-block;
-		margin-left: 10px;	
+		margin-left: 7px;
+
+		@media screen and (max-width: $md) {
+			margin-left: 3px;
+		}	
+
+		a{
+			font-size: 14px;
+			@extend .bold;
+			color: white;
+			display: block;
+			padding: 0 15px;
+			@include transition(all .125s);
+
+			&:hover{
+			}
+
+			@media screen and (max-width: $md) {
+				paddin: 5px;
+			}
+
+			@media screen and (max-width: $xs) {
+				display: none;
+			}		
+		}
+
 	}
+}
+
+
+
+//PRIMARY
+#nav-menu-primary{
+
+	@extend .clearfix;
+
+	li{
+		display: inline-block;
+		margin-left: 10px;	
+
+		@media screen and (max-width: $md) {
+			margin-left: 5px;
+		}
+
+		a{
+			@include text-size($text-nav);
+			font-size: 17px;
+			@extend .bold;
+			@extend .tracked-less;
+			color: white;
+			display: block;
+			padding: 0 15px;
+			@include transition(all .125s);
+			height: 50px;
+			vertical-align: middle;
+			text-transform: uppercase;
+
+			&:hover, &.on{
+				border-bottom: 4px solid white;
+			}
+
+			@media screen and (max-width: $lg) {
+				padding: 0 8px;
+			}			
+
+			@media screen and (max-width: $md) {
+				padding: 0 6px;
+				letter-spacing: .02em;
+			}
+
+		}
+
+	}
+}
+
+
+
+//LOGOS
+#logo{
+	height: inherit;
+	width: $nav-height;
+	float: left;
 
 	a{
-		@include text-size($text-nav);
-		display: block;
-		padding: 0 15px;
-		@include transition(all .125s);
-		height: 50px;
-		line-height: 50px;
-		vertical-align: middle;
-
-		&:hover{
-			color: $brand;
-		}
-
-		@media screen and (max-width: $lg) {
-			padding: 0 10px;
-		}			
-
-		@media screen and (max-width: $sm) {
-			padding: 0 9px;
-			height: 34px;
-			line-height: 34px;
-		}
-
-		@media screen and (max-width: $xs) {
-			display: none;
-		}		
+		padding: 0;
+		height: inherit;
 	}
 
+	svg{
+		height: 100%;
+		width: auto;
+	}
 }
+
 
 .logo{
 
@@ -72,6 +160,88 @@ $text-nav: (
 	}
 }
 
+
+
+//MENUS
+.menu-dropdown{
+	margin: 0;
+	padding: 0;
+	height: $dropdown-height;
+	width: 100%;
+	top: $nav-height;
+	background: $khaki;
+	box-shadow: 0px 3px 12px $slate;
+	position: fixed;
+	transform: translate(0,-800px) rotateX(0deg);
+	transform-origin: 0 0;
+	transition: transform 1s;
+	z-index: 6;
+	opacity: 0;
+
+	@media screen and (max-width: $md) {
+		top: $nav-height-md;
+	}
+
+	&.on{
+		transform: translate(0,0) rotateX(0);
+		opacity: 1;
+	}
+
+	.menu-dropdown-links{
+		background: white;
+		padding: 45px 15px 29px 15px;
+
+		li{
+			display: inline-block;
+			height: 35px;
+			margin-right: 35px;
+
+			a{
+				display: block;
+				@extend .bold;
+				color: $brand;
+				transition: all .1s;
+				&:hover{
+					border-bottom: 2px solid $brand;
+				}
+
+				@media screen and (max-width: $lg) {
+					font-size: 16px;	
+				}
+
+				@media screen and (max-width: $md) {
+					font-size: 15px;	
+				}
+			}
+		}
+	}
+
+	.menu-dropdown-graphics{
+		
+	}
+}
+
+
+#blanket-dropdown{
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: calc(100% - #{$nav-plus-dropdown-height});
+	background: rgba(255,255,255,.25);
+	z-index: 5;
+	transform: translate(0,100vh);
+}
+
+body.dropdown-on{
+	#blanket-dropdown{
+		transform: translate(0,0);
+	}
+}
+
+
+
+//mobile nav
 
 
 #mobile-nav{

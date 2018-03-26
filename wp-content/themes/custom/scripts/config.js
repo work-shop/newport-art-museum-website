@@ -9,6 +9,13 @@ var global_config = {
 };
 
 var config = {
+    dropdowns: {
+        linkSelector: '.dropdown-link',
+        bodyOffClass: 'dropdown-off',
+        bodyOnClass: 'dropdown-on',
+        dropdownSelector: '.menu-dropdown',     
+        blanketSelector: '#blanket-dropdown'     
+    },
     stickyNav: {
         selector: '#nav',
         navHeight: global_config.headerHeight,

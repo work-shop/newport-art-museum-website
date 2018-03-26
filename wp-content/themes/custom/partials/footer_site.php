@@ -13,7 +13,7 @@
 		</div>
 		<div class="site-credit">
 			<a href="http://workshop.co" target="_blank">
-				<h4>Site by Work-Shop Design Studio</h4>
+				<h4 class="white">Site by Work-Shop Design Studio</h4>
 			</a>
 		</div>
 	</div>

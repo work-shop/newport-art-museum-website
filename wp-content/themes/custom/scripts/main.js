@@ -3,7 +3,8 @@
 import { config } from './config.js';
 import { loading } from './loading.js';
 import { linksNewtab } from './links-newtab.js';
-import { stickyNav } from './sticky-nav.js';
+import { dropdowns } from './dropdowns.js';
+//import { stickyNav } from './sticky-nav.js';
 import { jumpLinks } from './jump-links.js';
 import { modals } from './modals.js';
 import { scrollSpy } from './scroll-spy.js';
@@ -12,7 +13,8 @@ import { slickSlideshows } from './slick-slideshows.js';
 
 loading(config.loading);
 linksNewtab(config.linksNewtab);
-stickyNav(config.stickyNav);
+dropdowns(config.dropdowns);
+//stickyNav(config.stickyNav);
 jumpLinks(config.jumpLinks);
 modals(config.modals);
 scrollSpy(config.scrollSpy);

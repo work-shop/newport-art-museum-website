@@ -64,7 +64,7 @@
 	color: $dark;
 	padding: 25px;
 	background: $ultra-light;
-	border-bottom: 3px solid $yellow-darker;
+	//border-bottom: 3px solid $yellow;
 }
 
 img.gform_ajax_spinner {
@@ -91,7 +91,7 @@ input,textarea{
 
 	&[type="submit"]{
 		@include text-size($text-button);
-		background: $yellow;
+		//background: $yellow;
 		padding: 10px 10px;
 		font-family: $font-medium;
 		color: $dark;

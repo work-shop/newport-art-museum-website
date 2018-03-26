@@ -60,7 +60,7 @@ h4,.h4{
 }
 
 h5,.h5{
-	@include text-size($text-small);
+	@include text-size($text-medium-small);
 }
 
 h6,.h6{
@@ -117,6 +117,18 @@ p{
 
 .brand{
 	color: $brand;
+}
+
+.brand-yellow{
+	color: $brand-yellow;
+}
+
+.khaki{
+	color: $khaki;
+}
+
+.slate{
+	color: $slate;
 }
 
 .white{

@@ -1,24 +1,37 @@
 
 <nav id="nav" class="fixed">
-	<div class="container-fluid">
-		<div class="row">
-			<div class="logo col-sm-3 col-xs-6">
-				<a href="/">
-					<?php get_template_part('partials/logo'); ?>
-				</a>
-			</div>
-			<div class="col-sm-9 col-xs-6" id="nav-menu">
-				<?php wp_nav_menu(); ?>
-			</div>
-
+	<div id="logo" class="logo">
+		<a href="/" title="Home">
+			<?php get_template_part('partials/logo'); ?>
+		</a>
+	</div>
+	<div id="nav-menus">
+		<div id="nav-menu-upper">
+			<ul>
+				<li id="nav-link-shop"><a href="/shop">Shop</a></li>
+				<li id="nav-link-login"><a href="/login">Login</a></li>
+				<li id="nav-link-cart"><a href="/cart"><span class="icon" data-icon="i"></span></a></li>
+			</ul>
+		</div>
+		<div id="nav-menu-primary">
+			<ul>
+				<li><a href="/visit" class="dropdown-link" id="nav-link-visit" data-dropdown-target="visit">Visit</a></li>
+				<li><a href="/about" class="dropdown-link" id="nav-link-about" data-dropdown-target="about">About</a></li>
+				<li><a href="/exhibitions" class="dropdown-link" id="nav-link-exhibitions" data-dropdown-target="exhibitions">Exhibitions</a></li>
+				<li><a href="/collection" class="dropdown-link" id="nav-link-collection" data-dropdown-target="collection">Collection</a></li>
+				<li><a href="/events" class="dropdown-link" id="nav-link-events" data-dropdown-target="events">Events</a></li>
+				<li><a href="/education" class="dropdown-link" id="nav-link-education" data-dropdown-target="education">Education</a></li>
+				<li><a href="/join" class="dropdown-link" id="nav-link-join" data-dropdown-target="join">Join</a></li>
+				<li><a href="/support" class="dropdown-link" id="nav-link-support" data-dropdown-target="support">Support</a></li>
+			</ul>
 		</div>
 	</div>
 </nav>
-<div id="mobile-nav">
+<nav id="mobile-nav">
 	<ul class="mobile-nav-items">
 		<?php wp_nav_menu(); ?>
 	</ul>
-</div>
+</nav>
 <div class="hamburger menu-toggle">
 	<span class="hamburger-line hl-1"></span>
 	<span class="hamburger-line hl-2"></span>

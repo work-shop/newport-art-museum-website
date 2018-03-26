@@ -35,8 +35,8 @@ body{
 	padding-right: $container-fluid-padding;
 
 	@media screen and (max-width: $md) {
-		//padding-left: $container-fluid-padding / 3;
-		//padding-right: $container-fluid-padding / 3;
+		padding-left: $container-fluid-padding-md;
+		padding-right: $container-fluid-padding-md;
 	}
 
 	@media screen and (max-width: $sm) {

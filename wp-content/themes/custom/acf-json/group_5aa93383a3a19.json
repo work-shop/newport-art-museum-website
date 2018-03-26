@@ -5,7 +5,7 @@
         {
             "key": "field_5aa933906f5ea",
             "label": "Show End of Page Info Section?",
-            "name": "show_end_of_page_info_section",
+            "name": "show_page_end_info",
             "type": "true_false",
             "instructions": "",
             "required": 0,
@@ -24,7 +24,7 @@
         {
             "key": "field_5aa933a56f5eb",
             "label": "End of Page Info Heading",
-            "name": "end_of_page_info_heading",
+            "name": "page_end_info_heading",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -51,7 +51,7 @@
         {
             "key": "field_5aa9343c2987f",
             "label": "End of Page Info Image",
-            "name": "end_of_page_info_image",
+            "name": "page_end_info_image",
             "type": "image",
             "instructions": "",
             "required": 0,
@@ -83,7 +83,7 @@
         {
             "key": "field_5aa934ad29880",
             "label": "End of Page Info Links",
-            "name": "end_of_page_info_links",
+            "name": "page_end_info_links",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -109,8 +109,8 @@
             "sub_fields": [
                 {
                     "key": "field_5aaa8256f108d",
-                    "label": "",
-                    "name": "",
+                    "label": "Link",
+                    "name": "link",
                     "type": "link",
                     "instructions": "",
                     "required": 0,
@@ -200,5 +200,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1521210854
+    "modified": 1521475288
 }

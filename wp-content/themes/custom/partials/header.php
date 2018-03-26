@@ -5,14 +5,17 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 	<title>
-		<?php
-			if( wp_title() ){
-				wp_title();
-			} else{
-				bloginfo( 'name' ); echo '-';  bloginfo( 'description' );
-			}
+		<?php 
+		if( is_front_page() ){
+			bloginfo( 'name' ); echo ' | ';  bloginfo( 'description' );
+		} else{
+			wp_title( false ); echo ' | '; bloginfo( 'name' );
+		}
 		?>
 	</title>
+
+	<!-- typekit for freightdisp pro -->
+	<link rel="stylesheet" href="https://use.typekit.net/reg3qbo.css">
 
 	<link rel="icon" type="image/png" sizes="16x16" href="<?php bloginfo('template_directory'); ?>/compiled/images/favicon-16x16.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="<?php bloginfo('template_directory'); ?>/compiled/images/favicon-32x32.png">
@@ -26,8 +29,9 @@
 	<?php wp_head(); ?>
 
 </head>
-<body <?php body_class('loading before-scroll modal-off menu-closed'); ?>>
+<body <?php body_class('loading before-scroll modal-off menu-closed dropdown-off'); ?>>
 
 	<?php get_template_part('partials/nav'); ?>
+	<?php get_template_part('partials/menus'); ?>
 
 	<main id="content">
