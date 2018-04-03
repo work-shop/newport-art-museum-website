@@ -34,6 +34,14 @@
 
 ## DevOps Assumptions
 
+We're replacing our previous Webpack + BrowserSync development setup with a Gulp development setup for this project. Our concensus is that Webpack bundling is simply too slow, and that Webpack HMR is too convoluted to properly implement in a non-react setup, where styles and markup are not bundled as javascript modules.
+
+Gulp has us returning to a (somewhat) simpler and (hopefully much) quicker environment based on browserify and livereload. The benefits are a simpler toolchain, a much quicker `develop, save, check` loop, and hot-reloading CSS into the page.
+
+The `webpack.config.js` file has been replaced with a Gulp configuration file: `gulpfile.js` in the project root. This file defines four rules, described below:
+
+- `gulp scss`.  
+
 ## Plugin Dependencies: Wordpress
 
 - [Object Sync for Salesforce](https://wordpress.org/plugins/object-sync-for-salesforce/). This plugin provides a low-level abstraction for connecting an arbitrary salesforce instance with an arbitrary wordpress installation. I intend to use it as a base for keeping User data in sync between salesforce and Wordpress.

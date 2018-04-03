@@ -141,4 +141,4 @@ typings/
 migrations
 
 # compiled scripts and styles
-wp-content/themes/custom/compiled
+wp-content/themes/custom/bundles

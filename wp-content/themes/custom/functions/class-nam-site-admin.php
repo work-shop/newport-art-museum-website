@@ -66,16 +66,16 @@ class NAM_Site_Admin {
         }
     }
 
-    public function pages_per_page_wpse_23503( $check, $object_id, $meta_key, $single ) { 
+    public function pages_per_page_wpse_23503( $check, $object_id, $meta_key, $single ) {
         if( 'edit_page_per_page' == $meta_key )
             return 100;
         return $check;
     }
 
-    public function admin_css( ) { 
-        wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/compiled/styles/wp-admin/admin.css' );
+    public function admin_css( ) {
+        wp_enqueue_style( 'admin_css', get_template_directory_uri() . '/bundles/admin-bundle.css' );
     }
-    
+
 
     /**
      * Removes comments icon from the admin bar.

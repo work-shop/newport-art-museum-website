@@ -1,5 +1,9 @@
 'use strict';
 
+global.$ = require('jquery');
+global.jQuery = global.$;
+window.$ = global.$;
+
 import { config } from './config.js';
 import { loading } from './loading.js';
 import { linksNewtab } from './links-newtab.js';
@@ -10,6 +14,9 @@ import { modals } from './modals.js';
 import { scrollSpy } from './scroll-spy.js';
 import { menuToggle } from './menu-toggle.js';
 import { slickSlideshows } from './slick-slideshows.js';
+import { livereload } from './livereload-client.js';
+
+livereload();
 
 loading(config.loading);
 linksNewtab(config.linksNewtab);
@@ -21,4 +28,4 @@ scrollSpy(config.scrollSpy);
 menuToggle(config.menuToggle);
 slickSlideshows(config.slickSlideshows);
 
-console.log('main.js loaded');
+console.log('main.js loaded, with gulp!');

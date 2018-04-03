@@ -59,11 +59,11 @@ class NAM_Site {
     public function enqueue_scripts_and_styles() {
         if ( function_exists( 'get_template_directory_uri' ) && function_exists( 'wp_enqueue_style' ) && function_exists( 'wp_enqueue_script' ) ) {
 
-            $main_css = '/styles/bundle.css';
-            $main_js = '/scripts/bundle.js';
+            $main_css = '/bundles/bundle.css';
+            $main_js = '/bundles/bundle.js';
 
-            $compiled_resources_dir = get_template_directory() . '/compiled';
-            $compiled_resources_uri = get_template_directory_uri() . '/compiled';
+            $compiled_resources_dir = get_template_directory();
+            $compiled_resources_uri = get_template_directory_uri();
 
             $main_css_ver = filemtime( $compiled_resources_dir . $main_css ); // version suffixes for cache-busting.
             $main_js_ver = filemtime( $compiled_resources_dir . $main_css ); // version suffixes for cache-busting.
@@ -74,7 +74,7 @@ class NAM_Site {
 
             // if (!file_exists( dirname( __FILE__ ) . '/env_prod' )){
             //     wp_register_script( 'cssrefresh', get_template_directory_uri() . '/scripts/cssrefresh.js');
-            //     wp_enqueue_script( 'cssrefresh' );      
+            //     wp_enqueue_script( 'cssrefresh' );
             // }
 
         }
