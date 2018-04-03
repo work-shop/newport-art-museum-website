@@ -4,7 +4,7 @@ $text-nav: (
 	sm: (12px, 60px),
 	md: (14px, 53px),
 	lg: (16px, 53px),
-	xl: (17px, 53px)
+	xl: (19px, 53px)
 	);
 
 
@@ -44,7 +44,7 @@ $text-nav: (
 
 	@extend .clearfix;
 	margin-top: 15px;
-	margin-bottom: 10px;
+	margin-bottom: 7px;
 
 	@media screen and (max-width: $md) {
 		margin-bottom: 2px;
@@ -53,7 +53,7 @@ $text-nav: (
 	ul{
 		float: right;
 		position: relative;
-		left: 5px;
+		left: 3px;
 	}
 
 	li{
@@ -109,9 +109,9 @@ $text-nav: (
 			@extend .tracked-less;
 			color: white;
 			display: block;
-			padding: 0 15px;
+			padding: 0 20px;
 			@include transition(all .125s);
-			height: 50px;
+			height: 55px;
 			vertical-align: middle;
 			text-transform: uppercase;
 
@@ -159,86 +159,6 @@ $text-nav: (
 		display: block;
 	}
 }
-
-
-
-//MENUS
-.menu-dropdown{
-	margin: 0;
-	padding: 0;
-	height: $dropdown-height;
-	width: 100%;
-	top: $nav-height;
-	background: $khaki;
-	box-shadow: 0px 3px 12px $slate;
-	position: fixed;
-	transform: translate(0,-800px) rotateX(0deg);
-	transform-origin: 0 0;
-	transition: transform 1s;
-	z-index: 6;
-	opacity: 0;
-
-	@media screen and (max-width: $md) {
-		top: $nav-height-md;
-	}
-
-	&.on{
-		transform: translate(0,0) rotateX(0);
-		opacity: 1;
-	}
-
-	.menu-dropdown-links{
-		background: white;
-		padding: 45px 15px 29px 15px;
-
-		li{
-			display: inline-block;
-			height: 35px;
-			margin-right: 35px;
-
-			a{
-				display: block;
-				@extend .bold;
-				color: $brand;
-				transition: all .1s;
-				&:hover{
-					border-bottom: 2px solid $brand;
-				}
-
-				@media screen and (max-width: $lg) {
-					font-size: 16px;	
-				}
-
-				@media screen and (max-width: $md) {
-					font-size: 15px;	
-				}
-			}
-		}
-	}
-
-	.menu-dropdown-graphics{
-		
-	}
-}
-
-
-#blanket-dropdown{
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	height: calc(100% - #{$nav-plus-dropdown-height});
-	background: rgba(255,255,255,.25);
-	z-index: 5;
-	transform: translate(0,100vh);
-}
-
-body.dropdown-on{
-	#blanket-dropdown{
-		transform: translate(0,0);
-	}
-}
-
 
 
 //mobile nav

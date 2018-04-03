@@ -1,17 +1,20 @@
-"use strict";
+'use strict';
 
 function dropdowns( config ) {
 	console.log('dropdowns.js loaded');
 
 	$(document).ready( function() {
 
+		var dropdownDelay = 180, timer;
+
 		$( config.linkSelector ).hover(
 			function() {
-				//setTimeout(function() {
-					openDropdown( $(this) );
-				//}, 100);
+				var currentLink = $(this);
+				timer = setTimeout(function() {
+					openDropdown( currentLink );
+				}, dropdownDelay);
 			}, function() {
-				//closeDropdown( $(this) );
+				clearTimeout(timer);
 			}
 			);
 
@@ -23,7 +26,7 @@ function dropdowns( config ) {
 
 	//open the dropdown
 	function openDropdown( link ){
-		//console.log(link);
+		console.log(link);
 		var linkTarget = link.data('dropdown-target');
 		//console.log(linkTarget);
 		var dropdownTarget = 'menu[data-dropdown="' + linkTarget + '"]';

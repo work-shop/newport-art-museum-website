@@ -68,9 +68,14 @@ class NAM_Site {
             $main_css_ver = filemtime( $compiled_resources_dir . $main_css ); // version suffixes for cache-busting.
             $main_js_ver = filemtime( $compiled_resources_dir . $main_css ); // version suffixes for cache-busting.
 
-            wp_enqueue_style('main-css', $compiled_resources_uri . $main_css, array(), $main_css_ver);
+            wp_enqueue_style('main-css', $compiled_resources_uri . $main_css, array(), null);
             wp_enqueue_script('jquery');
             wp_enqueue_script('main-js', $compiled_resources_uri . $main_js, array('jquery'), $main_js_ver, true);
+
+            // if (!file_exists( dirname( __FILE__ ) . '/env_prod' )){
+            //     wp_register_script( 'cssrefresh', get_template_directory_uri() . '/scripts/cssrefresh.js');
+            //     wp_enqueue_script( 'cssrefresh' );      
+            // }
 
         }
     }

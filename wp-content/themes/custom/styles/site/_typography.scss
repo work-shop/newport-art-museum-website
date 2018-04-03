@@ -13,7 +13,7 @@
 body{
 	font-family: $font-main;
 	font-weight: normal;
-	@include text-size($text-regular);
+	@include text-size($text-h4);
 	color: $dark;
 }
 
@@ -44,31 +44,31 @@ body{
 //massive, huge, large, medium, regular, small
 
 h1,.h1{
-	@include text-size($text-massive);
+	@include text-size($text-h1);
 }
 
 h2,.h2{
-	@include text-size($text-huge);
+	@include text-size($text-h2);
 }
 
 h3,.h3{
-	@include text-size($text-large);
+	@include text-size($text-h3);
 }
 
 h4,.h4{
-	@include text-size($text-regular);
+	@include text-size($text-h4);
 }
 
 h5,.h5{
-	@include text-size($text-medium-small);
+	@include text-size($text-h5);
 }
 
 h6,.h6{
-	@include text-size($text-small);
+	@include text-size($text-h5);
 }
 
 p{
-	@include text-size($text-regular);
+	@include text-size($text-h4);
 	margin-top: 0;
 }
 

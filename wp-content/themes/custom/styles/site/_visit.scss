@@ -1,0 +1,82 @@
+
+
+//PLAN YOUR VISIT
+
+
+.plan-your-visit{
+	border-bottom: 1px solid $light;
+}
+
+
+.plan-your-visit-container{
+	height: inherit;
+}
+
+.plan-your-visit-column{
+	float: left;
+	width: 50%;
+	@extend .clearfix;
+}
+
+.plan-your-visit-left{
+	width: 61%;
+	height: inherit;
+	float: left;
+	@extend .clearfix;
+	padding-left: $container-fluid-padding;
+	padding-right: $container-fluid-padding;
+	padding-top: 80px;
+}
+
+.plan-your-visit-right{
+	width: 39%;
+	height: 100%;
+	float: left;
+	@extend .clearfix;
+}
+
+.plan-your-visit-3{
+	height: 100%;
+}
+
+.plan-your-visit-map{
+	height: calc(100% - 1px);
+}
+
+.plan-your-visit-title{
+	margin-bottom: 3em;
+}
+
+
+
+
+
+//PLAN YOUR VISIT CONTEXTS
+
+
+.home main, .page-id-23{
+	.plan-your-visit{
+		height: 69vh;
+	}
+
+	.plan-your-visit-heading{
+		@extend .bold;
+	}
+}
+
+#menu-visit{
+	.plan-your-visit{
+		height: 100%;
+		padding-top: 15px;
+		padding-bottom: 15px;
+	}
+
+	.plan-your-visit-map{
+		padding-right: 15px;
+		border: 1px solid $slate;
+	}
+
+	.plan-your-visit-heading{
+		@extend .serif;
+	}
+}
