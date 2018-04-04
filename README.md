@@ -40,7 +40,21 @@ Gulp has us returning to a (somewhat) simpler and (hopefully much) quicker envir
 
 The `webpack.config.js` file has been replaced with a Gulp configuration file: `gulpfile.js` in the project root. This file defines four rules, described below:
 
-- `gulp scss`.  
+- `gulp scss`. Builds the front-end sass, compiling it down to CSS. from the `scss/main.scss` file, it builds a bundle, which is written to `bundles/bundle.css`. Does autoprefixing for a range of browsers automatically, so don't bother.
+
+- `gulp admin-scss`. Builds the admin sass, compiling it down to CSS. from the `scss/admin.scss` file, it builds a bundle, which is written to `bundles/admin-bundle.css`. Does autoprefixing for a range of browsers automatically, so don't bother.
+
+- `gulp js`. Builds the all javascript, compiling it from ES6, node-style javascript to a standard browser-compliant bundle.. from the `scss/admin.scss` file, it builds a bundle, which is written to `bundles/admin-bundle.css`.
+
+- `gulp files`. For environments that have a source directory different from the served directory, this rule copies files (optionally modifying or compressing them) to the served directory. In this project, the served directory is the source directory; this rule does nothing, and is not called.
+
+- `gulp build`. The default rule. Runs `admin-scss`, `scss`, and `js` in that order.
+
+- `gulp watch`. Starts a livereload server that watches for changes to php files or javascript, and runs the corresponding build rules, then reloads the page. For scss files, it builds the files, then injects the resulting bundle into the page without a reload.
+
+- `gulp`. The default rule. Runs `admin-scss`, `scss`, `js`, and `watch`, in that order.
+
+The npm scripts have also been updated. You can run `npm run build` to invoke `gulp build`, if you like. Similarly `npm run watch` will invoke `gulp watch`. If you're switching to this build process from Webpack, delete your `node_modules` directory to get rid of any unneeded modules, and then run `npm install`. Thats it.
 
 ## Plugin Dependencies: Wordpress
 

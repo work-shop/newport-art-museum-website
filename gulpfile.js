@@ -196,4 +196,6 @@ gulp.task('js', js_bundle( process.env.NODE_ENV === 'development' ) );
 
 gulp.task('watch', watch );
 
-gulp.task('default', ['files', 'admin-scss', 'scss', 'js', 'watch']);
+gulp.task('build', ['admin-scss', 'scss', 'js']);
+
+gulp.task('default', ['admin-scss', 'scss', 'js', 'watch']);
