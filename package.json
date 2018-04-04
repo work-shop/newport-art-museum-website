@@ -18,8 +18,8 @@
   "homepage": "https://github.com/work-shop/newport-art-museum-site#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "watch": "webpack --watch",
-    "build": "webpack -p",
+    "watch": "gulp",
+    "build": "gulp build",
     "deploy": "./.deploy.sh",
     "pull-database": "./.pull-database.sh"
   },
