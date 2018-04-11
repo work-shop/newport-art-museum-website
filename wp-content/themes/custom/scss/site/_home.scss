@@ -1,2 +1,57 @@
 
 /* home page */
+
+.home {
+
+	padding-top: 0;
+
+	.container-fluid{
+		max-width: 1380px;
+	}
+
+	#nav{
+		background: none;
+
+		.logo{
+			position: fixed;
+			top: 25px;
+			left: 25px;
+		}
+	}
+
+}
+
+#home-hero{
+
+	h1{
+		//font-size: 4vw;
+	}
+
+
+
+	.home-hero-separator{
+		margin-top: 1.8em;
+		margin-bottom: 1.6em;
+	}
+
+	.home-hero-link-button{
+		padding: 15px 25px 13px 25px;
+		//background: transparentize($slate, .1);
+		border-radius: 3px;
+		transition: all .1s;
+
+		&:hover{
+			background: transparentize($slate, .1);
+			color: white !important;
+		}
+
+		@media screen and (max-width: $md) {
+			padding: 10px 20px 9px 20px;
+		}
+
+		.icon:before{
+			margin-left: 15px;
+			font-size: 33px;
+		}
+	}
+}

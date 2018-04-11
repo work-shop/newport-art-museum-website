@@ -4,6 +4,10 @@ body{
 	background-color: $body-background-color;
 	padding-top: $nav-height;	
 
+	@media screen and (max-width: $md) {
+		padding-top: $nav-height-md;
+	}
+
 	@media screen and (max-width: $sm) {
 		padding-top: $nav-height-mobile;
 	}
@@ -56,30 +60,36 @@ $text-button: (
 	xl: (12px, 12px)
 	);
 
-.button{
-	display: block;
+// .button{
+// 	display: block;
 
-	a{
-		@include text-size($text-button);	
-		background: $brand;
-		padding: 10px 10px;
-		font-family: $font-main;
-		color: $dark;
-		@extend .uppercase;	
-		border-radius: 2px;
-		display: inline-block;
-		text-align: center;
-		border: 2px solid $brand;
-		@include transition(background .125s);
+// 	a{
+// 		@include text-size($text-button);	
+// 		background: $brand;
+// 		padding: 10px 10px;
+// 		font-family: $font-main;
+// 		color: $dark;
+// 		@extend .uppercase;	
+// 		border-radius: 2px;
+// 		display: inline-block;
+// 		text-align: center;
+// 		border: 2px solid $brand;
+// 		@include transition(background .125s);
 
-		&:hover{
-			background: white;
-		}
+// 		&:hover{
+// 			background: white;
+// 		}
 
-		@media screen and (max-width: $sm) {
-			padding: 3px 8px;
-		}
-	}
+// 		@media screen and (max-width: $sm) {
+// 			padding: 3px 8px;
+// 		}
+// 	}
+// }
+
+.nam-dash{
+	width: 36px;
+	height: 3px;
+	background: transparentize($brand-yellow, .1);
 }
 
 

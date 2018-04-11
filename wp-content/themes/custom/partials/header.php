@@ -17,9 +17,9 @@
 	<!-- typekit for freightdisp pro -->
 	<link rel="stylesheet" href="https://use.typekit.net/reg3qbo.css">
 
-	<link rel="icon" type="image/png" sizes="16x16" href="<?php bloginfo('template_directory'); ?>/compiled/images/favicon-16x16.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="<?php bloginfo('template_directory'); ?>/compiled/images/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="96x96" href="<?php bloginfo('template_directory'); ?>/compiled/images/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="<?php bloginfo('template_directory'); ?>/images/favicon-16x16.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="<?php bloginfo('template_directory'); ?>/images/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="<?php bloginfo('template_directory'); ?>//images/favicon-96x96.png">
 	<link rel="apple-touch-icon" href="<?php bloginfo('template_directory'); ?>/images/apple-icon.png">
 
 	<meta name="description" content="<?php bloginfo('description'); ?>">

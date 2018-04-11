@@ -1,3 +1,6 @@
+
+<?php //THE HOME PAGE IS MANAGED in PAGE-HOME.PHP ?>
+
 <?php get_template_part('partials/header'); ?>
 
 <?php get_template_part('partials/home/home_hero' ); ?>

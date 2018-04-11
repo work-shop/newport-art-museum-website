@@ -1,9 +1,9 @@
 
 $text-nav: (
-	xs: (13px, 53px),
-	sm: (12px, 60px),
-	md: (14px, 53px),
-	lg: (16px, 53px),
+	xs: (12px, 12px),
+	sm: (12px, 12px),
+	md: (14px, 55px),
+	lg: (16px, 55px),
 	xl: (19px, 53px)
 	);
 
@@ -31,10 +31,25 @@ $text-nav: (
 
 }
 
+body.dropdown-on{
+	#nav{
+		background: lighten($brand,5%);
+
+		.logo{
+			top: 0;
+			left: 0;
+		}
+	}
+}
+
 #nav-menus{
 	float: right;
 	padding-right: 10px;
 	height: $nav-height;
+
+	@media screen and (max-width: $md) {
+		height: $nav-height-md;
+	}
 }
 
 
@@ -47,7 +62,8 @@ $text-nav: (
 	margin-bottom: 7px;
 
 	@media screen and (max-width: $md) {
-		margin-bottom: 2px;
+		margin-top: 11px;
+		margin-bottom: 0px;
 	}
 	
 	ul{
@@ -76,7 +92,7 @@ $text-nav: (
 			}
 
 			@media screen and (max-width: $md) {
-				paddin: 5px;
+				padding: 5px;
 			}
 
 			@media screen and (max-width: $xs) {
@@ -104,14 +120,14 @@ $text-nav: (
 
 		a{
 			@include text-size($text-nav);
-			font-size: 17px;
 			@extend .bold;
 			@extend .tracked-less;
 			color: white;
 			display: block;
 			padding: 0 20px;
 			@include transition(all .125s);
-			height: 55px;
+			height: 53px;
+			//outline: 1px solid yellow;
 			vertical-align: middle;
 			text-transform: uppercase;
 
@@ -119,11 +135,17 @@ $text-nav: (
 				border-bottom: 4px solid white;
 			}
 
+			@media screen and (max-width: 1300px) {
+				padding: 0 15px;
+			}
+
 			@media screen and (max-width: $lg) {
+				height: 55px;
 				padding: 0 8px;
 			}			
 
 			@media screen and (max-width: $md) {
+				height: 45px;
 				padding: 0 6px;
 				letter-spacing: .02em;
 			}

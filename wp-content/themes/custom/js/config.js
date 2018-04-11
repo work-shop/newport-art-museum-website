@@ -16,6 +16,9 @@ var config = {
         dropdownSelector: '.menu-dropdown',     
         blanketSelector: '#blanket-dropdown'     
     },
+    viewportLabel: {
+        viewportLabelPxSelector: '#viewport-label-px'
+    },
     stickyNav: {
         selector: '#nav',
         navHeight: global_config.headerHeight,

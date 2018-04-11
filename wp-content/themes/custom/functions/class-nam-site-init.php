@@ -5,6 +5,8 @@ class NAM_Site {
 
     public function __construct() {
 
+        wp_debug_mode();
+
         add_action('init', array( $this, 'register_image_sizing') );
         add_action('init', array( $this, 'register_theme_support') );
         add_action('init', array( $this, 'register_post_types_and_taxonomies' ) );
@@ -42,7 +44,7 @@ class NAM_Site {
             add_image_size('social_card', 600, 600, array( 'x_crop_position' => 'center', 'y_crop_position' => 'center'));
             add_image_size('acf_preview', 300, 300, false);
             add_image_size('page_hero', 1440, 660, false);
-
+            add_image_size('home_hero', 1920, 1200, false);
 
         }
     }

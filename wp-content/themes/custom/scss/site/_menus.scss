@@ -8,10 +8,10 @@
 	height: $dropdown-height;
 	width: 100%;
 	top: $nav-height;
-	background: transparentize($khaki, .05);
-	box-shadow: 0px 3px 12px $slate;
+	background: transparentize($ultra-light, .02);
+	box-shadow: 0px 4px 35px $slate;
 	position: fixed;
-	transform: translate(0,-800px) rotateX(0deg);
+	transform: translate(0,-100vh) rotateX(0deg);
 	transform-origin: 0 0;
 	transition: transform .25s;
 	z-index: 6;
@@ -65,21 +65,38 @@
 }
 
 
+main{
+
+}
+
 #blanket-dropdown{
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	width: 100%;
 	height: calc(100% - #{$nav-plus-dropdown-height});
-	background: rgba(255,255,255,.25);
+	//background: rgba(255,255,255,.45);
 	z-index: 5;
-	transform: translate(0,100vh);
+	transform: translate(0,-100vh);
+	transition: transform .25s;
+	// transition-delay: .25s;
+}
+
+main, footer{
+	transition: opacity .5s;
 }
 
 body.dropdown-on{
+
+	main,footer{
+		
+		opacity: .5;
+	}
+
 	#blanket-dropdown{
 		transform: translate(0,0);
 	}
+	
 }
 
 

@@ -6,6 +6,7 @@ window.$ = global.$;
 
 import { config } from './config.js';
 import { loading } from './loading.js';
+import { viewportLabel } from './viewport-label.js';
 import { linksNewtab } from './links-newtab.js';
 import { dropdowns } from './dropdowns.js';
 //import { stickyNav } from './sticky-nav.js';
@@ -19,6 +20,7 @@ import { livereload } from './livereload-client.js';
 livereload();
 
 loading(config.loading);
+viewportLabel(config.viewportLabel);
 linksNewtab(config.linksNewtab);
 dropdowns(config.dropdowns);
 //stickyNav(config.stickyNav);

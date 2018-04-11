@@ -5,6 +5,14 @@
 
 .plan-your-visit{
 	border-bottom: 1px solid $light;
+
+	h4{
+		line-height: 1.25;
+	}
+
+	.row .row{
+		margin-bottom: .9em;
+	}
 }
 
 
@@ -26,6 +34,10 @@
 	padding-left: $container-fluid-padding;
 	padding-right: $container-fluid-padding;
 	padding-top: 80px;
+
+	@media screen and (max-width: $md) {
+		width: 100%;
+	}
 }
 
 .plan-your-visit-right{
@@ -33,6 +45,10 @@
 	height: 100%;
 	float: left;
 	@extend .clearfix;
+
+	@media screen and (max-width: $sm) {
+		display: none;
+	}
 }
 
 .plan-your-visit-3{
@@ -44,7 +60,11 @@
 }
 
 .plan-your-visit-title{
-	margin-bottom: 3em;
+	margin-bottom: 2em;
+}
+
+.plan-your-visit-currently{
+	//max-width: 320px;
 }
 
 
@@ -54,7 +74,7 @@
 //PLAN YOUR VISIT CONTEXTS
 
 
-.home main, .page-id-23{
+.home main, .page-id-23 main{
 	.plan-your-visit{
 		height: 69vh;
 	}
@@ -67,16 +87,24 @@
 #menu-visit{
 	.plan-your-visit{
 		height: 100%;
-		padding-top: 15px;
-		padding-bottom: 15px;
+	}
+
+	.plan-your-visit-left{
+		padding-top: 60px;
+	}
+
+	.plan-your-visit-right{
+		padding-top: 25px;
+		padding-bottom: 25px;
+		padding-right: 25px;
 	}
 
 	.plan-your-visit-map{
-		padding-right: 15px;
-		border: 1px solid $slate;
+		//border: 1px solid $light !important;
 	}
 
 	.plan-your-visit-heading{
 		@extend .serif;
+		@extend .h3;
 	}
 }

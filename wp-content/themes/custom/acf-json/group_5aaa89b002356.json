@@ -3,11 +3,70 @@
     "title": "Visit Details",
     "fields": [
         {
-            "key": "field_5aaa6dfbf23bc",
-            "label": "Hours",
-            "name": "hours",
+            "key": "field_5ac4f02603da9",
+            "label": "Hours - Content",
+            "name": "hours_content",
             "type": "repeater",
-            "instructions": "",
+            "instructions": "This is where the written content for the museum hours is stored.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_5ac4f02603daa",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Days and Hours",
+            "sub_fields": [
+                {
+                    "key": "field_5ac4f02603daa",
+                    "label": "Days",
+                    "name": "days",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                },
+                {
+                    "key": "field_5ac4f02603dad",
+                    "label": "Hours",
+                    "name": "hours",
+                    "type": "text",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "default_value": "",
+                    "placeholder": "",
+                    "prepend": "",
+                    "append": "",
+                    "maxlength": ""
+                }
+            ]
+        },
+        {
+            "key": "field_5aaa6dfbf23bc",
+            "label": "Hours - Settings",
+            "name": "hours_settings",
+            "type": "repeater",
+            "instructions": "This is where the settings for the museum hours are stored. This information helps the site determine whether or not the museum is currently open.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -19,11 +78,11 @@
             "min": 0,
             "max": 0,
             "layout": "table",
-            "button_label": "Add Day(s) and Time",
+            "button_label": "Add Days and Times",
             "sub_fields": [
                 {
                     "key": "field_5aaa6e45f23bd",
-                    "label": "Day(s)",
+                    "label": "Days",
                     "name": "days",
                     "type": "text",
                     "instructions": "",
@@ -42,9 +101,9 @@
                 },
                 {
                     "key": "field_5aaa6e62f23be",
-                    "label": "Hours",
-                    "name": "hours",
-                    "type": "text",
+                    "label": "Open\/Closed",
+                    "name": "open_closed",
+                    "type": "radio",
                     "instructions": "",
                     "required": 0,
                     "conditional_logic": 0,
@@ -53,11 +112,64 @@
                         "class": "",
                         "id": ""
                     },
+                    "choices": {
+                        "open": "Open",
+                        "closed": "Closed"
+                    },
+                    "allow_null": 0,
+                    "other_choice": 0,
+                    "save_other_choice": 0,
                     "default_value": "",
-                    "placeholder": "",
-                    "prepend": "",
-                    "append": "",
-                    "maxlength": ""
+                    "layout": "vertical",
+                    "return_format": "value"
+                },
+                {
+                    "key": "field_5ac4ef2f45f8c",
+                    "label": "Open",
+                    "name": "open",
+                    "type": "time_picker",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_5aaa6e62f23be",
+                                "operator": "==",
+                                "value": "open"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "display_format": "g:ia",
+                    "return_format": "g:ia"
+                },
+                {
+                    "key": "field_5ac4ef7945f8d",
+                    "label": "Close",
+                    "name": "close",
+                    "type": "time_picker",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": [
+                        [
+                            {
+                                "field": "field_5aaa6e62f23be",
+                                "operator": "==",
+                                "value": "open"
+                            }
+                        ]
+                    ],
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "display_format": "g:ia",
+                    "return_format": "g:ia"
                 }
             ]
         },
@@ -210,5 +322,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1521126274
+    "modified": 1522866657
 }
