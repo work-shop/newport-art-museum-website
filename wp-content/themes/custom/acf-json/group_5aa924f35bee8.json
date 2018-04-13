@@ -78,7 +78,7 @@
             "placeholder": "",
             "prepend": "",
             "append": "",
-            "maxlength": 75
+            "maxlength": 60
         }
     ],
     "location": [
@@ -198,5 +198,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1521211275
+    "modified": 1523472349
 }

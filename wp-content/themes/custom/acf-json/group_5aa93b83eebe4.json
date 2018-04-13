@@ -23,9 +23,9 @@
         },
         {
             "key": "field_5aa9324d7cc18",
-            "label": "Page Introduction Section",
-            "name": "page_introduction_section",
-            "type": "text",
+            "label": "Page Introduction Text",
+            "name": "page_introduction_text",
+            "type": "textarea",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -36,9 +36,9 @@
             },
             "default_value": "",
             "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
+            "maxlength": "",
+            "rows": 4,
+            "new_lines": "br"
         }
     ],
     "location": [
@@ -120,5 +120,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1521211265
+    "modified": 1523473069
 }

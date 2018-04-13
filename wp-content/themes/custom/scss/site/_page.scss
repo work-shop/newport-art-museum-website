@@ -1,2 +1,88 @@
 
 /* page template */
+
+
+//PAGE NAV
+$page-nav-height: 160px;
+
+#page-nav{
+	height: $page-nav-height;
+	background: $khaki;
+
+	li{
+		display: inline-block;
+		margin-right: 7px;
+
+		&:first-child{
+			a{
+				padding-left: 0;
+			}
+		}
+
+		a{
+			color: $medium;
+			display: block;
+			padding: 0 .6vw;
+			font-size: 18px;
+
+			&.active{
+				@extend .bold;
+			}
+
+			&:hover{
+				color: $brand;
+			}
+		}
+	}
+
+	.page-nav-title{
+		margin-top: 44px;
+		margin-bottom: 4px;
+
+		font-size: 2.5vw;
+	}
+}
+
+
+//PAGE HERO
+
+.page-hero{
+	height: calc(100vh - 60px - #{$nav-height} - #{$page-nav-height});
+
+}
+
+.page-hero-text{
+	position: absolute;
+	right: 0;
+	top: 0;
+	height: 100%;
+	width: 39vw;
+	background: transparentize($slate, .05);
+	padding: 3.5vw;
+	max-width: 550px;
+
+
+	h1{
+		line-height: 1.15;
+	}
+
+	@media screen and (max-width: $lg) {
+		width: 45vw;
+	}
+
+	@media screen and (max-width: $md) {
+		width: 60vw;
+	}
+
+	@media screen and (max-width: $sm) {
+		width: 69vw;
+	}
+}
+
+
+//PAGE INTRODUCTION
+
+.page-introduction{
+	background: #E7E8EA;
+	padding: 8vh 0;
+}

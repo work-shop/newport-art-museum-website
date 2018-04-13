@@ -1,0 +1,43 @@
+
+
+.flexible-content{
+	padding-top: 11vh;
+	padding-bottom: 11vh;
+}
+
+.container-fc{
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0 105px;
+	max-width: 1410px;
+	//border: 1px solid $medium;
+
+	@media screen and (max-width: $lg) {
+		padding: 0 70px;	
+	}
+
+	@media screen and (max-width: $md) {
+		padding: 0 50px;	
+	}
+
+	@media screen and (max-width: $sm) {
+		padding: 0 20px;	
+	}		
+}
+
+.fc-section-heading{
+	margin-bottom: 6vh;
+}
+
+
+
+
+
+//RICH TEXT
+
+.rich-text{
+
+	p.p1{
+		padding: 0;
+	}
+}

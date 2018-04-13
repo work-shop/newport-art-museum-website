@@ -4,7 +4,7 @@
 //brand colors
 $brand: #1E4487;
 $brand-yellow: #DFBA39;
-$khaki: #F3F1EC;
+$khaki: #F7F5F2;
 $slate: #8792A3;
 
 
@@ -12,7 +12,7 @@ $slate: #8792A3;
 $ultra-light: #fafafa;
 $light: #D8D8D8;
 $medium-light: #9B9B9B;
-$medium: #828282;
+$medium: #888C8F;
 $medium-dark: #555555;
 $dark: #222222;
 
@@ -31,8 +31,8 @@ $nav-plus-dropdown-height: $nav-height + $dropdown-height;
 $nav-drop: $nav-height;
 $nav-drop-after: $nav-height - 1px;
 $nav-height-mobile: 80px;
-$container-fluid-max-width: none;
-$container-fluid-padding: 40px;
+$container-fluid-max-width: 1200px;
+$container-fluid-padding: 100px;
 $container-fluid-padding-md: $container-fluid-padding / 2;
 $container-fluid-padding-mobile: 15px;
 $container-fluid-sum: $container-fluid-padding * 2;

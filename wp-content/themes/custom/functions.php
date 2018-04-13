@@ -25,9 +25,9 @@
     require_once( __ROOT__ . '/functions/class-nam-site-admin.php' );
     require_once( __ROOT__ . '/functions/class-nam-site-init.php' );
 
-
     new NAM_Site();
     new NAM_Site_Admin();
 
+   // require_once( __ROOT__ . '/functions/library/helpers.php');
 
 ?>

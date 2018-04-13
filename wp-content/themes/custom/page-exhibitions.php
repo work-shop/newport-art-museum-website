@@ -1,6 +1,8 @@
 
 <?php get_template_part('partials/header'); ?>
 
+<?php get_template_part('partials/page/page_nav' ); ?>
+
 <?php get_template_part('partials/exhibitions/now_on_view' ); ?>
 
 <?php get_template_part('partials/exhibitions/upcoming_exhibitions' ); ?>

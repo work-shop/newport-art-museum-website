@@ -133,10 +133,11 @@
 }
 
 //visualize container-fluid extents
+
 // body:after{
 // 	content: '';
 // 	width: 3px;
-// 	background: transparentize($yellow,.5);
+// 	background: transparentize($brand,.5);
 // 	position: fixed;
 // 	top: 0;
 // 	z-index: 9999;
@@ -148,10 +149,14 @@
 // 	content: '';
 // 	width: 3px;
 // 	padding: 0;
-// 	background: transparentize($yellow,.5);
+// 	background: transparentize($brand,.5);
 // 	position: fixed;
 // 	top: 0;
 // 	z-index: 9999;
 // 	left: $container-fluid-padding;
 // 	height: 100vh;
+// }
+
+// .container-fluid{
+// 	border: 1px solid transparentize($brand,.5);
 // }
