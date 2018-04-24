@@ -1,6 +1,20 @@
 Changelog
 =========
 
+* 1.3.4 (2018-04-14)
+	* Bug fix: this release refixes an issue in which a custom post object with custom fields was not sending its custom fields on the first save, causing it to fail if the fields were required in Salesforce. Thanks to WordPress users @rtd2 and @bill5roses for reporting that the previous fix was not sufficient.
+
+* 1.3.3 (2018-03-31)
+	* Bug fix: a modified Salesforce Contact, which is not mapped to a user in WordPress but when the fieldmap does exist, would try to create a new user in WordPress but fail to add the email address to the email field. Thanks to GitHub user @mcculloughcm for the report.
+	* Bug fix: the key and prematch fields were ignored if their Salesforce status was not updateable, so this broke prematch checking in those cases. Thanks to GitHub user @johnpbloch for the report.
+	* New: small tweaks to plugin readme, inline form text.
+
+* 1.3.2 (2018-03-16)
+	* Bug fix: this plugin would sometimes conflict with jQuery from other plugins, especially older ones. This puts the object into an enclosure instead.
+	* Bug fix: allow mapped date fields to be empty without causing a push error.
+	* Bug fix: make sure plugin notices only appear on pages related to this plugin.
+	* Bug fix: doing an import with only one object map would fail.
+
 * 1.3.1 (2018-03-11)
 	* Bug fix: this release fixes an issue in which a custom post object with custom fields was not sending its custom fields on the first save, causing it to fail if the fields were required in Salesforce. Thanks to WordPress user @rtd2 for reporting this.
 	* Bug fix: this release makes the data import preserve the field structure.

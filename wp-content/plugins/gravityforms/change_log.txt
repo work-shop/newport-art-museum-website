@@ -1,4 +1,24 @@
 ------------------------------------------------------------------------------------------------------------------
+Version 2.2.6.5
+	- Fixed required validation of the Radio Button field "other" choice value.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.6.4
+	- Fixed ampersands in the Post Title field value being replaced by HTML entities.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.6.3
+	- Added Saint Martin with country code MF to country list
+  
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.6.2
+	- Added security enhancements.
+
+------------------------------------------------------------------------------------------------------------------
+Version 2.2.6.1
+	- AF: Fixed an issue where feeds for add-ons not selected as delayed on the PayPal feed could, in some situations, be processed following PayPal payment.
+
+------------------------------------------------------------------------------------------------------------------
 Version 2.2.6
 	- Added security enhancements.
 	- Added a message in the plugins page to remind users to take a backup of the database and update all Gravity Forms add-ons before updating to 2.3.

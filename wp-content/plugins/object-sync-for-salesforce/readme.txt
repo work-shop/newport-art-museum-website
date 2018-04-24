@@ -4,17 +4,19 @@ Donate link: https://www.minnpost.com/support/?campaign=7010G0000012fXGQAY
 Tags: salesforce, sync, crm
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 1.3.0
+Stable tag: 1.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-This is a WordPress plugin that implements mapping and syncing between Salesforce objects and WordPress objects. It is based on the [Drupal Salesforce Suite](https://github.com/thinkshout/salesforce) (version 7.x-3.x-dev), but strives to use WordPress conventions rather than Drupal's whenever possible.
+Object Sync for Salesforce maps and syncs data between Salesforce objects and WordPress objects. It is based on the [Drupal Salesforce Suite](https://github.com/thinkshout/salesforce) (version 7.x-3.x-dev), but works in a very WordPress way.
 
 == Description ==
 
-This plugin creates a mapping functionality between Salesforce objects and WordPress content types. For any supported WordPress content types (e.g. post, page, user, or any custom content type in your installation), you can assign Salesforce objects that will be created / updated when the data in WordPress is saved, and the WordPress objects can be created / updated when the data in Salesforce is saved. Both of these directions act upon any matching data that is created after the plugin is installed. For each such assignment, you choose which WordPress and Salesforce fields should be mapped to one another.
+This plugin maps and syncs data between Salesforce objects and WordPress content types. For any supported WordPress content types (e.g. post, page, user, or any custom content type in your installation), you can assign Salesforce objects that will be created / updated / deleted when the data in WordPress is saved, and the WordPress objects can be created / updated / deleted when the data in Salesforce is saved.
 
-This plugin also includes API hooks that allow for additional plugins to modify what data the plugin is working with, or what happens upon specific events.
+Both of these directions act upon any matching data that is created after the plugin is installed. For each such assignment, you choose which WordPress and Salesforce fields should be mapped to one another.
+
+This plugin also includes developer hooks that allow for additional plugins to modify what data the plugin is working with, or what happens upon specific events.
 
 == Installation ==
 
@@ -141,7 +143,6 @@ Things to know:
 
 1. See the answer above about custom fields. Any ACF field must have at least one value in the database before Object Sync for Salesforce can map it.
 2. When you try to map an ACF field, you'll see one that has an underscore in front of it, and one that does not. This is because ACF uses both for its own purposes. As long as you map the ACF field that **does not** have the underscore in front of it, you should be able to get data to and from Salesforce. For example, you could map a `test_field` to a `Contact_description` field. The fieldmap screen will show a `_test_field` in the dropdown, but you should be able to safely ignore that, and only map `test_field`.
-3. If you are mapping `post` fields, it seems that when a `post` is saved, the ACF fields will have no values. Immediately after the first save (within the same milisecond), ACF runs a post update to add the values for its own fields. This can cause issues if you are working with required fields in Salesforce, and you may need to compensate for that with default values in a developer hook, for example.
 
 While we will not include code that only runs for ACF in this plugin, we would happily point to any add-on plugin that uses Object Sync for Salesforce hooks to build a more comprehensive integration with ACF for all users who install this plugin while they're running ACF.
 
@@ -154,6 +155,20 @@ This doesn't mean you can't use them together, but it does mean this plugin is n
 Object Sync for Salesforce does have abundant developer hooks, and WooCommerce has its own API, and it would be possible to build an add-on plugin to provide full support by integrating these (we would happily point to it for all users who install this plugin while they're running WooCommerce).
 
 == Changelog ==
+
+* 1.3.4 (2018-04-14)
+	* Bug fix: this release refixes an issue in which a custom post object with custom fields was not sending its custom fields on the first save, causing it to fail if the fields were required in Salesforce. Thanks to WordPress users @rtd2 and @bill5roses for reporting that the previous fix was not sufficient.
+
+* 1.3.3 (2018-03-31)
+	* Bug fix: a modified Salesforce Contact, which is not mapped to a user in WordPress but when the fieldmap does exist, would try to create a new user in WordPress but fail to add the email address to the email field. Thanks to GitHub user @mcculloughcm for the report.
+	* Bug fix: the key and prematch fields were ignored if their Salesforce status was not updateable, so this broke prematch checking in those cases. Thanks to GitHub user @johnpbloch for the report.
+	* New: small tweaks to plugin readme, inline form text.
+
+* 1.3.2 (2018-03-16)
+	* Bug fix: this plugin would sometimes conflict with jQuery from other plugins, especially older ones. This puts the object into an enclosure instead.
+	* Bug fix: allow mapped date fields to be empty without causing a push error.
+	* Bug fix: make sure plugin notices only appear on pages related to this plugin.
+	* Bug fix: doing an import with only one object map would fail.
 
 * 1.3.1 (2018-03-11)
 	* Bug fix: this release fixes an issue in which a custom post object with custom fields was not sending its custom fields on the first save, causing it to fail if the fields were required in Salesforce. Thanks to WordPress user @rtd2 for reporting this.

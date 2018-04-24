@@ -808,7 +808,7 @@ class GFFormDisplay {
 			/**
 			 * Filter the form not found message that will be displayed
 			 *
-			 * @since
+			 * @since 2.2.6
 			 *
 			 * @param string                The default form not found message
 			 * @param int|string $form_id   The ID of the form we tried to retrieve

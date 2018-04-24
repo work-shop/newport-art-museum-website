@@ -9,6 +9,10 @@ $page-nav-height: 160px;
 	height: $page-nav-height;
 	background: $khaki;
 
+	.container-fluid{
+		max-width: none;
+	}
+
 	li{
 		display: inline-block;
 		margin-right: 7px;
@@ -38,7 +42,6 @@ $page-nav-height: 160px;
 	.page-nav-title{
 		margin-top: 44px;
 		margin-bottom: 4px;
-
 		font-size: 2.5vw;
 	}
 }

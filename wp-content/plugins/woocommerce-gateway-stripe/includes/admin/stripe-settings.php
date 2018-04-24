@@ -3,8 +3,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$webhook_url = WC_Stripe_Helper::get_webhook_url();
-
 return apply_filters( 'wc_stripe_settings',
 	array(
 		'enabled' => array(
@@ -32,7 +30,7 @@ return apply_filters( 'wc_stripe_settings',
 			'title'       => __( 'Webhook Endpoints', 'woocommerce-gateway-stripe' ),
 			'type'        => 'title',
 			/* translators: webhook URL */
-			'description' => sprintf( __( 'You must add the webhook endpoint <strong style="background-color:#ddd;">&nbsp;&nbsp;%s&nbsp;&nbsp;</strong> to your Stripe Account Settings <a href="https://dashboard.stripe.com/account/webhooks" target="_blank">Here</a> so you can receive notifications on the charge statuses.', 'woocommerce-gateway-stripe' ), $webhook_url ),
+			'description' => $this->display_admin_settings_webhook_description(),
 		),
 		'testmode' => array(
 			'title'       => __( 'Test mode', 'woocommerce-gateway-stripe' ),
@@ -96,23 +94,15 @@ return apply_filters( 'wc_stripe_settings',
 			'title'       => __( '3D Secure', 'woocommerce-gateway-stripe' ),
 			'label'       => __( 'Require 3D Secure when applicable', 'woocommerce-gateway-stripe' ),
 			'type'        => 'checkbox',
-			'description' => __( 'Some payment methods have 3D Secure feature. This is an extra security layer for your store. Choose how to handle payments when 3D Secure is optional. Enabling would require customers to use 3D Secure when optional.', 'woocommerce-gateway-stripe' ),
-			'default'     => 'no',
+			'description' => __( 'Some payment methods have 3D Secure feature. This is an extra security layer for your store. Choose how to handle payments when 3D Secure is recommended. Enabling would require customers to use 3D Secure when recommended.', 'woocommerce-gateway-stripe' ),
+			'default'     => 'yes',
 			'desc_tip'    => true,
 		),
 		'stripe_checkout' => array(
-			'title'       => __( 'Stripe Checkout', 'woocommerce-gateway-stripe' ),
+			'title'       => __( 'Stripe Modal Checkout', 'woocommerce-gateway-stripe' ),
 			'label'       => __( 'Enable Stripe Checkout', 'woocommerce-gateway-stripe' ),
 			'type'        => 'checkbox',
-			'description' => __( 'If enabled, this option shows a "pay" button and modal credit card form on the checkout, instead of credit card fields directly on the page.', 'woocommerce-gateway-stripe' ),
-			'default'     => 'no',
-			'desc_tip'    => true,
-		),
-		'stripe_bitcoin' => array(
-			'title'       => __( 'Bitcoin Currency', 'woocommerce-gateway-stripe' ),
-			'label'       => __( 'Enable Bitcoin Currency', 'woocommerce-gateway-stripe' ),
-			'type'        => 'checkbox',
-			'description' => __( 'If enabled, an option to accept bitcoin will show on the checkout modal. Note: Stripe Checkout needs to be enabled and store currency must be set to USD.', 'woocommerce-gateway-stripe' ),
+			'description' => __( 'If enabled, this option shows a "pay" button and modal credit card form on the checkout, instead of credit card fields directly on the page. We recommend you leave this disabled and use the embedded form as that is the preferred method.', 'woocommerce-gateway-stripe' ),
 			'default'     => 'no',
 			'desc_tip'    => true,
 		),

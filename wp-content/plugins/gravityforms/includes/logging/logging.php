@@ -411,10 +411,11 @@ class GFLogging extends GFAddOn {
 				),
 			);
 
+			$random = function_exists( 'random_bytes' ) ? random_bytes( 12 ) : wp_generate_password( 24, true, true );
 			$plugin_fields[] = array(
 				'name'          => $plugin_slug . '[file_name]',
 				'type'          => 'hidden',
-				'default_value' => sha1( $plugin_slug . time() ),
+				'default_value' => sha1( $plugin_slug . $random ),
 			);
 
 		}
@@ -780,10 +781,11 @@ class GFLogging extends GFAddOn {
 
 		$settings = array();
 		foreach ( $supported_plugins as $plugin_slug => $plugin_name ) {
+			$random = function_exists( 'random_bytes' ) ? random_bytes( 12 ) : wp_generate_password( 24, true, true );
 			$settings[ $plugin_slug ] = array(
 				'log_level' => '1',
 				'enable'    => '1',
-				'file_name' => sha1( $plugin_slug . time() ),
+				'file_name' => sha1( $plugin_slug . $random ),
 			);
 		}
 		$this->update_plugin_settings( $settings );
@@ -847,9 +849,10 @@ class GFLogging extends GFAddOn {
 				$new_settings = array();
 
 				foreach ( $old_settings as $plugin_slug => $log_level ) {
+					$random = function_exists( 'random_bytes' ) ? random_bytes( 12 ) : wp_generate_password( 24, true, true );
 					$new_settings[ $plugin_slug ] = array(
 						'log_level' => $log_level,
-						'file_name' => sha1( $plugin_slug . time() ),
+						'file_name' => sha1( $plugin_slug . $random ),
 					);
 				}
 
@@ -875,9 +878,10 @@ class GFLogging extends GFAddOn {
 			$new_settings = array();
 
 			foreach ( $old_settings as $plugin_slug => $log_level ) {
+				$random = function_exists( 'random_bytes' ) ? random_bytes( 12 ) : wp_generate_password( 24, true, true );
 				$new_settings[ $plugin_slug ] = array(
 					'log_level' => $log_level,
-					'file_name' => sha1( $plugin_slug . time() ),
+					'file_name' => sha1( $plugin_slug . $random ),
 				);
 			}
 

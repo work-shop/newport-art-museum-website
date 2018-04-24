@@ -2,7 +2,7 @@
 /*
 Plugin Name: Object Sync for Salesforce
 Description: WordPress plugin that implements mapping and syncing between Salesforce objects and WordPress objects
-Version: 1.3.1
+Version: 1.3.4
 Author: MinnPost
 Author URI: http://code.minnpost.com
 License: GPL2+
@@ -118,24 +118,24 @@ class Object_Sync_Salesforce {
 
 		global $wpdb;
 
-		$this->wpdb = $wpdb;
-		$this->version = '1.3.1';
+		$this->wpdb              = $wpdb;
+		$this->version           = '1.3.4';
 		$this->login_credentials = $this->get_login_credentials();
-		$this->slug = 'object-sync-for-salesforce';
+		$this->slug              = 'object-sync-for-salesforce';
 
 		$this->schedulable_classes = array(
 			'salesforce_push' => array(
-				'label' => 'Push to Salesforce',
-				'class' => 'Object_Sync_Sf_Salesforce_Push',
+				'label'    => 'Push to Salesforce',
+				'class'    => 'Object_Sync_Sf_Salesforce_Push',
 				'callback' => 'salesforce_push_sync_rest',
 			),
 			'salesforce_pull' => array(
-				'label' => 'Pull from Salesforce',
-				'class' => 'Object_Sync_Sf_Salesforce_Pull',
+				'label'       => 'Pull from Salesforce',
+				'class'       => 'Object_Sync_Sf_Salesforce_Pull',
 				'initializer' => 'salesforce_pull',
-				'callback' => 'salesforce_pull_process_records',
+				'callback'    => 'salesforce_pull_process_records',
 			),
-			'salesforce' => array(
+			'salesforce'      => array(
 				'label' => 'Salesforce Authorization',
 				'class' => 'Object_Sync_Sf_Salesforce',
 			),
@@ -174,7 +174,7 @@ class Object_Sync_Salesforce {
 
 		$this->mappings = $this->mappings( $this->wpdb, $this->version, $this->slug, $this->logging );
 
-		$this->wordpress = $this->wordpress( $this->wpdb, $this->version, $this->slug, $this->mappings, $this->logging );
+		$this->wordpress  = $this->wordpress( $this->wpdb, $this->version, $this->slug, $this->mappings, $this->logging );
 		$this->salesforce = $this->salesforce_get_api();
 
 		$this->push = $this->push( $this->wpdb, $this->version, $this->login_credentials, $this->slug, $this->wordpress, $this->salesforce, $this->mappings, $this->logging, $this->schedulable_classes );
@@ -250,19 +250,19 @@ class Object_Sync_Salesforce {
 	public function salesforce_get_api() {
 		require_once( plugin_dir_path( __FILE__ ) . 'classes/salesforce.php' );
 		require_once( plugin_dir_path( __FILE__ ) . 'classes/salesforce_query.php' ); // this can be used to generate soql queries, but we don't often need it so it gets initialized whenever it's needed
-		$consumer_key = $this->login_credentials['consumer_key'];
-		$consumer_secret = $this->login_credentials['consumer_secret'];
-		$login_url = $this->login_credentials['login_url'];
-		$callback_url = $this->login_credentials['callback_url'];
-		$authorize_path = $this->login_credentials['authorize_path'];
-		$token_path = $this->login_credentials['token_path'];
-		$rest_api_version = $this->login_credentials['rest_api_version'];
-		$slug = $this->slug;
-		$wordpress = $this->wordpress;
-		$logging = $this->logging;
+		$consumer_key        = $this->login_credentials['consumer_key'];
+		$consumer_secret     = $this->login_credentials['consumer_secret'];
+		$login_url           = $this->login_credentials['login_url'];
+		$callback_url        = $this->login_credentials['callback_url'];
+		$authorize_path      = $this->login_credentials['authorize_path'];
+		$token_path          = $this->login_credentials['token_path'];
+		$rest_api_version    = $this->login_credentials['rest_api_version'];
+		$slug                = $this->slug;
+		$wordpress           = $this->wordpress;
+		$logging             = $this->logging;
 		$schedulable_classes = $this->schedulable_classes;
-		$is_authorized = false;
-		$sfapi = '';
+		$is_authorized       = false;
+		$sfapi               = '';
 		if ( $consumer_key && $consumer_secret ) {
 			$sfapi = new Object_Sync_Sf_Salesforce( $consumer_key, $consumer_secret, $login_url, $callback_url, $authorize_path, $token_path, $rest_api_version, $wordpress, $slug, $logging, $schedulable_classes );
 			if ( $sfapi->is_authorized() === true ) {
@@ -271,7 +271,7 @@ class Object_Sync_Salesforce {
 		}
 		return array(
 			'is_authorized' => $is_authorized,
-			'sfapi' => $sfapi,
+			'sfapi'         => $sfapi,
 		);
 	}
 
@@ -404,8 +404,8 @@ class Object_Sync_Salesforce {
 	* @return void
 	*/
 	public function admin_scripts_and_styles() {
-		wp_enqueue_script( $this->slug . '-admin', plugins_url( 'assets/js/object-sync-for-salesforce-admin.min.js', __FILE__ ), array( 'jquery' ), $this->version, true );
-		wp_enqueue_style( $this->slug . '-admin', plugins_url( 'assets/css/object-sync-for-salesforce-admin.min.css', __FILE__ ), array(), $this->version, 'all' );
+		wp_enqueue_script( $this->slug . '-admin', plugins_url( 'assets/js/object-sync-for-salesforce-admin.min.js', __FILE__ ), array( 'jquery' ), filemtime( plugin_dir_path( __FILE__ ) . 'assets/js/object-sync-for-salesforce-admin.js' ), true );
+		wp_enqueue_style( $this->slug . '-admin', plugins_url( 'assets/css/object-sync-for-salesforce-admin.min.css', __FILE__ ), array(), filemtime( plugin_dir_path( __FILE__ ) . 'assets/css/object-sync-for-salesforce-admin.css' ), 'all' );
 	}
 
 	/**
@@ -427,21 +427,21 @@ class Object_Sync_Salesforce {
 	*/
 	private function get_login_credentials() {
 
-		$consumer_key = defined( 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_KEY' ) ? OBJECT_SYNC_SF_SALESFORCE_CONSUMER_KEY : get_option( 'object_sync_for_salesforce_consumer_key', '' );
-		$consumer_secret = defined( 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET' ) ? OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET : get_option( 'object_sync_for_salesforce_consumer_secret', '' );
-		$callback_url = defined( 'OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL' ) ? OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL : get_option( 'object_sync_for_salesforce_callback_url', '' );
-		$login_base_url = defined( 'OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL' ) ? OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL : get_option( 'object_sync_for_salesforce_login_base_url', '' );
+		$consumer_key       = defined( 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_KEY' ) ? OBJECT_SYNC_SF_SALESFORCE_CONSUMER_KEY : get_option( 'object_sync_for_salesforce_consumer_key', '' );
+		$consumer_secret    = defined( 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET' ) ? OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET : get_option( 'object_sync_for_salesforce_consumer_secret', '' );
+		$callback_url       = defined( 'OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL' ) ? OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL : get_option( 'object_sync_for_salesforce_callback_url', '' );
+		$login_base_url     = defined( 'OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL' ) ? OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL : get_option( 'object_sync_for_salesforce_login_base_url', '' );
 		$authorize_url_path = defined( 'OBJECT_SYNC_SF_SALESFORCE_AUTHORIZE_URL_PATH' ) ? OBJECT_SYNC_SF_SALESFORCE_AUTHORIZE_URL_PATH : get_option( 'object_sync_for_salesforce_authorize_url_path', '' );
-		$token_url_path = defined( 'OBJECT_SYNC_SF_SALESFORCE_TOKEN_URL_PATH' ) ? OBJECT_SYNC_SF_SALESFORCE_TOKEN_URL_PATH : get_option( 'object_sync_for_salesforce_token_url_path', '' );
-		$api_version = defined( 'OBJECT_SYNC_SF_SALESFORCE_API_VERSION' ) ? OBJECT_SYNC_SF_SALESFORCE_API_VERSION : get_option( 'object_sync_for_salesforce_api_version', '' );
+		$token_url_path     = defined( 'OBJECT_SYNC_SF_SALESFORCE_TOKEN_URL_PATH' ) ? OBJECT_SYNC_SF_SALESFORCE_TOKEN_URL_PATH : get_option( 'object_sync_for_salesforce_token_url_path', '' );
+		$api_version        = defined( 'OBJECT_SYNC_SF_SALESFORCE_API_VERSION' ) ? OBJECT_SYNC_SF_SALESFORCE_API_VERSION : get_option( 'object_sync_for_salesforce_api_version', '' );
 
 		$login_credentials = array(
-			'consumer_key' => $consumer_key,
-			'consumer_secret' => $consumer_secret,
-			'callback_url' => $callback_url,
-			'login_url' => $login_base_url,
-			'authorize_path' => $authorize_url_path,
-			'token_path' => $token_url_path,
+			'consumer_key'     => $consumer_key,
+			'consumer_secret'  => $consumer_secret,
+			'callback_url'     => $callback_url,
+			'login_url'        => $login_base_url,
+			'authorize_path'   => $authorize_url_path,
+			'token_path'       => $token_url_path,
 			'rest_api_version' => $api_version,
 		);
 

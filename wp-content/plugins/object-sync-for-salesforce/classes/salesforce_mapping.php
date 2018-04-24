@@ -312,7 +312,7 @@ class Object_Sync_Sf_Mapping {
 					$posted['is_delete'][ $key ] = false;
 				}
 				if ( false === $posted['is_delete'][ $key ] ) {
-
+					// I think it's good to over-mention that updateable is really how the Salesforce api spells it.
 					$updateable_key = array_search( $posted['salesforce_field'][ $key ], array_column( $salesforce_fields, 'name' ), true );
 
 					$salesforce_field_attributes = array();
@@ -688,18 +688,6 @@ class Object_Sync_Sf_Mapping {
 
 			$fieldmap['wordpress_field']['methods'] = maybe_unserialize( $fieldmap['wordpress_field']['methods'] );
 
-			// skip fields that aren't being pushed to Salesforce.
-			if ( in_array( $trigger, $wordpress_haystack, true ) && ! in_array( $fieldmap['direction'], array_values( $this->direction_wordpress ), true ) ) {
-				// The trigger is a WordPress trigger, but the fieldmap direction is not a WordPress direction.
-				continue;
-			}
-
-			// skip fields that aren't being pulled from Salesforce.
-			if ( in_array( $trigger, $salesforce_haystack, true ) && ! in_array( $fieldmap['direction'], array_values( $this->direction_salesforce ), true ) ) {
-				// The trigger is a Salesforce trigger, but the fieldmap direction is not a Salesforce direction.
-				continue;
-			}
-
 			$wordpress_field = $fieldmap['wordpress_field']['label'];
 
 			if ( version_compare( $this->version, '1.2.0', '>=' ) && isset( $fieldmap['salesforce_field']['name'] ) ) {
@@ -713,11 +701,6 @@ class Object_Sync_Sf_Mapping {
 			// A WordPress event caused this.
 			if ( in_array( $trigger, array_values( $wordpress_haystack ), true ) ) {
 
-				// Skip fields that aren't updateable when mapping params because Salesforce will error otherwise.
-				if ( 1 !== (int) $fieldmap['salesforce_field']['updateable'] ) {
-					continue;
-				}
-
 				// Is the field in WordPress an array, if we unserialize it? Salesforce wants it to be an imploded string.
 				if ( is_array( maybe_unserialize( $object[ $wordpress_field ] ) ) ) {
 					$object[ $wordpress_field ] = implode( $this->array_delimiter, $object[ $wordpress_field ] );
@@ -727,15 +710,19 @@ class Object_Sync_Sf_Mapping {
 					// Is the Salesforce field a date, and is the WordPress value a valid date?
 					// According to https://salesforce.stackexchange.com/questions/57032/date-format-with-salesforce-rest-api
 					if ( in_array( $salesforce_field_type, $this->date_types_from_salesforce ) ) {
-						if ( false !== strtotime( $object[ $wordpress_field ] ) ) {
-							$timestamp = strtotime( $object[ $wordpress_field ] );
+						if ( '' === $object[ $wordpress_field ] ) {
+							$object[ $wordpress_field ] = null;
 						} else {
-							$timestamp = $object[ $wordpress_field ];
-						}
-						if ( 'datetime' === $salesforce_field_type ) {
-							$object[ $wordpress_field ] = date_i18n( 'c', $timestamp );
-						} else {
-							$object[ $wordpress_field ] = date_i18n( 'Y-m-d', $timestamp );
+							if ( false !== strtotime( $object[ $wordpress_field ] ) ) {
+								$timestamp = strtotime( $object[ $wordpress_field ] );
+							} else {
+								$timestamp = $object[ $wordpress_field ];
+							}
+							if ( 'datetime' === $salesforce_field_type ) {
+								$object[ $wordpress_field ] = date_i18n( 'c', $timestamp );
+							} else {
+								$object[ $wordpress_field ] = date_i18n( 'Y-m-d', $timestamp );
+							}
 						}
 					}
 
@@ -767,6 +754,19 @@ class Object_Sync_Sf_Mapping {
 						'wordpress_field'  => $wordpress_field,
 						'value'            => $object[ $wordpress_field ],
 					);
+				}
+
+				// Skip fields that aren't being pushed to Salesforce.
+				if ( ! in_array( $fieldmap['direction'], array_values( $this->direction_wordpress ), true ) ) {
+					// The trigger is a WordPress trigger, but the fieldmap direction is not a WordPress direction.
+					unset( $params[ $salesforce_field ] );
+				}
+
+				// I think it's good to over-mention that updateable is really how the Salesforce api spells it.
+				// Skip fields that aren't updateable when mapping params because Salesforce will error otherwise.
+				// This happens after dealing with the field types because key and prematch should still be available to the plugin, even if the values are not updateable in Salesforce.
+				if ( 1 !== (int) $fieldmap['salesforce_field']['updateable'] ) {
+					unset( $params[ $salesforce_field ] );
 				}
 			} elseif ( in_array( $trigger, $salesforce_haystack, true ) ) {
 
@@ -831,6 +831,12 @@ class Object_Sync_Sf_Mapping {
 						'method_create'    => $fieldmap['wordpress_field']['methods']['create'],
 						'method_update'    => $fieldmap['wordpress_field']['methods']['update'],
 					);
+				}
+
+				// Skip fields that aren't being pulled from Salesforce.
+				if ( ! in_array( $fieldmap['direction'], array_values( $this->direction_salesforce ), true ) ) {
+					// The trigger is a Salesforce trigger, but the fieldmap direction is not a Salesforce direction.
+					unset( $params[ $wordpress_field ] );
 				}
 
 				switch ( $trigger ) {

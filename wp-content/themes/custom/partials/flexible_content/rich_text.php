@@ -16,8 +16,8 @@
 			</div>
 		<?php endif; ?>
 		<div class="row">
-			<div class="col-lg-7 col-md-9">
-				<div class="rich-text fc-rich-text-container">
+			<div class="col-xl-8 col-lg-9 col-md-10">
+				<div class="rich-text fc-rich-text-container wysiwyg">
 					<?php echo $rich_text; ?>
 				</div>
 			</div>

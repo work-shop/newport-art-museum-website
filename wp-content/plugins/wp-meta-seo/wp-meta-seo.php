@@ -4,7 +4,7 @@
  * Plugin Name: WP Meta SEO
  * Plugin URI: http://www.joomunited.com/wordpress-products/wp-meta-seo
  * Description: WP Meta SEO is a plugin for WordPress to fill meta for content, images and main SEO info in a single view.
- * Version: 3.6.8
+ * Version: 3.7.0
  * Text Domain: wp-meta-seo
  * Domain Path: /languages
  * Author: JoomUnited
@@ -99,7 +99,7 @@ if (!defined('WPMSEO_VERSION')) {
     /**
      * plugin version
      */
-    define('WPMSEO_VERSION', '3.6.8');
+    define('WPMSEO_VERSION', '3.7.0');
 }
 
 if (!defined('WPMS_CLIENTID')) {
@@ -177,7 +177,8 @@ if (is_admin()) {
     require_once(WPMETASEO_PLUGIN_DIR . 'inc/class.metaseo-google-analytics.php');
     require_once(WPMETASEO_PLUGIN_DIR . 'inc/class.metaseo-admin.php');
     add_action( 'plugins_loaded', 'wpmsAdminInit', 15 );
-    function wpmsAdminInit() {
+    function wpmsAdminInit()
+    {
         $GLOBALS['metaseo_admin'] = new MetaSeoAdmin;
     }
 
@@ -324,7 +325,7 @@ if (is_admin()) {
 
         // is front page
         if (is_front_page() && 'page' == get_option('show_on_front') && is_page(get_option('page_on_front'))) {
-            $metas = $opengraph->getFrontPageMeta();
+            $metas = $opengraph->getFrontPageMeta($settings);
             $meta_title_esc = $meta_twtitle = $meta_fbtitle = $metas['title'];
             $meta_desc_esc = $meta_twdesc = $meta_fbdesc = $metas['desc'];
             $page_follow = $metas['page_follow'];
@@ -399,11 +400,24 @@ if (is_admin()) {
     }
 
     add_filter( 'pre_get_document_title', 'wpmstitle', 15 );
+    add_filter( 'wp_title', 'wpmstitle', 15, 3 );
+    add_filter( 'thematic_doctitle', 'wpmstitle', 15 );
+    add_filter( 'woo_title', 'wpmstitle', 99 );
     function wpmstitle($title) {
         global $wp_query;
+        $settings = get_option('_metaseo_settings');
+        if (empty($settings)) {
+            return $title;
+        }
+
+        if (empty($settings['metaseo_metatitle_tab'])) {
+            return $title;
+        }
+
         if (empty($wp_query->post)) {
             return $title;
         }
+        
         $is_shop = false;
         if ( function_exists( 'is_shop' ) ) {
             if (is_shop()) {
@@ -426,7 +440,7 @@ if (is_admin()) {
 
         // is front page
         if (is_front_page() && 'page' == get_option('show_on_front') && is_page(get_option('page_on_front'))) {
-            $metas = $opengraph->getFrontPageMeta();
+            $metas = $opengraph->getFrontPageMeta($settings);
             $meta_title = $metas['title'];
         }
 
@@ -657,7 +671,7 @@ function wpmsTemplateRedirect()
                         $sql = $wpdb->prepare(
                             "SELECT * FROM " . $wpdb->prefix . "posts WHERE post_title = %s AND post_excerpt = %s",
                             array(
-                                "WP Meta SEO 404 Page",
+                                "404 error page",
                                 "metaseo_404_page"
                             )
                         );

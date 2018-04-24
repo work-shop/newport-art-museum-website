@@ -190,10 +190,10 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
                     $class[] = $desc_first ? 'asc' : 'desc';
                 }
                 $hr = esc_url(add_query_arg(compact('orderby', 'order'), $current_url));
-                $column_display_name = '<a href="' . $hr . '">';
-                $column_display_name .= '<span>' . $column_display_name . '</span>';
-                $column_display_name .= '<span class="sorting-indicator"></span>';
-                $column_display_name .= '</a>';
+                $column_name = '<a href="' . $hr . '">';
+                $column_name .= '<span>' . $column_display_name . '</span>';
+                $column_name .= '<span class="sorting-indicator"></span>';
+                $column_name .= '</a>';
             }
 
             $id = $with_id ? "id='$column_key'" : '';
@@ -203,9 +203,9 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             }
 
             if ($column_key === 'cb') {
-                echo "<th scope='col' $id $class style='padding:8px 10px;'>$column_display_name</th>";
+                echo "<th scope='col' $id $class style='padding:8px 10px;'>$column_name</th>";
             } else {
-                echo "<th scope='col' $id $class $style colspan=\"3\">$column_display_name</th>";
+                echo "<th scope='col' $id $class $style colspan=\"3\">$column_name</th>";
             }
         }
     }
@@ -1228,6 +1228,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
         if ($post->post_excerpt != 'metaseo_404_page') {
             if ($post->post_status == 'publish') {
                 if (isset($post->post_content) && $post->post_content != '') {
+                    // find <a> tag in current post content
                     preg_match_all("#<a[^>]*>.*?</a>#si", $post->post_content, $matches, PREG_PATTERN_ORDER);
                     foreach (array_unique($matches[0]) as $i => $content) {
                         $dom->loadHTML($content);
@@ -1257,6 +1258,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
                         );
                     }
 
+                    // find <img> tag in current post content
                     preg_match_all(
                         '/(<img[\s]+[^>]*src\s*=\s*)([\"\'])([^>]+?)\2([^<>]*>)/i',
                         $post->post_content,
@@ -1415,7 +1417,12 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
 
         // scan link in comment content
         $k = 0;
-        $off_set = ($_POST['comment_paged'] - 1) * $limit_comment_content;
+        if (isset($_POST['comment_paged'])) {
+            $off_set = ($_POST['comment_paged'] - 1) * $limit_comment_content;
+        } else {
+            $off_set = 0;
+        }
+
         $query = "SELECT * FROM " . $wpdb->prefix . "comments
          WHERE comment_approved = 1 AND comment_content != '' LIMIT $limit_comment_content OFFSET $off_set";
         $comments_content = $wpdb->get_results($query);

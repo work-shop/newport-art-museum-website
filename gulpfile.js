@@ -47,6 +47,10 @@ const admin_sass_entrypoint = path.join( __dirname, paths.src, 'scss', 'admin.sc
 const admin_sass_exitpoint = path.join( __dirname, paths.dest, 'bundles' );
 const admin_sass_watch_files = [path.join( __dirname, paths.src, 'scss', 'admin.scss' ), path.join( __dirname, paths.src, 'styles', 'admin', '**', '*.scss' )];
 
+const admin_tinymce_sass_entrypoint = path.join( __dirname, paths.src, 'scss', 'admin-tinymce.scss' );
+const admin_tinymce_sass_exitpoint = path.join( __dirname, paths.dest, 'bundles' );
+const admin_tinymce_sass_watch_files = [path.join( __dirname, paths.src, 'scss', 'admin-tinymce.scss' ), path.join( __dirname, paths.src, 'styles', 'admin-tinymce', '**', '*.scss' )];
+
 const js_bundler = browserify(js_entrypoint).transform( babelify, {presets: ['env']});
 
 /** =============
@@ -133,7 +137,6 @@ function admin_sass_bundle( development ) {
                     'Firefox ESR'
                 ]
             }))
-            .pipe( rename({ basename: 'admin', ext: '.css' }) )
             .pipe( sourcemaps.write('./', {
                 includeContent: false,
                 sourceRoot: path.join(__dirname, paths.src)
@@ -145,6 +148,39 @@ function admin_sass_bundle( development ) {
     };
 
 }
+
+/**
+ * This rule compiles the admin-tinymce.scss file, producing
+ * a admin-tinymce.css output.
+ */
+function admin_tinymce_sass_bundle( development ) {
+
+    return function() {
+
+        gulp.src( admin_tinymce_sass_entrypoint )
+            .pipe( sass({
+                includePaths: [ slick_includePaths ].concat( bourbon_includePaths ),
+                outputStyle: ( development ) ? 'expanded' : 'compressed'
+            }).on('error', sass.logError ) )
+            .pipe( autoprefixer({
+                browsers: [
+                    'last 2 versions',
+                    '> 5%',
+                    'Firefox ESR'
+                ]
+            }))
+            .pipe( sourcemaps.write('./', {
+                includeContent: false,
+                sourceRoot: path.join(__dirname, paths.src)
+            }))
+            .pipe( rename({ basename: 'admin-tinymce-bundle', ext: '.css' }) )
+            .pipe( livereload() )
+            .pipe( gulp.dest( admin_tinymce_sass_exitpoint ) );
+
+    };
+
+}
+
 
 /**
  * This rule compiles the main.js file, producing
@@ -191,6 +227,8 @@ gulp.task('files', file_bundle( process.env.NODE_ENV === 'development' ) );
 gulp.task('scss', sass_bundle( process.env.NODE_ENV === 'development' ) );
 
 gulp.task('admin-scss', admin_sass_bundle( process.env.NODE_ENV === 'development' ) );
+
+gulp.task('admin-tinymce-scss', admin_tinymce_sass_bundle( process.env.NODE_ENV === 'development' ) );
 
 gulp.task('js', js_bundle( process.env.NODE_ENV === 'development' ) );
 

@@ -289,11 +289,20 @@ class MetaSeoOpenGraph
      * Get meta for front page
      * @return array
      */
-    public function getFrontPageMeta()
+    public function getFrontPageMeta($settings)
     {
         $mpage_on_front = get_option('page_on_front');
         $title = esc_attr(get_post_meta($mpage_on_front, '_metaseo_metatitle', true));
         $desc = esc_attr(get_post_meta($mpage_on_front, '_metaseo_metadesc', true));
+
+        if ($title == '') {
+            $title = esc_attr($settings['metaseo_title_home']);
+        }
+
+        if ($desc == '') {
+            $desc = esc_attr($settings['metaseo_desc_home']);
+        }
+
         $page_follow = get_post_meta($mpage_on_front, '_metaseo_metafollow', true);
         $page_index = get_post_meta($mpage_on_front, '_metaseo_metaindex', true);
         return array(

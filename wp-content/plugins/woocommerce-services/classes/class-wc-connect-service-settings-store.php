@@ -59,6 +59,10 @@ if ( ! class_exists( 'WC_Connect_Service_Settings_Store' ) ) {
 			$result['paper_size'] = $this->get_preferred_paper_size();
 			$result = array_merge( $default, $result );
 
+			if ( ! isset( $result['email_receipts'] ) ) {
+				$result['email_receipts'] = true;
+			}
+
 			return $result;
 		}
 
@@ -72,7 +76,7 @@ if ( ! class_exists( 'WC_Connect_Service_Settings_Store' ) ) {
 		public function update_account_settings( $settings ) {
 			// simple validation for now
 			if ( ! is_array( $settings ) ) {
-				$this->logger->debug( 'Array expected but not received', __FUNCTION__ );
+				$this->logger->log( 'Array expected but not received', __FUNCTION__ );
 				return false;
 			}
 
@@ -244,6 +248,11 @@ if ( ! class_exists( 'WC_Connect_Service_Settings_Store' ) ) {
 				if ( $label_data['label_id'] === $new_label_data->label_id ) {
 					$result = array_merge( $label_data, (array) $new_label_data );
 					$labels_data[ $index ] = $result;
+
+					if ( ! isset( $label_data['tracking'] )
+						&& isset( $result['tracking'] ) ) {
+							WC_Connect_Extension_Compatibility::on_new_tracking_number( $order_id, $result['carrier_id'], $result['tracking'] );
+					}
 				}
 			}
 			update_post_meta( $order_id, 'wc_connect_labels', $labels_data );
@@ -317,6 +326,10 @@ if ( ! class_exists( 'WC_Connect_Service_Settings_Store' ) ) {
 		}
 
 		public function get_enabled_services_by_ids( $service_ids ) {
+			if ( empty( $service_ids ) ) {
+				return array();
+			}
+
 			$enabled_services = array();
 
 			// Note: We use esc_sql here instead of prepare because we are using WHERE IN
@@ -568,7 +581,7 @@ if ( ! class_exists( 'WC_Connect_Service_Settings_Store' ) ) {
 				case 'yd':
 					return __('yd', 'woocommerce-services');
 				default:
-					$this->logger->debug( 'Unexpected measurement unit: ' . $value, __FUNCTION__ );
+					$this->logger->log( 'Unexpected measurement unit: ' . $value, __FUNCTION__ );
 					return $value;
 			}
 		}

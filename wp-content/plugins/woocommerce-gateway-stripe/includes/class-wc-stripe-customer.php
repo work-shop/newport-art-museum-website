@@ -52,6 +52,13 @@ class WC_Stripe_Customer {
 	 * @param [type] $id [description]
 	 */
 	public function set_id( $id ) {
+		// Backwards compat for customer ID stored in array format. (Pre 3.0)
+		if ( is_array( $id ) && isset( $id['customer_id'] ) ) {
+			$id = $id['customer_id'];
+
+			update_user_meta( $this->get_user_id(), '_stripe_customer_id', $id );
+		}
+
 		$this->id = wc_clean( $id );
 	}
 
@@ -135,6 +142,21 @@ class WC_Stripe_Customer {
 	}
 
 	/**
+	 * Checks to see if error is of invalid request
+	 * error and it is no such customer.
+	 *
+	 * @since 4.1.2
+	 * @param array $error
+	 */
+	public function is_no_such_customer_error( $error ) {
+		return (
+			$error &&
+			'invalid_request_error' === $error->type &&
+			preg_match( '/No such customer/i', $error->message )
+		);
+	}
+
+	/**
 	 * Add a source for this stripe customer.
 	 * @param string $source_id
 	 * @param bool $retry
@@ -149,11 +171,13 @@ class WC_Stripe_Customer {
 			'source' => $source_id,
 		), 'customers/' . $this->get_id() . '/sources' );
 
+		$wc_token = false;
+
 		if ( ! empty( $response->error ) ) {
 			// It is possible the WC user once was linked to a customer on Stripe
 			// but no longer exists. Instead of failing, lets try to create a
 			// new customer.
-			if ( preg_match( '/No such customer/i', $response->error->message ) ) {
+			if ( $this->is_no_such_customer_error( $response->error ) ) {
 				delete_user_meta( $this->get_user_id(), '_stripe_customer_id' );
 				$this->create_customer();
 				return $this->add_source( $source_id, false );
