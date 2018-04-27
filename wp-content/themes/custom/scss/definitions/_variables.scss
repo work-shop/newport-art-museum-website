@@ -10,9 +10,9 @@ $slate: #8792A3;
 
 //grays
 $ultra-light: #fafafa;
-$light: #D8D8D8;
+$light: lighten($slate,25%);
 $medium-light: #9B9B9B;
-$medium: #888C8F;
+$medium: $slate;
 $medium-dark: #555555;
 $dark: #222222;
 

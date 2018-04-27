@@ -9,7 +9,7 @@
 	$home_hero_link_url = get_field('home_hero_link_url');	
 	$home_hero_link_color = get_field('home_hero_link_color');
 	?>
-	<div class="block-background mask-dark" style="background-image: url('<?php echo $home_hero_image; ?>');"></div>
+	<div class="block-background mask mask-dark" style="background-image: url('<?php echo $home_hero_image; ?>');"></div>
 	<div class="vertical-center">
 		<div class="container-fluid">
 			<div class="row">

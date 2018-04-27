@@ -1,27 +1,28 @@
 
 /* Sizing heights and widths with viewport units*/
 
-@for $i from 1 through 20 {
-	.vh#{$i*5}{ 
-		height: 5vh * $i;
+@for $i from 1 through 100 {
+	.vh#{$i*1}{ 
+		height: 1vh * $i;
 	}
 }
 
-@for $i from 1 through 20 {
-	.vw#{$i*5}{
-		width: 5% * $i; 
+@for $i from 1 through 100 {
+	.vw#{$i*1}{
+		width: 1% * $i; 
 	}
 }
 
-@for $i from 1 through 20 {
-	.vhmin#{$i*5}{ 
-		min-height: 5vh * $i;
+@for $i from 1 through 100 {
+	.vhmin#{$i*1}{ 
+		min-height: 1vh * $i;
 	}
 }
 
-@for $i from 1 through 20 {
-	.vhmax#{$i*5}{ 
-		max-height: 5vh * $i;
+
+@for $i from 1 through 100 {
+	.vhmax#{$i*1}{ 
+		max-height: 1vh * $i;
 	}
 }
 
