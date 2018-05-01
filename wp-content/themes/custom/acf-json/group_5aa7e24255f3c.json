@@ -214,7 +214,7 @@
                             "other_choice": 0,
                             "save_other_choice": 0,
                             "default_value": "",
-                            "layout": "vertical",
+                            "layout": "horizontal",
                             "return_format": "value"
                         },
                         {
@@ -317,7 +317,7 @@
                             "other_choice": 0,
                             "save_other_choice": 0,
                             "default_value": "",
-                            "layout": "vertical",
+                            "layout": "horizontal",
                             "return_format": "value"
                         },
                         {
@@ -698,6 +698,61 @@
                             "prefix_name": 0
                         },
                         {
+                            "key": "field_5ae339ca9c0d5",
+                            "label": "Section Background Color",
+                            "name": "section_background_color",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "bg-brand": "Brand Blue",
+                                "bg-medium": "Medium Gray",
+                                "bg-light": "Light Gray",
+                                "bg-khaki": "Khaki",
+                                "bg-white": "White"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "save_other_choice": 0,
+                            "default_value": "",
+                            "layout": "horizontal",
+                            "return_format": "value"
+                        },
+                        {
+                            "key": "field_5ae33b83ecc5e",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "white": "White",
+                                "yellow": "Yellow",
+                                "khaki": "Khaki",
+                                "light-gray": "Light Gray",
+                                "dark": "Dark Gray",
+                                "brand": "Brand Blue"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "save_other_choice": 0,
+                            "default_value": "",
+                            "layout": "horizontal",
+                            "return_format": "value"
+                        },
+                        {
                             "key": "field_5aa80cc9cb3e9",
                             "label": "Paragraphs",
                             "name": "paragraphs",
@@ -844,6 +899,48 @@
                             "prefix_name": 0
                         },
                         {
+                            "key": "field_5ae38bcf1cdb8",
+                            "label": "Section Background Color",
+                            "name": "section_background_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae339ca9c0d5"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
+                            "key": "field_5ae38c161cdbb",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae33b83ecc5e"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
                             "key": "field_5aa80e07e7f3d",
                             "label": "List Items",
                             "name": "list_items",
@@ -884,7 +981,7 @@
                                 {
                                     "key": "field_5aa80e07e7f3f",
                                     "label": "List Item Body",
-                                    "name": "paragraph",
+                                    "name": "list_item_body",
                                     "type": "wysiwyg",
                                     "instructions": "",
                                     "required": 0,
@@ -965,6 +1062,48 @@
                             ],
                             "display": "seamless",
                             "layout": "",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
+                            "key": "field_5ae38c121cdba",
+                            "label": "Section Background Color",
+                            "name": "section_background_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae339ca9c0d5"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
+                            "key": "field_5ae38bea1cdb9",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae33b83ecc5e"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
                             "prefix_label": 0,
                             "prefix_name": 0
                         },
@@ -1136,6 +1275,48 @@
                             "prefix_name": 0
                         },
                         {
+                            "key": "field_5ae38c431cdbc",
+                            "label": "Section Background Color",
+                            "name": "section_background_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae339ca9c0d5"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
+                            "key": "field_5ae38c471cdbd",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae33b83ecc5e"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
                             "key": "field_5aa810e1bd9c9",
                             "label": "Gallery",
                             "name": "gallery",
@@ -1225,6 +1406,48 @@
                             },
                             "clone": [
                                 "field_5aa7eff687f24"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
+                            "key": "field_5ae38c6a1cdbe",
+                            "label": "Section Background Color",
+                            "name": "section_background_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae339ca9c0d5"
+                            ],
+                            "display": "seamless",
+                            "layout": "block",
+                            "prefix_label": 0,
+                            "prefix_name": 0
+                        },
+                        {
+                            "key": "field_5ae38c6e1cdbf",
+                            "label": "Section Text Color",
+                            "name": "section_text_color",
+                            "type": "clone",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": 0,
+                            "wrapper": {
+                                "width": "",
+                                "class": "",
+                                "id": ""
+                            },
+                            "clone": [
+                                "field_5ae33b83ecc5e"
                             ],
                             "display": "seamless",
                             "layout": "block",
@@ -1437,5 +1660,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1524839973
+    "modified": 1524862758
 }

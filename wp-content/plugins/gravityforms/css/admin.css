@@ -865,6 +865,10 @@ ul.gfield_checkbox, ul.gfield_radio {
 	vertical-align: top
 }
 
+.gchoice_select_all {
+	font-weight: 700;
+}
+
 .gfield_checkbox li input[type="checkbox"],
 .gfield_radio li input[type="radio"],
 .gfield_checkbox li input {
@@ -4752,6 +4756,15 @@ div.wrap.gf_browser_chrome .gfield_checkbox li input {
 	width:500px;*/
 }
 
+#gform_register_site {
+	display:none;
+}
+
+#gform_license_key {
+	font-size: 19px !important;
+	width: 90% !important;
+}
+
 /* Form List and Entry List */
 
 #entry_list_form .column-is_starred,
@@ -4764,7 +4777,7 @@ div.wrap.gf_browser_chrome .gfield_checkbox li input {
 
 #form_list_form .column-id,
 #form_list_form .column-conversion,
-#form_list_form .column-lead_count,
+#form_list_form .column-entry_count,
 #form_list_form .column-view_count{
 	width:10%;
 }

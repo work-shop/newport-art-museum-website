@@ -36,12 +36,21 @@
 		margin-bottom: 1em;
 	}
 
+	p{
+		margin-bottom: 2em;
+	
+		a{
+			color: lighten($brand,5%);
+			text-decoration: underline;
+		}
+	}	
+
 	p ~ ul{
 		margin-top: 2em;
 		margin-bottom: 3em;
 	}
 
-	p.p1{
+	.p1{
 		padding: 0;
 	}
 

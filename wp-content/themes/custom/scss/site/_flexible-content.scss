@@ -10,6 +10,55 @@ $fc-padding: 12vh 0;
 
 }
 
+.fc-button{
+
+	a{
+		padding: 10px 0 10px 0;
+		display: inline-block;
+		text-align: center;
+		@include transition(all .125s);
+		position: relative;
+
+		&:before {
+			content: '';
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			height: 1px;
+			width: 69%; 
+			//width: 100%; 
+			border-bottom: 2px solid;
+			@include transition(width .2s);
+		}
+
+		&:after{
+			content: '‹';
+			font-family: 'modern_pictograms_proregular';			
+			font-size: 37px;
+			position: absolute;
+			right: -4px;
+			bottom: -26px;
+			opacity: 0;
+			@include transition(all .3s);		
+			//transition-delay: .1s;
+		}
+
+		&:hover{
+			&:before{
+				width: 100%;
+			}
+			&:after{
+				opacity: 1;
+			}			
+		}
+
+		@media screen and (max-width: $sm) {
+			//padding: 3px 8px;
+		}
+	}
+
+}
+
 .container-fc{
 	margin-left: auto;
 	margin-right: auto;
@@ -57,7 +106,7 @@ $fc-padding: 12vh 0;
 
 	.mask-light{
 		&:after{
-			background: transparentize($ultra-light, .4);
+			background: transparentize(white, .3);
 		}
 	}
 
@@ -94,11 +143,15 @@ $fc-padding: 12vh 0;
 }
 
 .fc-background-image-height-33,.fc-background-height-33,.fc-background-image-height-50,.fc-background-height-50,.fc-background-image-height-66,.fc-background-height-66,.fc-background-image-height-100,.fc-background-height-100,.fc-background-image-height-natural-image{
+
 	.fc-background-text{
+		max-width: none;
 		@extend .vertical-center;
 		position: absolute;
+		display: table;
 		width: 100%;
 	}
+
 }
 
 .fc-background-heading,.fc-background-subheading,.fc-background-link{
@@ -111,6 +164,11 @@ $fc-padding: 12vh 0;
 	&.righted{
 		float: right;
 	}
+
+	&.centered{
+		margin-left: auto;
+		margin-right: auto;
+	}
 }
 
 .fc-background-heading{
@@ -118,7 +176,7 @@ $fc-padding: 12vh 0;
 }
 
 .fc-background-subheading{
-	margin-bottom: 1.5em;
+	margin-bottom: 2.5em;
 }
 
 .fc-background-link{
@@ -188,6 +246,43 @@ $fc-padding: 12vh 0;
 }
 
 
+//REPEATING PARAGRAPHS
+
+.fc-repeating-paragraphs{
+	padding: $fc-padding;
+
+	.fc-repeating-paragraphs-row{
+		margin-bottom: 10vh;
+
+		&:last-child{
+			margin-bottom: 2vh;
+		}
+	}
+}
+
+.fc-repeating-paragraphs-separator{
+	content: '';
+	height: 1px;
+	opacity: .3;
+	margin-top: 7vh;
+}
+
+
+
+//COLLAPSIBLE LIST
+
+.fc-collapsible-list{
+	padding: $fc-padding;
+	*{
+		//outline: 1px solid black;
+	}
+}
+
+.fc-collapsible-list-link{
+	margin-top: 1em;
+}
+
+//accordian styles in /utitlies/accordian.scss
 
 
 

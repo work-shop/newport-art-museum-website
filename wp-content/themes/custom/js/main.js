@@ -15,7 +15,10 @@ import { modals } from './modals.js';
 import { scrollSpy } from './scroll-spy.js';
 import { menuToggle } from './menu-toggle.js';
 import { slickSlideshows } from './slick-slideshows.js';
+import { jqueryAccordian } from './jquery-accordian.js';
+import { accordian } from './accordian.js';
 import { livereload } from './livereload-client.js';
+
 
 livereload();
 
@@ -29,5 +32,7 @@ modals(config.modals);
 scrollSpy(config.scrollSpy);
 menuToggle(config.menuToggle);
 slickSlideshows(config.slickSlideshows);
+jqueryAccordian();
+accordian();
 
 console.log('main.js loaded, with gulp!');

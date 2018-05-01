@@ -73,6 +73,9 @@ var config = {
         fade: true,
         autoplaySpeed: 5000,
         speed: 700        
+    },
+    accordian: {
+        
     }
 };
 

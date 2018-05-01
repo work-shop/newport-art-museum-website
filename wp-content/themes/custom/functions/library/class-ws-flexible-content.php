@@ -2,7 +2,6 @@
 
 class WS_Flexible_Content_Helper{
 
-
 	public static function fc_background_text($heading, $text_alignment, $text_color, $subheading, $link_url, $link_text){ ?>
 		<?php if( $heading ): ?>
 			<div class="fc-background-heading <?php echo $text_alignment; ?>">
@@ -15,8 +14,8 @@ class WS_Flexible_Content_Helper{
 			</div>
 		<?php endif; ?>
 		<?php if( $link_url ): ?>
-			<div class="fc-background-link <?php echo $text_alignment; ?>">
-				<a href="<?php echo $link_url; ?>" class="fc-background-button <?php echo $text_color; ?>"><?php echo $link_text; ?></a>
+			<div class="fc-background-link fc-button <?php echo $text_alignment; ?>">
+				<a href="<?php echo $link_url; ?>" class="<?php echo $text_color; ?>"><?php echo $link_text; ?></a>
 			</div>
 		<?php endif; ?>
 	<?php } 
@@ -31,7 +30,6 @@ class WS_Flexible_Content_Helper{
 			</div>
 		<?php endif; ?>		
 	<?php }
-
 
 
 }
