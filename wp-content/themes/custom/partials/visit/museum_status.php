@@ -30,4 +30,4 @@ endif; ?>
 
 The museum is currently <span class="ms-status"><?php echo $museum_status; ?></span>. 
 <br>
-Our hours today are <span class="ms-open"><?php echo $museum_open; ?> to <span class="ms-close"><?php echo $museum_close; ?>
+Our hours today are <span class="ms-open"><?php echo $museum_open; ?> to <span class="ms-close"><?php echo $museum_close; ?>.

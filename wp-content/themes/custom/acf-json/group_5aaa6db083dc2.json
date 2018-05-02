@@ -3,29 +3,10 @@
     "title": "Footer",
     "fields": [
         {
-            "key": "field_5aaa70381fd7c",
-            "label": "Footer Message",
-            "name": "footer_message",
-            "type": "text",
-            "instructions": "",
-            "required": 0,
-            "conditional_logic": 0,
-            "wrapper": {
-                "width": "",
-                "class": "",
-                "id": ""
-            },
-            "default_value": "",
-            "placeholder": "",
-            "prepend": "",
-            "append": "",
-            "maxlength": ""
-        },
-        {
             "key": "field_5aaa6ecd7758a",
             "label": "Footer Menu Links Column 1",
             "name": "footer_menu_links_column_1",
-            "type": "link",
+            "type": "repeater",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -34,13 +15,34 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "collapsed": "field_5ae9ec65ea5ae",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Link",
+            "sub_fields": [
+                {
+                    "key": "field_5ae9ec65ea5ae",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array"
+                }
+            ]
         },
         {
-            "key": "field_5aaa6fc97758b",
+            "key": "field_5ae9f30398533",
             "label": "Footer Menu Links Column 2",
             "name": "footer_menu_links_column_2",
-            "type": "link",
+            "type": "repeater",
             "instructions": "",
             "required": 0,
             "conditional_logic": 0,
@@ -49,7 +51,28 @@
                 "class": "",
                 "id": ""
             },
-            "return_format": "array"
+            "collapsed": "field_5ae9ec65ea5ae",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Link",
+            "sub_fields": [
+                {
+                    "key": "field_5ae9f30398534",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array"
+                }
+            ]
         },
         {
             "key": "field_5aaa8a02a509d",
@@ -86,5 +109,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "(Site Options & Menus)",
-    "modified": 1521125927
+    "modified": 1525281559
 }
