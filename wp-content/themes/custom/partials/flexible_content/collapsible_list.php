@@ -26,9 +26,8 @@ $list_items = $fc_row['list_items'];
 							<div class="accordion fc-collapsible-list-accordian" data-accordion>
 								<div class="fc-collapsible-list-accordian-label" data-control>
 									<?php if( $list_item['list_item_label'] ): ?>
-										<h4 class="<?php echo $section_text_color; ?>">
+										<h4 class="">
 											<?php echo $list_item['list_item_label']; ?>
-
 										</h4>
 										<span class="icon" data-icon="”"></span>
 									<?php endif; ?>
@@ -36,13 +35,13 @@ $list_items = $fc_row['list_items'];
 								<div class="fc-collapsible-list-accordian-body" data-content>
 									<div class="accordian-content-inner">
 										<?php if( $list_item['list_item_body'] ): ?>
-											<div class="wysiwyg <?php echo $section_text_color; ?>">
+											<div class="wysiwyg">
 												<?php echo $list_item['list_item_body']; ?>
 											</div>
 										<?php endif; ?>
 										<?php if( $list_item['link_url'] && $list_item['link_text']): ?>
 											<div class="fc-collapsible-list-link fc-button">
-												<a href="<?php echo $list_item['link_url']; ?>" class="<?php echo $section_text_color; ?>">
+												<a href="<?php echo $list_item['link_url']; ?>" class="">
 													<?php echo $list_item['link_text']; ?>
 												</a>
 											</div>

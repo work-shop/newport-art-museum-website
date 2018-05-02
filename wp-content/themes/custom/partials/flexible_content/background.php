@@ -65,7 +65,6 @@ endif; ?>
 			</div>
 		</div>
 
-
 	<?php elseif( $background_type === 'color'): ?>
 		<?php if( $include_text ): ?>
 			<div class="container-fc fc-background-text">
@@ -76,8 +75,7 @@ endif; ?>
 				</div>
 			</div>
 		<?php endif; ?>
-
-
+		
 	<?php endif; ?>
 </section>
 

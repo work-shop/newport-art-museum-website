@@ -112,3 +112,40 @@ $text-button: (
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
 }
+
+
+//slick modifications for this site
+
+
+.slick-arrow{
+	background: $brand;
+	border-radius: 1px;
+
+	&:after{
+		color: white;
+	}
+
+}
+
+.slick-dots{
+	li{
+		display: inline-block;
+		margin-right: 15px;
+
+		&.slick-active button{
+			background: $medium;
+			border: 1px solid transparentize($brand,.5);
+			width: 30px;
+			height: 5px;
+		}
+	}
+
+	button{
+		border: 1px solid $medium;
+		width: 30px;
+		height: 5px;
+		padding: 0px;
+		background: $light;
+		border-radius: 0;	
+	}
+}

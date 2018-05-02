@@ -10,10 +10,12 @@ function slickSlideshows( config ) {
 			slidesToShow: config.slidesToShow,
 			dots: config.dots,
 			arrows: config.arrows,
-			autoplay: config.autoplay,
+			autoplay: false,
 			fade: config.fade,
 			autoplaySpeed: config.autoplaySpeed,
-			speed: config.speed
+			speed: config.speed,
+			pauseOnHover: true,
+			pauseOnDotsHover: true
 		});
 	});
 

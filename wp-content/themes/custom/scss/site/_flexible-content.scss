@@ -1,6 +1,7 @@
 $fc-padding: 12vh 0;
 
 .fc{
+	padding: $fc-padding;
 	//border: 1px solid $light;
 
 	p{
@@ -13,48 +14,50 @@ $fc-padding: 12vh 0;
 .fc-button{
 
 	a{
-		padding: 10px 0 10px 0;
+		padding: 5px 10px 5px 10px;
 		display: inline-block;
 		text-align: center;
-		@include transition(all .125s);
+		@include transition(all .2s);
 		position: relative;
-
-		&:before {
-			content: '';
-			position: absolute;
-			left: 0;
-			bottom: 0;
-			height: 1px;
-			width: 69%; 
-			//width: 100%; 
-			border-bottom: 2px solid;
-			@include transition(width .2s);
-		}
-
-		&:after{
-			content: '‹';
-			font-family: 'modern_pictograms_proregular';			
-			font-size: 37px;
-			position: absolute;
-			right: -4px;
-			bottom: -26px;
-			opacity: 0;
-			@include transition(all .3s);		
-			//transition-delay: .1s;
-		}
+		border: 1px solid;
+		border-radius: 2px;
 
 		&:hover{
-			&:before{
-				width: 100%;
-			}
-			&:after{
-				opacity: 1;
-			}			
+			transform: scale(1.07);
 		}
 
-		@media screen and (max-width: $sm) {
-			//padding: 3px 8px;
-		}
+		// &:before {
+		// 	content: '';
+		// 	position: absolute;
+		// 	left: 0;
+		// 	bottom: 0;
+		// 	height: 1px;
+		// 	//width: 69%; 
+		// 	width: 100%; 
+		// 	border-bottom: 2px solid;
+		// 	@include transition(width .2s);
+		// }
+
+		// &:after{
+		// 	content: '‹';
+		// 	font-family: 'modern_pictograms_proregular';			
+		// 	font-size: 37px;
+		// 	position: absolute;
+		// 	right: -4px;
+		// 	bottom: -26px;
+		// 	opacity: 0;
+		// 	@include transition(all .3s);		
+		// 	//transition-delay: .1s;
+		// }
+
+		// &:hover{
+		// 	&:before{
+		// 		width: 100%;
+		// 	}
+		// 	&:after{
+		// 		opacity: 1;
+		// 	}			
+		// }
 	}
 
 }
@@ -91,12 +94,12 @@ $fc-padding: 12vh 0;
 //most of the rich text styles are in wysiwyg.scss
 
 .fc-rich-text{
-	padding: $fc-padding;
 }
 
 //BACKGROUND
 
 .fc-background{
+	padding: 0;
 
 	.mask-dark{
 		&:after{
@@ -249,7 +252,6 @@ $fc-padding: 12vh 0;
 //REPEATING PARAGRAPHS
 
 .fc-repeating-paragraphs{
-	padding: $fc-padding;
 
 	.fc-repeating-paragraphs-row{
 		margin-bottom: 10vh;
@@ -272,7 +274,6 @@ $fc-padding: 12vh 0;
 //COLLAPSIBLE LIST
 
 .fc-collapsible-list{
-	padding: $fc-padding;
 }
 
 .fc-collapsible-list-link{
@@ -286,7 +287,6 @@ $fc-padding: 12vh 0;
 //LABELLED LIST
 
 .fc-labelled-list{
-	padding: $fc-padding;
 }
 
 .fc-labelled-list-item{
@@ -315,4 +315,64 @@ $fc-padding: 12vh 0;
 .fc-labelled-list-link{
 	margin-top: 1em;
 }
+
+
+//GALLERY
+
+.fc-gallery{
+}
+
+.fc-gallery-slide-image-container{
+	position: relative;
+	height: 65vh;
+	//background: transparentize($medium, .8);
+
+	@media only screen and (max-width: 767px) and (orientation: portrait) {
+		height: 36vh;
+	}
+
+}
+
+.fc-gallery-slide-image{
+	@extend .background;
+	background-size: contain;
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+
+.fc-gallery-slide-caption-container{
+	//border: 1px solid red;
+	height: 55px;
+
+	.fc-image-caption{
+		width: 61%;
+		min-width: 300px;
+		margin: 0 auto;
+		text-align: center;
+		line-height: 1.3;
+		font-size: .7em;
+		color: $medium;
+		padding: 10px 15px;
+	}
+}
+
+
+//VIDEO
+
+.fc-video-container{
+	height: 65vh;
+	//outline: 1px solid white;
+
+	@media only screen and (max-width: 767px) and (orientation: portrait) {
+		height: 36vh;
+	}
+
+	iframe{
+		width: 100%;
+		max-width: none;
+		height: inherit;
+	}
+}
+
+
 
