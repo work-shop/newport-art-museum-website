@@ -273,9 +273,6 @@ $fc-padding: 12vh 0;
 
 .fc-collapsible-list{
 	padding: $fc-padding;
-	*{
-		//outline: 1px solid black;
-	}
 }
 
 .fc-collapsible-list-link{
@@ -285,4 +282,37 @@ $fc-padding: 12vh 0;
 //accordian styles in /utitlies/accordian.scss
 
 
+
+//LABELLED LIST
+
+.fc-labelled-list{
+	padding: $fc-padding;
+}
+
+.fc-labelled-list-item{
+	margin-bottom: 3em;
+	//outline: 1px solid white;
+}
+
+.fc-labelled-list-label{
+	position: relative;
+	top: 2px;
+	h4{
+		line-height: 1.3;
+		@extend .bold;
+	}
+}
+
+.fc-labelled-list-body{
+	p{
+		&:last-child{
+			margin-bottom: 0;
+		}
+	}
+}
+
+
+.fc-labelled-list-link{
+	margin-top: 1em;
+}
 

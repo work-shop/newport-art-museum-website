@@ -1169,7 +1169,7 @@
                                 {
                                     "key": "field_5aa8101abd9be",
                                     "label": "List Item Body",
-                                    "name": "paragraph",
+                                    "name": "list_item_body",
                                     "type": "wysiwyg",
                                     "instructions": "",
                                     "required": 0,
@@ -1660,5 +1660,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1524862758
+    "modified": 1525204030
 }
