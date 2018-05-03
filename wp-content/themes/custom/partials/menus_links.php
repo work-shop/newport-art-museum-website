@@ -13,7 +13,7 @@
 		<?php endif; ?>
 		<div class="row">
 			<div class="col-sm-12">
-				<ul>
+				<ul class="menu-links-list">
 					<?php foreach( $links as $post): // variable must be called $post (IMPORTANT) ?>
 						<?php setup_postdata($post); ?>
 						<li>
@@ -21,9 +21,10 @@
 						</li>
 					<?php endforeach; ?>
 					<?php if( $links_additional ): ?>
+						<?php // var_dump($links_additional); ?>
 						<?php foreach( $links_additional as $link): ?>
 							<li>
-								<a href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>"><?php echo $link['title']; ?></a>
+								<a href="<?php echo $link['link']['url']; ?>" target="<?php echo $link['link']['target']; ?>"><?php echo $link['link']['title']; ?></a>
 							</li>
 						<?php endforeach; ?>
 					<?php endif; ?>

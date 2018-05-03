@@ -3,7 +3,7 @@
 var slick = require ('slick-carousel');
 
 function slickSlideshows( config ) {
-	console.log('slick-slideshows.js loaded');
+	//console.log('slick-slideshows.js loaded');
 
 	$( document ).ready( function() {
 		$('.slick-default').slick({

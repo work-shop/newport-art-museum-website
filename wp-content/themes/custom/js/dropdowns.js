@@ -1,7 +1,7 @@
 'use strict';
 
 function dropdowns( config ) {
-	console.log('dropdowns.js loaded');
+	//console.log('dropdowns.js loaded');
 
 	$(document).ready( function() {
 
@@ -26,7 +26,7 @@ function dropdowns( config ) {
 
 	//open the dropdown
 	function openDropdown( link ){
-		console.log(link);
+		//console.log(link);
 		var linkTarget = link.data('dropdown-target');
 		//console.log(linkTarget);
 		var dropdownTarget = 'menu[data-dropdown="' + linkTarget + '"]';

@@ -6,7 +6,7 @@ var stickyNavProperties = {
 };
 
 function stickyNav( config ) {
-	console.log("sticky-nav.js loaded");
+	//console.log("sticky-nav.js loaded");
 
 	stickyNavProperties.selector = config.selector || '#nav';
 	stickyNavProperties.navHeight = config.navHeight || 75;

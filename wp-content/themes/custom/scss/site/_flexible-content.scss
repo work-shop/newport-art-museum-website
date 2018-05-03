@@ -258,6 +258,9 @@ $fc-padding: 12vh 0;
 
 		&:last-child{
 			margin-bottom: 2vh;
+			.fc-repeating-paragraphs-separator{
+				display: none;
+			}
 		}
 	}
 }

@@ -1,7 +1,7 @@
 'use strict';
 
-function accordian( config ) {
-	console.log('accordian.js loaded');
+function accordian() {
+	//console.log('accordian.js loaded');
 
 	$(document).ready( function() {
 		$('.accordion').accordion({

@@ -10,7 +10,7 @@ var firstPass = true;
 
 function scrollSpy( config ){
 
-	console.log('scroll-spy.js loaded');
+	//console.log('scroll-spy.js loaded');
 
 	$(window).on('load', function() {		
 

@@ -1,8 +1,8 @@
-"use strict";
+'use strict';
 
 
 function jumpLinks(config){
-	console.log("jump-links.js loaded");
+	//console.log("jump-links.js loaded");
 
 	$(document).ready( function() {
 

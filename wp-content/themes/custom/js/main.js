@@ -17,6 +17,7 @@ import { menuToggle } from './menu-toggle.js';
 import { slickSlideshows } from './slick-slideshows.js';
 import { jqueryAccordian } from './jquery-accordian.js';
 import { accordian } from './accordian.js';
+import { menuOverflow } from './menu-overflow.js';
 import { livereload } from './livereload-client.js';
 
 
@@ -34,5 +35,6 @@ menuToggle(config.menuToggle);
 slickSlideshows(config.slickSlideshows);
 jqueryAccordian();
 accordian();
+menuOverflow();
 
-console.log('main.js loaded, with gulp!');
+//console.log('main.js loaded, with gulp!');

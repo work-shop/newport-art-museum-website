@@ -3,7 +3,7 @@
 var modalProperties = {};
 
 function modals( config ) {
-	console.log('modals.js loaded');
+	//console.log('modals.js loaded');
 
 	modalProperties.modalClass = config.modalClass || 'modal';
 	modalProperties.modalToggleClass = config.modalToggleClass || 'modal-toggle';
