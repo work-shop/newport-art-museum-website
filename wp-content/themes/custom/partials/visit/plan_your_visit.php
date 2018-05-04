@@ -7,7 +7,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-7">
 					<h4 class="plan-your-visit-heading mb2">
 						Hours
 					</h4>
@@ -18,7 +18,7 @@
 						<?php get_template_part('partials/visit/hours'); ?>
 					</div>
 				</div>
-				<div class="col-md-6">
+				<div class="col-md-5">
 					<h4 class="plan-your-visit-heading mb2">
 						Admission
 					</h4>
@@ -27,12 +27,12 @@
 						if( have_rows('admission','23') ):
 							while ( have_rows('admission','23') ) : the_row(); ?>
 							<div class="row">
-								<div class="col-md-6">
+								<div class="col-md-9">
 									<h4 class="plan-your-visit-admission-type">
 										<?php the_sub_field('admission_type'); ?>
 									</h4>
 								</div>
-								<div class="col-md-6">
+								<div class="col-md-3">
 									<h4 class="plan-your-visit-admission-cost">
 										<?php the_sub_field('admission_cost'); ?>
 									</h4>

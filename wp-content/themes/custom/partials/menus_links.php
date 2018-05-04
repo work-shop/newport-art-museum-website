@@ -1,7 +1,7 @@
 <?php $links = $GLOBALS['links']; ?>
 <?php $links_additional = $GLOBALS['links_additional']; ?>
 <?php if( $links ): ?>
-	<div class="container-fluid">
+	<div class="container-fluid menu-links-container">
 		<?php if ( $GLOBALS['page_nav'] ): ?>
 			<div class="row">
 				<div class="col-sm-12">

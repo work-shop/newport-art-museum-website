@@ -59,11 +59,11 @@ body.dropdown-on{
 
 	@extend .clearfix;
 	margin-top: 15px;
-	margin-bottom: 7px;
+	margin-bottom: 17px;
 
 	@media screen and (max-width: $md) {
 		margin-top: 11px;
-		margin-bottom: 0px;
+		margin-bottom: 10px;
 	}
 	
 	ul{

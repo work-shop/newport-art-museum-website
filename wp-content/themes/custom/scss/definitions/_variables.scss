@@ -22,15 +22,15 @@ $error: #ff4a4a;
 
 
 //sizes
-$nav-height: 105px;
-$nav-height-md: 90px;
-$dropdown-height: 600px;
-$dropdown-links-height: 120px;
+$nav-height: 115px;
+$nav-height-md: 100px;
+$nav-height-mobile: 80px;
+$dropdown-height: 605px;
+$dropdown-links-height: 100px;
 $dropdown-graphics-height: $dropdown-height - $dropdown-links-height;
 $nav-plus-dropdown-height: $nav-height + $dropdown-height;
 $nav-drop: $nav-height;
 $nav-drop-after: $nav-height - 1px;
-$nav-height-mobile: 80px;
 $container-fluid-max-width: 1410px;
 $container-fluid-padding: 105px;
 $container-fluid-padding-md: $container-fluid-padding / 2;

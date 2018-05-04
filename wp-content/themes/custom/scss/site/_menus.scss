@@ -1,5 +1,15 @@
 
 //MENUS
+
+$menu-graphic-padding: 25px;
+
+#menus{
+	.menu-links-container{
+		max-width: none;
+	}
+}
+
+
 .menu-dropdown{
 	margin: 0;
 	padding: 0;
@@ -31,33 +41,39 @@
 	}
 
 	.menu-dropdown-links{
-		height: $dropdown-links-height;
+		//height: $dropdown-links-height;
 		background: white;
-		padding: 30px 0 29px 0;
-		border-bottom: 1px solid $light;
+		padding: 15px 0 15px 0;
+		border-bottom: 1px solid darken($light, 7%);
 
 		ul{
 			width: 95%;
-			//outline: 1px solid $medium;
-			//text-overflow: ellipsis;
 			white-space: nowrap;
 			overflow: hidden;
-			padding-top: 17px;
+			padding-top: 21px;
+			padding-bottom: 10px;
+			//outline: 1px solid red;
 
 			&.overflowed{
 				white-space: normal;
-				width: 75%;
-				padding-top: 0;
-				outline: 1px solid red;
-				//width: 60%;
+				width: 80%;
+				padding-top: 12px;
+				padding-bottom: 0;
+				margin-top: 0px;
 			}
 		}
 
 		li{
 			display: inline-block;
 			height: 34px;
-			margin-right: 2.5vw;
+			margin-right: 3vw;
 			margin-bottom: 0;
+			//outline: 1px solid green;
+
+			@media screen and (max-width: $sm) {
+				margin-right: 5vw;
+				height: 30px;
+			}
 
 			a{
 				display: block;
@@ -65,8 +81,23 @@
 				color: $brand;
 				transition: all .1s;
 				font-size: 20px;
-				padding: 4px;
+				padding: 2px 5px 0px 5px;
+				height: inherit;
 				//outline: 1px solid blue;
+
+				font-size: 17px;
+
+				@media screen and (max-width: $lg) {
+					font-size: 15px;
+				}
+
+				@media screen and (max-width: $md) {
+					font-size: 14px;
+				}
+
+				@media screen and (max-width: $sm) {
+					font-size: 12px;
+				}				
 
 				&:hover{
 					border-bottom: 2px solid $brand;
@@ -86,12 +117,6 @@
 	.menu-dropdown-graphic{
 		height: $dropdown-graphics-height;
 	}
-}
-
-
-
-main{
-
 }
 
 #blanket-dropdown{
@@ -125,6 +150,35 @@ body.dropdown-on{
 }
 
 
+//GRAPHIC MENUS
+
+.menu-dropdown-graphic-two-column{
+	display: grid;
+	grid-template-columns: 61% 39%;
+
+	.menu-dropdown-graphic-1{
+		padding-left: $container-fluid-padding;
+		padding-top: 3em;
+
+		p{
+			width: 61%;
+		}
+	}
+
+	.menu-dropdown-graphic-2{
+		margin: $menu-graphic-padding;
+		position: relative;
+	}
+
+}
+
+.menu-dropdown-graphic-background{
+	@extend .background;
+	//width: calc(100% - $menu-graphic-padding);
+	//height: calc(100% - $menu-graphic-padding);
+}
+
+
 //SPECIFIC MENUS
 
 #menu-visit{
@@ -134,4 +188,8 @@ body.dropdown-on{
 	}
 
 }
+
+
+
+
 

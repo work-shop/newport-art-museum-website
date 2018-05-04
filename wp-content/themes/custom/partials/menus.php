@@ -17,8 +17,29 @@
 			<?php $GLOBALS['links_additional'] = get_field('about_menu_additional_links', 'option'); ?>		
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
-		<div class="menu-dropdown-graphic">
-			ABOUT Graphic
+		<div class="menu-dropdown-graphic menu-dropdown-graphic-two-column">
+			<div class="menu-dropdown-graphic-1">
+				<?php 
+				$heading = get_field('about_menu_heading', 'option'); 
+				$subheading = get_field('about_menu_subheading', 'option'); 
+				?>
+				<?php if( $heading ): ?>
+					<h3 class="serif"><?php echo $heading; ?></h3>
+				<?php endif; ?>
+				<?php if( $subheading ): ?>
+					<p class="serif"><?php echo $subheading; ?></p>
+				<?php endif; ?>
+				<div class="menu-dropdown-graphic-link">
+					<a class="" href="/about">Learn More About The Museum</a>
+				</div>	
+			</div>
+			<div class="menu-dropdown-graphic-2">
+				<?php $image = get_field('about_menu_image', 'option'); ?>
+				<?php if( $image ): ?>
+					<div class="menu-dropdown-graphic-background" style="background-image: url('<?php echo $image['sizes']['large']; ?>')">
+					</div>
+				<?php endif; ?>
+			</div>
 		</div>
 	</menu>
 
