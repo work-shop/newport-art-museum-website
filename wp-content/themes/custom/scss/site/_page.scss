@@ -89,3 +89,50 @@ $page-nav-height: 160px;
 	background: #E7E8EA;
 	padding: 8vh 0;
 }
+
+
+//PAGE END INFO
+
+.page-end-info{
+	margin: 0;
+	border: 25px solid $light;
+
+	@media screen and (min-width: 768px) {
+		min-height: 70vh;
+	}
+
+	@media screen and (max-width: $sm) {
+		border: 15px solid $light;
+	}
+}
+
+.page-end-info-1{
+	position: relative;
+	height: 100%;
+
+	@media screen and (max-width: $sm) {
+		display: none;
+	}
+}
+
+.page-end-info-2{
+	padding: 9vh 8vw 9vh 4vw;
+
+	@media screen and (max-width: $sm) {
+		padding-top: 6vh;
+		padding-bottom: 6vh;
+	}
+}
+
+.page-end-info-links{
+	
+	li{
+		margin-bottom: .6em;
+	}
+
+	a{
+		@extend .bold;
+		color: $brand;
+	}
+}
+

@@ -13,10 +13,10 @@ $menu-graphic-padding: 25px;
 .menu-dropdown{
 	margin: 0;
 	padding: 0;
-	height: $dropdown-height;
+	//height: $dropdown-height;
 	width: 100%;
 	top: $nav-height;
-	background: transparentize($ultra-light, .02);
+	background: transparentize($ultra-light, .1);
 	box-shadow: 0px 4px 35px $slate;
 	position: fixed;
 	transform: translate(0,-100vh) rotateX(0deg);
@@ -24,6 +24,7 @@ $menu-graphic-padding: 25px;
 	transition: transform .25s;
 	z-index: -9;
 	opacity: 0;
+	overflow: hidden;
 
 	@media screen and (max-width: $md) {
 		top: $nav-height-md;
@@ -44,7 +45,7 @@ $menu-graphic-padding: 25px;
 		//height: $dropdown-links-height;
 		background: white;
 		padding: 15px 0 15px 0;
-		border-bottom: 1px solid darken($light, 7%);
+		border-bottom: 2px solid darken($light, 10%);
 
 		ul{
 			width: 95%;
@@ -124,8 +125,9 @@ $menu-graphic-padding: 25px;
 	bottom: 0;
 	left: 0;
 	width: 100%;
-	height: calc(100% - #{$nav-plus-dropdown-height});
+	height: 100%;
 	//background: rgba(255,255,255,.45);
+	//background: yellow;
 	z-index: 5;
 	transform: translate(0,-100vh);
 	transition: transform .25s;
@@ -152,13 +154,20 @@ body.dropdown-on{
 
 //GRAPHIC MENUS
 
+.menu-dropdown-graphic{
+	.container-fluid{
+		max-width: none;
+	}
+}
+
+
 .menu-dropdown-graphic-two-column{
 	display: grid;
 	grid-template-columns: 61% 39%;
 
 	.menu-dropdown-graphic-1{
 		padding-left: $container-fluid-padding;
-		padding-top: 3em;
+		padding-top: 4em;
 
 		p{
 			width: 61%;
@@ -176,6 +185,24 @@ body.dropdown-on{
 	@extend .background;
 	//width: calc(100% - $menu-graphic-padding);
 	//height: calc(100% - $menu-graphic-padding);
+}
+
+.menu-dropdown-graphic-link{
+	
+	a{
+		display: block;
+		font-size: 18px;
+		color: $brand;
+
+		@media screen and (max-width: $md) {
+			font-size: 16px;
+		}
+
+	}
+}
+
+.menu-dropdown-cards-upper{
+	padding-top: 2em;
 }
 
 

@@ -82,8 +82,8 @@
         },
         {
             "key": "field_5aa934ad29880",
-            "label": "End of Page Info Links",
-            "name": "page_end_info_links",
+            "label": "End of Page Info Links Column 1",
+            "name": "page_end_info_links_column_1",
             "type": "repeater",
             "instructions": "",
             "required": 0,
@@ -109,6 +109,50 @@
             "sub_fields": [
                 {
                     "key": "field_5aaa8256f108d",
+                    "label": "Link",
+                    "name": "link",
+                    "type": "link",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "return_format": "array"
+                }
+            ]
+        },
+        {
+            "key": "field_5af3352373368",
+            "label": "End of Page Info Links Column 2",
+            "name": "page_end_info_links_column_2",
+            "type": "repeater",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": [
+                [
+                    {
+                        "field": "field_5aa933906f5ea",
+                        "operator": "==",
+                        "value": "1"
+                    }
+                ]
+            ],
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "field_5aaa8256f108d",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "Add Link",
+            "sub_fields": [
+                {
+                    "key": "field_5af3352373369",
                     "label": "Link",
                     "name": "link",
                     "type": "link",
@@ -200,5 +244,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1521475288
+    "modified": 1525888302
 }

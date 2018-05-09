@@ -14,8 +14,8 @@ if ( $post->post_parent === 42 ) { ?>
 
 	<?php get_template_part('partials/footer' ); ?>
 
+<?php // else not a collection child page ?>
 <?php } else { ?>
-
 
 	<?php get_template_part('partials/page/page_hero' ); ?>
 

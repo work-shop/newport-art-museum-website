@@ -49,6 +49,23 @@ body{
 	}	
 }
 
+a{
+	color: $brand;
+
+}
+
+
+@media only screen and (min-width : 768px) {
+    .row-equal-height{
+        display: table;
+    }
+    .row-equal-height [class*="col-"]{
+        float: none;
+        display: table-cell;
+        vertical-align: top;
+    }
+}
+
 
 /* sitewide button styles */
 
