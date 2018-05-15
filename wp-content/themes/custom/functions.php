@@ -25,6 +25,7 @@ require_once( __ROOT__ . '/functions/post-types/news/class-nam-news.php');
 require_once( __ROOT__ . '/functions/class-nam-site-admin.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-init.php' );
 
+require_once( __ROOT__ . '/functions/library/class-nam-helpers.php' );
 require_once( __ROOT__ . '/functions/library/class-ws-flexible-content.php' );
 
 new NAM_Site();

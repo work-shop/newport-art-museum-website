@@ -47,6 +47,10 @@ body{
 		padding-left: $container-fluid-padding-mobile;
 		padding-right: $container-fluid-padding-mobile;
 	}	
+
+	&.container-fluid-stretch{
+		max-width: none;
+	}
 }
 
 a{

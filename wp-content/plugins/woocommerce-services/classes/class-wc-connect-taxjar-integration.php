@@ -12,8 +12,26 @@ class WC_Connect_TaxJar_Integration {
 	 */
 	public $logger;
 
+	private $expected_options = array(
+		// If automated taxes are enabled and user disables taxes we re-enable them
+		'woocommerce_calc_taxes' => 'yes',
+		// Users can set either billing or shipping address for tax rates but not shop
+		'woocommerce_tax_based_on' => 'shipping',
+		// Rate calculations assume tax not included
+		'woocommerce_prices_include_tax' => 'no',
+		// Use no special handling on shipping taxes, our API handles that
+		'woocommerce_shipping_tax_class' => '',
+		// API handles rounding precision
+		'woocommerce_tax_round_at_subtotal' => 'no',
+		// Rates are calculated in the cart assuming tax not included
+		'woocommerce_tax_display_shop' => 'excl',
+		// TaxJar returns one total amount, not line item amounts
+		'woocommerce_tax_display_cart' => 'excl',
+		// TaxJar returns one total amount, not line item amounts
+		'woocommerce_tax_total_display' => 'single',
+	);
+
 	const PROXY_PATH               = 'taxjar/v2';
-	const ENV_SETUP_FLAG           = 'needs_tax_environment_setup';
 	const OPTION_NAME              = 'wc_connect_taxes_enabled';
 	const SETUP_WIZARD_OPTION_NAME = 'woocommerce_setup_automated_taxes';
 
@@ -42,12 +60,19 @@ class WC_Connect_TaxJar_Integration {
 		// Add toggle for automated taxes to the core settings page
 		add_filter( 'woocommerce_tax_settings', array( $this, 'add_tax_settings' ) );
 
+		// Settings values filter to handle the hardcoded settings
+		add_filter( 'woocommerce_admin_settings_sanitize_option', array( $this, 'sanitize_tax_option' ), 10, 2 );
+
+		// Settings Page
+		add_action( 'woocommerce_sections_tax', array( $this, 'output_sections_before' ),  9 );
+		add_action( 'woocommerce_sections_tax', array( $this, 'output_sections_after' ),  11 );
+
 		// Bow out if we're not wanted
 		if ( ! $this->is_enabled() ) {
 			return;
 		}
 
-		$this->setup_environment();
+		$this->configure_tax_settings();
 
 		// Calculate Taxes at Cart / Checkout
 		if ( class_exists( 'WC_Cart_Totals' ) ) { // Woo 3.2+
@@ -88,10 +113,13 @@ class WC_Connect_TaxJar_Integration {
 	 * @return array
 	 */
 	public function add_tax_settings( $tax_settings ) {
+		$enabled = $this->is_enabled();
+
 		$automated_taxes = array(
 			'title'    => __( 'Automated taxes', 'woocommerce-services' ),
 			'id'       => self::OPTION_NAME, // TODO: save in `wc_connect_options`?
 			'desc_tip' => __( 'Automate your sales tax calculations with WooCommerce Services, powered by Jetpack.', 'woocommerce-services' ),
+			'desc'     => $enabled ? '<p>' . __( 'Powered by WooCommerce Services ― Your tax rates and settings are automatically configured.', 'woocommerce-services' ) . '</p>' : '',
 			'default'  => 'no',
 			'type'     => 'select',
 			'class'    => 'wc-enhanced-select',
@@ -104,23 +132,88 @@ class WC_Connect_TaxJar_Integration {
 		// Insert the "automated taxes" setting at the top (under the section title)
 		array_splice( $tax_settings, 1, 0, array( $automated_taxes ) );
 
+		if ( $enabled ) {
+			// If the automated taxes are enabled, disable the settings that would be reverted in the original plugin
+			foreach ( $tax_settings as $index => $tax_setting ) {
+				if ( ! array_key_exists( $tax_setting['id'], $this->expected_options ) ) {
+					continue;
+				}
+				$tax_settings[$index]['custom_attributes'] = array( 'disabled' => true );
+			}
+		}
+
 		return $tax_settings;
 	}
 
 	/**
-	 * Put the WooCommerce tax settings in a known-good initial configuration.
+	 * When automated taxes are enabled, overwrite core tax settings that might break the API integration
+	 * This is similar to the original plugin functionality where these options were reverted on page load
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c58/includes/class-wc-taxjar-integration.php#L66-L91
+	 *
+	 * @param mixed $value - option value
+	 * @param array $option - option metadata
+	 * @return string new option value, based on the automated taxes state or $value
 	 */
-	public function setup_environment() {
-		$needs_setup = WC_Connect_Options::get_option( self::ENV_SETUP_FLAG, true );
-
-		if ( ! $needs_setup ) {
-			return;
+	public function sanitize_tax_option( $value, $option ) {
+		if (
+			//skip unrecognized option format
+			! is_array( $option )
+			//skip if unexpected option format
+			|| ! isset( $option['id'] )
+			//skip if not enabled or not being enabled in the current request
+			|| ! $this->is_enabled() && ( ! isset( $_POST[self::OPTION_NAME] ) || 'yes' != $_POST[self::OPTION_NAME] ) ) {
+			return $value;
 		}
 
-		$this->configure_tax_settings();
-		$this->backup_existing_tax_rates();
+		//the option is currently being enabled - backup the rates and flush the rates table
+		if ( ! $this->is_enabled() && self::OPTION_NAME === $option['id'] && 'yes' === $value ) {
+			$this->backup_existing_tax_rates();
+			return $value;
+		}
 
-		WC_Connect_Options::update_option( self::ENV_SETUP_FLAG, false );
+		//skip if unexpected option
+		if ( ! array_key_exists( $option['id'], $this->expected_options ) ) {
+			return $value;
+		}
+
+		return $this->expected_options[ $option['id'] ];
+	}
+
+	/**
+	 * Overwrite WooCommerce core tax settings if they are different than expected
+	 *
+	 * Ported from TaxJar's plugin and modified to support $this->expected_options
+	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c58/includes/class-wc-taxjar-integration.php#L66-L91
+	 */
+	public function configure_tax_settings() {
+		foreach( $this->expected_options as $option => $value ) {
+			//first check the option value - with default memory caching this should help to avoid unnecessary DB operations
+			if ( get_option( $option ) !== $value ) {
+				update_option( $option, $value );
+			}
+		}
+	}
+
+	/**
+	 * Hack to hide the tax sections for additional tax class rate tables.
+	 */
+	public function output_sections_before() {
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+		?>
+		<div style="display: none">
+		<?php
+	}
+
+	/**
+	 * Hack to hide the tax sections for additional tax class rate tables.
+	 */
+	public function output_sections_after() {
+		if ( ! $this->is_enabled() ) {
+			return;
+		}
+		?></div><?php
 	}
 
 	/**
@@ -196,23 +289,7 @@ class WC_Connect_TaxJar_Integration {
 	 * @param $wc_cart_object
 	 */
 	public function maybe_calculate_totals( $wc_cart_object ) {
-		// Skip for carts loaded from session in the dashboard
-		if ( is_admin() && did_action( 'woocommerce_cart_loaded_from_session' ) ) {
-			return;
-		}
-
-		// Skip during Jetpack API requests
-		if ( false !== strpos( $_SERVER['REQUEST_URI'], 'jetpack/v4/' ) ) {
-			return;
-		}
-
-		// Skip during REST API or XMLRPC requests
-		if ( defined( 'REST_REQUEST' ) || defined( 'REST_API_REQUEST' ) || defined( 'XMLRPC_REQUEST' ) ) {
-			return;
-		}
-
-		// Skip during Jetpack REST API proxy requests
-		if ( isset( $_GET['rest_route'] ) && isset( $_GET['_for'] ) && ( 'jetpack' === $_GET['_for'] ) ) {
+		if ( ! WC_Connect_Functions::should_send_cart_api_request() ) {
 			return;
 		}
 
@@ -700,38 +777,6 @@ class WC_Connect_TaxJar_Integration {
 		} else {
 			$this->_error( 'Error retrieving the tax rates. Received (' . $response['response']['code'] . '): ' . $response['body'] );
 		}
-	}
-
-	/**
-	 * Configure WooCommerce core tax settings for TaxJar integration.
-	 *
-	 * Ported from TaxJar's plugin.
-	 * See: https://github.com/taxjar/taxjar-woocommerce-plugin/blob/82bf7c58/includes/class-wc-taxjar-integration.php#L66-L91
-	 */
-	public function configure_tax_settings() {
-		// If TaxJar is enabled and a user disables taxes we renable them
-		update_option( 'woocommerce_calc_taxes', 'yes' );
-
-		// Users can set either billing or shipping address for tax rates but not shop
-		update_option( 'woocommerce_tax_based_on', 'shipping' );
-
-		// Rate calculations assume tax not included
-		update_option( 'woocommerce_prices_include_tax', 'no' );
-
-		// Use no special handling on shipping taxes, our API handles that
-		update_option( 'woocommerce_shipping_tax_class', '' );
-
-		// API handles rounding precision
-		update_option( 'woocommerce_tax_round_at_subtotal', 'no' );
-
-		// Rates are calculated in the cart assuming tax not included
-		update_option( 'woocommerce_tax_display_shop', 'excl' );
-
-		// TaxJar returns one total amount, not line item amounts
-		update_option( 'woocommerce_tax_display_cart', 'excl' );
-
-		// TaxJar returns one total amount, not line item amounts
-		update_option( 'woocommerce_tax_total_display', 'single' );
 	}
 
 	/**
