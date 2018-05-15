@@ -18,7 +18,7 @@ class WCCPT_Template_Loader {
 		add_filter( 'comments_template', array( __CLASS__, 'comments_template_loader' ) );
 	}
 
-	
+
 	/**
 	 * Load a template.
 	 *
@@ -65,7 +65,9 @@ class WCCPT_Template_Loader {
 	 */
 	private static function get_template_loader_default_file() {
 		$cpt = get_post_type();
+
 		if ( is_singular( 'product' ) || ( WC_CPT_List::is_active( $cpt ) && is_singular( $cpt ) ) ) {
+
 			$default_file = 'single-product.php';
 		} elseif ( is_product_taxonomy() ) {
 			$term = get_queried_object();
@@ -76,7 +78,7 @@ class WCCPT_Template_Loader {
 				$default_file = 'archive-product.php';
 			}
 		} elseif ( is_post_type_archive( 'product' ) || ( WC_CPT_List::is_active( $cpt ) && is_post_type_archive( $cpt ) ) || is_page( wc_get_page_id( 'shop' ) ) ) {
-			$default_file = 'archive-product.php';
+            $default_file = 'archive-product.php';
 		} else {
 			$default_file = '';
 		}
@@ -115,13 +117,13 @@ class WCCPT_Template_Loader {
 	 * @return string
 	 */
 	public static function comments_template_loader( $template ) {
-		
+
 		$cpt = get_post_type();
-		
+
 		if ( ! ( ( $cpt == 'product') || WC_CPT_List::is_active( $cpt ) ) ) {
 			return $template;
 		}
-		
+
 		$check_dirs = array(
 			trailingslashit( get_stylesheet_directory() ) . WC()->template_path(),
 			trailingslashit( get_template_directory() ) . WC()->template_path(),

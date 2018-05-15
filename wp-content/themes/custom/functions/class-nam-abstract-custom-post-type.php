@@ -2,6 +2,9 @@
 
 abstract class NAM_Custom_Post_Type {
 
+
+    public static $archive_template;
+
     /**
      * A simple helper utility method to check a map for a specific key,
      * and return a default of it's not present.
@@ -70,6 +73,51 @@ abstract class NAM_Custom_Post_Type {
         }
 
     }
+
+
+    /**
+     * This function returns true if the current URL path represents
+     * the archive for this post-type.
+     *
+     * @return bool true iff this is a post-type archive for this post type.
+     *
+     */
+    public static function is_archive() {
+        return (get_post_type() == static::$slug) && is_archive();
+    }
+
+
+    /**
+     * This function returns true if the current URL path represents
+     * a single page for this post-type.
+     *
+     * @return bool true iff this is a post-type single for this post type.
+     *
+     */
+    public static function is_single() {
+        return (get_post_type() == static::$slug) && is_single();
+    }
+
+
+    /**
+     * This function returns the path to the archive template for this post type.
+     *
+     * @return string the path to the archive template for this post type
+     */
+    public static function archive_template() {
+        return 'page-' . static::$slug . '.php';
+    }
+
+
+    /**
+     * This function returns the path to the single template for this post type.
+     *
+     * @return string the path to the single template for this post type
+     */
+    public static function single_template() {
+        return 'single-' . static::$slug . '.php';
+    }
+
 
     /**
      * This static method retrieves a set of posts for the child's post-type.

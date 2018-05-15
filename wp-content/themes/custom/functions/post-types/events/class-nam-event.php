@@ -11,19 +11,19 @@ class NAM_Event extends NAM_Custom_Post_Type {
     public static $post_options = array(
         'menu_icon'                 => 'dashicons-calendar-alt',
         'hierarchical'              => false,
-        'has_archive'               => true,
+        'has_archive'               => false,
         'menu_position'             => 3,
         'supports'                  => array(
                                         'title',
                                         'thumbnail',
                                         'revisions'
                                     ),
-        'rewrite'                   => array(
-                                        'slug' => 'events',
-                                        'with_front' => false,
-                                        'feeds' => true,
-                                        'pages' => true
-                                    ),
+        // 'rewrite'                   => array(
+        //                                 'slug' => 'events',
+        //                                 'with_front' => false,
+        //                                 'feeds' => true,
+        //                                 'pages' => true
+        //                             ),
         'taxonomies'                => array(  )
 
     );
@@ -31,6 +31,13 @@ class NAM_Event extends NAM_Custom_Post_Type {
     public static $query_options = array(
 
     );
+
+    public static function get_posts() {
+        return get_posts(array(
+            'posts_per_page' => -1,
+            'post_type' => 'events'
+        ));
+    }
 
     /**
      * ==== Instance Members and Methods ====

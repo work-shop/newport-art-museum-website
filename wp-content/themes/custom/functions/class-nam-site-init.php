@@ -3,6 +3,8 @@
 
 class NAM_Site {
 
+    public static $product_post_types = array( NAM_Event, NAM_Class, NAM_Shop_Product, NAM_Membership_Tier );
+
     public function __construct() {
 
         wp_debug_mode();
@@ -16,6 +18,10 @@ class NAM_Site {
         add_filter('show_admin_bar', '__return_false');
 
         new WS_CDN_Url();
+
+    }
+
+    public static function get_page_type() {
 
     }
 
@@ -54,6 +60,7 @@ class NAM_Site {
         if ( function_exists( 'add_theme_support' ) ) {
 
             add_theme_support( 'menus' );
+            add_theme_support( 'woocommerce' );
 
         }
     }
@@ -82,6 +89,8 @@ class NAM_Site {
 
         }
     }
+
+
 
 }
 
