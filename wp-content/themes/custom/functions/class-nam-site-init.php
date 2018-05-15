@@ -44,10 +44,9 @@ class NAM_Site {
             add_image_size('acf_preview', 300, 300, false);
             add_image_size('page_hero', 1440, 660, false);
             add_image_size('home_hero', 1920, 1200, false);
-            add_image_size('card_large', 1162, 538, true);
             add_image_size('card_wide', 1162, 538, true);
             add_image_size('card_medium', 500, 375, true);
-            
+
         }
     }
 
