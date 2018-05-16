@@ -1,5 +1,5 @@
-<div class="plan-your-visit clearfix" >
-	<div class="plan-your-visit-container">
+<div class="plan-your-visit" >
+	<div class="plan-your-visit-container clearfix row-broken row-equal-height-broken">
 		<div class="plan-your-visit-left">
 			<div class="row">
 				<div class="col-xs-12">
@@ -7,18 +7,18 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-7">
+				<div class="col-md-5 col-sm-5 mb3">
 					<h4 class="plan-your-visit-heading mb2">
 						Hours
 					</h4>
-					<h4 class="plan-your-visit-currently museum-status mb2">
+					<h4 class="plan-your-visit-currently museum-status brand mb2 hidden">
 						<?php get_template_part('partials/visit/museum_status'); ?>
 					</h4>	
 					<div class="plan-your-visit-hours hours">
 						<?php get_template_part('partials/visit/hours'); ?>
 					</div>
 				</div>
-				<div class="col-md-5">
+				<div class="col-md-6 offset-md-1 col-sm-6 offset-sm-1">
 					<h4 class="plan-your-visit-heading mb2">
 						Admission
 					</h4>
@@ -26,31 +26,31 @@
 						<?php
 						if( have_rows('admission','23') ):
 							while ( have_rows('admission','23') ) : the_row(); ?>
-							<div class="row">
-								<div class="col-md-9">
-									<h4 class="plan-your-visit-admission-type">
-										<?php the_sub_field('admission_type'); ?>
-									</h4>
-								</div>
-								<div class="col-md-3">
-									<h4 class="plan-your-visit-admission-cost">
-										<?php the_sub_field('admission_cost'); ?>
-									</h4>
-								</div>
-							</div> 
-							<?php 
-						endwhile;
-					endif;
-					?>
-				</h4>		
+								<div class="row">
+									<div class="col-md-8 col-xs-8">
+										<h4 class="plan-your-visit-admission-type key">
+											<?php the_sub_field('admission_type'); ?>
+										</h4>
+									</div>
+									<div class="col-md-4 col-xs-4">
+										<h4 class="plan-your-visit-admission-cost value">
+											<?php the_sub_field('admission_cost'); ?>
+										</h4>
+									</div>
+								</div> 
+								<?php 
+							endwhile;
+						endif;
+						?>
+					</h4>		
+				</div>
 			</div>
 		</div>
+		<div class="plan-your-visit-right">
+			<div class="plan-your-visit-3">
+				<?php $google_maps_api_key = 'AIzaSyCh9fjCJw8vxVBIvC6_IAtMQ050t4iYxjg'; ?>
+				<iframe class="plan-your-visit-map" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=Newport%20Art%20Museum&key=AIzaSyCh9fjCJw8vxVBIvC6_IAtMQ050t4iYxjg" allowfullscreen></iframe>
+			</div>		
+		</div>
 	</div>
-	<div class="plan-your-visit-right">
-		<div class="plan-your-visit-3">
-			<?php $google_maps_api_key = 'AIzaSyCh9fjCJw8vxVBIvC6_IAtMQ050t4iYxjg'; ?>
-			<iframe class="plan-your-visit-map" frameborder="0" style="border:0" src="https://www.google.com/maps/embed/v1/place?q=Newport%20Art%20Museum&key=AIzaSyCh9fjCJw8vxVBIvC6_IAtMQ050t4iYxjg" allowfullscreen></iframe>
-		</div>		
-	</div>
-</div>
 </div>

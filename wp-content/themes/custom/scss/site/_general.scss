@@ -111,6 +111,10 @@ $text-button: (
 	width: 36px;
 	height: 3px;
 	background: transparentize($yellow, .1);
+
+	@media screen and (max-width: $sm) {
+		width: 20px;
+	}
 }
 
 
@@ -151,22 +155,22 @@ $text-button: (
 .slick-dots{
 	li{
 		display: inline-block;
-		margin-right: 15px;
+		margin-right: 12px;
 
 		&.slick-active button{
 			background: $medium;
-			border: 1px solid transparentize($brand,.5);
-			width: 30px;
-			height: 5px;
+			border: 1px solid transparent;
+			width: 20px;
+			height: 3px;
 		}
 	}
 
 	button{
-		border: 1px solid $medium;
-		width: 30px;
-		height: 5px;
+		border: 1px solid transparent;
+		width: 20px;
+		height: 3px;
 		padding: 0px;
-		background: $light;
+		background: $brand;
 		border-radius: 0;	
 	}
 }

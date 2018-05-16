@@ -4,47 +4,87 @@
 
 
 .plan-your-visit{
-	border-bottom: 1px solid $light;
-
-	h4{
-		line-height: 1.25;
-	}
+	border-bottom: 1px solid darken($light,8%);
 
 	.row .row{
-		margin-bottom: .9em;
+		margin-bottom: 1em;
+		//min-height: 50px;
 	}
 }
-
 
 .plan-your-visit-container{
 	height: inherit;
 }
 
-.plan-your-visit-column{
-	float: left;
-	width: 50%;
-	@extend .clearfix;
-}
-
 .plan-your-visit-left{
-	width: 61%;
+	width: 67%;
 	height: inherit;
 	float: left;
 	@extend .clearfix;
-	padding-left: $container-fluid-padding;
-	padding-right: $container-fluid-padding;
 	padding-top: 80px;
+	padding-right: $container-fluid-padding-md;
+	padding-left: $container-fluid-padding;
 
-	@media screen and (max-width: $md) {
+	@media screen and (max-width: 1400px) {
+		padding-left: $container-fluid-padding-md;
+	}
+
+	@media screen and (max-width: $lg) {
 		width: 100%;
 	}
+
+	@media screen and (max-width: $sm) {
+		padding-left: $container-fluid-padding-mobile;
+		padding-right: $container-fluid-padding-mobile;
+		width: 100%;
+	}
+
+	.key{
+		line-height: 1.1;
+		font-size: 20px;
+
+		@media screen and (max-width: 1440px) {
+			font-size: 16px;
+		}
+
+		@media screen and (max-width: $sm) {
+			font-size: 15px;
+		}
+
+		@media screen and (max-width: $sm) {
+			font-size: 13px;
+		}
+	}
+
+	.value{
+		text-align: right;
+		line-height: .9;
+		font-size: 20px;
+
+		@media screen and (max-width: 1440px) {
+			font-size: 16px;
+		}
+
+		@media screen and (max-width: $sm) {
+			font-size: 15px;
+		}
+
+		@media screen and (max-width: $sm) {
+			font-size: 13px;
+		}
+	}
+
 }
 
 .plan-your-visit-right{
-	width: 39%;
+	width: 33%;
 	height: 100%;
 	float: left;
 	@extend .clearfix;
+
+	@media screen and (max-width: $lg) {
+		display: none;
+	}
 
 	@media screen and (max-width: $sm) {
 		display: none;
@@ -76,12 +116,22 @@
 
 .home main, .page-id-23 main{
 	.plan-your-visit{
-		height: 69vh;
+		@extend .vhfull;
+	}
+
+	.plan-your-visit-left{
+		padding-bottom: 80px;
+	}
+
+	.plan-your-visit-right{
+		padding: 15px;
 	}
 
 	.plan-your-visit-heading{
 		@extend .bold;
 	}
+
+
 }
 
 #menu-visit{
@@ -90,6 +140,7 @@
 	}
 
 	.plan-your-visit-left{
+		padding-left: $container-fluid-padding-md;
 		padding-top: 60px;
 	}
 
@@ -108,3 +159,14 @@
 		@extend .h3;
 	}
 }
+
+
+//HOURS
+
+.hours{
+	.value{
+		text-align: right;
+	}
+}
+
+

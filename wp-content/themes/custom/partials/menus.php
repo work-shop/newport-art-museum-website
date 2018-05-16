@@ -54,7 +54,12 @@
 					if ($posts) : ?>
 						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
 							<div class="col-md-6">
-								<?php // NAM_Helpers::card( $post, 'text_right'); ?>
+								<?php 
+								$card_layout = 'text_right'; //'text_right', 'text_bottom', 'text_top'
+								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
+								$card_type = 'exhibition';  //'event', 'class', 'product', 'news' 
+								NAM_Helpers::card( $card_layout, $card_size, $card_type );
+								?>							
 							</div>
 						<?php endforeach; ?>
 						<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>

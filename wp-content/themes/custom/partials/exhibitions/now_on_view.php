@@ -2,12 +2,12 @@
 	<div class="container-fluid container-fluid-stretch">
 		<div class="row now-on-view-title">
 			<div class="col-sm-12">
-				<h2 class="serif">Now on View</h2>
+				<h2 class="serif mb1">Now on View</h2>
 			</div>
 		</div>
 	</div>
-	<div class="now-on-view-slider">
-		<div class="slick slick-exhibhitions">
+	<div class="exhibition-slider ">
+		<div class="slick slick-exhibitions">
 			<?php
 			$the_query = new WP_Query( array(
 				'post_type' => 'exhibitions',

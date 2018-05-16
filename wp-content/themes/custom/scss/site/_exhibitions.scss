@@ -1,0 +1,73 @@
+
+
+//EXHIBITIONS SLIDERS
+
+.slick-exhibitions{
+
+	overflow: hidden;
+
+	.slick-list{
+		transform: translate3d(-210px, 0, 0);
+		overflow: visible;
+
+		@media screen and (max-width: 1280px) {
+			transform: translate3d(-115px, 0, 0);
+		}
+
+		@media screen and (max-width: $md) {
+			transform: translate3d(-55px, 0, 0);
+		}
+
+		@media screen and (max-width: $sm) {
+			transform: translate3d(-40px, 0, 0);
+		}
+	}
+
+	.slick-slide{
+		margin-left: 20px;
+		margin-right: 20px;
+		opacity: .25;
+		transition: opacity .5s;
+
+		@media screen and (max-width: $md) {
+			margin-left: 12px;
+			margin-right: 12px;
+		}
+
+		@media screen and (max-width: $sm) {
+			margin-left: 10px;
+			margin-right: 10px;
+		}
+
+		.card-text{
+			transition: opacity .7s;
+			opacity: 0;
+		}
+
+		&.slick-current{
+			transition: opacity .5s;
+			opacity: 1;
+
+			.card-text{
+				transition: opacity .7s;
+				opacity: 1;
+			}
+		}
+	}
+
+	.slick-dots{
+		transform: none;
+		position: static;
+		margin-left: $container-fluid-padding;
+
+		@media screen and (max-width: $md) {
+			margin-left: $container-fluid-padding-md;
+		}
+
+
+		@media screen and (max-width: $sm) {
+			margin-left: $container-fluid-padding-mobile;
+		}
+	}
+
+}

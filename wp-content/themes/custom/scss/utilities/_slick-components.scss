@@ -48,7 +48,7 @@
 		content: '‘';
 		font-family: modern_pictograms_proregular;
 		display: block;
-		width: 40px;
+		width: 35px;
 		height: 60px;
 		line-height: 60px;
 		font-size: 50px;
@@ -65,10 +65,10 @@
 
 	&.slick-next{
 		left: auto;
-		right: -0px;
+		right: 0px;
 
 		@media screen and (max-width: $md) {
-			right: 0;
+			right: 0px;
 		}			
 
 		&:after{

@@ -1,24 +1,96 @@
 
 .card{
 	position: relative;
+	overflow: hidden;
+	box-shadow: 0px 2px 4px transparentize($slate, .5);
 }
 
 
 .card-image{
-
+	
+	img{
+		display: block;
+	}
 
 }
 
-.card-text{
 
+.card-text{
+	//position: absolute;
+	//height: 100%;
+	background: $slate;
+	padding: 6vh 2vw;
+
+	@media screen and (max-width: $sm) {
+		padding: 4vh 2vw;
+	}
+
+	*{
+		color: $khaki;
+	}
+
+	.nam-dash{
+		margin-bottom: 30px;
+		height: 2px;
+
+		@media screen and (max-width: $sm) {
+			margin-bottom: 15px;
+		}
+	}
+}
+
+.card-text-title{
+	margin-bottom: 30px;
+	font-size: 3vw;
+	line-height: 1.1;
+
+	@media screen and (max-width: $sm) {
+		margin-bottom: 15px;
+		font-size: 20px;
+	}
+
+}
+
+.card-text-info{
+
+	*{
+		@extend .bold;
+	}
+
+	h4{
+		font-size: 1.2vw;
+
+		@media screen and (max-width: $md) {
+			font-size: 2vw;
+		}
+
+		@media screen and (max-width: $sm) {
+			font-size: 12px;
+		}
+
+		@media screen and (max-width: $xs) {
+			font-size: 11px;
+		}
+	}
 
 }
 
 
 //CARD LAYOUTS
 
-.card-text-right{
-
+.card-layout-text_right{
+	
+	.card-text{
+		position: absolute;
+		top: 0;
+		right: 0;
+		height: 100%;
+		width: 39%;
+		
+		@media screen and (max-width: $md) {
+			width: 50%;
+		}
+	}
 
 }
 
@@ -28,5 +100,20 @@
 
 }
 
+
+
+//CARD TYPES
+
+.card-type-exhibition{
+	
+
+	&.card-size-wide{
+		.card-text{
+			background: transparentize($slate, .1);
+		}
+	}
+
+
+}
 
 
