@@ -4,7 +4,7 @@ Donate link: https://www.minnpost.com/support/?campaign=7010G0000012fXGQAY
 Tags: salesforce, sync, crm
 Requires at least: 4.5
 Tested up to: 4.9
-Stable tag: 1.3.5
+Stable tag: 1.3.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -72,7 +72,7 @@ Go to the Settings tab for the plugin. It is the default URL that opens when you
 4. Login Base URL: For most Salesforce environments, you can use `https://test.salesforce.com` for sandbox, and `https://login.salesforce.com` for production.
 5. Authorize URL Path: The plugin starts with a default of `/services/oauth2/authorize`. You should generally not have to change this.
 6. Token URL Path: The plugin starts with a default of `/services/oauth2/token`. You should generally not have to change this.
-7. Salesforce API Version: You should generally use the latest version your install has access to. This plugin starts with 39.0, but once it is authenticated the text field will be replaced with a dropdown of your available versions from which you can choose.
+7. Salesforce API Version: You should generally use the latest version your install has access to. This plugin starts with 42.0, but once it is authenticated the text field will be replaced with a dropdown of your available versions from which you can choose.
 8. Limit Salesforce Objects: These allow you to indicate whether Salesforce should relate to objects that can't be triggered or updated via the API. Generally it's a good idea to have these boxes checked to avoid errors.
 9. Pull Throttle (seconds): This plugin starts with 5 seconds, but you can change it based on your server's needs.
 10. Debug mode: This won't do anything until after the plugin has been authorized, but once it has you can use it to see more information about what the API is doing. **Don't check this in a production environment.**
@@ -131,7 +131,7 @@ There is extensive documentation of the plugin, including its developer hooks, [
 
 WordPress stores metadata as key/value pairs in its database. Many plugins and themes use this method to store custom field data. Object Sync for Salesforce supports mapping these fields (many other plugins use non-standard methods, and this plugin may or may not support them).
 
-There's a [helpful spreadsheet](https://docs.google.com/spreadsheets/d/1mSqienVYxLopTFGLPK0lGCJst2knKzXDtLQRgwjeBN8/edit#gid=3) comparing various options for custom fields you can review. If the plugin you wish to use uses Meta-based Storage (listed in the spreadsheet), you should be able to use it with Object Sync for Salesforce, but how well they work together will vary. Plugins with full meta compatibility (also listed in the spreadsheet) may work the best, but you don't have to restrict yourself to those.
+There's a [helpful spreadsheet](https://docs.google.com/spreadsheets/d/1mSqienVYxLopTFGLPK0lGCJst2knKzXDtLQRgwjeBN8/edit#gid=3) (we are not affiliated with it, we just think it's useful) comparing various options for custom fields you can review. If the plugin you wish to use uses Meta-based Storage (listed in the spreadsheet), you should be able to use it with Object Sync for Salesforce, but how well they work together will vary. Plugins with full meta compatibility (also listed in the spreadsheet) may work the best, but you don't have to restrict yourself to those.
 
 Object Sync for Salesforce, however, cannot see meta fields before the field has at least one value in the database. For example, if you have a "testfield" on your user object, it won’t be in the fieldmap options until there is at least one user that has a value for the field.
 
@@ -160,19 +160,22 @@ Object Sync for Salesforce does have abundant developer hooks, and WooCommerce h
 
 If you are successfully authenticated with Salesforce, but you have a fieldmap that is not passing data, there are several ways to troubleshoot. More information is available in the plugin documentation.
 
-1. Plugin configuration
+#### Plugin configuration
 - Remember to clear the plugin cache on the Fieldmaps screen.
 - If you are not able to push data to Salesforce, try with asynchronous checked, and without. This will tell you if your issue is related to the plugin's cron jobs.
 - To inspect your cron jobs, use the [WP Crontrol](https://wordpress.org/plugins/wp-crontrol/) plugin. Make sure the Salesforce push and/or pull jobs are running as you expect them to, and make sure to check the Schedule screen to make sure the jobs are scheduled as they should be.
-2. Plugin logs
+
+#### Plugin logs
 - Make sure to use the Log Settings screen to configure logs. Once enabled, they are added to a custom post type called Logs in the WordPress menu.
 - If the plugin tries to create or update data, but WordPress or Salesforce encounter errors, the plugin will always try to create a log entry. If you see entries, review the title and content of each.
-3. Plugin mapping errors
+
+#### Plugin mapping errors
 - If the plugin fails in the middle of creating a map between two objects, a row may be created on the Mapping Errors screen. If it is a push error, it will tell you the WordPress object ID it was trying to map. If it is a pull error, it will tell you the Salesforce ID. **You should not leave these entries.**
-4. Server logs
+
+#### Server logs
 - If you don't see any error logs in WordPress, it is always a good idea to check your server's error logs and see if PHP is encountering errors.
 
 == Changelog ==
 
-* 1.3.5 (2018-04-25)
-	* Bug fix: this release fixes an issue where the plugin can fail to map certain fields in certain cases when the Salesforce value it is attempting to save in WordPress is empty.
+* 1.3.6 (2018-05-16)
+	* Bug fix: this release fixes an issue where the plugin can fail to save setting values in older WordPress versions, which keeps it from ever being activated. Thanks to WordPress user @amstertam for bringing this to our attention.

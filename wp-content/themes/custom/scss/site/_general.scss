@@ -174,3 +174,39 @@ $text-button: (
 		border-radius: 0;	
 	}
 }
+
+
+//PAGINATION
+
+.pagination{
+	margin-top: 4vh;
+	text-align: center;
+
+
+
+	a,span{
+		margin-left: 6px;
+		margin-right: 6px;
+		@extend .bold;
+		padding: 4px;
+
+		&.prev,&.next{
+			font-family: 'modern_pictograms_proregular';
+			font-size: 27px;
+			position: relative;
+			top: 2px;
+		}
+
+		&.prev{
+			margin-right: 15px;
+		}
+
+		&.next{
+			margin-left: 15px;
+		}
+	}
+
+	span{
+		color: $medium;
+	}
+}

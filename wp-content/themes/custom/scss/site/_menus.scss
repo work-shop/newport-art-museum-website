@@ -191,11 +191,17 @@ body.dropdown-on{
 	
 	a{
 		display: block;
-		font-size: 18px;
+		font-size: 16px;
 		color: $brand;
+		position: relative;
+		top: 17px;
 
 		@media screen and (max-width: $md) {
-			font-size: 16px;
+			font-size: 14px;
+		}
+
+		&:hover{
+			text-decoration: underline;
 		}
 
 	}

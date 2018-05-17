@@ -37,11 +37,11 @@
 		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-two">
 			<div class="container-fluid contrainer-fluid-stretch">
 				<div class="row menu-dropdown-cards-upper">
-					<div class="col-md-9">
+					<div class="col-md-6">
 						<h3 class="serif">Now on view</h3>
 					</div>
-					<div class="col-md-3">
-						<div class="menu-dropdown-graphic-link">
+					<div class="col-md-6">
+						<div class="menu-dropdown-graphic-link righted">
 							<a href="/exhibitions">See All Exhibitions 
 								<span class="menu-dropdown-graphic-link-arrow">-></span>
 							</a>
@@ -58,7 +58,7 @@
 								$card_layout = 'text_right'; //'text_right', 'text_bottom', 'text_top'
 								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
 								$card_type = 'exhibition';  //'event', 'class', 'product', 'news' 
-								NAM_Helpers::card( $card_layout, $card_size, $card_type );
+								NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
 								?>							
 							</div>
 						<?php endforeach; ?>
@@ -75,8 +75,39 @@
 			<?php $GLOBALS['links_additional'] = get_field('collection_menu_additional_links', 'option'); ?>
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
-		<div class="menu-dropdown-graphic">
-			Collection Graphic
+		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-three">
+			<div class="container-fluid contrainer-fluid-stretch">
+				<div class="row menu-dropdown-cards-upper">
+					<div class="col-md-6">
+						<h3 class="serif">Collection</h3>
+					</div>
+					<div class="col-md-6">
+						<div class="menu-dropdown-graphic-link righted">
+							<a href="/exhibitions">Learn About the Collection
+								<span class="menu-dropdown-graphic-link-arrow">-></span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row menu-dropdown-cards-lower">
+					<?php if( have_rows('collection_menu_featured_artworks','option') ): ?>
+						<?php  while ( have_rows('collection_menu_featured_artworks','option') ) : the_row(); ?>
+							<div class="col-md-4">
+								<?php 
+								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
+								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
+								$card_type = 'generic';  //'event', 'class', 'product', 'news', 'generic' 
+								$card_link = '/collection';
+								$card_image = get_sub_field('image');
+								$card_title = get_sub_field('title');
+								$card_info = get_sub_field('artist');
+								NAM_Helpers::card( $card_layout, $card_size, $card_type, $card_link, $card_image, $card_title, $card_info );
+								?>							
+							</div>
+						<?php endwhile; ?>
+					<?php endif; ?>
+				</div>
+			</div>
 		</div>
 	</menu>
 

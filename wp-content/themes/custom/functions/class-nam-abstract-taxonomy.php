@@ -7,6 +7,7 @@ abstract class NAM_Taxonomy {
             register_taxonomy(
                 $slug,
                 $post_types,
+
                 array(
                     'labels' => array(
                         'name'                              => $plural_name,

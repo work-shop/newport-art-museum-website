@@ -6,87 +6,56 @@
 .plan-your-visit{
 	border-bottom: 1px solid darken($light,8%);
 
-	.row .row{
-		margin-bottom: 1em;
-		//min-height: 50px;
-	}
-}
-
-.plan-your-visit-container{
-	height: inherit;
-}
-
-.plan-your-visit-left{
-	width: 67%;
-	height: inherit;
-	float: left;
-	@extend .clearfix;
-	padding-top: 80px;
-	padding-right: $container-fluid-padding-md;
-	padding-left: $container-fluid-padding;
+	.container-fluid{
+		padding-right: 20px;
+		padding-left: $container-fluid-padding;
 
 	@media screen and (max-width: 1400px) {
 		padding-left: $container-fluid-padding-md;
 	}
 
-	@media screen and (max-width: $lg) {
-		width: 100%;
+	@media screen and (max-width: $sm) {
+		padding-right: 10px;
 	}
 
-	@media screen and (max-width: $sm) {
-		padding-left: $container-fluid-padding-mobile;
-		padding-right: $container-fluid-padding-mobile;
-		width: 100%;
+	}
+}
+
+.plan-your-visit-left{
+	padding-top: 80px;
+
+	.key,.value,.plan-your-visit-currently{
+		font-size: 20px;
+		@media screen and (max-width: 1440px) {
+			font-size: 16px;
+		}
+		@media screen and (max-width: $sm) {
+			font-size: 15px;
+		}
+		@media screen and (max-width: $sm) {
+			font-size: 13px;
+		}	
 	}
 
 	.key{
 		line-height: 1.1;
-		font-size: 20px;
-
-		@media screen and (max-width: 1440px) {
-			font-size: 16px;
-		}
-
-		@media screen and (max-width: $sm) {
-			font-size: 15px;
-		}
-
-		@media screen and (max-width: $sm) {
-			font-size: 13px;
-		}
 	}
 
 	.value{
-		text-align: right;
 		line-height: .9;
-		font-size: 20px;
-
-		@media screen and (max-width: 1440px) {
-			font-size: 16px;
-		}
-
-		@media screen and (max-width: $sm) {
-			font-size: 15px;
-		}
-
-		@media screen and (max-width: $sm) {
-			font-size: 13px;
-		}
 	}
 
 }
 
+.plan-your-visit-title{
+	margin-bottom: 2em;
+}
+
 .plan-your-visit-right{
-	width: 33%;
-	height: 100%;
-	float: left;
-	@extend .clearfix;
+	padding-top: 20px;
+	padding-bottom: 20px;
 
 	@media screen and (max-width: $lg) {
-		display: none;
-	}
-
-	@media screen and (max-width: $sm) {
 		display: none;
 	}
 }
@@ -99,32 +68,14 @@
 	height: calc(100% - 1px);
 }
 
-.plan-your-visit-title{
-	margin-bottom: 2em;
-}
-
-.plan-your-visit-currently{
-	//max-width: 320px;
-}
-
-
-
 
 
 //PLAN YOUR VISIT CONTEXTS
 
-
 .home main, .page-id-23 main{
-	.plan-your-visit{
-		@extend .vhfull;
-	}
 
 	.plan-your-visit-left{
-		padding-bottom: 80px;
-	}
-
-	.plan-your-visit-right{
-		padding: 15px;
+		padding-bottom: 3vh;
 	}
 
 	.plan-your-visit-heading{
@@ -144,28 +95,24 @@
 		padding-top: 60px;
 	}
 
-	.plan-your-visit-right{
-		padding-top: 25px;
-		padding-bottom: 25px;
-		padding-right: 25px;
-	}
-
-	.plan-your-visit-map{
-		//border: 1px solid $light !important;
-	}
 
 	.plan-your-visit-heading{
 		@extend .serif;
 		@extend .h3;
+		margin-bottom: 2em;
 	}
 }
 
 
 //HOURS
 
-.hours{
+.hours, .admissions{
 	.value{
 		text-align: right;
+	}
+
+	.row{
+		margin-bottom: .3em;
 	}
 }
 
