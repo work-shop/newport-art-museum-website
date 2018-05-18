@@ -3,7 +3,7 @@
 	$page_end_info_image = get_field('page_end_info_image');
 	$page_end_info_image = $page_end_info_image['sizes']['large'];
 	$page_end_info_heading = get_field('page_end_info_heading'); ?>
-	<section class="block page-end-info bg-khaki">
+	<section class="block page-end-info bg-khaki" id="page-end-info">
 		<div class="container-fluid container-fluid-stretch">
 			<div class="row">
 				<div class="page-end-info-1 col-md-4 col-lg-5">

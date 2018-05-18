@@ -24,7 +24,7 @@
         {
             "key": "field_5aaa707e597a3",
             "label": "Sidewide Alert Message",
-            "name": "sidewide_alert_message",
+            "name": "sitewide_alert_message",
             "type": "text",
             "instructions": "",
             "required": 0,
@@ -50,8 +50,8 @@
         },
         {
             "key": "field_5aaa708e597a4",
-            "label": "Sidewide Alert Link",
-            "name": "sidewide_alert_link",
+            "label": "Sitewide Alert Link",
+            "name": "sitewide_alert_link",
             "type": "url",
             "instructions": "",
             "required": 0,
@@ -90,5 +90,5 @@
     "hide_on_screen": "",
     "active": 1,
     "description": "(Site Options & Menus)",
-    "modified": 1521119551
+    "modified": 1526605649
 }

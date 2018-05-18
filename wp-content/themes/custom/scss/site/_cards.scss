@@ -24,6 +24,10 @@
 	background: $slate;
 	padding: 3vh 2vw;
 
+	@media screen and (max-width: $md) {
+		padding: 2vh 2vw;
+	}
+
 	*{
 		color: $khaki;
 	}

@@ -17,14 +17,15 @@
 					<?php foreach( $links as $post): // variable must be called $post (IMPORTANT) ?>
 						<?php setup_postdata($post); ?>
 						<li>
-							<a href="<?php the_permalink(); ?>"><?php the_title(); ?></a>
+							<a href="<?php the_permalink(); ?>" class="<?php if ( $GLOBALS['page_nav'] ): echo 'page-nav-link'; endif; ?>"><?php the_title(); ?></a>
 						</li>
 					<?php endforeach; ?>
 					<?php if( $links_additional ): ?>
-						<?php // var_dump($links_additional); ?>
 						<?php foreach( $links_additional as $link): ?>
 							<li>
-								<a href="<?php echo $link['link']['url']; ?>" target="<?php echo $link['link']['target']; ?>"><?php echo $link['link']['title']; ?></a>
+								<a href="<?php echo $link['link']['url']; ?>/" target="<?php echo $link['link']['target']; ?>" class="page-nav-link">
+									<?php echo $link['link']['title']; ?>
+								</a>
 							</li>
 						<?php endforeach; ?>
 					<?php endif; ?>

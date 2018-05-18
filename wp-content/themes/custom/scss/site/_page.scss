@@ -6,8 +6,10 @@
 $page-nav-height: 160px;
 
 #page-nav{
-	height: $page-nav-height;
+	min-height: $page-nav-height;
 	background: $khaki;
+	padding-top: 60px;
+	padding-bottom: 30px;
 
 	.container-fluid{
 		max-width: none;
@@ -29,8 +31,17 @@ $page-nav-height: 160px;
 			padding: 0 .6vw;
 			font-size: 18px;
 
+			@media screen and (max-width: $md) {
+				font-size: 16px;
+			}
+
+			@media screen and (max-width: $sm) {
+				font-size: 14px;
+			}
+
 			&.active{
 				@extend .bold;
+				color: $brand;
 			}
 
 			&:hover{
@@ -40,10 +51,21 @@ $page-nav-height: 160px;
 	}
 
 	.page-nav-title{
-		margin-top: 44px;
 		margin-bottom: 4px;
-		font-size: 2.5vw;
+		font-size: 36px;
+
+		@media screen and (max-width: $lg) {
+			font-size: 27px;
+		}
+
+		@media screen and (max-width: $md) {
+			font-size: 24px;
+		}
+		@media screen and (max-width: $sm) {
+			font-size: 21px;
+		}
 	}
+
 }
 
 

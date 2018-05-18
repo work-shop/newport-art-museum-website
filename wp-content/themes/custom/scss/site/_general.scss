@@ -11,6 +11,10 @@ body{
 	@media screen and (max-width: $sm) {
 		padding-top: $nav-height-mobile;
 	}
+
+	&.sitewide-alert-on{
+		padding-top: $nav-height + $sitewide-alert-height;	
+	}
 }
 
 
@@ -55,6 +59,10 @@ body{
 
 a{
 	color: $brand;
+
+	&:focus{
+		text-decoration: none;
+	}
 
 }
 
@@ -181,8 +189,6 @@ $text-button: (
 .pagination{
 	margin-top: 4vh;
 	text-align: center;
-
-
 
 	a,span{
 		margin-left: 6px;

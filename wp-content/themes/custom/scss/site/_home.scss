@@ -6,12 +6,26 @@
 	padding-top: 0;
 
 	#nav{
+		transition: background .1s .1s;
 		background: none;
 
 		.logo{
 			position: fixed;
+			transition: all .1s;
 			top: 25px;
 			left: 25px;
+		}
+
+
+		&.after{
+			transition: background .1s .1s;
+			background: $nav-background;
+
+			.logo{
+				transition: all .1s;
+				top: 0;
+				left: 0;
+			}
 		}
 	}
 

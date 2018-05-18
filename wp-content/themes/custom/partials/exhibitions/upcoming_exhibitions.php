@@ -5,7 +5,7 @@ $the_query = new WP_Query( array(
 		array (
 			'taxonomy' => 'exhibitions-categories',
 			'field' => 'slug',
-			'terms' => 'upcoming',
+			'terms' => 'upcoming-exhibitions',
 		)
 	),
 ) ); ?>

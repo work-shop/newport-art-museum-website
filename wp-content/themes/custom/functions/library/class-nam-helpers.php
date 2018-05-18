@@ -2,6 +2,16 @@
 
 class NAM_Helpers{
 
+	public static function is_tree($pid) {  
+		global $post;         
+		if( is_page() && ( $post->post_parent == $pid || is_page($pid) ) ) {
+			// we're at the page or at a sub page
+			return true;
+		}  else{
+			return false;  
+		} 
+	}
+
 
 	public static function menu_graphic_two_column( $heading, $subheading, $link, $image ){ ?>
 		<div class="menu-dropdown-graphic-1">

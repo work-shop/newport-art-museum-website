@@ -7,6 +7,7 @@ $text-nav: (
 	xl: (19px, 53px)
 	);
 
+$nav-background: lighten($brand,5%);
 
 #nav{
 	top: 0;
@@ -14,11 +15,18 @@ $text-nav: (
 	width: 100%;
 	height: $nav-height;
 	overflow: hidden;
-	background: lighten($brand,5%);
+	background: $nav-background;
 	z-index: 7;
+	transition: all .1s;
 
 	&.fixed{
 		position: fixed;
+	}
+
+	&.after{
+		.nav-current{
+			border-bottom: 4px solid white;
+		}
 	}
 
 	@media screen and (max-width: $md) {
@@ -127,7 +135,6 @@ body.dropdown-on{
 			padding: 0 20px;
 			@include transition(all .125s);
 			height: 55px;
-			//outline: 1px solid yellow;
 			vertical-align: middle;
 			text-transform: uppercase;
 
@@ -135,12 +142,17 @@ body.dropdown-on{
 				border-bottom: 4px solid white;
 			}
 
+			&:focus{
+				text-decoration: none;
+				outline: none;
+			}
+
 			@media screen and (max-width: 1300px) {
 				padding: 0 15px;
 			}
 
 			@media screen and (max-width: $lg) {
-				height: 55px;
+				height: 57px;
 				padding: 0 8px;
 			}			
 
@@ -185,7 +197,6 @@ body.dropdown-on{
 
 //mobile nav
 
-
 #mobile-nav{
 	position: fixed;
 	width: 100%;
@@ -199,6 +210,62 @@ body.dropdown-on{
 .mobile-nav-open{
 	#mobile-nav{
 		right: 0;
+	}
+}
+
+
+//sitewide alert
+
+#sitewide-alert{
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: $sitewide-alert-height;
+	z-index: 10;
+
+	a{
+		display: block;
+	}
+}
+
+#sitewide-alert-close{
+	position: absolute;
+	top: 15px;
+	right: 15px;
+
+	.icon:before{
+		color: white;
+	}
+}
+
+.sitewide-alert-message{
+	color: white;
+	@extend .bold;
+	display: block;
+	text-align: center;
+	line-height: $sitewide-alert-height + 3px;
+	vertical-align: middle;
+	text-shadow: 0px 1px 1px #aaa;
+}
+
+.sitewide-alert-on{
+	#nav{
+		top: $sitewide-alert-height;
+	}
+
+	&.home{
+		#nav{
+			.logo{
+				top: $sitewide-alert-height + 25px;
+			}
+
+			&.after{
+				.logo{
+					top: $sitewide-alert-height;
+				}
+			}
+		}
 	}
 }
 

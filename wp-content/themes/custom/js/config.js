@@ -1,9 +1,9 @@
 'use strict';
 
 var global_config = {
-    navHeight: 75,
-    mobileNavHeight: 50,  
-    navPadding: 75,      
+    navHeight: 115,
+    mobileNavHeight: 75,  
+    navPadding: 105,      
     transitionDuration: 1000,
     mobileBreakpoint: 768
 };
@@ -21,8 +21,8 @@ var config = {
     },
     stickyNav: {
         selector: '#nav',
-        navHeight: global_config.headerHeight,
-        mobileNavHeight: global_config.headerHeight,
+        navHeight: global_config.navHeight,
+        mobileNavHeight: global_config.mobileNavHeight,
         mobileBreakpoint: global_config.mobileBreakpoint,
         activeOnMobile: true        
     },
