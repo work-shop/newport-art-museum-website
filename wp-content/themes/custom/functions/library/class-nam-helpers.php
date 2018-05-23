@@ -71,6 +71,10 @@ class NAM_Helpers{
 								<h4 class="card-text-exhibition-dates">
 									<?php the_field('exhibition_start_date'); ?> - <?php the_field('exhibition_end_date'); ?> 
 								</h4>
+							<?php elseif( $card_type === 'event' ): ?>
+								<h4 class="card-text-event-date mb0">
+									<?php the_field('event_date'); ?>
+								</h4>
 							<?php endif; ?>
 						</div>
 					</div>
