@@ -8,6 +8,8 @@ require_once( __ROOT__ . '/functions/class-nam-abstract-custom-post-type.php' );
 
 require_once( __ROOT__ . '/functions/library/class-ws-cdn-url.php');
 
+require_once( __ROOT__ . '/functions/post-types/class-post-types-archive-mapping.php');
+
 require_once( __ROOT__ . '/functions/taxonomies/groups/class-nam-group.php');
 require_once( __ROOT__ . '/functions/taxonomies/classes-categories/class-nam-classes-category.php');
 require_once( __ROOT__ . '/functions/taxonomies/events-categories/class-nam-events-category.php');

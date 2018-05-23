@@ -2,6 +2,7 @@
 
 abstract class NAM_Custom_Post_Type {
 
+    public static $archive_page_id;
 
     public static $archive_template;
 
@@ -18,6 +19,8 @@ abstract class NAM_Custom_Post_Type {
      * in WordPress
      */
     public static function register( ) {
+
+        $called_class = get_called_class();
 
         if ( function_exists( 'register_post_type' ) ) {
             register_post_type(
@@ -72,6 +75,13 @@ abstract class NAM_Custom_Post_Type {
 
         }
 
+        /** Setup the proxy-postdata for the archive page on this post type. */
+        //add_action('wpmsseo_head', array( $callad_class, 'setup_archive_postdata_proxy' ), 1 );
+
+        /** Setup the proxy-postdata for the archive page on this post type. */
+        add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 0 );
+        add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 9999);
+
     }
 
 
@@ -83,7 +93,7 @@ abstract class NAM_Custom_Post_Type {
      *
      */
     public static function is_archive() {
-        return (get_post_type() == static::$slug) && is_archive();
+        return ((get_post_type() == static::$slug) && is_archive()) || get_the_ID() == static::get_archive_page_id();
     }
 
 
@@ -118,6 +128,46 @@ abstract class NAM_Custom_Post_Type {
         return 'single-' . static::$slug . '.php';
     }
 
+    /**
+     * This routine is hooked to 'the_post', and overrides
+     * setup post-data on product archive templates, replacing
+     * the typical archive page loop with the data for the page
+     * that holds the archive information for this custom post type.
+     *
+     * @hooked the_post
+     */
+    public static function setup_archive_query_proxy() {
+        if ( static::is_archive() ) { static::setup_wp_query_archive_page(); }
+    }
+
+
+    /**
+     * Returns the page of the archive
+     *
+     */
+    public static function get_archive_page_id() {
+        return NAM_Custom_Post_Type_Archive_Mapping::$archive_page_ids[ static::$slug ];
+    }
+
+    /**
+     * This function sets up the post with the correct page-id of
+     * The wordpress backend page that proxies content for this archive page.
+     *
+     * @return Boolean always true
+     *
+     */
+    public static function setup_wp_query_archive_page() {
+        global $post, $wp_query;
+
+        $id = static::get_archive_page_id();
+
+        $wp_query = new WP_Query();
+        $wp_query->query( array( 'p' => $id, 'post_type' => 'any' ) );
+        $post = get_post( $id );
+
+        setup_postdata( $post );
+
+    }
 
     /**
      * This static method retrieves a set of posts for the child's post-type.
