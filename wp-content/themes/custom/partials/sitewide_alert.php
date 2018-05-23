@@ -21,6 +21,6 @@ $sitewide_alert_link = get_field('sitewide_alert_link', 'option');
 				</div>
 			</div>
 		</div>
-		<a href="#" id="sitewide-alert-close"><span class="icon" data-icon="X"></span></a>
+		<a href="#" id="sitewide-alert-close"><span class="icon" data-icon="’"></span></a>
 	</div>
 <?php endif; ?>
