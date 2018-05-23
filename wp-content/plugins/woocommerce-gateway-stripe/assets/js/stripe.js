@@ -3,8 +3,6 @@
 jQuery( function( $ ) {
 	'use strict';
 
-    console.log('stripe-loaded');
-
 	var stripe = Stripe( wc_stripe_params.key );
 
 	var stripe_elements_options = wc_stripe_params.elements_options.length ? wc_stripe_params.elements_options : {},
@@ -699,7 +697,7 @@ jQuery( function( $ ) {
 			wc_stripe_form.form.prepend( '<div class="woocommerce-NoticeGroup woocommerce-NoticeGroup-checkout">' + error_message + '</div>' );
 			wc_stripe_form.form.removeClass( 'processing' ).unblock();
 			wc_stripe_form.form.find( '.input-text, select, input:checkbox' ).blur();
-
+			
 			var selector = '';
 
 			if ( $( '#add_payment_method' ).length ) {

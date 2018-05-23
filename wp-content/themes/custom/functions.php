@@ -31,4 +31,16 @@ require_once( __ROOT__ . '/functions/library/class-ws-flexible-content.php' );
 new NAM_Site();
 new NAM_Site_Admin();
 
+
+
+
+
+
+
+
+
+
+
+add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
+
 ?>

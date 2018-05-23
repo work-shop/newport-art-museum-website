@@ -59,6 +59,7 @@ endif;
 	<?php get_template_part('partials/nav'); ?>
 	<?php get_template_part('partials/menus'); ?>
 
-    <?php get_template_part('partials/notices'); ?>
-
 	<main id="content">
+
+		<?php get_template_part('partials/notices'); ?>
+

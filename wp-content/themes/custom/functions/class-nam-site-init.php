@@ -16,15 +16,35 @@ class NAM_Site {
         add_action('wp_enqueue_scripts', array( $this, 'enqueue_scripts_and_styles' ) );
 
         add_filter('show_admin_bar', '__return_false');
+        add_filter( 'woocommerce_add_to_cart_fragments', array( $this,'woocommerce_header_add_to_cart_fragment' ) );
+
 
         new WS_CDN_Url();
 
     }
 
+    /**
+     * Show cart contents / total Ajax
+     */
+
+    public function woocommerce_header_add_to_cart_fragment( $fragments ) {
+        global $woocommerce;
+
+        ob_start();
+
+        ?>
+        <a class="cart-customlocation" title="View Your Shopping Cart" href="<?php echo wc_get_cart_url(); ?>">
+            <span class="icon" data-icon="i"></span>
+            <span id="cart-number"><?php echo WC()->cart->get_cart_contents_count(); ?>
+        </a>
+        <?php
+        $fragments['a.cart-customlocation'] = ob_get_clean();
+        return $fragments;
+    }
+
     public static function get_page_type() {
 
     }
-
 
     public function register_post_types_and_taxonomies() {
 

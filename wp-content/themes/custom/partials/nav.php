@@ -10,8 +10,13 @@
 			<ul>
 				<li id="nav-link-shop"><a href="/shop">Shop</a></li>
 				<li id="nav-link-login"><a href="/login">Login</a></li>
-				<li id="nav-link-cart"><a href="/cart"><span class="icon" data-icon="i"></span></a></li>
-			</ul>
+				<li id="nav-link-cart">
+					<a class="cart-customlocation" title="View Your Shopping Cart" href="<?php echo wc_get_cart_url(); ?>">
+						<span class="icon" data-icon="i"></span>
+						<span id="cart-number"><?php echo WC()->cart->get_cart_contents_count(); ?>
+					</a>
+				</li>			
+				</ul>
 		</div>
 		<div id="nav-menu-primary">
 			<ul>

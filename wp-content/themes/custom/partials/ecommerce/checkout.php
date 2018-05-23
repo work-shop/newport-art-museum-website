@@ -1,1 +1,10 @@
-<?php the_content(); ?>
+<section class="block padded" id="checkout-contents-nam">
+	<div class="container-fluid container-fluid-stretch">
+		<div class="row">
+			<div class="col-sm-12">
+				<?php the_content(); ?>
+			</div>
+		</div>
+	</div>
+</section>
+
