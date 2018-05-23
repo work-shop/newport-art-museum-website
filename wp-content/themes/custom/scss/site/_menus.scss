@@ -30,7 +30,6 @@ $menu-graphic-padding: 25px;
 		top: $nav-height-md;
 	}
 
-
 	@media screen and (max-width: $sm) {
 		top: $nav-height-mobile;
 	}
@@ -119,6 +118,21 @@ $menu-graphic-padding: 25px;
 		height: $dropdown-graphics-height;
 	}
 }
+
+
+.sitewide-alert-on{
+	.menu-dropdown{
+		top: $sitewide-alert-height + $nav-height;
+	}
+
+	@media screen and (max-width: $md) {
+		.menu-dropdown{
+			top: $sitewide-alert-height + $nav-height-md;
+		}
+	}
+
+}
+
 
 #blanket-dropdown{
 	position: fixed;

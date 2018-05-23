@@ -231,11 +231,17 @@ body.dropdown-on{
 
 #sitewide-alert-close{
 	position: absolute;
-	top: 15px;
-	right: 15px;
+	top: 0px;
+	right: 0px;
+	display: block;
+	width: $sitewide-alert-height;
+	height: $sitewide-alert-height;
 
 	.icon:before{
 		color: white;
+		font-size: 42px;
+		top: 10px;
+		left: 18px;
 	}
 }
 
