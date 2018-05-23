@@ -417,7 +417,7 @@ if (is_admin()) {
         if (empty($wp_query->post)) {
             return $title;
         }
-        
+
         $is_shop = false;
         if ( function_exists( 'is_shop' ) ) {
             if (is_shop()) {
