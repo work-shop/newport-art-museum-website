@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 
 	<title>
-		<?php 
+		<?php
 		if( is_front_page() ){
 			bloginfo( 'name' ); echo ' | ';  bloginfo( 'description' );
 		} else{
@@ -58,5 +58,7 @@ endif;
 	<?php if( $show_sitewide_alert ): get_template_part('partials/sitewide_alert'); endif; ?>
 	<?php get_template_part('partials/nav'); ?>
 	<?php get_template_part('partials/menus'); ?>
+
+    <?php get_template_part('partials/notices'); ?>
 
 	<main id="content">

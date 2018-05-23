@@ -18,12 +18,12 @@ class NAM_Event extends NAM_Custom_Post_Type {
                                         'thumbnail',
                                         'revisions'
                                     ),
-        // 'rewrite'                   => array(
-        //                                 'slug' => 'events',
-        //                                 'with_front' => false,
-        //                                 'feeds' => true,
-        //                                 'pages' => true
-        //                             ),
+        'rewrite'                   => array(
+                                        'slug' => 'events',
+                                        'with_front' => false,
+                                        'feeds' => true,
+                                        'pages' => true
+                                    ),
         'taxonomies'                => array(  )
 
     );
