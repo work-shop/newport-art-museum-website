@@ -96,7 +96,7 @@ $text-button: (
 // .button{
 // 	display: block;
 
-// 	a{
+// 	a,.button{
 // 		@include text-size($text-button);	
 // 		background: $brand;
 // 		padding: 10px 10px;
@@ -118,6 +118,29 @@ $text-button: (
 // 		}
 // 	}
 // }
+
+.button{
+		//@include text-size($text-button);	
+		background: $brand;
+		padding: 10px 10px;
+		font-family: $font-main;
+		color: white;
+		@extend .bold;
+		@extend .uppercase;	
+		border-radius: 2px;
+		display: inline-block;
+		text-align: center;
+		border: 2px solid $brand;
+		@include transition(background .125s);
+
+		&:hover{
+			background: lighten($brand,15%);
+		}
+
+		@media screen and (max-width: $sm) {
+			padding: 3px 8px;
+		}
+	}
 
 .nam-dash{
 	width: 36px;

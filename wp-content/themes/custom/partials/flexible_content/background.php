@@ -16,7 +16,9 @@ $include_text= $fc_row['include_text'];
 $text_color = $fc_row['text_color'];
 $text_alignment = $fc_row['text_alignment'];
 $heading = $fc_row['heading'];
+$heading_font = $fc_row['heading_font'];
 $subheading = $fc_row['subheading'];
+$subheading_font = $fc_row['subheading_font'];
 $link_text = $fc_row['link_text'];
 $link_url = $fc_row['link_url'];
 $fc_background_classes = 'fc-background-' . $background_type . ' ';
@@ -37,7 +39,7 @@ endif; ?>
 			<div class="container-fc fc-background-text">
 				<div class="row">
 					<div class="col-sm-12">
-						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $text_alignment, $text_color, $subheading, $link_url, $link_text); ?>
+						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $heading_font, $text_alignment, $text_color, $subheading, $subheading_font, $link_url, $link_text); ?>
 					</div>
 				</div>
 			</div>
@@ -50,7 +52,7 @@ endif; ?>
 					<?php if( $multi_column_layout === 'image-left' ): ?>
 						<?php WS_Flexible_Content_Helper::fc_background_image( $background_type, $background_image, $section_height_image, $background_image_masking ); ?>
 					<?php else: ?>
-						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $text_alignment, $text_color, $subheading, $link_url, $link_text); ?>
+						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $heading_font, $text_alignment, $text_color, $subheading, $subheading_font, $link_url, $link_text); ?>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -59,7 +61,7 @@ endif; ?>
 					<?php if( $multi_column_layout === 'image-right' ): ?>
 						<?php WS_Flexible_Content_Helper::fc_background_image( $background_type, $background_image, $section_height_image, $background_image_masking ); ?>
 					<?php else: ?>
-						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $text_alignment, $text_color, $subheading, $link_url, $link_text); ?>
+						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $heading_font, $text_alignment, $text_color, $subheading, $subheading_font, $link_url, $link_text); ?>
 					<?php endif; ?>
 				</div>
 			</div>
@@ -70,7 +72,7 @@ endif; ?>
 			<div class="container-fc fc-background-text">
 				<div class="row">
 					<div class="col-sm-12">
-						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $text_alignment, $text_color, $subheading, $link_url, $link_text); ?>
+						<?php WS_Flexible_Content_Helper::fc_background_text( $background_type, $heading, $heading_font, $text_alignment, $text_color, $subheading, $subheading_font, $link_url, $link_text); ?>
 					</div>
 				</div>
 			</div>

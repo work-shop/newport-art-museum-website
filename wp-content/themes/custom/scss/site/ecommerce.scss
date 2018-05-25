@@ -1,0 +1,60 @@
+
+
+//CART
+
+.col-md,.col-md-6,.col-md-1{
+	//outline: 1px solid black;
+}
+
+.cart-headings{
+	border-bottom: 1px solid darken($light,15%);
+	padding-bottom: 5px;
+	//margin-bottom: 1.5em;
+}
+
+.cart-contents{
+	margin-bottom: 5em;
+}
+
+.product-remove,.product-remove-heading{
+	flex-basis: 50px;
+}
+
+#update-cart-button{
+	margin-top: 2em;
+}
+
+.cart-row{
+	padding-top: 24px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid darken($light,5%);
+	
+	&:last-child{
+		//border: none;
+	}
+
+	.qty{
+		width: 3.631em;
+		outline: none;
+		border: 1px solid #ddd;
+		text-align: center;
+		border-radius: 2px;
+	}
+}
+
+
+
+
+
+
+
+//WOOCOMMERCE STYLES THAT WE NEED
+
+.screen-reader-text {
+    clip: rect(1px,1px,1px,1px);
+    height: 1px;
+    overflow: hidden;
+    position: absolute!important;
+    width: 1px;
+    word-wrap: normal!important;
+}

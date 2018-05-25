@@ -62,4 +62,3 @@ endif;
 	<main id="content">
 
 		<?php get_template_part('partials/notices'); ?>
-

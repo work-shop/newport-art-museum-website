@@ -162,7 +162,7 @@ abstract class NAM_Custom_Post_Type {
         $id = static::get_archive_page_id();
 
         $wp_query = new WP_Query();
-        $wp_query->query( array( 'p' => $id, 'post_type' => 'any' ) );
+        $wp_query->query( array( 'page_id' => $id, 'post_type' => 'any' ) );
         $post = get_post( $id );
 
         setup_postdata( $post );

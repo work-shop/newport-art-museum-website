@@ -480,6 +480,45 @@
                             "maxlength": ""
                         },
                         {
+                            "key": "field_5b080b445aa2a",
+                            "label": "Heading Font",
+                            "name": "heading_font",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_5aa7f2ff4b4d3",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "field": "field_5aa7f053add52",
+                                        "operator": "==",
+                                        "value": "multi-column"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "serif": "Serif",
+                                "sans-serif": "Sans Serif"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "save_other_choice": 0,
+                            "default_value": "serif",
+                            "layout": "vertical",
+                            "return_format": "value"
+                        },
+                        {
                             "key": "field_5aa8010033626",
                             "label": "Subheading",
                             "name": "subheading",
@@ -512,6 +551,45 @@
                             "maxlength": "",
                             "rows": "",
                             "new_lines": "br"
+                        },
+                        {
+                            "key": "field_5b080b7f5aa2b",
+                            "label": "Sub Heading Font",
+                            "name": "subheading_font",
+                            "type": "radio",
+                            "instructions": "",
+                            "required": 0,
+                            "conditional_logic": [
+                                [
+                                    {
+                                        "field": "field_5aa7f2ff4b4d3",
+                                        "operator": "==",
+                                        "value": "1"
+                                    }
+                                ],
+                                [
+                                    {
+                                        "field": "field_5aa7f053add52",
+                                        "operator": "==",
+                                        "value": "multi-column"
+                                    }
+                                ]
+                            ],
+                            "wrapper": {
+                                "width": "30",
+                                "class": "",
+                                "id": ""
+                            },
+                            "choices": {
+                                "serif": "Serif",
+                                "sans-serif": "Sans Serif"
+                            },
+                            "allow_null": 0,
+                            "other_choice": 0,
+                            "save_other_choice": 0,
+                            "default_value": "serif",
+                            "layout": "vertical",
+                            "return_format": "value"
                         },
                         {
                             "key": "field_5aa813787b099",
@@ -1667,5 +1745,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1525289445
+    "modified": 1527254929
 }
