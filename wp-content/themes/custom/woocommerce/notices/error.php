@@ -25,8 +25,16 @@ if ( ! $messages ) {
 }
 
 ?>
-<ul class="woocommerce-error" role="alert">
-	<?php foreach ( $messages as $message ) : ?>
-		<li><?php echo wp_kses_post( $message ); ?></li>
-	<?php endforeach; ?>
-</ul>
+
+<?php foreach ( $messages as $message ) : ?>
+	<div class="woocommerce-error notice row" role="alert">
+		<div class="notice-text col-10">
+			<h4><?php echo wp_kses_post( $message ); ?></h4>
+		</div>
+		<div class="notice-close justify-content-end col-2">
+			<a href="#" class="notice-close-link">
+				<span class="icon" data-icon="’"></span>
+			</a>
+		</div>
+	</div>
+<?php endforeach; ?>

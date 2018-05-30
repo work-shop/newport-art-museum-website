@@ -18,6 +18,7 @@ import { slickSlideshows } from './slick-slideshows.js';
 import { jqueryAccordian } from './jquery-accordian.js';
 import { accordian } from './accordian.js';
 import { menuOverflow } from './menu-overflow.js';
+import { ecommerceHelpers } from './ecommerce-helpers.js';
 import { livereload } from './livereload-client.js';
 
 
@@ -35,6 +36,7 @@ menuToggle(config.menuToggle);
 slickSlideshows(config.slickSlideshows);
 jqueryAccordian();
 accordian();
+ecommerceHelpers();
 menuOverflow();
 
 //console.log('main.js loaded, with gulp!');

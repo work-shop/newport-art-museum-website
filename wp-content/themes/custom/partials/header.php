@@ -30,28 +30,8 @@
 
 </head>
 
-<?php
-if( NAM_Helpers::is_tree(23) ): $GLOBALS['tree_slug'] = 'visit'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(40) || is_tax( 'exhibitions-categories' ) ): $GLOBALS['tree_slug'] = 'exhibitions'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(42) ): $GLOBALS['tree_slug'] = 'collection'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(46) ): $GLOBALS['tree_slug'] = 'about'; $GLOBALS['include_page_nav'] = true; endif;
-if( is_post_type_archive( 'news' ) || is_tax( 'news-categories' ) ): $GLOBALS['tree_slug'] = 'about'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(76) || is_tax( 'classes-categories' ) ): $GLOBALS['tree_slug'] = 'education'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(74) || is_tax( 'events-categories' ) ): $GLOBALS['tree_slug'] = 'events'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(70) ): $GLOBALS['tree_slug'] = 'join'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(66) ): $GLOBALS['tree_slug'] = 'support'; $GLOBALS['include_page_nav'] = true; endif;
-if( NAM_Helpers::is_tree(4) || is_tax( 'products-categories' ) ): $GLOBALS['tree_slug'] = 'shop'; $GLOBALS['include_page_nav'] = true; endif;
-?>
-
-<?php
-$sitewide_alert_on = get_field('show_sitewide_alert', 'option');
-if( $sitewide_alert_on === true ):
-	if( !isset($_COOKIE['nam_show_sitewide_alert']) || $_COOKIE['nam_show_sitewide_alert'] === false ):
-		$sitewide_alert_class = 'sitewide-alert-on';
-		$show_sitewide_alert = true;
-	endif;
-endif;
-?>
+<?php get_template_part('partials/setup_slug'); ?>
+<?php get_template_part('partials/setup_sitewide_alert'); ?>
 
 <body <?php body_class( ' loading before-scroll modal-off menu-closed dropdown-off ' . $sitewide_alert_class . ' ' ); ?>>
 
@@ -60,5 +40,10 @@ endif;
 	<?php get_template_part('partials/menus'); ?>
 
 	<main id="content">
+		
+		<?php // get_template_part('partials/notices'); ?>
+		
 
-		<?php get_template_part('partials/notices'); ?>
+		<?php wc_add_notice('This is a success notice', 'success');
+wc_add_notice('This is a regular notice', 'notice');
+wc_add_notice('This is an error notice', 'error'); ?>

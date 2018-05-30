@@ -8,7 +8,14 @@
  *
  * You can modify the html associated with these messages in the `woocommerce/notices` director.
  */
-
-wc_print_notices();
-
 ?>
+
+<section class="block" id="notices">
+	<div class="container-fluid container-fluid-stretch container-fluid-extend">
+		<div class="row">
+			<div class="col-sm-12">
+				<?php wc_print_notices(); ?>
+			</div>
+		</div>
+	</div>
+</section>
