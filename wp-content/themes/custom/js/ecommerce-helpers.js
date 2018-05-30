@@ -5,7 +5,8 @@ function ecommerceHelpers() {
 
 	$(document).ready( function() {
 
-		$( '.notice-close-link' ).click(function() {
+		$( '.notice-close-link' ).click(function(e) {
+			e.preventDefault();
 			noticeClose($(this));
 		});
 
@@ -13,7 +14,7 @@ function ecommerceHelpers() {
 
 
 	function noticeClose(link){
-		console.log(link);
+		link.closest('.notice').addClass('hidden');
 	}
 
 }

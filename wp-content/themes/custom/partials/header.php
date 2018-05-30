@@ -44,6 +44,8 @@
 		<?php // get_template_part('partials/notices'); ?>
 		
 
-		<?php wc_add_notice('This is a success notice', 'success');
-wc_add_notice('This is a regular notice', 'notice');
-wc_add_notice('This is an error notice', 'error'); ?>
+		<?php 
+		// wc_add_notice('This is a success notice', 'success');
+		// wc_add_notice('This is a regular notice', 'notice');
+		// wc_add_notice('This is an error notice', 'error');
+		?>
