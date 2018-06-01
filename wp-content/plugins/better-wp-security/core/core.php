@@ -24,7 +24,7 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 		 *
 		 * @access private
 		 */
-		private $plugin_build = 4087;
+		private $plugin_build = 4095;
 
 		/**
 		 * Used to distinguish between a user modifying settings and the API modifying settings (such as from Sync
@@ -120,6 +120,8 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			require( $this->plugin_dir . 'core/response.php' );
 			require( $this->plugin_dir . 'core/lib/class-itsec-lib-user-activity.php' );
 			require( $this->plugin_dir . 'core/lib/class-itsec-lib-password-requirements.php' );
+			require( $this->plugin_dir . 'core/lib/class-itsec-lib-login-interstitial.php' );
+			require( $this->plugin_dir . 'core/lib/class-itsec-lib-distributed-storage.php' );
 
 			require( $this->plugin_dir . 'core/lib/class-itsec-scheduler.php' );
 			require( $this->plugin_dir . 'core/lib/class-itsec-job.php' );
@@ -167,6 +169,9 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 				$pass_requirements = new ITSEC_Lib_Password_Requirements();
 				$pass_requirements->run();
 			}
+
+			$login_interstitial = new ITSEC_Lib_Login_Interstitial();
+			$login_interstitial->run();
 
 			if ( defined( 'ITSEC_USE_CRON' ) && ITSEC_USE_CRON !== ITSEC_Lib::use_cron() ) {
 				ITSEC_Modules::set_setting( 'global', 'use_cron', ITSEC_USE_CRON );
@@ -303,6 +308,7 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			ITSEC_Modules::register_module( 'security-check', "$path/modules/security-check", 'always-active' );
 			ITSEC_Modules::register_module( 'global', "$path/modules/global", 'always-active' );
 			ITSEC_Modules::register_module( 'notification-center', "$path/modules/notification-center", 'always-active' );
+			ITSEC_Modules::register_module( 'privacy', "$path/modules/privacy", 'always-active' );
 			ITSEC_Modules::register_module( '404-detection', "$path/modules/404-detection" );
 			ITSEC_Modules::register_module( 'admin-user', "$path/modules/admin-user", 'always-active' );
 			ITSEC_Modules::register_module( 'away-mode', "$path/modules/away-mode" );
@@ -604,7 +610,7 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			$url = network_admin_url( 'admin.php?page=itsec-logs' );
 
 			if ( ! empty( $filter ) ) {
-				$url = add_query_arg( array( 'filter' => $filter ), $url );
+				$url = add_query_arg( array( 'filters' => rawurlencode( "module|{$filter}" ) ), $url );
 			}
 
 			return $url;
@@ -802,7 +808,11 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			$home_path = parse_url( get_option( 'home' ), PHP_URL_PATH );
 			$home_path = trim( $home_path, '/' );
 
-			$rest_api_path = "/$home_path/" . rest_get_url_prefix() . '/';
+			if ( '' === $home_path ) {
+				$rest_api_path = '/' . rest_get_url_prefix() . '/';
+			} else {
+				$rest_api_path = "/$home_path/" . rest_get_url_prefix() . '/';
+			}
 
 			if ( 0 === strpos( $_SERVER['REQUEST_URI'], $rest_api_path ) ) {
 				$GLOBALS['__itsec_core_is_rest_api_request'] = true;

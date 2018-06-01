@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin database schema
- * WARNING: 
- * 	dbDelta() doesn't like empty lines in schema string, so don't put them there;
+ * WARNING:
+ *    dbDelta() doesn't like empty lines in schema string, so don't put them there;
  *  WPDB doesn't like NULL values so better not to have them in the tables;
  */
 
@@ -17,11 +17,13 @@ $charset_collate = '';
 // Declare these as global in case schema.php is included from a function.
 global $wpdb, $plugin_queries;
 
-if ( ! empty($wpdb->charset))
-	$charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
-if ( ! empty($wpdb->collate))
-	$charset_collate .= " COLLATE $wpdb->collate";
-	
+if (!empty($wpdb->charset)) {
+    $charset_collate = "DEFAULT CHARACTER SET $wpdb->charset";
+}
+if (!empty($wpdb->collate)) {
+    $charset_collate .= " COLLATE $wpdb->collate";
+}
+
 $table_prefix = PMXI_Plugin::getInstance()->getTablePrefix();
 
 $plugin_queries = <<<SCHEMA
@@ -41,7 +43,7 @@ CREATE TABLE {$table_prefix}templates (
 CREATE TABLE {$table_prefix}imports (
 	id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	parent_import_id BIGINT(20) NOT NULL DEFAULT 0,
-	name VARCHAR(255) NOT NULL DEFAULT '',
+	name TEXT,
 	friendly_name VARCHAR(255) NOT NULL DEFAULT '',
 	type VARCHAR(32) NOT NULL DEFAULT '',
 	feed_type ENUM('xml','csv','zip','gz','') NOT NULL DEFAULT '',	
@@ -78,14 +80,23 @@ CREATE TABLE {$table_prefix}posts (
 	product_key TEXT,
 	iteration BIGINT(20) NOT NULL DEFAULT 0,
 	specified BOOL NOT NULL DEFAULT 0,
-	PRIMARY KEY  (id)	
+	PRIMARY KEY  (id),
+  	KEY import_id (import_id),
+  	KEY post_id (post_id)	
 ) $charset_collate;
 CREATE TABLE {$table_prefix}files (
 	id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
 	import_id BIGINT(20) UNSIGNED NOT NULL,
-	name VARCHAR(255) NOT NULL DEFAULT '',
+	name TEXT,
 	path TEXT,
 	registered_on DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+	PRIMARY KEY  (id)
+) $charset_collate;
+CREATE TABLE {$table_prefix}images (
+	id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT,	
+	attachment_id BIGINT(20) UNSIGNED NOT NULL,
+	image_url VARCHAR(600) NOT NULL DEFAULT '',
+	image_filename VARCHAR(600) NOT NULL DEFAULT '',	
 	PRIMARY KEY  (id)
 ) $charset_collate;
 CREATE TABLE {$table_prefix}history (

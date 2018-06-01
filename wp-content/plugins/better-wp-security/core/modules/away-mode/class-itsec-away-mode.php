@@ -8,9 +8,10 @@ final class ITSEC_Away_Mode {
 		add_action( 'itsec_admin_init', array( $this, 'run_active_check' ) );
 		add_action( 'login_init', array( $this, 'run_active_check' ) );
 
+		add_filter( 'itsec_managed_files', array( $this, 'register_managed_file' ) );
+
 		add_action( 'ithemes_sync_register_verbs', array( $this, 'register_sync_verbs' ) );
 		add_filter( 'itsec-filter-itsec-get-everything-verbs', array( $this, 'register_sync_get_everything_verbs' ) );
-
 	}
 
 	/**
@@ -86,6 +87,22 @@ final class ITSEC_Away_Mode {
 			wp_clear_auth_cookie();
 			die();
 		}
+	}
+
+	/**
+	 * Register the away mode file as a managed file.
+	 *
+	 * @param array $files
+	 *
+	 * @return array
+	 */
+	public function register_managed_file( $files ) {
+
+		require_once( dirname( __FILE__ ) . '/utilities.php' );
+
+		$files[] = ITSEC_Away_Mode_Utilities::get_active_file_name();
+
+		return $files;
 	}
 
 	/**

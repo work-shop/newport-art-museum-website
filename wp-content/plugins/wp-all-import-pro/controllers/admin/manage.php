@@ -603,6 +603,9 @@ class PMXI_Admin_Manage extends PMXI_Controller_Admin {
 
 			$item->delete( ! $is_delete_posts, $is_deleted_images, $is_delete_attachments, $is_delete_import );
 
+            $scheduling = \Wpai\Scheduling\Scheduling::create();
+            $scheduling->deleteScheduleIfExists($id);
+
 			$redirect_msg = '';
 
 			if ( $is_delete_import and ! $is_delete_posts )
@@ -647,8 +650,12 @@ class PMXI_Admin_Manage extends PMXI_Controller_Admin {
 			$is_delete_posts = $this->input->post('is_delete_posts', false);
 			$is_deleted_images = $this->input->post('is_delete_images');
 			$is_delete_attachments = $this->input->post('is_delete_attachments');
-			foreach($items->convertRecords() as $item) {
+
+            $scheduling = \Wpai\Scheduling\Scheduling::create();
+
+            foreach($items->convertRecords() as $item) {
 				$item->delete( ! $is_delete_posts, $is_deleted_images, $is_delete_attachments );
+                $scheduling->deleteScheduleIfExists($item->id);
 			}
 			
 			wp_redirect(add_query_arg('pmxi_nt', urlencode(sprintf(__('%d %s deleted', 'wp_all_import_plugin'), $items->count(), _n('import', 'imports', $items->count(), 'wp_all_import_plugin'))), $this->baseUrl)); die();

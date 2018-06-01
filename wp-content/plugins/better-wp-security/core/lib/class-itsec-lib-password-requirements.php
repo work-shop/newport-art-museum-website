@@ -23,10 +23,7 @@ class ITSEC_Lib_Password_Requirements {
 		add_action( 'validate_password_reset', array( $this, 'forward_reset_pass' ), 10, 2 );
 		add_action( 'profile_update', array( $this, 'set_password_last_updated' ), 10, 2 );
 
-		add_action( 'wp_login', array( $this, 'wp_login' ), 12, 2 );
-		add_filter( 'wp_login_errors', array( $this, 'token_expired_message' ) );
-		add_action( 'login_form_' . self::LOGIN_ACTION, array( $this, 'handle_update_password_form' ), 9 );
-		add_action( 'login_form_' . self::LOGIN_ACTION, array( $this, 'display_update_password_form' ) );
+		add_action( 'itsec_login_interstitial_init', array( $this, 'register_interstitial' ) );
 	}
 
 	/**
@@ -70,14 +67,14 @@ class ITSEC_Lib_Password_Requirements {
 	 */
 	public function forward_reset_pass( $errors, $user ) {
 
-		if ( ! isset( $_POST['pass1'] ) ) {
+		if ( ! isset( $_POST['pass1'] ) || is_wp_error( $user ) ) {
 			// The validate_password_reset action fires when first rendering the reset page and when handling the form
 			// submissions. Since the pass1 data is missing, this must be the initial page render. So, we don't need to
 			// do anything yet.
 			return;
 		}
 
-		self::validate_password( $user, $user->user_pass, array(
+		self::validate_password( $user, $_POST['pass1'], array(
 			'error'   => $errors,
 			'context' => 'reset-password',
 		) );
@@ -102,316 +99,102 @@ class ITSEC_Lib_Password_Requirements {
 	}
 
 	/**
-	 * Whenever a user logs in, check if their password needs to be changed. If so, mark that the user must change
-	 * their password.
+	 * Register the password change interstitial.
 	 *
-	 * @since 1.8
-	 *
-	 * @param string  $username the username attempted
-	 * @param WP_User $user     wp_user the user
-	 *
-	 * @return void
+	 * @param ITSEC_Lib_Login_Interstitial $lib
 	 */
-	public function wp_login( $username, $user = null ) {
-
-		//Get a valid user or terminate the hook (all we care about is forcing the password change... Let brute force protection handle the rest
-		if ( null !== $user ) {
-			$current_user = $user;
-		} elseif ( is_user_logged_in() ) {
-			$current_user = wp_get_current_user();
-		} else {
-			return;
-		}
-
-		if ( ! self::password_change_required( $current_user ) ) {
-			return;
-		}
-
-		$token = $this->set_update_password_key( $current_user );
-		$this->destroy_session( $current_user );
-
-		$this->login_html( $current_user, $token );
-		exit;
-	}
-
-	/**
-	 * Add a message that the update password token has expired and they must login again.
-	 *
-	 * @param WP_Error $errors
-	 *
-	 * @return WP_Error
-	 */
-	public function token_expired_message( $errors ) {
-
-		if ( ! empty( $_GET['itsec_update_pass_expired'] ) ) {
-			$errors->add(
-				'itsec_update_pass_expired',
-				esc_html__( 'Sorry, the update password request has expired. Please log in again.', 'better-wp-security' )
-			);
-		}
-
-		return $errors;
-	}
-
-	/**
-	 * Handle the request to update the user's password.
-	 */
-	public function handle_update_password_form() {
-
-		if ( empty( $_POST['itsec_update_password'] ) || empty( $_POST['itsec_update_password_user'] ) || empty( $_POST['pass1'] ) ) {
-			return;
-		}
-
-		$user = get_userdata( $_POST['itsec_update_password_user'] );
-
-		if ( ! $user || empty( $_POST['itsec_update_password_token'] ) || ! $this->verify_update_password_key( $user, $_POST['itsec_update_password_token'] ) ) {
-
-			$url = add_query_arg( 'itsec_update_pass_expired', 1, wp_login_url() );
-			wp_safe_redirect( set_url_scheme( $url, 'login_post' ) );
-			die();
-		}
-
-		$error = self::validate_password( $user, $_POST['pass1'] );
-
-		if ( $error->get_error_message() ) {
-			$this->error_message = $error->get_error_message();
-
-			return;
-		}
-
-		$error = wp_update_user( array(
-			'ID'        => $user->ID,
-			'user_pass' => $_POST['pass1']
+	public function register_interstitial( $lib ) {
+		$lib->register( 'update-password', array( $this, 'render_interstitial' ), array(
+			'show_to_user' => array( __CLASS__, 'password_change_required' ),
+			'info_message' => array( __CLASS__, 'get_message_for_password_change_reason' ),
+			'submit'       => array( $this, 'submit' ),
 		) );
-
-		if ( is_wp_error( $error ) ) {
-			$this->error_message = $error->get_error_message();
-
-			return;
-		}
-
-		$this->delete_update_password_key( $user );
-		wp_set_auth_cookie( $user->ID, ! empty( $_REQUEST['rememberme'] ) );
-
-		if ( ! empty( $_REQUEST['redirect_to'] ) ) {
-			$redirect_to = apply_filters( 'login_redirect', $_REQUEST['redirect_to'], $_REQUEST['redirect_to'], $user );
-			wp_safe_redirect( $redirect_to );
-		} else {
-			wp_safe_redirect( admin_url( 'index.php' ) );
-		}
-
-		exit;
 	}
 
 	/**
-	 * When the login page is loaded with the 'itsec_update_password' action, maybe display the update password form,
-	 * or redirect to a standard login page.
-	 */
-	public function display_update_password_form() {
-
-		$user = null;
-		$token = '';
-
-		if ( is_user_logged_in() ) {
-			$user  = wp_get_current_user();
-			$token = $this->set_update_password_key( $user );
-			$this->destroy_session( $user );
-		} elseif ( ! empty( $_POST['itsec_update_password_user'] ) ) {
-			$user  = get_userdata( $_POST['itsec_update_password_user'] );
-			$token = empty( $_POST['itsec_update_password_token'] ) ? '' : $_POST['itsec_update_password_token'];
-		}
-
-		if ( ! $user ) {
-			wp_safe_redirect( set_url_scheme( wp_login_url(), 'login_post' ) );
-			die();
-		}
-
-		if ( ! self::password_change_required( $user ) ) {
-			wp_safe_redirect( set_url_scheme( wp_login_url(), 'login_post' ) );
-			die();
-		}
-
-		$this->login_html( $user, $token );
-		exit;
-	}
-
-	/**
-	 * Destroy the session for a user.
+	 * Render the interstitial.
 	 *
 	 * @param WP_User $user
 	 */
-	private function destroy_session( $user ) {
-		WP_Session_Tokens::get_instance( $user->ID )->destroy_all();
-		wp_clear_auth_cookie();
-	}
-
-	/**
-	 * Verify that the update password key is valid.
-	 *
-	 * @param WP_User $user
-	 * @param string  $key
-	 *
-	 * @return bool
-	 */
-	private function verify_update_password_key( $user, $key ) {
-		$expected = get_user_meta( $user->ID, self::META_KEY, true );
-
-		if ( ! $expected || ! is_array( $expected ) ) {
-			return false;
-		}
-
-		if ( empty( $expected['expires'] ) || $expected['expires'] < ITSEC_Core::get_current_time_gmt() ) {
-			return false;
-		}
-
-		return hash_equals( $expected['key'], $key );
-	}
-
-	/**
-	 * Set the update password key for a user.
-	 *
-	 * @param WP_User $user
-	 *
-	 * @return string
-	 */
-	private function set_update_password_key( $user ) {
-		$key = $this->generate_update_password_key();
-
-		update_user_meta( $user->ID, self::META_KEY, array(
-			'key'     => $key,
-			'expires' => ITSEC_Core::get_current_time_gmt() + HOUR_IN_SECONDS
-		) );
-
-		return $key;
-	}
-
-	/**
-	 * Generate a token to be used to verify intent of updating password.
-	 *
-	 * We can't use nonces here because the WordPress Session Tokens won't be initialized yet.
-	 *
-	 * @return string
-	 */
-	private function generate_update_password_key() {
-		return wp_generate_password( 32, true, false );
-	}
-
-	/**
-	 * Delete the update password key for a user.
-	 *
-	 * @param WP_User $user
-	 */
-	private function delete_update_password_key( $user ) {
-		delete_user_meta( $user->ID, self::META_KEY );
-	}
-
-	/**
-	 * Display an interstitial form during the login process to force a user to update their password.
-	 *
-	 * @param WP_User $user
-	 * @param string  $token
-	 */
-	protected function login_html( $user, $token ) {
-
-		$wp_login_url = set_url_scheme( wp_login_url(), 'login_post' );
-		$wp_login_url = add_query_arg( 'action', self::LOGIN_ACTION, $wp_login_url );
-
-		if ( isset( $_GET['wpe-login'] ) && ! preg_match( '/[&?]wpe-login=/', $wp_login_url ) ) {
-			$wp_login_url = add_query_arg( 'wpe-login', $_GET['wpe-login'], $wp_login_url );
-		}
-
-		$interim_login = isset( $_REQUEST['interim-login'] );
-		$redirect_to   = '';
-
-		$rememberme = ! empty( $_REQUEST['rememberme'] );
-
-		wp_enqueue_script( 'user-profile' );
-
-		// Prevent JetPack from attempting to SSO the update password form.
-		add_filter( 'jetpack_sso_allowed_actions', '__return_empty_array' );
-
-		if ( ! function_exists( 'login_header' ) ) {
-			require_once( dirname( __FILE__ ) . '/includes/function.login-header.php' );
-		}
-
-		login_header();
-
-		$type = self::password_change_required( $user );
-		// Modules are responsible for providing escaped reason messages
-		$reason = $this->get_message_for_password_change_reason( $type );
+	public function render_interstitial( $user ) {
 		?>
 
-		<?php if ( $this->error_message ) : ?>
-			<div id="login-error" class="message" style="border-left-color: #dc3232;">
-				<?php echo $this->error_message; ?>
-			</div>
-		<?php else: ?>
-			<p class="message"><?php echo $reason; ?></p>
-		<?php endif; ?>
+		<div class="user-pass1-wrap">
+			<p><label for="pass1"><?php _e( 'New Password', 'better-wp-security' ); ?></label></p>
+		</div>
 
-		<form name="resetpassform" id="resetpassform" action="<?php echo esc_url( $wp_login_url ); ?>" method="post"
-			  autocomplete="off">
-
-			<div class="user-pass1-wrap">
-				<p><label for="pass1"><?php _e( 'New Password', 'better-wp-security' ); ?></label></p>
-			</div>
-
-			<div class="wp-pwd">
+		<div class="wp-pwd">
 				<span class="password-input-wrapper">
 					<input type="password" data-reveal="1"
 						   data-pw="<?php echo esc_attr( wp_generate_password( 16 ) ); ?>" name="pass1" id="pass1"
 						   class="input" size="20" value="" autocomplete="off" aria-describedby="pass-strength-result"/>
 				</span>
-				<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e( 'Strength indicator', 'better-wp-security' ); ?></div>
-			</div>
+			<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e( 'Strength indicator', 'better-wp-security' ); ?></div>
+		</div>
 
-			<p class="user-pass2-wrap">
-				<label for="pass2"><?php _e( 'Confirm new password' ) ?></label><br/>
-				<input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="off"/>
-			</p>
-
-			<p class="description indicator-hint"><?php echo wp_get_password_hint(); ?></p>
-			<br class="clear"/>
-
-			<p class="submit">
-				<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large"
-					   value="<?php esc_attr_e( 'Update Password', 'better-wp-security' ); ?>"/>
-			</p>
-
-			<?php if ( $interim_login ) : ?>
-				<input type="hidden" name="interim-login" value="1"/>
-			<?php else : ?>
-				<input type="hidden" name="redirect_to" value="<?php echo esc_url( $redirect_to ); ?>"/>
-			<?php endif; ?>
-
-			<input type="hidden" name="rememberme" id="rememberme" value="<?php echo esc_attr( $rememberme ); ?>"/>
-			<input type="hidden" name="itsec_update_password" value="1">
-			<input type="hidden" name="itsec_update_password_token" value="<?php echo esc_attr( $token ); ?>">
-			<input type="hidden" name="itsec_update_password_user" value="<?php echo esc_attr( $user->ID ); ?>">
-		</form>
-
-		<p id="backtoblog">
-			<a href="<?php echo esc_url( home_url( '/' ) ); ?>" title="<?php esc_attr_e( 'Are you lost?', 'better-wp-security' ); ?>">
-				<?php echo esc_html( sprintf( __( '&larr; Back to %s', 'better-wp-security' ), get_bloginfo( 'title', 'display' ) ) ); ?>
-			</a>
+		<p class="user-pass2-wrap">
+			<label for="pass2"><?php _e( 'Confirm new password' ) ?></label><br/>
+			<input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="off"/>
 		</p>
 
-		</div>
-		<?php do_action( 'login_footer' ); ?>
-		<div class="clear"></div>
-		</body>
-		</html>
+		<p class="description indicator-hint"><?php echo wp_get_password_hint(); ?></p>
+		<br class="clear"/>
+
+		<p class="submit">
+			<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large"
+				   value="<?php esc_attr_e( 'Update Password', 'better-wp-security' ); ?>"/>
+		</p>
+
 		<?php
+	}
+
+	/**
+	 * Handle the request to update the user's password.
+	 *
+	 * @param WP_User $user
+	 * @param array   $data POSTed data.
+	 *
+	 * @return WP_Error|null
+	 */
+	public function submit( $user, $data ) {
+
+		if ( empty( $data['pass1'] ) ) {
+			return new WP_Error(
+				'itsec-password-requirements-empty-password',
+				__( 'Please enter your new password.', 'better-wp-security' )
+			);
+		}
+
+		$error = self::validate_password( $user, $data['pass1'] );
+
+		if ( $error->get_error_message() ) {
+			return $error;
+		}
+
+		$error = wp_update_user( array(
+			'ID'        => $user->ID,
+			'user_pass' => $data['pass1']
+		) );
+
+		if ( is_wp_error( $error ) ) {
+			return $error;
+		}
+
+		return null;
 	}
 
 	/**
 	 * Get a message indicating to the user why a password change is required.
 	 *
-	 * @param string $reason
+	 * @param WP_User $user
 	 *
 	 * @return string
 	 */
-	protected function get_message_for_password_change_reason( $reason ) {
+	public static function get_message_for_password_change_reason( $user ) {
+
+		if ( ! $reason = self::password_change_required( $user ) ) {
+			return '';
+		}
 
 		/**
 		 * Retrieve a human readable description as to why a password change has been required for the current user.

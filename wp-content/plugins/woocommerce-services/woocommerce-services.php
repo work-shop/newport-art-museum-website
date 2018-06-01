@@ -7,7 +7,7 @@
  * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-services
  * Domain Path: /i18n/languages/
- * Version: 1.13.3
+ * Version: 1.14.1
  * WC requires at least: 3.0.0
  * WC tested up to: 3.3.4
  *
@@ -93,12 +93,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 		 * @var WC_REST_Connect_Services_Controller
 		 */
 		protected $rest_services_controller;
-
-		/**
-		 * @var WC_REST_Connect_Services_Dismiss_Service_Notice_Controller
-		 */
-		protected $rest_dismiss_service_notice_controller;
-
 
 		/**
 		 * @var WC_REST_Connect_Self_Help_Controller
@@ -299,10 +293,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
 		public function set_rest_services_controller( WC_REST_Connect_Services_Controller $rest_services_controller ) {
 			$this->rest_services_controller = $rest_services_controller;
-		}
-
-		public function set_rest_dismiss_service_notice_controller( WC_REST_Connect_Services_Dismiss_Service_Notice_Controller $rest_dismiss_service_notice_controller ) {
-			$this->rest_dismiss_service_notice_controller = $rest_dismiss_service_notice_controller;
 		}
 
 		public function get_rest_self_help_controller() {
@@ -590,6 +580,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			require_once( plugin_basename( 'classes/class-wc-connect-stripe.php' ) );
 			require_once( plugin_basename( 'classes/class-wc-connect-paypal-ec.php' ) );
 			require_once( plugin_basename( 'classes/class-wc-connect-label-reports.php' ) );
+			require_once( plugin_basename( 'classes/class-wc-connect-privacy.php' ) );
 
 			$core_logger           = new WC_Logger();
 			$logger                = new WC_Connect_Logger( $core_logger );
@@ -610,6 +601,8 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$stripe                = new WC_Connect_Stripe( $api_client, $options, $payments_logger );
 			$paypal_ec             = new WC_Connect_PayPal_EC( $api_client, $nux );
 			$label_reports         = new WC_Connect_Label_Reports( $settings_store );
+
+			new WC_Connect_Privacy( $settings_store, $api_client );
 
 			$this->set_logger( $logger );
 			$this->set_shipping_logger( $shipping_logger );
@@ -738,11 +731,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$this->set_rest_services_controller( $rest_services_controller );
 			$rest_services_controller->register_routes();
 
-			require_once( plugin_basename( 'classes/class-wc-rest-connect-dismiss-service-notice-controller.php' ) );
-			$rest_dismiss_service_notice_controller = new WC_REST_Connect_Services_Dismiss_Service_Notice_Controller( $this->api_client, $settings_store, $logger, $this->nux );
-			$this->set_rest_dismiss_service_notice_controller( $rest_dismiss_service_notice_controller );
-			$rest_dismiss_service_notice_controller->register_routes();
-
 			require_once( plugin_basename( 'classes/class-wc-rest-connect-self-help-controller.php' ) );
 			$rest_self_help_controller = new WC_REST_Connect_Self_Help_Controller( $this->api_client, $settings_store, $logger );
 			$this->set_rest_self_help_controller( $rest_self_help_controller );
@@ -859,7 +847,6 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				'formType'           => 'services',
 				'methodId'           => $method_id,
 				'instanceId'         => $instance_id,
-				'noticeDismissed'    => $this->nux->is_notice_dismissed( 'service_settings' ),
 			) );
 		}
 
@@ -874,9 +861,10 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				return;
 			}
 
-			do_action( 'enqueue_wc_connect_script',
-				'wc-connect-service-settings',
-				apply_filters( 'wc_connect_shipping_service_settings', array(), $method_id, $instance_id ) );
+			do_action( 'enqueue_wc_connect_script', 'wc-connect-service-settings', array(
+				'methodId' => $method_id,
+				'instanceId' => $instance_id,
+			) );
 		}
 
 		/**
