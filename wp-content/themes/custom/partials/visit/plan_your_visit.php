@@ -12,7 +12,7 @@
 						<h4 class="plan-your-visit-heading mb2">
 							Hours
 						</h4>
-						<h4 class="plan-your-visit-currently museum-status brand mb2">
+						<h4 class="plan-your-visit-currently museum-status mb2">
 							<?php get_template_part('partials/visit/museum_status'); ?>
 						</h4>	
 						<div class="plan-your-visit-hours hours">

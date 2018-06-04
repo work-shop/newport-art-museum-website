@@ -26,6 +26,30 @@ $fc-padding: 12vh 0;
 			transform: scale(1.07);
 		}
 
+		&.khaki:hover{
+			color: $khaki;
+		}
+
+		&.brand:hover{
+			color: $brand;
+		}
+
+		&.medium:hover{
+			color: $medium;
+		}
+
+		&.dark:hover{
+			color: $dark;
+		}
+
+		&.light:hover{
+			color: $light;
+		}
+
+		&.white:hover{
+			color: $white;
+		}
+
 		// &:before {
 		// 	content: '';
 		// 	position: absolute;

@@ -95,10 +95,7 @@ input{
 
 //MESSAGES AND NOTICES
 
-$error: #e8756f;
-$message: $brand;
-$success: #9fcc99;
-
+//color variables in definitions/variables.scss
 
 .notice{
 	background: transparentize($message,.9);

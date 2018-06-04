@@ -233,7 +233,8 @@ var jqueryAccordian = function() {
                 calculateHeight($content);
 
                 if(isAccordionGroup) {
-                    closeSiblingAccordions($accordion);
+                    //commented out by GN 6-4-18 to stop siblings from closing.
+                    //closeSiblingAccordions($accordion);
                 }
 
                 if($accordion.hasClass('open')) {

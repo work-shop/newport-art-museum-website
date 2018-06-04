@@ -23,7 +23,7 @@ $list_items = $fc_row['list_items'];
 				<div class="col-xl-8 col-lg-9 col-md-10">
 					<div data-accordion-group>
 						<?php foreach ($list_items as $list_item): ?> 
-							<div class="accordion fc-collapsible-list-accordian" data-accordion>
+							<div class="accordion fc-collapsible-list-accordian mult-collapse" data-accordion>
 								<div class="fc-collapsible-list-accordian-label" data-control>
 									<?php if( $list_item['list_item_label'] ): ?>
 										<h4 class="">

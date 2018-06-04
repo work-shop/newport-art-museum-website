@@ -27,7 +27,7 @@
 					<?php endif; ?>
 					<?php if( $home_hero_link_url && $home_hero_link_text ): ?>
 						<div class="home-hero-link mt3 <?php echo $home_hero_link_color; ?>">
-							<a href="<?php echo $home_hero_link_url; ?>" class="home-hero-link-button button <?php echo $home_hero_link_color; ?>">
+							<a href="<?php echo $home_hero_link_url; ?>" class="home-hero-link-button <?php echo $home_hero_link_color; ?>">
 								<?php echo $home_hero_link_text; ?>
 								<span class="icon" data-icon="‹"></span>
 							</a>

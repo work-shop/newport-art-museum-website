@@ -79,8 +79,8 @@ abstract class NAM_Custom_Post_Type {
         //add_action('wpmsseo_head', array( $callad_class, 'setup_archive_postdata_proxy' ), 1 );
 
         /** Setup the proxy-postdata for the archive page on this post type. */
-        add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 0 );
-        add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 9999);
+        //add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 0 );
+        //add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 9999);
 
     }
 
