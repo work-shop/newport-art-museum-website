@@ -101,11 +101,11 @@ a{
 /* sitewide button styles */
 
 $text-button: (
-	xs: (10px, 14px),
-	sm: (11px, 16px),
-	md: (12px, 12px),
-	lg: (12px, 12px),
-	xl: (12px, 12px)
+	xs: (12px, 12px),
+	sm: (13px, 12px),
+	md: (14px, 12px),
+	lg: (15px, 12px),
+	xl: (16px, 12px)
 	);
 
 // .button{
@@ -135,68 +135,79 @@ $text-button: (
 // }
 
 .button{
-		//@include text-size($text-button);	
-		background: $brand;
-		padding: 10px 10px 6px 10px;
-		font-family: $font-main;
-		color: white;
-		@extend .bold;
-		@extend .uppercase;	
-		@extend .tracked-less;
-		border-radius: 2px;
-		display: inline-block;
-		text-align: center;
-		border: none;
-		@include transition(background .125s);
+	background: $brand;
+	padding: 10px 10px 6px 10px;
+	font-family: $font-main;
+	color: white;
+	@extend .bold;
+	@extend .uppercase;	
+	@extend .tracked-less;
+	border-radius: 2px;
+	display: inline-block;
+	text-align: center;
+	border: none;
+	@include transition(background .125s);
+	@include text-size($text-button);	
 
-		font-size: 17px;
-
-		&.button-small{
-			padding: 5px 8px 2px 8px;
-			font-size: 13px;
-		}
-
-		&.button-centered{
-			margin: auto;
-			display: block;
-		}
-
-		&:hover{
-			background: lighten($brand,15%);
-			cursor: pointer;
-			color: white;
-		}
-
-		&:focus{
-			outline: none;
-			box-shadow: none;
-			border: none;
-		}
-
-		@media screen and (max-width: $sm) {
-			padding: 3px 8px;
-		}
+	&.button-small{
+		padding: 5px 8px 2px 8px;
+		font-size: 13px;
 	}
 
-	.button-full{
+	&.button-centered{
+		margin: auto;
+		display: block;
+	}
+
+	&.button-full{
 		width: 100%;
 		padding: 20px 0;
 		border-radius: 0;
 	}
 
-	.nam-dash{
-		width: 36px;
-		height: 3px;
-		background: transparentize($yellow, .1);
+	&.button-bordered{
+		background: none;
+		border: 1px solid $brand;
+		color: $brand;
 
-		@media screen and (max-width: $sm) {
-			width: 20px;
+		&:hover{
+			background: $brand;
 		}
 	}
 
-	.shadowed{
-		box-shadow: 0px 2px 4px transparentize($slate, .5);
+	&:hover{
+		background: lighten($brand,15%);
+		cursor: pointer;
+		color: white;
 	}
+
+	&:focus{
+		outline: none;
+		box-shadow: none;
+		border: none;
+	}
+
+	@media screen and (max-width: $sm) {
+		padding: 6px 7px 4px 7px;
+	}
+
+
+}
+
+
+.nam-dash{
+	width: 36px;
+	height: 3px;
+	background: transparentize($yellow, .1);
+
+	@media screen and (max-width: $sm) {
+		width: 20px;
+	}
+}
+
+.shadowed{
+	box-shadow: 0px 2px 4px transparentize($slate, .5);
+}
 
 
 
