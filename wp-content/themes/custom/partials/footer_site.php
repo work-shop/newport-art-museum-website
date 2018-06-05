@@ -4,19 +4,19 @@
 			<h4 class="white"><?php get_template_part('partials/visit/museum_status'); ?></h4>
 		</div>
 	</div>
-	<div class="footer-body bg-khaki pt5 pb9">
+	<div class="footer-body bg-khaki pt4 pb6">
 		<div class="container-fluid">
 			<div class="row">
-				<div class="col-md-2 col-lg-2 col-xs-3 footer-col">
+				<div class="col-md-2 col-lg-2 col-3 footer-col">
 					<a href="/" id="footer-logo">
 						<?php get_template_part('partials/logo'); ?>
 					</a>
 				</div>
-				<div class="col-md-4 col-lg-4 col-xs-12 footer-col">
+				<div class="col-md-4 col-lg-4 col-9 footer-col">
 					<div class="footer-address address">
 						<?php get_template_part('partials/visit/address'); ?>
 					</div>
-					<div class="footer-hours hours">
+					<div class="footer-hours hours hidden-sm hidden-xs">
 						<?php get_template_part('partials/visit/hours'); ?>
 					</div>
 				</div>

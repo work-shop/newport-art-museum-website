@@ -79,6 +79,10 @@
 
 #menu-visit{
 
+	.plan-your-visit{
+		background: transparentize($khaki, .4);
+	}
+
 	.plan-your-visit-currently{
 		margin-bottom: 2em;
 	}

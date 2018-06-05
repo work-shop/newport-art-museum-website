@@ -3,7 +3,7 @@
 
 .footer-message{
 	text-align: center;
-	padding: 35px 0 23px 0;
+	padding: 30px 0 19px 0;
 
 	h4{
 		@extend .bold;
@@ -70,5 +70,9 @@
 
 	h4{
 		font-size: 15px;
+
+		@media screen and (max-width: $sm) {
+			font-size: 13px;
+		}
 	}
 }
