@@ -29,6 +29,10 @@
 	}
 }
 
+.plan-your-visit-heading{
+	@extend .bold;
+}
+
 .plan-your-visit-menu-link{
 	display: none;
 }
@@ -61,19 +65,17 @@
 	}
 }
 
-.home main, .page-id-23 main{
-
-	.plan-your-visit-left{
-		padding-bottom: 3vh;
+//getting-here
+.page-id-28 main{
+	.plan-your-visit-getting-here{
+		display: none;
 	}
-
-	.plan-your-visit-heading{
-		@extend .bold;
-	}
-
-
 }
 
+//visit
+.page-id-23 main{
+
+}
 
 #menu-visit{
 
@@ -91,13 +93,6 @@
 
 	.plan-your-visit-holidays{
 		display: none;
-	}
-
-	.plan-your-visit-heading{
-		//@extend .serif;
-		//@extend .h3;
-		//margin-bottom: 2em;
-		@extend .bold;
 	}
 }
 

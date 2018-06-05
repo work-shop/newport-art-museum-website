@@ -44,6 +44,11 @@
 		cursor: pointer;
 	}
 
+	&:focus{
+		outline: none;
+		border: none;
+	}
+
 	&:after{
 		content: '‘';
 		font-family: modern_pictograms_proregular;

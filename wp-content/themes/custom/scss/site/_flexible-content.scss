@@ -112,8 +112,6 @@ $fc-padding: 12vh 0;
 
 
 
-
-
 //RICH TEXT
 //most of the rich text styles are in wysiwyg.scss
 
@@ -278,7 +276,11 @@ $fc-padding: 12vh 0;
 .fc-repeating-paragraphs{
 
 	.fc-repeating-paragraphs-row{
-		margin-bottom: 10vh;
+		margin-bottom: 6vh;
+
+		h3{
+			@extend .bold;
+		}
 
 		&:last-child{
 			margin-bottom: 2vh;
@@ -317,7 +319,7 @@ $fc-padding: 12vh 0;
 }
 
 .fc-labelled-list-item{
-	margin-bottom: 3em;
+	margin-bottom: 2.5em;
 	//outline: 1px solid white;
 }
 

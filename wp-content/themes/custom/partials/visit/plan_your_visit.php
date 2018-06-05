@@ -28,11 +28,11 @@
 					<?php get_template_part('partials/visit/address'); ?>
 				</div>
 				<div class="plan-your-visit-location-links">
-					<a href="/visit/getting-here" class="button button-bordered mb1">
+					<a href="/visit/getting-here" class="button button-bordered mb1 plan-your-visit-getting-here">
 						Getting here
 					</a>
 					<br>
-					<a href="/visit/nearby-attractions" class="button button-bordered mb1">
+					<a href="/visit/nearby-attractions" class="button button-bordered mb1 plan-your-visit-nearby-attractions" >
 						Nearby Attractions
 					</a>
 				</div>

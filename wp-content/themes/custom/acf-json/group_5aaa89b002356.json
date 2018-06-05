@@ -7,7 +7,7 @@
             "label": "Hours - Content",
             "name": "hours_content",
             "type": "repeater",
-            "instructions": "This is where the written content for the museum hours is stored.",
+            "instructions": "This is where the public-facing written content for the museum hours are stored.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -62,11 +62,30 @@
             ]
         },
         {
+            "key": "field_5b15b2c8d0c09",
+            "label": "Holidays - Content",
+            "name": "holidays_content",
+            "type": "textarea",
+            "instructions": "This is where the public-facing written content for the museum holidays is stored.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "default_value": "",
+            "placeholder": "",
+            "maxlength": "",
+            "rows": "",
+            "new_lines": "br"
+        },
+        {
             "key": "field_5aaa6dfbf23bc",
             "label": "Hours - Settings",
             "name": "hours_settings",
             "type": "repeater",
-            "instructions": "This is where the settings for the museum hours are stored. This information helps the site determine whether or not the museum is currently open.",
+            "instructions": "This is where the settings for the museum hours are stored. This information helps the website determine whether or not the museum is currently open, and display that status to visitors to the site. This is NOT where the publicly listed hours are stored, although it should match that exactly.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -170,6 +189,44 @@
                     },
                     "display_format": "g:ia",
                     "return_format": "g:ia"
+                }
+            ]
+        },
+        {
+            "key": "field_5b1582e67fcd0",
+            "label": "Holidays - Settings",
+            "name": "holidays_settings",
+            "type": "repeater",
+            "instructions": "This is where the settings for the museum holidays are stored. This information helps the website determine whether or not the museum is closed for a holiday, and display that status to visitors to the site. This is NOT where the publicly listed holiday closures are stored, although it should match that exactly.",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "collapsed": "",
+            "min": 0,
+            "max": 0,
+            "layout": "table",
+            "button_label": "",
+            "sub_fields": [
+                {
+                    "key": "field_5b1583327fcd1",
+                    "label": "Holiday Date",
+                    "name": "holiday_date",
+                    "type": "date_picker",
+                    "instructions": "",
+                    "required": 0,
+                    "conditional_logic": 0,
+                    "wrapper": {
+                        "width": "",
+                        "class": "",
+                        "id": ""
+                    },
+                    "display_format": "F j, Y",
+                    "return_format": "F j, Y",
+                    "first_day": 1
                 }
             ]
         },
@@ -322,5 +379,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1522866657
+    "modified": 1528208898
 }

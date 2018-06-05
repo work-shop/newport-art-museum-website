@@ -22,14 +22,14 @@ $list_items = $fc_row['list_items'];
 				<div class="col-xl-8 col-lg-9 col-md-10">
 					<?php foreach ($list_items as $list_item): ?> 
 						<div class="row fc-labelled-list-item">
-							<div class="fc-labelled-list-label cl-md-3 col-lg-2">
+							<div class="fc-labelled-list-label cl-md-4 col-lg-3">
 								<?php if( $list_item['list_item_label'] ): ?>
 									<h4 class="<?php echo $section_text_color; ?>">
 										<?php echo $list_item['list_item_label']; ?>
 									</h4>
 								<?php endif; ?>
 							</div>
-							<div class="fc-labelled-list-body cl-md-9 col-lg-10">
+							<div class="fc-labelled-list-body cl-md-8 col-lg-9">
 								<?php if( $list_item['list_item_body'] ): ?>
 									<div class="wysiwyg <?php echo $section_text_color; ?>">
 										<?php echo $list_item['list_item_body']; ?>

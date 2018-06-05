@@ -1,6 +1,6 @@
 
 <?php
-if( NAM_Helpers::is_tree(23) ): $GLOBALS['tree_slug'] = 'visit'; $GLOBALS['include_page_nav'] = true; endif;
+if( NAM_Helpers::is_tree(23) || NAM_Helpers::is_tree(30) ): $GLOBALS['tree_slug'] = 'visit'; $GLOBALS['include_page_nav'] = true; endif;
 if( NAM_Helpers::is_tree(40) || is_tax( 'exhibitions-categories' ) ): $GLOBALS['tree_slug'] = 'exhibitions'; $GLOBALS['include_page_nav'] = true; endif;
 if( NAM_Helpers::is_tree(42) ): $GLOBALS['tree_slug'] = 'collection'; $GLOBALS['include_page_nav'] = true; endif;
 if( NAM_Helpers::is_tree(46) ): $GLOBALS['tree_slug'] = 'about'; $GLOBALS['include_page_nav'] = true; endif;
