@@ -39,7 +39,7 @@
 			</div>
 			<div class="col-md-4 single-body-right">
 				<div class="single-body-right-content">
-					<?php the_field('short_description'); ?>
+				
 				</div>
 			</div>
 		</div>

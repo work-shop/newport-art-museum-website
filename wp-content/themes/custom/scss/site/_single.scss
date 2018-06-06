@@ -33,8 +33,7 @@ $single-body-left-padding-sm: 10px;
 .single-body-left-link{
 	background: $brand;
 	display: inline-block;
-	padding: 13px 20px 11px 20px;
-	position: relative;
+	padding: 13px $single-body-left-padding 11px $single-body-left-padding;
 	box-shadow: 0px -2px 4px transparentize($slate, .5);
 
 	a{
