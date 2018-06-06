@@ -5,7 +5,7 @@ function dropdowns( config ) {
 
 	$(document).ready( function() {
 
-		var dropdownDelay = 180, timer;
+		var dropdownDelay = 200, timer;
 
 		$( config.linkSelector ).hover(
 			function() {
@@ -19,6 +19,10 @@ function dropdowns( config ) {
 			);
 
 		$(config.blanketSelector).click(function(){
+			closeDropdown();
+		});
+
+		$('.dropdown-link').click(function(){
 			closeDropdown();
 		});
 

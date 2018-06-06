@@ -12,8 +12,8 @@ $video_title = $fc_row['video_title'];
 <section class="block flexible-content fc fc-video <?php echo $section_background_color; ?>">
 	<div class="container-fc">
 		<?php if( $section_heading ): ?>
-			<div class="row fc-section-heading">
-				<div class="col-sm-12">
+			<div class="row fc-section-heading fc-row-primary">
+				<div class="col-sm-12 fc-col-primary">
 					<h2 class="serif fc-section-heading-text <?php echo $section_text_color; ?>">
 						<?php echo $section_heading; ?>
 					</h2>
@@ -22,7 +22,7 @@ $video_title = $fc_row['video_title'];
 		<?php endif; ?>
 		<?php if( $video_title ): ?>
 			<div class="fc-video-title">
-				<h4 class="<?php echo $section_text_color; ?>">
+				<h4 class="bold <?php echo $section_text_color; ?>">
 					<?php echo $video_title; ?>
 				</h4>
 			</div>

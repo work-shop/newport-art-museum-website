@@ -74,7 +74,9 @@
 
 //visit
 .page-id-23 main{
-
+	.plan-your-visit{
+		background: $light;
+	}
 }
 
 #menu-visit{
@@ -110,6 +112,15 @@
 
 	.row{
 		margin-bottom: .3em;
+	}
+}
+
+.hours{
+	.row:nth-child(2){
+		.value{
+			position: relative;
+			top: 14px;
+		}
 	}
 }
 

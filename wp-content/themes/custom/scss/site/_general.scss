@@ -39,9 +39,7 @@ body{
 
 /* customize bootstrap container fluid parameters */
 .container-fluid{
-
 	max-width: $container-fluid-max-width;
-
 	padding-left: $container-fluid-padding;
 	padding-right: $container-fluid-padding;
 
@@ -56,6 +54,11 @@ body{
 	}	
 
 	&.container-fluid-stretch{
+		max-width: none;
+	}
+
+	//more container-fluid-single styles in single.scss
+	&.container-fluid-single{
 		max-width: none;
 	}
 
