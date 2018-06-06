@@ -386,7 +386,7 @@ final class ITSEC_Notification_Center {
 		$notification_data[] = $data;
 
 		if ( $enforce_unique ) {
-			$notification_data = array_unique( $notification_data );
+			$notification_data = array_unique( $notification_data, SORT_REGULAR );
 		}
 
 		$all_data[ $notification ] = $notification_data;

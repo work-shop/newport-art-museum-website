@@ -3,6 +3,25 @@
     "title": "Event Details",
     "fields": [
         {
+            "key": "field_5b057f430a9d1",
+            "label": "Registration Required?",
+            "name": "registration_required",
+            "type": "true_false",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "message": "",
+            "default_value": 0,
+            "ui": 0,
+            "ui_on_text": "",
+            "ui_off_text": ""
+        },
+        {
             "key": "field_5aa93b487f9dc",
             "label": "Event Date",
             "name": "event_date",
@@ -21,8 +40,24 @@
         },
         {
             "key": "field_5aa93c977f9dd",
-            "label": "Event Time",
-            "name": "event_time",
+            "label": "Event Start Time",
+            "name": "event_start_time",
+            "type": "time_picker",
+            "instructions": "",
+            "required": 0,
+            "conditional_logic": 0,
+            "wrapper": {
+                "width": "",
+                "class": "",
+                "id": ""
+            },
+            "display_format": "g:i a",
+            "return_format": "g:i a"
+        },
+        {
+            "key": "field_5b106c06e1d50",
+            "label": "Event End Time",
+            "name": "event_end_time",
             "type": "time_picker",
             "instructions": "",
             "required": 0,
@@ -39,8 +74,8 @@
             "key": "field_5aa93cb97f9de",
             "label": "Event Location",
             "name": "event_location",
-            "type": "google_map",
-            "instructions": "",
+            "type": "text",
+            "instructions": "Write the name of the location here, for example 'Griswold House'.",
             "required": 0,
             "conditional_logic": 0,
             "wrapper": {
@@ -48,10 +83,11 @@
                 "class": "",
                 "id": ""
             },
-            "center_lat": "41.4857",
-            "center_lng": "71.3082",
-            "zoom": "",
-            "height": ""
+            "default_value": "",
+            "placeholder": "",
+            "prepend": "",
+            "append": "",
+            "maxlength": ""
         },
         {
             "key": "field_5aa93cde7f9df",
@@ -92,5 +128,5 @@
     ],
     "active": 1,
     "description": "",
-    "modified": 1521049249
+    "modified": 1527802909
 }

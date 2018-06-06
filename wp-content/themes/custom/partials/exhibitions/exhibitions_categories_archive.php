@@ -1,13 +1,13 @@
 
 <?php if( have_posts() ): ?>
 	<section class="block pt4 pb7" id="exhibitions-categories-archive">
-		<div class="container-fluid container-fluid-stretch">
+<!-- 		<div class="container-fluid container-fluid-stretch">
 			<div class="row now-on-view-title">
 				<div class="col-sm-12">
 					<h2 class="serif mb1"><?php single_term_title(); ?></h2>
 				</div>
 			</div>
-		</div>
+		</div> -->
 		<div class="exhibitions">
 			<div class="container-fluid container-fluid-stretch">
 				<div class="row">

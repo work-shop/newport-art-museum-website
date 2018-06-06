@@ -12,6 +12,7 @@ final class ITSEC_Security_Check_Scanner {
 			'ban-users'           => __( 'Banned Users', 'better-wp-security' ),
 			'backup'              => __( 'Database Backups', 'better-wp-security' ),
 			'brute-force'         => __( 'Local Brute Force Protection', 'better-wp-security' ),
+			'online-files'        => __( 'File Change Detection', 'better-wp-security' ),
 			'magic-links'         => __( 'Magic Links', 'better-wp-security' ),
 			'malware-scheduling'  => __( 'Malware Scan Scheduling', 'better-wp-security' ),
 			'network-brute-force' => __( 'Network Brute Force Protection', 'better-wp-security' ),
@@ -69,6 +70,8 @@ final class ITSEC_Security_Check_Scanner {
 		self::enforce_setting( 'wordpress-tweaks', 'rest_api', 'restrict-access', __( 'Changed the REST API setting in WordPress Tweaks to "Restricted Access".', 'better-wp-security' ) );
 
 		self::enforce_setting( 'global', 'write_files', true, __( 'Enabled the Write to Files setting in Global Settings.', 'better-wp-security' ) );
+
+		self::enforce_setting( 'online-files', 'compare_file_hashes', true, __( 'Enabled Online Files Comparison in File Change Detection.', 'better-wp-security' ) );
 
 		do_action( 'itsec-security-check-after-default-checks', self::$feedback, self::$available_modules );
 	}

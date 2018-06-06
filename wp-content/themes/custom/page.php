@@ -17,6 +17,8 @@ if ( $post->post_parent === 42 ) { ?>
 <?php // else not a collection child page ?>
 <?php } else { ?>
 
+	<?php get_template_part('partials/page/page_nav' ); ?>
+
 	<?php get_template_part('partials/page/page_hero' ); ?>
 
 	<?php get_template_part('partials/page/page_intro' ); ?>

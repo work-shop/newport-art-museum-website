@@ -23,21 +23,18 @@ $the_query = new WP_Query( array(
 				<?php while ( $the_query->have_posts() ) : ?>
 					<?php $the_query->the_post(); ?>
 					<?php 
-				$card_layout = 'text_right'; //'text_right', 'text_bottom', 'text_top'
-				$card_size = 'wide'; //'wide', 'medium', 'small', 'menu'
-				$card_type = 'exhibition';  //'event', 'class', 'product', 'news' 
-				NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
-				?>
-			<?php endwhile; ?>
-			<?php wp_reset_postdata(); ?>
-			<div class="past-exhibitions-link-slide bg-light">
-				<h3 class="bold">
+					$card_layout = 'text_right'; //'text_right', 'text_bottom', 'text_top'
+					$card_size = 'wide'; //'wide', 'medium', 'small', 'menu'
+					$card_type = 'exhibition';  //'event', 'class', 'product', 'news' 
+					NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null ); ?>
+				<?php endwhile; ?>
+				<?php wp_reset_postdata(); ?>
+				<div class="past-exhibitions-link-slide">
 					<a href="/past-exhibitions">
-						See All Past Exhibitions ->
+						<span>See All Past Exhibitions -></span>
 					</a>
-				</h3>
+				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
 <?php endif; ?>

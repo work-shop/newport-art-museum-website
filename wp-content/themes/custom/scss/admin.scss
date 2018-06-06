@@ -4,6 +4,17 @@
 	.acf-fc-popup a[data-layout="background"] {
 		display: none;
 	}
+
+	//section text color and section background color inside single flexible content
+	.acf-field-5ae33b83ecc5e, .acf-field-5ae339ca9c0d5{
+		display: none;
+	}
+
+	//section text color and section background color for GALLERY inside single flexible content
+	.acf-field-5ae9d2455f038,.acf-field-5ae9d1a25f037{
+		display: none;
+	}
+
 }
 
 //darken acf accordian labels to make structure more clear

@@ -9,8 +9,8 @@ $paragraphs = $fc_row['paragraphs'];
 <section class="block flexible-content fc fc-repeating-paragraphs <?php echo $section_background_color; ?>">
 	<div class="container-fc">
 		<?php if( $section_heading ): ?>
-			<div class="row fc-section-heading">
-				<div class="col-sm-12">
+			<div class="row fc-section-heading fc-row-primary">
+				<div class="col-sm-12 fc-col-primary">
 					<h2 class="serif fc-section-heading-text <?php echo $section_text_color; ?>">
 						<?php echo $section_heading; ?>
 					</h2>
@@ -19,8 +19,8 @@ $paragraphs = $fc_row['paragraphs'];
 		<?php endif; ?>
 		<?php if( $paragraphs ): ?>
 			<?php foreach ($paragraphs as $paragraph): ?> 
-				<div class="row fc-repeating-paragraphs-row">
-					<div class="col-xl-8 col-lg-9 col-md-10">
+				<div class="row fc-repeating-paragraphs-row fc-row-primary">
+					<div class="col-xl-8 col-lg-9 col-md-10 fc-col-primary">
 						<?php if( $paragraph['heading'] ): ?>
 							<h3 class="<?php echo $section_text_color; ?>">
 								<?php echo $paragraph['heading']; ?>

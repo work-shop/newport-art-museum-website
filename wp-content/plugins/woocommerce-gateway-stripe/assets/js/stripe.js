@@ -173,9 +173,7 @@ jQuery( function( $ ) {
 			// checkout page
 			if ( $( 'form.woocommerce-checkout' ).length ) {
 				this.form = $( 'form.woocommerce-checkout' );
-                console.log('[✔] woocommerce-checkout');
 			}
-
 
 			$( 'form.woocommerce-checkout' )
 				.on(

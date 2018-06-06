@@ -21,7 +21,7 @@ $gallery_title = $fc_row['gallery_title'];
 		<?php if( $gallery ): ?>
 			<?php if( $gallery_title ): ?>
 				<div class="fc-gallery-title">
-					<h4 class="centered <?php echo $section_text_color; ?>">
+					<h4 class="centered bold <?php echo $section_text_color; ?>">
 						<?php echo $gallery_title; ?>
 					</h4>
 				</div>

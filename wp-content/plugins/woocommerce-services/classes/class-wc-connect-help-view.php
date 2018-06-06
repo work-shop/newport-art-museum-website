@@ -118,7 +118,13 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 			// Check that we are able to talk to the WooCommerce Services server
 			$schemas = $this->service_schemas_store->get_service_schemas();
 			$last_fetch_timestamp = $this->service_schemas_store->get_last_fetch_timestamp();
-			if ( is_null( $schemas ) ) {
+			if ( isset( $_GET['refresh'] ) && 'failed' === $_GET['refresh'] ) {
+				$health_item = array(
+					'state' => 'error',
+					'message' => __( 'An error occurred while refreshing service data.', 'woocommerce-services' ),
+					'timestamp' => $last_fetch_timestamp,
+				);
+			} else if ( is_null( $schemas ) ) {
 				$health_item = array(
 					'state' => 'error',
 					'message' => __( 'No service data available', 'woocommerce-services' ),
@@ -228,7 +234,7 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 			$latest_file_date = 0;
 
 			foreach ( $logs as $log_key => $log_file ) {
-				if ( ! preg_match( '/' . $log_prefix . '\-[0-9a-f]{32}\-log/', $log_key ) ) {
+				if ( ! preg_match( '/' . $log_prefix . '\-(?:\d{4}\-\d{2}\-\d{2}\-)?[0-9a-f]{32}\-log/', $log_key ) ) {
 					continue;
 				}
 
@@ -249,13 +255,13 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 
 			$line_count = count( $data->tail );
 			if ( $line_count < 1 ) {
-				$log_tail = __( 'Log is empty', 'woocommerce-services' );
+				$log_tail = array( __( 'Log is empty', 'woocommerce-services' ) );
 			} else {
 				$log_tail = $data->tail;
 			}
 
 			return array(
-				'tail' => implode( $log_tail, '' ),
+				'tail' => implode( $log_tail ),
 				'url'  => $url = add_query_arg(
 					array(
 						'page'     => 'wc-status',
@@ -308,8 +314,8 @@ if ( ! class_exists( 'WC_Connect_Help_View' ) ) {
 		 */
 		public function page() {
 			if ( isset( $_GET['refresh'] ) && 'true' === $_GET['refresh'] ) {
-				$this->service_schemas_store->fetch_service_schemas_from_connect_server();
-				$url = remove_query_arg( 'refresh' );
+				$fetched = $this->service_schemas_store->fetch_service_schemas_from_connect_server();
+				$url = add_query_arg( 'refresh', $fetched ? false : 'failed' );
 				wp_safe_redirect( $url );
 			}
 

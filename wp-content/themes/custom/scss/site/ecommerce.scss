@@ -95,15 +95,7 @@ input{
 
 //MESSAGES AND NOTICES
 
-$error: #e8756f;
-$message: $brand;
-$success: #9fcc99;
-
-// #notices{
-// 	//padding-top: 3em;
-// 	//margin-bottom: 2em;
-// 	//border: 1px solid yellow;
-// }
+//color variables in definitions/variables.scss
 
 .notice{
 	background: transparentize($message,.9);
@@ -123,6 +115,10 @@ $success: #9fcc99;
 	.notice-close-link{
 		display: block;
 		text-align: right;
+
+		.icon:before{
+			color: $dark;
+		}
 	}
 }
 
@@ -142,3 +138,52 @@ $success: #9fcc99;
 }
 
 
+
+//CHECKOUT
+
+.woocommerce-checkout{
+
+	label{
+		display: block;
+		width: 100%;
+		margin-bottom: .25rem;
+	}
+
+	input{
+		display: block;
+		width: 100%;
+		margin-bottom: 1em;
+	}
+
+}
+
+.required,abbr.required{
+	color: $error;
+	text-decoration: none;
+}
+
+
+
+//LOGIN
+
+.woocommerce-form-login{
+	width: 360px;
+	//margin: 0 auto 3em auto;
+	margin-bottom: 3em;
+	background: $light;
+	padding: 30px;
+	border: 1px solid darken($light, 7%);
+	border-radius: 3px;
+
+	button[type="submit"]{
+		margin-bottom: 1em;
+		margin: 1em auto;
+		display: block;
+	}
+}
+
+input[name="rememberme"]{
+	display: inline;
+	margin-right: 30px;
+	width: auto;
+}

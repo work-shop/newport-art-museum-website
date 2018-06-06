@@ -31,7 +31,15 @@
 </head>
 
 <?php get_template_part('partials/setup_slug'); ?>
-<?php get_template_part('partials/setup_sitewide_alert'); ?>
+<?php
+$sitewide_alert_on = get_field('show_sitewide_alert', 'option');
+if( $sitewide_alert_on === true ):
+	if( !isset($_COOKIE['nam_show_sitewide_alert']) || $_COOKIE['nam_show_sitewide_alert'] === false ):
+		$sitewide_alert_class = 'sitewide-alert-on';
+		$show_sitewide_alert = true;
+	endif;
+endif;
+?>
 
 <body <?php body_class( ' loading before-scroll modal-off menu-closed dropdown-off ' . $sitewide_alert_class . ' ' ); ?>>
 
@@ -40,9 +48,10 @@
 	<?php get_template_part('partials/menus'); ?>
 
 	<main id="content">
+
+		<!-- <h1><?php  echo $GLOBALS['tree_slug']; ?></h1> -->
 		
 		<?php // get_template_part('partials/notices'); ?>
-		
 
 		<?php 
 		// wc_add_notice('This is a success notice', 'success');
