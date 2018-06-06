@@ -1,0 +1,36 @@
+
+$padding-sidebar-box: 40px;
+
+.sidebar-box{
+	padding: $padding-sidebar-box;
+
+	@media screen and (max-width: $lg) {
+		padding: $padding-sidebar-box * .75;
+	}
+
+	@media screen and (max-width: $md) {
+		padding: $padding-sidebar-box * .5;
+	}
+
+	@media screen and (max-width: $sm) {
+		padding: $padding-sidebar-box * .25;
+	}
+}
+
+.mailchimp-form{
+
+	.mailchimp-form-fields{
+		@extend .sidebar-box;
+	}
+
+	.mc-field-group{
+		margin-bottom: 1em;
+	}
+	input[type="text"],input[type="email"]{
+		width: 100%;
+		padding: 7px 10px;
+		background: lighten($light, 1%);
+		border-radius: 3px;
+		border: 1px solid darken($light,5%);
+	}
+}

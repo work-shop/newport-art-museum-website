@@ -28,7 +28,7 @@ $the_query = new WP_Query( array(
 				<?php endif; ?>
 			</div>
 			<div class="col-md-4 offset-lg-1">
-
+				<?php get_template_part('partials/mailchimp_form'); ?>
 			</div>
 		</div>
 	</div>

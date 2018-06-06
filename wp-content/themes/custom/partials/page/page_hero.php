@@ -1,4 +1,7 @@
 <?php if( get_field('show_hero') ): ?>
+	<?php if( is_single() ): ?>
+		<div class="single-has-hero">
+	<?php endif; ?>
 	<?php $hero_image = get_field('hero_image');
 	$hero_image = $hero_image['sizes']['page_hero'];
 	$hero_text = get_field('hero_text'); ?>

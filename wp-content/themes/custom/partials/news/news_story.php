@@ -29,9 +29,15 @@
 			</div>
 			<div class="col-md-4 single-body-right">
 				<div class="single-body-right-content">
-				
+					<?php get_template_part('partials/mailchimp_form'); ?>
 				</div>
 			</div>
 		</div>
 	</div>
 </section>
+
+<?php if( get_field('show_hero') ): ?>
+	<?php if( is_single() ): ?>
+		</div><!--end .single-has-hero-->
+	<?php endif; ?>
+<?php endif; ?>

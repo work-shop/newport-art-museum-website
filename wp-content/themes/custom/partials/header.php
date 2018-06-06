@@ -48,8 +48,6 @@ endif;
 	<?php get_template_part('partials/menus'); ?>
 
 	<main id="content">
-
-		<!-- <h1><?php  echo $GLOBALS['tree_slug']; ?></h1> -->
 		
 		<?php // get_template_part('partials/notices'); ?>
 
