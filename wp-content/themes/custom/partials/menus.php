@@ -118,7 +118,7 @@
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
 		<div class="menu-dropdown-graphic">
-			events Graphic
+			
 		</div>
 	</menu>
 

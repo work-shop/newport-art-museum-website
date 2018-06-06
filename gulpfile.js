@@ -213,7 +213,7 @@ function watch() {
     gulp.watch( php_entrypoint ).on('change', function( file ) { livereload.changed( file.path ); });
     gulp.watch( js_watch_files, ['js']);
     gulp.watch( sass_watch_files, ['scss']);
-    gulp.watch( admin_sass_watch_files, ['admin']);
+    gulp.watch( admin_sass_watch_files, ['admin-scss']);
 
 }
 

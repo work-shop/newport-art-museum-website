@@ -6,8 +6,8 @@
 					<a href="/exhibitions">Back To Exhibitions</a>
 				</div>
 				<div class="single-body-left-main">
-					<div class="exhibition-single-introduction">
-						<h1 class="serif exhibition-single-title">
+					<div class="exhibition-single-introduction single-introduction">
+						<h1 class="serif exhibition-single-title single-title">
 							<?php the_title(); ?>
 						</h1>
 						<h3 class="exhibition-single-short-description">

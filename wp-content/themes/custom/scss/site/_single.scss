@@ -30,6 +30,12 @@ $single-body-left-padding-sm: 10px;
 	top: -150px;
 }
 
+#news-single-body{
+	.single-body-left{
+		top: -185px;
+	}
+}
+
 .single-body-left-link{
 	background: $brand;
 	display: inline-block;
@@ -78,7 +84,7 @@ $single-body-left-padding-sm: 10px;
 
 	.fc{
 		padding: 40px 0;
-		background: none;
+		background: none !important;
 
 		&:first-child{
 			padding-top: 0em;

@@ -9,6 +9,7 @@
 		height: 2px;
 
 		@media screen and (max-width: $sm) {
+			margin-top: 15px;
 			margin-bottom: 15px;
 		}
 	}
@@ -40,26 +41,6 @@
 }
 
 .card-text-info{
-
-	*{
-		@extend .bold;
-	}
-
-	h4{
-		font-size: 1vw;
-
-		@media screen and (max-width: $md) {
-			font-size: 1.5vw;
-		}
-
-		@media screen and (max-width: $sm) {
-			font-size: 12px;
-		}
-
-		@media screen and (max-width: $xs) {
-			font-size: 11px;
-		}
-	}
 
 }
 
@@ -127,6 +108,7 @@
 
 //CARD TYPES
 
+//exhibitions
 .card-type-exhibition{
 	
 	&.card-size-wide{
@@ -139,7 +121,52 @@
 
 	}
 
+}
 
+
+//news
+.card-type-news{
+	margin-bottom: 4em;
+
+	.card-text{
+		padding-top: 40px;
+		padding-bottom: 40px;
+
+		@media screen and (max-width: $sm) {
+			padding-top: 20px;
+			padding-bottom: 20px;
+		}
+		*{
+			max-width: 600px;
+		}
+	}
+
+	.nam-dash{
+		display: none;
+	}
+}
+
+.card-text-news-date{
+	margin-bottom: .5em;
+	//font-size: 16px;
+
+	@media screen and (max-width: $md) {
+		//font-size: 14px;
+	}
+
+	@media screen and (max-width: $sm) {
+		//font-size: 12px;
+	}
+}
+
+.card-text-news-short-description{
+	margin-bottom: 1.5em;
+}
+
+.card-text-news-link{
+	a{
+		color: $yellow;
+	}
 }
 
 

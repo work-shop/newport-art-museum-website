@@ -49,40 +49,51 @@ class NAM_Helpers{
 				<div class="card-image">
 					<?php if( $card_image ): ?>
 						<img src="<?php echo $card_image['sizes']['card_medium']; ?>">
-						<?php else: ?>
-							<?php if( $card_size === 'wide' ): 
-								$size = 'card_wide';
-							else:
-								$size = 'card_medium'; ?>
+					<?php else: ?>
+						<?php if( $card_size === 'wide' ): 
+							$size = 'card_wide';
+						else:
+							$size = 'card_medium'; ?>
+						<?php endif; ?>
+						<?php the_post_thumbnail($size); ?>
+					<?php endif; ?>
+				</div>
+				<div class="card-text">
+					<?php if( $card_type === 'news' ): ?>
+						<h5 class="card-text-news-date">
+							<?php the_field('news_story_date'); ?>
+						</h5>
+					<?php endif; ?>
+					<h3 class="serif card-text-title">
+						<?php if( $card_title ): echo $card_title; else: the_title(); endif; ?>
+					</h3>
+					<div class="nam-dash"></div>
+					<div class="card-text-info">
+						<?php if( $card_type === 'exhibition' ): ?>
+							<h5 class="card-text-exhibition-location bold mb0">
+								<?php the_field('exhibition_location'); ?>
+							</h5>
+							<h5 class="card-text-exhibition-dates bold">
+								<?php the_field('exhibition_start_date'); ?> - <?php the_field('exhibition_end_date'); ?> 
+							</h5>
+						<?php elseif( $card_type === 'event' ): ?>
+							<h5 class="card-text-event-date bold mb0">
+								<?php the_field('event_date'); ?>
+							</h5>
+						<?php elseif( $card_type === 'news' ): ?>
+							<?php if( get_field('short_description') ): ?>
+								<h5 class="card-text-news-short-description">
+									<?php the_field('short_description'); ?>
+								</h5>
 							<?php endif; ?>
-							<?php the_post_thumbnail($size); ?>
+							<h5 class="card-text-news-link mb0">
+								<a href="<?php the_permalink(); ?>">Read More</a>
+							</h5>
 						<?php endif; ?>
 					</div>
-					<div class="card-text">
-						<h3 class="serif card-text-title">
-							<?php if( $card_title ): echo $card_title; else: the_title(); endif; ?>
-						</h3>
-						<div class="nam-dash"></div>
-						<div class="card-text-info">
-							<?php if( $card_type === 'exhibition' ): ?>
-								<h4 class="card-text-exhibition-location mb0">
-									<?php the_field('exhibition_location'); ?>
-								</h4>
-								<h4 class="card-text-exhibition-dates">
-									<?php the_field('exhibition_start_date'); ?> - <?php the_field('exhibition_end_date'); ?> 
-								</h4>
-							<?php elseif( $card_type === 'event' ): ?>
-								<h4 class="card-text-event-date mb0">
-									<?php the_field('event_date'); ?>
-								</h4>
-							<?php endif; ?>
-						</div>
-					</div>
-				</a>
-			</div>
+				</div>
+			</a>
+		</div>
+	<?php }  
 
-		<?php }  
-
-
-
-	} ?>
+} ?>
