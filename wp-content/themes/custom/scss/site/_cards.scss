@@ -70,8 +70,8 @@
 
 	&.card-layout-text_bottom{
 		.card-text{
-			position: absolute;
-			bottom: 0;
+			position: static;
+			bottom: -100px;
 			width: 100%;
 
 		}
@@ -91,7 +91,7 @@
 		height: 100%;
 		width: 39%;
 		
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			width: 50%;
 		}
 	}
@@ -100,7 +100,7 @@
 
 
 .card-text-bottom{
-
+	
 
 }
 

@@ -10,6 +10,7 @@ $page-nav-height: 160px;
 	background: $khaki;
 	padding-top: 60px;
 	padding-bottom: 30px;
+	border-bottom: 1px solid darken($light,7%);
 
 	.container-fluid{
 		max-width: none;

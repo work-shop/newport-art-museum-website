@@ -5,8 +5,11 @@
 			<?php $GLOBALS['fc_index'] = $fc_index; ?>
 			<?php //var_dump(get_field('page_flexible_content')); ?>
 			<?php 
-			$fc_type = get_row_layout();
-			get_template_part('partials/flexible_content/' . $fc_type );
+			$active = get_sub_field('active'); 
+			if( $active ):
+				$fc_type = get_row_layout();
+				get_template_part('partials/flexible_content/' . $fc_type );
+			endif;
 			$fc_index++; 
 			?>
 		<?php endwhile; ?>

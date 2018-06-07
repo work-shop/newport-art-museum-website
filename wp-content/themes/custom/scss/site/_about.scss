@@ -1,2 +1,44 @@
 
 /* about page */
+
+.about-mission-row{
+	margin: 0;
+}
+
+.about-quote{
+	padding: 90px $container-fluid-padding;
+
+	@media screen and (max-width: $lg) {
+		padding: 60px $container-fluid-padding-md;
+	}
+
+	@media screen and (max-width: $sm) {
+		padding: 40px $container-fluid-padding-mobile;
+	}
+
+	.block-background{
+		z-index: -1;
+		@extend .mask-brand;
+	}
+
+	h1{
+		line-height: 1.3;
+	}
+
+}
+
+.about-mission-vision{
+	padding: 90px 40px;
+
+	@media screen and (max-width: $lg) {
+		padding: 75px 30px;
+	}
+
+	@media screen and (max-width: $md) {
+		padding: 60px 20px;
+	}
+
+	h2{
+		margin-bottom: 1em;
+	}
+}

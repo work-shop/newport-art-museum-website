@@ -38,7 +38,7 @@
 			<div class="container-fluid contrainer-fluid-stretch">
 				<div class="row menu-dropdown-cards-upper">
 					<div class="col-md-6">
-						<h3 class="serif">Now on view</h3>
+						<h3 class="serif menu-dropdown-graphic-heading">Now on view</h3>
 					</div>
 					<div class="col-md-6">
 						<div class="menu-dropdown-graphic-link righted">
@@ -52,8 +52,9 @@
 					<?php
 					$posts = get_field('exhibitions_menu_featured_exhibitions','option'); 
 					if ($posts) : ?>
+						<?php $count = 0; ?>
 						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
-							<div class="col-md-6">
+							<div class="col-md-6 <?php // if( $count === 1 ): echo ' offset-md-2'; endif ?>">
 								<?php 
 								$card_layout = 'text_right'; //'text_right', 'text_bottom', 'text_top'
 								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
@@ -61,6 +62,7 @@
 								NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
 								?>							
 							</div>
+							<?php $count++; ?>
 						<?php endforeach; ?>
 						<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
 					<?php endif; ?>
@@ -79,7 +81,7 @@
 			<div class="container-fluid contrainer-fluid-stretch">
 				<div class="row menu-dropdown-cards-upper">
 					<div class="col-md-6">
-						<h3 class="serif">Collection</h3>
+						<h3 class="serif menu-dropdown-graphic-heading">Collection</h3>
 					</div>
 					<div class="col-md-6">
 						<div class="menu-dropdown-graphic-link righted">
@@ -117,8 +119,40 @@
 			<?php $GLOBALS['links_additional'] = get_field('events_menu_additional_links', 'option'); ?>
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
-		<div class="menu-dropdown-graphic">
-			
+		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-three">
+			<div class="container-fluid contrainer-fluid-stretch">
+				<div class="row menu-dropdown-cards-upper">
+					<div class="col-md-6">
+						<h3 class="serif menu-dropdown-graphic-heading">Upcoming Events</h3>
+					</div>
+					<div class="col-md-6">
+						<div class="menu-dropdown-graphic-link righted">
+							<a href="/events">See All Events 
+								<span class="menu-dropdown-graphic-link-arrow">-></span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row menu-dropdown-cards-lower">
+					<?php
+					$posts = get_field('events_menu_featured_events','option'); 
+					if ($posts) : ?>
+						<?php $count = 0; ?>
+						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
+							<div class="col-md-4">
+								<?php 
+								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
+								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
+								$card_type = 'event';  //'event', 'class', 'product', 'news' 
+								NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
+								?>							
+							</div>
+							<?php $count++; ?>
+						<?php endforeach; ?>
+						<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
+					<?php endif; ?>
+				</div>
+			</div>
 		</div>
 	</menu>
 
@@ -128,8 +162,40 @@
 			<?php $GLOBALS['links_additional'] = get_field('education_menu_additional_links', 'option'); ?>
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
-		<div class="menu-dropdown-graphic">
-
+		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-three">
+			<div class="container-fluid contrainer-fluid-stretch">
+				<div class="row menu-dropdown-cards-upper">
+					<div class="col-md-6">
+						<h3 class="serif menu-dropdown-graphic-heading">Upcoming Classes</h3>
+					</div>
+					<div class="col-md-6">
+						<div class="menu-dropdown-graphic-link righted">
+							<a href="/classes">See All Classes 
+								<span class="menu-dropdown-graphic-link-arrow">-></span>
+							</a>
+						</div>
+					</div>
+				</div>
+				<div class="row menu-dropdown-cards-lower">
+					<?php
+					$posts = get_field('education_menu_featured_classes','option'); 
+					if ($posts) : ?>
+						<?php $count = 0; ?>
+						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
+							<div class="col-md-4">
+								<?php 
+								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
+								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
+								$card_type = 'class';  //'event', 'class', 'product', 'news' 
+								NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
+								?>							
+							</div>
+							<?php $count++; ?>
+						<?php endforeach; ?>
+						<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
+					<?php endif; ?>
+				</div>
+			</div>
 		</div>
 	</menu>
 

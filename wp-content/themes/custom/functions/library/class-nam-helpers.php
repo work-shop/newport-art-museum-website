@@ -16,7 +16,7 @@ class NAM_Helpers{
 	public static function menu_graphic_two_column( $heading, $subheading, $link, $image ){ ?>
 		<div class="menu-dropdown-graphic-1">
 			<?php if( $heading ): ?>
-				<h3 class="serif"><?php echo $heading; ?></h3>
+				<h3 class="serif menu-dropdown-graphic-heading"><?php echo $heading; ?></h3>
 			<?php endif; ?>
 			<?php if( $subheading ): ?>
 				<p class="serif"><?php echo $subheading; ?></p>

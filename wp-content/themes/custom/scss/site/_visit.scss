@@ -21,16 +21,33 @@
 	}
 
 	.key{
-		line-height: 1.1;
+
 	}
 
 	.value{
-		line-height: .9;
+
+	}
+
+	address{
+		font-size: 19px;
+		@media screen and (max-width: 1440px) {
+			font-size: 15px;
+		}
+		@media screen and (max-width: $sm) {
+			font-size: 15px;
+		}
+		@media screen and (max-width: $sm) {
+			font-size: 13px;
+		}	
+		
 	}
 }
 
 .plan-your-visit-heading{
-	@extend .bold;
+	//@extend .bold;
+	@extend .serif;
+	@extend .h3;
+
 }
 
 .plan-your-visit-menu-link{
@@ -65,6 +82,8 @@
 	}
 }
 
+
+
 //getting-here
 .page-id-28 main{
 	.plan-your-visit-getting-here{
@@ -75,7 +94,8 @@
 //visit
 .page-id-23 main{
 	.plan-your-visit{
-		background: $light;
+		//background: lighten($brand,65%);
+		
 	}
 }
 
@@ -105,13 +125,25 @@
 
 //HOURS
 
-.hours, .admissions{
-	.value{
-		//text-align: right;
-	}
+.admissions{
 
 	.row{
-		margin-bottom: .3em;
+		margin-bottom: .4em;
+
+		@media screen and (max-width: $sm) {
+			margin-bottom: .2em;
+		}
+	}
+}
+
+.hours{
+
+	.row{
+		margin-bottom: 1.2em;
+
+		@media screen and (max-width: $sm) {
+			margin-bottom: .2em;
+		}
 	}
 }
 
@@ -119,7 +151,7 @@
 	.row:nth-child(2){
 		.value{
 			position: relative;
-			top: 14px;
+			//top: 14px;
 		}
 	}
 }

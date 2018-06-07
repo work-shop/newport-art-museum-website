@@ -17,7 +17,7 @@ $menu-graphic-padding: 25px;
 	width: 100%;
 	top: $nav-height;
 	background: transparentize($ultra-light, .1);
-	box-shadow: 0px 4px 35px $slate;
+	box-shadow: 0px 4px 35px darken($slate,15%);
 	position: fixed;
 	transform: translate(0,-100vh) rotateX(0deg);
 	transform-origin: 0 0;
@@ -115,7 +115,17 @@ $menu-graphic-padding: 25px;
 	}
 
 	.menu-dropdown-graphic{
-		height: $dropdown-graphics-height;
+		//height: $dropdown-graphics-height;
+
+		height: calc(100vh - 380px);
+
+		// @media screen and (max-height: 950px) {
+		// 	height: 575px;
+		// }
+
+		// @media screen and (max-height: 900px) {
+		// 	height: 525px;
+		// }
 	}
 }
 
@@ -146,6 +156,11 @@ $menu-graphic-padding: 25px;
 	transform: translate(0,-100vh);
 	transition: transform .25s;
 	// transition-delay: .25s;
+	//background: url("../images/favicon.png");
+
+	&:hover{
+		cursor: url("../images/close.png"), auto;
+	}
 }
 
 main, footer{
@@ -171,6 +186,10 @@ body.dropdown-on{
 .menu-dropdown-graphic{
 	.container-fluid{
 		max-width: none;
+	}
+
+	.card-text-exhibition-location{
+		display: none;
 	}
 }
 
@@ -201,6 +220,10 @@ body.dropdown-on{
 	//height: calc(100% - $menu-graphic-padding);
 }
 
+.menu-dropdown-graphic-heading,.menu-dropdown-graphic-link{
+	line-height: 40px;
+}
+
 .menu-dropdown-graphic-link{
 	
 	a{
@@ -208,9 +231,9 @@ body.dropdown-on{
 		font-size: 16px;
 		color: $brand;
 		position: relative;
-		top: 17px;
+		top: 7px;
 
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			font-size: 14px;
 			top: 9px;
 		}

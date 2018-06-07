@@ -20,11 +20,11 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-4 col-xl-3 mb3">
+			<div class="col-md-6 col-xl-3 mb3">
 				<h4 class="plan-your-visit-heading mb2">
 					Location
 				</h4>
-				<div class="plan-your-visit-address address mb2">
+				<div class="plan-your-visit-address address mb1">
 					<?php get_template_part('partials/visit/address'); ?>
 				</div>
 				<div class="plan-your-visit-location-links">
@@ -37,7 +37,7 @@
 					</a>
 				</div>
 			</div>
-			<div class="admissions col-md-4 col-xl-5 mb3">
+			<div class="admissions col-md-6 col-xl-4 mb3">
 				<h4 class="plan-your-visit-heading mb2">
 					Admission
 				</h4>
@@ -63,13 +63,15 @@
 					?>
 				</h4>		
 			</div>			
-			<div class="col-md-4">
+			<div class="col-md-6 col-xl-5">
 				<h4 class="plan-your-visit-heading mb2">
 					Hours
 				</h4>
 				<div class="plan-your-visit-hours hours mb4">
 					<?php get_template_part('partials/visit/hours'); ?>
 				</div>
+			</div>
+			<div class="col-md-6 col-xl-5 offset-xl-7">
 				<div class="plan-your-visit-holidays">
 					<h4 class="plan-your-visit-heading mb2">
 						Holidays
