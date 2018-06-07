@@ -19,6 +19,16 @@ function slickSlideshows( config ) {
 			pauseOnDotsHover: true
 		});
 
+		$('.slick-sponsors').slick({
+			slidesToShow: 3,
+			autoplay: false,
+			fade: false,
+			autoplaySpeed: config.autoplaySpeed,
+			speed: config.speed,
+			pauseOnHover: true,
+			pauseOnDotsHover: true
+		});
+
 		$('.slick-exhibitions').slick({
 			slidesToShow: 1,
 			dots: true,

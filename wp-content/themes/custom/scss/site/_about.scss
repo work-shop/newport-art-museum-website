@@ -42,3 +42,13 @@
 		margin-bottom: 1em;
 	}
 }
+
+.slick-sponsors{
+	.slick-sponsor-slide{
+		padding: 20px;
+
+		@media screen and (max-width: $sm) {
+			padding: 5px;
+		}
+	}
+}
