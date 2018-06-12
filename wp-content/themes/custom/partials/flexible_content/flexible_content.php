@@ -5,7 +5,9 @@
 			<?php $GLOBALS['fc_index'] = $fc_index; ?>
 			<?php //var_dump(get_field('page_flexible_content')); ?>
 			<?php 
+			$active = false;
 			$active = get_sub_field('active'); 
+			//var_dump($active);
 			if( $active ):
 				$fc_type = get_row_layout();
 				get_template_part('partials/flexible_content/' . $fc_type );
