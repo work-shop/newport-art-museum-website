@@ -2,7 +2,7 @@
 
 <?php if( $GLOBALS['include_page_nav'] ): ?>
 	<nav id="page-nav" class="present">
-		<?
+		<?php 
 		$GLOBALS['links'] = get_field( $GLOBALS['tree_slug'] . '_menu_links', 'option');
 		$GLOBALS['links_additional'] = get_field( $GLOBALS['tree_slug'] . '_menu_additional_links', 'option');
 		$GLOBALS['page_nav'] = true;

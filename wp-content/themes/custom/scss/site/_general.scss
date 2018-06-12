@@ -21,6 +21,10 @@ body{
 	}
 }
 
+*{
+	word-wrap: break-word;
+}
+
 
 /* make bootstrap gutters smaller on small screens */
 .row{
