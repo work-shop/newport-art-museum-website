@@ -52,3 +52,23 @@
 		}
 	}
 }
+
+
+//STAFF PAGE
+
+.staff-group{
+	margin-bottom: 4em;
+}
+
+.staff-list{
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.staff-person{
+	margin-bottom: 1.5em;
+	flex: 1 0 50%;
+	padding-right: 10px;
+	//outline: 1px solid salmon;
+}
+

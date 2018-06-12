@@ -22,6 +22,7 @@ function slickSlideshows( config ) {
 		$('.slick-sponsors').slick({
 			slidesToShow: 3,
 			autoplay: false,
+			dots: true,
 			fade: false,
 			autoplaySpeed: config.autoplaySpeed,
 			speed: config.speed,
