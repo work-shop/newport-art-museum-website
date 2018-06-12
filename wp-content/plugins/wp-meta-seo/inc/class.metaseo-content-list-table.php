@@ -365,7 +365,7 @@ class MetaSeoContentListTable extends WP_List_Table
              WHERE meta_key = '_metaseo_metadesc') md ON md.post_id = $wpdb->posts.ID "
             . " LEFT JOIN (SELECT * FROM $wpdb->postmeta
              WHERE meta_key = '_metaseo_metakeywords') mk ON mk.post_id = $wpdb->posts.ID "
-            . " WHERE " . implode(' AND ', $where) . $orderStr;
+            . " WHERE " . implode(' AND ', $where);
 
         $total_items = $wpdb->get_var($query);
         $query = "SELECT DISTINCT ID, post_title, post_name, post_type,  post_status,

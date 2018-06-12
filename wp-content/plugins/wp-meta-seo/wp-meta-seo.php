@@ -4,7 +4,7 @@
  * Plugin Name: WP Meta SEO
  * Plugin URI: http://www.joomunited.com/wordpress-products/wp-meta-seo
  * Description: WP Meta SEO is a plugin for WordPress to fill meta for content, images and main SEO info in a single view.
- * Version: 3.7.0
+ * Version: 3.7.1
  * Text Domain: wp-meta-seo
  * Domain Path: /languages
  * Author: JoomUnited
@@ -99,7 +99,7 @@ if (!defined('WPMSEO_VERSION')) {
     /**
      * plugin version
      */
-    define('WPMSEO_VERSION', '3.7.0');
+    define('WPMSEO_VERSION', '3.7.1');
 }
 
 if (!defined('WPMS_CLIENTID')) {
@@ -417,7 +417,7 @@ if (is_admin()) {
         if (empty($wp_query->post)) {
             return $title;
         }
-
+        
         $is_shop = false;
         if ( function_exists( 'is_shop' ) ) {
             if (is_shop()) {
@@ -429,7 +429,7 @@ if (is_admin()) {
         } else {
             $id = $wp_query->post->ID;
         }
-        $settings = get_option('_metaseo_settings');
+
         $opengraph = new MetaSeoOpenGraph();
         $meta_title = $opengraph->getTitle($is_shop, $id);
 
@@ -654,6 +654,7 @@ function wpmsTemplateRedirect()
             'wpms_page_redirected' => 'none'
         );
         $wpms_settings_404 = get_option('wpms_settings_404');
+
         if (is_array($wpms_settings_404)) {
             $defaul_settings_404 = array_merge($defaul_settings_404, $wpms_settings_404);
         }
@@ -703,30 +704,30 @@ function wpmsTemplateRedirect()
     // redirect by rule
     if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
         $url = $_SERVER['REQUEST_URI'];
-        $matches = false;
-        $all_links = $wpdb->get_results("SELECT * FROM " . $wpdb->prefix . "wpms_links");
-        $target = '';
-        $status_redirect = 302;
-        foreach ($all_links as $link) {
-            if ($link->link_url == '/') {
-                continue;
-            }
-            $link->link_url = str_replace('/*', '/(.*)', $link->link_url);
-            if ((@preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', $url, $matches) > 0) || (@preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', urldecode($url), $matches) > 0)) {    // Check if our match wants this URL
-                $target = $link->link_url_redirect;
-                if ($link->type == 'add_custom') {
-                    $status_redirect = $link->meta_title;
+        if ($url != '/') {
+            $matches = false;
+            $sql = $wpdb->prepare("SELECT * FROM " . $wpdb->prefix . "wpms_links WHERE link_url != %s AND link_url LIKE %s", array('/', '%' .$url. '%'));
+            $all_links = $wpdb->get_results($sql);
+            $target = '';
+            $status_redirect = 302;
+            foreach ($all_links as $link) {
+                $link->link_url = str_replace('/*', '/(.*)', $link->link_url);
+                if ((@preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', $url, $matches) > 0) || (@preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', urldecode($url), $matches) > 0)) {    // Check if our match wants this URL
+                    $target = $link->link_url_redirect;
+                    if ($link->type == 'add_custom') {
+                        $status_redirect = $link->meta_title;
+                    }
+                    break;
                 }
-                break;
             }
-        }
 
-        if (!empty($target)) {
-            if (empty($status_redirect)) {
-                $status_redirect = 302;
+            if (!empty($target)) {
+                if (empty($status_redirect)) {
+                    $status_redirect = 302;
+                }
+                wp_redirect($target, $status_redirect);
+                exit();
             }
-            wp_redirect($target, $status_redirect);
-            exit();
         }
     }
 }

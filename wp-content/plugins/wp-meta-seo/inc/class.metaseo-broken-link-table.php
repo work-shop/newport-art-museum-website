@@ -106,7 +106,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             'col_hit' => __('Hits number', 'wp-meta-seo'),
             'col_status' => __('Status', 'wp-meta-seo'),
             'col_link_text' => __('Type or Link text', 'wp-meta-seo'),
-            'col_source' => __('Source', 'wp-meta-seo'),
+            'col_source' => __('Source', 'wp-meta-seo')
         );
     }
 
@@ -189,6 +189,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
                     $class[] = 'sortable';
                     $class[] = $desc_first ? 'asc' : 'desc';
                 }
+
                 $hr = esc_url(add_query_arg(compact('orderby', 'order'), $current_url));
                 $column_name = '<a href="' . $hr . '">';
                 $column_name .= '<span>' . $column_display_name . '</span>';
@@ -203,9 +204,9 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             }
 
             if ($column_key === 'cb') {
-                echo "<th scope='col' $id $class style='padding:8px 10px;'>$column_name</th>";
+                echo "<th scope='col' $id $class style='padding:8px 10px;'>$column_display_name</th>";
             } else {
-                echo "<th scope='col' $id $class $style colspan=\"3\">$column_name</th>";
+                echo "<th scope='col' $id $class $style colspan=\"3\">$column_display_name</th>";
             }
         }
     }
@@ -280,7 +281,6 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
         $hidden = array();
         $sortable = $this->get_sortable_columns();
         $this->_column_headers = array($columns, $hidden, $sortable);
-
         $query = "SELECT * FROM " . $wpdb->prefix . "wpms_links WHERE " . implode(' AND ', $where) . $orderStr;
         if (!empty($_REQUEST['metaseo_broken_link_per_page'])) {
             $_per_page = intval($_REQUEST['metaseo_broken_link_per_page']);

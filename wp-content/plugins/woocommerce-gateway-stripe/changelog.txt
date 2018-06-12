@@ -1,5 +1,9 @@
 *** Changelog ***
 
+= 4.1.7 - 2018-06-06 =
+* Fix - Asynchronous payment methods such as SEPA, did not show order Stripe fees/net after payment succeed.
+* Fix - Missing semicolon on a CSS style value which causes display issues in some browsers.
+
 = 4.1.6 - 2018-05-31 =
 * Fix - Radio buttons on checkout on some themes are not aligned properly.
 * Fix - False negative on SSL warning notice in admin.
