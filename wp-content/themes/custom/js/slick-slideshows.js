@@ -32,8 +32,8 @@ function slickSlideshows( config ) {
 
 		$('.slick-collection').slick({
 			slidesToShow: 1,
-			autoplay: true,
-			dots: true,
+			autoplay: false,
+			dots: false,
 			fade: true,
 			autoplaySpeed: config.autoplaySpeed,
 			speed: config.speed,

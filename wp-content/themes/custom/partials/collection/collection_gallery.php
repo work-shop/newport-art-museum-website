@@ -1,8 +1,9 @@
 <section class="block collection-gallery">
 	<?php if( have_rows('collection_highlights_gallery') ): ?>
 		<div class="slick slick-collection">
+			<?php $count = 0; ?>
 			<?php  while ( have_rows('collection_highlights_gallery') ) : the_row(); ?>
-				<div class="slick-collection-slide">
+				<div class="slick-collection-slide closed" id="artwork-<?php echo $count; ?>">
 					<?php 
 					$image = get_sub_field('artwork_image'); 
 					$artwork_title = get_sub_field('artwork_title'); 
@@ -13,30 +14,36 @@
 					<div class="artwork-image">
 						<img src="<?php echo $image['sizes']['page_hero']; ?>">
 					</div>
-					<div class="artwork-content">
+					<div class="artwork-content" >
 						<div class="artwork-content-upper">
-							<div class="row row-full">
-								<div class="col-9">
-									<h5 class="white uppercase">
+							<div class="row row-full artwork-content-upper-controls">
+								<div class="col-9 p0">
+									<h6 class="white uppercase bold tracked-less">
 										Highlight
-									</h5>
-									<h4 class="artwork-title white">
-										<span class="bold"><?php echo $artwork_artist; ?></span>, <?php echo $artwork_title; ?>
-									</h4>
+									</h6>
 								</div>
-								<div class="col-3">
-									<a href="#" class="collection-gallery-more">More Info <span class="icon" data-icon="”"></span></a>
+								<div class="col-3 p0">
+									<a href="#" class="collection-gallery-more righted h5 display-block" data-target="#artwork-<?php echo $count; ?>">More Info <span class="icon collection-gallery-more-icon" data-icon="ﬁ"></span></a>
 								</div>
+							</div>
+							<div class="row row-full">
+								<h5 class="artwork-title white">
+									<span class="bold"><?php echo $artwork_artist; ?></span>, <?php echo $artwork_title; ?>
+								</h5>
 							</div>
 						</div>
 						<div class="artwork-content-lower">
-							<h4 class="white artwork-description">
+							<h5 class="white artwork-description">
 								<?php echo $artwork_description; ?>
-							</h4>
+							</h5>
 						</div>
 					</div>
+					<div class="artwork-content-bottom">
+					</div>
 				</div>
+				<?php $count++; ?>
 			<?php endwhile; ?>
 		</div>
 	<?php endif; ?>
 </section>
+

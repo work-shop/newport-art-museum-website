@@ -18,6 +18,7 @@ import { slickSlideshows } from './slick-slideshows.js';
 import { jqueryAccordian } from './jquery-accordian.js';
 import { accordian } from './accordian.js';
 import { menuOverflow } from './menu-overflow.js';
+import { collection } from './collection.js';
 import { ecommerceHelpers } from './ecommerce-helpers.js';
 import { livereload } from './livereload-client.js';
 
@@ -34,6 +35,7 @@ modals(config.modals);
 scrollSpy(config.scrollSpy);
 menuToggle(config.menuToggle);
 slickSlideshows(config.slickSlideshows);
+collection();
 jqueryAccordian();
 accordian();
 ecommerceHelpers();

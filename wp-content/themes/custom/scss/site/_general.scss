@@ -92,7 +92,12 @@ body{
 a{
 	color: $brand;
 
+	&:hover{
+		color: $brand;
+	}
+
 	&:focus{
+		outline: none;
 		text-decoration: none;
 	}
 
