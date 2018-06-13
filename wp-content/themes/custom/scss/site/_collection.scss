@@ -1,0 +1,26 @@
+
+.slick-collection{
+
+
+	.slick-collection-slide{
+		position: relative;
+	}
+
+	.artwork-content{
+		position: absolute;
+		background: transparentize($slate, .2);
+		z-index: 1;
+		bottom: 0;
+		right: $container-fluid-padding;
+		width: 600px;
+	}
+
+	.artwork-content-upper{
+		background: $slate;
+	}
+
+	.slick-dots{
+		bottom: 40px;
+		left: $container-fluid-padding;
+	}
+}

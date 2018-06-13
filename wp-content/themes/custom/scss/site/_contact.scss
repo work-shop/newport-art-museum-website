@@ -1,2 +1,48 @@
 
 /** contact page */
+
+.contact-map {
+	padding: 0px;
+	background: $brand;
+
+	iframe{
+		height: 100%;
+
+		@media screen and (max-width: $sm) {
+			height: 350px;
+			padding: 10px;
+		}
+	}
+}
+
+.contact-intro-address{
+	padding: 15vh 90px;
+
+	@media screen and (max-width: $md) {
+		padding: 10vh 40px;
+	}
+
+	address{
+		color: white;
+	}
+}
+
+.contact-directory-item{
+	padding-top: 30px;
+	padding-bottom: 40px;
+
+	@media screen and (max-width: $sm) {
+		padding-top: 25px;
+		padding-bottom: 30px;
+	}
+
+	&:nth-child(odd){
+		background: $light;
+	}
+
+	@media screen and (max-width: $sm) {
+		h4,h5{
+			margin-bottom: .25em;
+		}
+	}
+}
