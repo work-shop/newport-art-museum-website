@@ -2,29 +2,30 @@
 /* home page */
 
 .home {
-
 	padding-top: 0;
 
-	#nav{
-		transition: background .1s .1s;
-		background: none;
-
-		.logo{
-			position: fixed;
-			transition: all .1s;
-			top: 25px;
-			left: 25px;
-		}
-
-
-		&.after{
+	@media screen and (min-width: $md) {
+		#nav{
 			transition: background .1s .1s;
-			background: $nav-background;
+			background: none;
 
 			.logo{
+				position: fixed;
 				transition: all .1s;
-				top: 0;
-				left: 0;
+				top: 25px;
+				left: 25px;
+			}
+
+
+			&.after{
+				transition: background .1s .1s;
+				background: $nav-background;
+
+				.logo{
+					transition: all .1s;
+					top: 0;
+					left: 0;
+				}
 			}
 		}
 	}

@@ -1,0 +1,39 @@
+
+
+.slick-classes{
+	padding-left: $container-fluid-padding;
+	padding-right: $container-fluid-padding;
+
+
+	@media screen and (max-width: $md) {
+		padding-left: $container-fluid-padding-md;
+		padding-right: $container-fluid-padding-md;
+	}
+
+	@media screen and (max-width: $sm) {
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+
+	.slick-dots{
+		transform: none;
+		position: static;
+	}
+
+	.slick-arrow{
+		margin-top: -60px;
+	}
+}
+
+.slick-classes-slide{
+	padding-right: 40px;
+
+	@media screen and (max-width: $sm) {
+		padding-left: 10px;
+		padding-right: 10px;
+	}
+
+	.card{
+		margin-bottom: 0;
+	}
+}

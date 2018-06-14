@@ -184,12 +184,23 @@ body.dropdown-on{
 //GRAPHIC MENUS
 
 .menu-dropdown-graphic{
+
+	@media screen and (max-width: $sm) {
+		display: none;
+	}
+
 	.container-fluid{
 		max-width: none;
 	}
 
 	.card-text-exhibition-location{
 		display: none;
+	}
+
+	.card{
+		.card-image{
+			display: none;
+		}
 	}
 }
 

@@ -86,7 +86,10 @@ $page-nav-height: 160px;
 	background: transparentize($slate, .05);
 	padding: 3.5vw;
 	max-width: 550px;
-
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(135,146,163,.70) 0%,rgba(135,146,163,0.90) 75%,rgba(135,146,163,0.99) 100%);
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(135,146,163,.70) 0%,rgba(135,146,163,0.90) 75%,rgba(135,146,163,0.99) 100%);
+	background: radial-gradient(ellipse at center, rgba(135,146,163,.70) 0%,rgba(135,146,163,0.90) 60%,rgba(135,146,163,0.99) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#008792a3', endColorstr='#f28792a3',GradientType=1 );
 
 	h1{
 		line-height: 1.15;

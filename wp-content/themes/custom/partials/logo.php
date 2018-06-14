@@ -1,4 +1,4 @@
-<svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+<svg version="1.0" id="svg-logo-1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 105 105" enable-background="new 0 0 105 105" xml:space="preserve">
 <rect x="0" fill="#FFFFFF" width="105" height="105"/>
 <g>

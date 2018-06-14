@@ -89,6 +89,29 @@ class NAM_Helpers{
 							<h5 class="card-text-news-link mb0">
 								<a href="<?php the_permalink(); ?>">Read More</a>
 							</h5>
+						<?php elseif( $card_type === 'class' ): ?>
+							<?php if( get_field('class_start_date') ): ?>
+								<h5 class="card-text-class-dates bold">
+									<?php the_field('class_start_date'); ?> - <?php the_field('class_end_date'); ?>
+									<?php if( get_field('number_of_sessions') ): ?> 
+										<span class="card-text-class-dates-sessions bold">
+											(<?php the_field('number_of_sessions'); ?> Sessions)
+										</span>
+									<?php endif; ?>
+								</h5>
+							<?php endif; ?>
+								<?php if( have_rows('class_days_and_times') ): ?>
+									<h5 class="card-text-class-days bold">
+										<?php  while ( have_rows('class_days_and_times') ) : the_row(); ?>
+											<?php the_sub_field('class_day'); ?> <?php the_sub_field('class_start_time'); ?> - <?php the_sub_field('class_end_time'); ?>
+										<?php endwhile; ?>
+									</h5>
+								<?php endif; ?>
+							<?php if( get_field('class_instructor_name') ): ?>
+								<h5 class="card-text-class-instructor bold">
+									Taught by <?php the_field('class_instructor_name'); ?>
+								</h5>
+							<?php endif; ?>
 						<?php endif; ?>
 					</div>
 				</div>

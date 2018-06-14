@@ -47,6 +47,11 @@ function nav( config ) {
 			document.cookie = cookie + '=' + 'false' + ';' + expires + ';path=/';
 		});
 
+		$('.has-sub-menu>a').click(function(e) {
+			e.preventDefault();
+			toggleSubMenu($(this));
+		});
+
 	});
 
 }
@@ -86,6 +91,19 @@ function toggleNav(){
 	}else if( stickyNavProperties.element.hasClass('after') ){
 		stickyNavProperties.element.removeClass('after').addClass('before');
 		$('body').removeClass('nav-after');			
+	}	
+
+}
+
+function toggleSubMenu(link){
+	//console.log(item);
+
+	var item = link.parent('.has-sub-menu');
+
+	if ( item.hasClass('sub-menu-closed') ){
+		item.removeClass('sub-menu-closed').addClass('sub-menu-open');
+	}else if( item.hasClass('sub-menu-open') ){
+		item.removeClass('sub-menu-open').addClass('sub-menu-closed');		
 	}	
 
 }

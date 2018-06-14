@@ -9,12 +9,16 @@ function dropdowns( config ) {
 
 		$( config.linkSelector ).hover(
 			function() {
-				var currentLink = $(this);
-				timer = setTimeout(function() {
-					openDropdown( currentLink );
-				}, dropdownDelay);
+				if( $(window).width() > 768){
+					var currentLink = $(this);
+					timer = setTimeout(function() {
+						openDropdown( currentLink );
+					}, dropdownDelay);
+				}
 			}, function() {
-				clearTimeout(timer);
+				if( $(window).width() > 768){
+					clearTimeout(timer);
+				}
 			}
 			);
 

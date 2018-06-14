@@ -41,6 +41,31 @@ function slickSlideshows( config ) {
 			pauseOnDotsHover: true
 		});
 
+		$('.slick-classes').slick({
+			slidesToShow: 3,
+			autoplay: false,
+			dots: true,
+			fade: false,
+			autoplaySpeed: config.autoplaySpeed,
+			speed: config.speed,
+			pauseOnHover: true,
+			pauseOnDotsHover: true,
+			responsive: [
+			{
+				breakpoint: 993,
+				settings: {
+					slidesToShow: 2
+				}
+			},
+			{
+				breakpoint: 480,
+				settings: {
+					slidesToShow: 1
+				}
+			}
+			]
+		});
+
 		$('.slick-exhibitions').slick({
 			slidesToShow: 1,
 			dots: true,

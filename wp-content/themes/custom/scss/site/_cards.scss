@@ -2,28 +2,37 @@
 .card{
 	position: relative;
 	overflow: hidden;
-	box-shadow: 0px 2px 4px transparentize($slate, .5);
+	box-shadow: 0px 2px 5px transparentize(darken($slate,10%), .4);
+	transition: transform .15s;
 
 	.nam-dash{
 		margin-bottom: 1.5vw;
-		height: 2px;
+		height: 1px;
 
 		@media screen and (max-width: $sm) {
 			margin-top: 15px;
 			margin-bottom: 15px;
 		}
 	}
+
+	&:hover{
+		// box-shadow: 0px 4px 9px transparentize(darken($slate,10%), .35);
+		transform: scale(1.015);
+	}
 }
 
 .card-image{
 	img{
 		display: block;
+		border-radius: 2px 2px 0px 0px;
 	}
 }
 
 .card-text{
 	background: $slate;
 	padding: 3vh 2vw;
+	border-radius: 0px 0px 2px 2px;
+
 
 	@media screen and (max-width: $md) {
 		padding: 2vh 2vw;
@@ -169,4 +178,24 @@
 	}
 }
 
+
+//class
+
+.card-type-class{
+
+	.card-text-title{
+		width: 80%;
+		height: 60px;
+
+		@media screen and (max-width: $sm) {
+			height: 50px;
+		}
+	}
+
+	.card-text-info{
+		h5{
+			margin-bottom: 0;
+		}
+	}
+}
 
