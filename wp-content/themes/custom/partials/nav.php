@@ -1,5 +1,5 @@
 
-<nav id="nav" class="fixed before open">
+<nav id="nav" class="fixed before closed">
 	<div id="logo" class="logo">
 		<a href="/" title="Home">
 			<?php get_template_part('partials/logo'); ?>
@@ -209,14 +209,8 @@
 		</div>
 	</div>
 </nav>
-<nav id="mobile-nav">
-	<ul class="mobile-nav-items">
-		<?php wp_nav_menu(); ?>
-	</ul>
-</nav>
 <div class="hamburger menu-toggle">
 	<span class="hamburger-line hl-1"></span>
 	<span class="hamburger-line hl-2"></span>
-	<span class="hamburger-line hl-3"></span>
 </div>
 

@@ -48,6 +48,10 @@
 	@extend .serif;
 	@extend .h3;
 
+	@media screen and (max-width: $sm) {
+		margin-bottom: 1em;
+	}
+
 }
 
 .plan-your-visit-menu-link{

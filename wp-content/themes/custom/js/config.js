@@ -59,7 +59,7 @@ var config = {
     },
     menuToggle:{
         menuToggleSelector: '.menu-toggle',
-        menuSelector: '#mobile-nav',
+        menuSelector: '#nav',
         blanketSelector: '#menu-blanket',
         bodyOffClass: 'menu-closed',
         bodyOnClass: 'menu-open'
