@@ -54,9 +54,9 @@
 					if ($posts) : ?>
 						<?php $count = 0; ?>
 						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
-							<div class="col-md-6 <?php // if( $count === 1 ): echo ' offset-md-2'; endif ?>">
+							<div class="col-md-4 <?php // if( $count === 1 ): echo ' offset-md-2'; endif ?>">
 								<?php 
-								$card_layout = 'text_right'; //'text_right', 'text_bottom', 'text_top'
+								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
 								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
 								$card_type = 'exhibition';  //'event', 'class', 'product', 'news' 
 								NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );

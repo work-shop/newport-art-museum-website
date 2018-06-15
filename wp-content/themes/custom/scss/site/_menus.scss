@@ -1,7 +1,7 @@
 
 //MENUS
 
-$menu-graphic-padding: 25px;
+$menu-graphic-padding: 15px;
 
 #menus{
 	.menu-links-container{
@@ -198,7 +198,17 @@ body.dropdown-on{
 	}
 
 	.card{
-		.card-image{
+
+		@media screen and (max-height: 800px) {
+			.card-image{
+				display: none;
+			}
+		}
+
+		.nam-dash{
+			display: none;
+		}
+		.card-text-info{
 			display: none;
 		}
 	}
@@ -238,19 +248,14 @@ body.dropdown-on{
 .menu-dropdown-graphic-link{
 	
 	a{
-		display: block;
-		font-size: 16px;
-		color: $brand;
-		position: relative;
-		top: 7px;
 
-		@media screen and (max-width: $lg) {
-			font-size: 14px;
-			top: 9px;
-		}
+		@extend .button;
+		@extend .button-bordered;	
+		color: transparentize($brand, .1);
+		border-color: transparentize($brand, .1);
 
 		&:hover{
-			text-decoration: underline;
+			//text-decoration: underline;
 		}
 
 	}
@@ -258,6 +263,7 @@ body.dropdown-on{
 
 .menu-dropdown-cards-upper{
 	padding-top: 2em;
+	padding-bottom: .5em;
 }
 
 

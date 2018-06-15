@@ -12,6 +12,12 @@ $page-nav-height: 160px;
 	padding-bottom: 30px;
 	border-bottom: 1px solid darken($light,7%);
 
+	@media screen and (max-width: $sm) {
+		min-height: auto;
+		padding-top: 25px;
+		padding-bottom: 10px;
+	}
+
 	.container-fluid{
 		max-width: none;
 	}
@@ -19,6 +25,10 @@ $page-nav-height: 160px;
 	li{
 		display: inline-block;
 		margin-right: 7px;
+
+		@media screen and (max-width: $sm) {
+			margin-bottom: .4em;
+		}
 
 		&:first-child{
 			a{
@@ -63,7 +73,8 @@ $page-nav-height: 160px;
 			font-size: 24px;
 		}
 		@media screen and (max-width: $sm) {
-			font-size: 21px;
+			font-size: 24px;
+			margin-bottom: 14px;
 		}
 	}
 

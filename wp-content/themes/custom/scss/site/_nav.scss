@@ -58,8 +58,12 @@ $nav-background: lighten($brand,0%);
 		box-shadow: 0px 10px 20px transparentize($brand, .25);
 	}
 
+	#nav-menu-primary{
+		height: auto;
+	}
+
 	.hamburger{
-		padding-top: 15px;
+		padding-top: 18px;
 	}
 
 	.hl-1{
@@ -158,6 +162,7 @@ body.dropdown-on{
 //PRIMARY
 #nav-menu-primary{
 	@extend .clearfix;
+	height: 0;
 
 	@media screen and (max-width: $sm) {
 		padding-top: $nav-height-mobile;
@@ -168,12 +173,8 @@ body.dropdown-on{
 		margin-left: 10px;	
 		position: relative;
 
-		.sub-menu{
-			display: none;
-		}
-
 		&.sub-menu-open{
-			&:after{
+			a:after{
 				content: '-';
 			}
 
@@ -196,16 +197,6 @@ body.dropdown-on{
 				border-top: 1px solid transparentize($light, .25);
 			}
 
-			&:after{
-				content: '+';
-				display: block;
-				position: absolute;
-				right: 20px;
-				top: 15px;
-				color: white;
-				font-size: 18px;
-				opacity: .8;
-			}
 		}
 
 		a{
@@ -219,6 +210,7 @@ body.dropdown-on{
 			height: 55px;
 			vertical-align: middle;
 			text-transform: uppercase;
+			position: relative;
 
 			&:hover, &.on{
 				border-bottom: 4px solid white;
@@ -253,11 +245,26 @@ body.dropdown-on{
 				font-size: 15px;
 				//background: transparentize($brand, .02);
 				background: lighten($brand,3%);
+
+
+				&:after{
+					content: '+';
+					display: block;
+					position: absolute;
+					right: 20px;
+					top: 20px;
+					color: white;
+					font-size: 18px;
+					opacity: .8;
+					font-family: $font-main;
+					font-weight: normal;
+				}
 			}
 
 		}
 
 		.sub-menu{
+			display: none;
 			padding-bottom: 15px;
 
 			li{
@@ -273,15 +280,15 @@ body.dropdown-on{
 					}
 				}
 
-				&:after{
-					content: '';
-					display: none;
-				}
-
 				a{
 					padding: 10px 20px 8px 35px;
 					text-transform: none;
 					background: none;
+
+					&:after{
+						content: '';
+						display: none;
+					}
 				}
 			}
 		}

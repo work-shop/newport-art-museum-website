@@ -77,12 +77,29 @@
 
 .card-size-menu{
 
+	&.card-type-class{
+		.card-text-title{
+			width: 100%;
+			height: auto;
+		}
+	}
+
+	.card-text-title{
+		font-size: 23px;
+	}
+
+	.card-text{
+		height: 90px;
+		padding: 20px;
+	}
+
+
+
 	&.card-layout-text_bottom{
 		.card-text{
 			position: static;
 			bottom: -100px;
 			width: 100%;
-
 		}
 	}
 	

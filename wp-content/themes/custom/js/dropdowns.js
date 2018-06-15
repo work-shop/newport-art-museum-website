@@ -9,14 +9,14 @@ function dropdowns( config ) {
 
 		$( config.linkSelector ).hover(
 			function() {
-				if( $(window).width() > 768){
+				if( $(window).width() > 767){
 					var currentLink = $(this);
 					timer = setTimeout(function() {
 						openDropdown( currentLink );
 					}, dropdownDelay);
 				}
 			}, function() {
-				if( $(window).width() > 768){
+				if( $(window).width() > 767){
 					clearTimeout(timer);
 				}
 			}

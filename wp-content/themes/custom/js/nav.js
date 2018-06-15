@@ -48,9 +48,15 @@ function nav( config ) {
 		});
 
 		$('.has-sub-menu>a').click(function(e) {
-			e.preventDefault();
-			toggleSubMenu($(this));
+			if( $(window).width() < 768){
+				e.preventDefault();
+				toggleSubMenu($(this));
+			}
 		});
+		// $('.has-sub-menu>a').click(function(e) {
+		// 	e.preventDefault();
+		// 	toggleSubMenu($(this));
+		// });
 
 	});
 

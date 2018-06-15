@@ -21,6 +21,7 @@ function menuToggle( config ) {
 		}
 		else if($('body').hasClass(config.bodyOnClass)){
 			$(config.menuToggleSelector).removeClass('open').addClass('closed');
+			$('.has-sub-menu').removeClass('sub-menu-open').addClass('sub-menu-closed');	
 			$(config.blanketSelector).removeClass('on').addClass('off');			
 			$('body').removeClass(config.bodyOnClass).addClass(config.bodyOffClass);
 		}
