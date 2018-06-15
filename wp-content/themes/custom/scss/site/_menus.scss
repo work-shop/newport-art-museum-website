@@ -1,7 +1,7 @@
 
 //MENUS
 
-$menu-graphic-padding: 15px;
+$menu-graphic-padding: 20px;
 
 #menus{
 	.menu-links-container{
@@ -16,7 +16,7 @@ $menu-graphic-padding: 15px;
 	//height: $dropdown-height;
 	width: 100%;
 	top: $nav-height;
-	background: transparentize($ultra-light, .1);
+	background: transparentize($khaki, .05);
 	box-shadow: 0px 4px 35px darken($slate,15%);
 	position: fixed;
 	transform: translate(0,-100vh) rotateX(0deg);
@@ -44,7 +44,7 @@ $menu-graphic-padding: 15px;
 		//height: $dropdown-links-height;
 		background: white;
 		padding: 15px 0 15px 0;
-		border-bottom: 2px solid darken($light, 10%);
+		border-bottom: 3px solid darken($light, 10%);
 
 		ul{
 			width: 95%;
@@ -68,7 +68,6 @@ $menu-graphic-padding: 15px;
 			height: 34px;
 			margin-right: 3vw;
 			margin-bottom: 0;
-			//outline: 1px solid green;
 
 			@media screen and (max-width: $sm) {
 				margin-right: 5vw;
@@ -83,7 +82,6 @@ $menu-graphic-padding: 15px;
 				font-size: 20px;
 				padding: 2px 5px 0px 5px;
 				height: inherit;
-				//outline: 1px solid blue;
 
 				font-size: 17px;
 
@@ -116,16 +114,8 @@ $menu-graphic-padding: 15px;
 
 	.menu-dropdown-graphic{
 		//height: $dropdown-graphics-height;
-
-		height: calc(100vh - 380px);
-
-		// @media screen and (max-height: 950px) {
-		// 	height: 575px;
-		// }
-
-		// @media screen and (max-height: 900px) {
-		// 	height: 525px;
-		// }
+		height: calc(100vh - 400px);
+		overflow: scroll;
 	}
 }
 
@@ -150,13 +140,9 @@ $menu-graphic-padding: 15px;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	//background: rgba(255,255,255,.45);
-	//background: yellow;
 	z-index: 5;
 	transform: translate(0,-100vh);
 	transition: transform .25s;
-	// transition-delay: .25s;
-	//background: url("../images/favicon.png");
 
 	&:hover{
 		cursor: url("../images/close.png"), auto;
@@ -217,14 +203,18 @@ body.dropdown-on{
 
 .menu-dropdown-graphic-two-column{
 	display: grid;
-	grid-template-columns: 61% 39%;
+	grid-template-columns: 50% 50%;
 
 	.menu-dropdown-graphic-1{
 		padding-left: $container-fluid-padding;
 		padding-top: 4em;
 
+		@media screen and (max-width: $lg) {
+			padding-left: $container-fluid-padding-md;
+		}
+
 		p{
-			width: 61%;
+			width: 80%;
 		}
 	}
 
@@ -237,8 +227,6 @@ body.dropdown-on{
 
 .menu-dropdown-graphic-background{
 	@extend .background;
-	//width: calc(100% - $menu-graphic-padding);
-	//height: calc(100% - $menu-graphic-padding);
 }
 
 .menu-dropdown-graphic-heading,.menu-dropdown-graphic-link{
@@ -253,11 +241,6 @@ body.dropdown-on{
 		@extend .button-bordered;	
 		color: transparentize($brand, .1);
 		border-color: transparentize($brand, .1);
-
-		&:hover{
-			//text-decoration: underline;
-		}
-
 	}
 }
 
