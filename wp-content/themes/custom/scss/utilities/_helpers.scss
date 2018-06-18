@@ -69,7 +69,7 @@
 //style the unloaded and loaded states of the page
 .loading{
 	opacity: 0;
-	@include transition(opacity .5s);
+	@include transition(opacity .3s);
 }
 
 .loaded{

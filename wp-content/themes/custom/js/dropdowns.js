@@ -28,6 +28,7 @@ function dropdowns( config ) {
 
 		$('.dropdown-link').click(function(){
 			closeDropdown();
+			$('body').removeClass('loaded').addClass('loading');
 		});
 
 	});
