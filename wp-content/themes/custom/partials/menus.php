@@ -50,10 +50,11 @@
 				</div>
 				<div class="row menu-dropdown-cards-lower">
 					<?php
-					$posts = get_field('exhibitions_menu_featured_exhibitions','option'); 
-					if ($posts) : ?>
+					$items = get_field('exhibitions_menu_featured_exhibitions','option'); 
+					if ($items) : ?>
 						<?php $count = 0; ?>
 						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
+							<?php setup_postdata($post); ?>
 							<div class="col-md-4 <?php // if( $count === 1 ): echo ' offset-md-2'; endif ?>">
 								<?php 
 								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
@@ -135,10 +136,11 @@
 				</div>
 				<div class="row menu-dropdown-cards-lower">
 					<?php
-					$posts = get_field('events_menu_featured_events','option'); 
-					if ($posts) : ?>
+					$items = get_field('events_menu_featured_events','option'); 
+					if ($items) : ?>
 						<?php $count = 0; ?>
-						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
+						<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
+							<?php setup_postdata($post); ?>
 							<div class="col-md-4">
 								<?php 
 								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
@@ -178,10 +180,11 @@
 				</div>
 				<div class="row menu-dropdown-cards-lower">
 					<?php
-					$posts = get_field('education_menu_featured_classes','option'); 
-					if ($posts) : ?>
+					$items = get_field('education_menu_featured_classes','option'); 
+					if ($items) : ?>
 						<?php $count = 0; ?>
-						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
+						<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
+							<?php setup_postdata($post); ?>
 							<div class="col-md-4">
 								<?php 
 								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'

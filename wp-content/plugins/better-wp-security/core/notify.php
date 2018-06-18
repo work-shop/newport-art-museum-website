@@ -124,9 +124,11 @@ class ITSEC_Notify {
 
 		$data_proxy = new ITSEC_Notify_Data_Proxy( $data );
 
-		$mail = $nc->mail();
+		$mail = $nc->mail( 'digest' );
 		$mail->add_header( $title, $banner_title );
+		$mail->start_group( 'intro' );
 		$mail->add_info_box( sprintf( esc_html__( 'The following is a summary of security related activity on your site: %s', 'better-wp-security' ), '<b>' . $mail->get_display_url() . '</b>' ) );
+		$mail->end_group();
 
 		$content = $mail->get_content();
 
@@ -203,10 +205,13 @@ class ITSEC_Notify {
 			'<a href="' . ITSEC_Mail::filter_admin_page_url( ITSEC_Core::get_logs_page_url() ) . '"><b>',
 			'</b></a>'
 		) );
-		$mail->add_divider();
-		$mail->add_large_text( esc_html__( 'Is your site as secure as it could be?', 'better-wp-security' ) );
-		$mail->add_text( esc_html__( 'Ensure your site is using recommended settings and features with a security check.', 'better-wp-security' ) );
-		$mail->add_button( esc_html__( 'Run a Security Check ✓', 'better-wp-security' ), ITSEC_Mail::filter_admin_page_url( ITSEC_Core::get_security_check_page_url() ) );
+
+		if ( apply_filters( 'itsec_security_digest_include_security_check', true ) ) {
+			$mail->add_divider();
+			$mail->add_large_text( esc_html__( 'Is your site as secure as it could be?', 'better-wp-security' ) );
+			$mail->add_text( esc_html__( 'Ensure your site is using recommended settings and features with a security check.', 'better-wp-security' ) );
+			$mail->add_button( esc_html__( 'Run a Security Check ✓', 'better-wp-security' ), ITSEC_Mail::filter_admin_page_url( ITSEC_Core::get_security_check_page_url() ) );
+		}
 
 		$mail->add_footer();
 

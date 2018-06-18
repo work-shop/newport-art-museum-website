@@ -44,7 +44,17 @@ final class ITSEC_File_Change_Logs {
 		} elseif ( 'recovery-scheduled' === $code ) {
 			$entry['description'] = esc_html__( 'Recovery Scheduled', 'better-wp-security' );
 		} elseif ( 'file-scan-aborted' === $code ) {
-			$entry['description'] = esc_html__( 'Scan Failed', 'better-wp-security' );
+			if  ( ! empty( $code_data[0] ) ) {
+				if ( $user = get_userdata( $code_data[0] ) ) {
+					$by = $user->display_name;
+				} else {
+					$by = "#{$code_data[0]}";
+				}
+
+				$entry['description'] = sprintf( esc_html__( 'Scan Cancelled by %s', 'better-wp-security' ), $by );
+			} else {
+				$entry['description'] = esc_html__( 'Scan Failed', 'better-wp-security' );
+			}
 		} elseif ( 'rescheduling' === $code ) {
 			$entry['description'] = esc_html__( 'Rescheduling', 'better-wp-security' );
 		}

@@ -56,7 +56,7 @@ final class ITSEC_Security_Check_Scanner {
 
 		self::add_network_brute_force_signup();
 
-		self::enforce_activation( 'strong-passwords', __( 'Strong Password Enforcement', 'better-wp-security' ) );
+		self::enforce_password_requirement_enabled( 'strength', __( 'Strong Password Enforcement', 'better-wp-security' ) );
 		self::enforce_activation( 'two-factor', __( 'Two-Factor Authentication', 'better-wp-security' ) );
 		self::enforce_setting( 'two-factor', 'available_methods', 'all', esc_html__( 'Changed the Authentication Methods Available to Users setting in Two-Factor Authentication to "All Methods".', 'better-wp-security' ) );
 		self::enforce_setting( 'two-factor', 'protect_user_type', 'privileged_users', esc_html__( 'Changed the User Type Protection setting in Two-Factor Authentication to "Privileged Users".', 'better-wp-security' ) );
@@ -153,6 +153,21 @@ final class ITSEC_Security_Check_Scanner {
 		}
 
 		self::$feedback->add_text( sprintf( $text, $name ) );
+	}
+
+	private static function enforce_password_requirement_enabled( $requirement, $description ) {
+
+		$active = ITSEC_Modules::get_setting( 'password-requirements', 'enabled_requirements' );
+
+		if ( ! empty( $active[ $requirement ] ) ) {
+			return;
+		}
+
+		$active[ $requirement ] = true;
+
+		ITSEC_Modules::set_setting( 'password-requirements', 'enabled_requirements', $active );
+		self::$feedback->add_section( 'enforce-setting-password-requirements-enabled_requirements', array( 'status' => 'action-taken' ) );
+		self::$feedback->add_text( $description );
 	}
 
 	public static function activate_network_brute_force( $data ) {

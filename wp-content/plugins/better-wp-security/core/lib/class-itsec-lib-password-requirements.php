@@ -1,186 +1,75 @@
 <?php
-/**
- * Tool to manage password requirements across modules.
- *
- * @since   3.9.0
- * @license GPLv2+
- */
 
 /**
  * Class ITSEC_Lib_Password_Requirements
  */
 class ITSEC_Lib_Password_Requirements {
 
-	const LOGIN_ACTION = 'itsec_update_password';
-	const META_KEY = '_itsec_update_password_key';
+	/** @var array[] */
+	private static $requirements;
 
-	/** @var string */
-	private $error_message = '';
+	/**
+	 * Get all registered password requirements.
+	 *
+	 * @return array
+	 */
+	public static function get_registered() {
+		if ( null === self::$requirements ) {
+			self::$requirements = array();
 
-	public function run() {
+			/**
+			 * Fires when password requirements should be registered.
+			 */
+			do_action( 'itsec_register_password_requirements' );
+		}
 
-		add_action( 'user_profile_update_errors', array( $this, 'forward_profile_pass_update' ), 0, 3 );
-		add_action( 'validate_password_reset', array( $this, 'forward_reset_pass' ), 10, 2 );
-		add_action( 'profile_update', array( $this, 'set_password_last_updated' ), 10, 2 );
-
-		add_action( 'itsec_login_interstitial_init', array( $this, 'register_interstitial' ) );
+		return self::$requirements;
 	}
 
 	/**
-	 * When a user's password is updated, or a new user created, verify that the new password is valid.
+	 * Register a password requirement.
 	 *
-	 * @param WP_Error         $errors
-	 * @param bool             $update
-	 * @param WP_User|stdClass $user
+	 * @param string $reason_code
+	 * @param array  $opts
 	 */
-	public function forward_profile_pass_update( $errors, $update, $user ) {
+	public static function register( $reason_code, $opts ) {
+		$merged = wp_parse_args( $opts, array(
+			'evaluate'                => null,
+			'validate'                => null,
+			'flag_check'              => null,
+			'reason'                  => null,
+			'defaults'                => null,
+			'settings_config'         => null, // Callable returning label, description, render & sanitize callbacks.
+			'meta'                    => "_itsec_password_evaluation_{$reason_code}",
+			'evaluate_if_not_enabled' => false,
+		) );
 
-		if ( ! isset( $user->user_pass ) ) {
+		if (
+			( array_key_exists( 'validate', $opts ) || array_key_exists( 'evaluate', $opts ) ) &&
+			( ! is_callable( $merged['validate'] ) || ! is_callable( $merged['evaluate'] ) )
+		) {
 			return;
 		}
 
-		if ( ! $update ) {
-			$context = 'admin-user-create';
-		} elseif ( isset( $user->ID ) && $user->ID === get_current_user_id() ) {
-			$context = 'profile-update';
-		} else {
-			$context = 'admin-profile-update';
-		}
-
-		$args = array(
-			'error'   => $errors,
-			'context' => $context
-		);
-
-		if ( isset( $user->role ) ) {
-			$args['role'] = $user->role;
-		}
-
-		self::validate_password( $user, $user->user_pass, $args );
-	}
-
-	/**
-	 * When a user attempts to reset their password, verify that the new password is valid.
-	 *
-	 * @param WP_Error $errors
-	 * @param WP_User  $user
-	 */
-	public function forward_reset_pass( $errors, $user ) {
-
-		if ( ! isset( $_POST['pass1'] ) || is_wp_error( $user ) ) {
-			// The validate_password_reset action fires when first rendering the reset page and when handling the form
-			// submissions. Since the pass1 data is missing, this must be the initial page render. So, we don't need to
-			// do anything yet.
+		if ( array_key_exists( 'flag_check', $opts ) && ! is_callable( $merged['flag_check'] ) ) {
 			return;
 		}
 
-		self::validate_password( $user, $_POST['pass1'], array(
-			'error'   => $errors,
-			'context' => 'reset-password',
-		) );
-	}
+		if ( array_key_exists( 'defaults', $opts ) ) {
+			if ( ! is_array( $merged['defaults'] ) ) {
+				return;
+			}
 
-	/**
-	 * Whenever a user object is updated, set when their password was last updated.
-	 *
-	 * @param int    $user_id
-	 * @param object $old_user_data
-	 */
-	public function set_password_last_updated( $user_id, $old_user_data ) {
+			if ( ! array_key_exists( 'settings_config', $opts ) ) {
+				return;
+			}
+		}
 
-		$user = get_userdata( $user_id );
-
-		if ( $user->user_pass === $old_user_data->user_pass ) {
+		if ( array_key_exists( 'settings_config', $opts ) && ! is_callable( $merged['settings_config'] ) ) {
 			return;
 		}
 
-		delete_user_meta( $user_id, 'itsec_password_change_required' );
-		update_user_meta( $user_id, 'itsec_last_password_change', ITSEC_Core::get_current_time_gmt() );
-	}
-
-	/**
-	 * Register the password change interstitial.
-	 *
-	 * @param ITSEC_Lib_Login_Interstitial $lib
-	 */
-	public function register_interstitial( $lib ) {
-		$lib->register( 'update-password', array( $this, 'render_interstitial' ), array(
-			'show_to_user' => array( __CLASS__, 'password_change_required' ),
-			'info_message' => array( __CLASS__, 'get_message_for_password_change_reason' ),
-			'submit'       => array( $this, 'submit' ),
-		) );
-	}
-
-	/**
-	 * Render the interstitial.
-	 *
-	 * @param WP_User $user
-	 */
-	public function render_interstitial( $user ) {
-		?>
-
-		<div class="user-pass1-wrap">
-			<p><label for="pass1"><?php _e( 'New Password', 'better-wp-security' ); ?></label></p>
-		</div>
-
-		<div class="wp-pwd">
-				<span class="password-input-wrapper">
-					<input type="password" data-reveal="1"
-						   data-pw="<?php echo esc_attr( wp_generate_password( 16 ) ); ?>" name="pass1" id="pass1"
-						   class="input" size="20" value="" autocomplete="off" aria-describedby="pass-strength-result"/>
-				</span>
-			<div id="pass-strength-result" class="hide-if-no-js" aria-live="polite"><?php _e( 'Strength indicator', 'better-wp-security' ); ?></div>
-		</div>
-
-		<p class="user-pass2-wrap">
-			<label for="pass2"><?php _e( 'Confirm new password' ) ?></label><br/>
-			<input type="password" name="pass2" id="pass2" class="input" size="20" value="" autocomplete="off"/>
-		</p>
-
-		<p class="description indicator-hint"><?php echo wp_get_password_hint(); ?></p>
-		<br class="clear"/>
-
-		<p class="submit">
-			<input type="submit" name="wp-submit" id="wp-submit" class="button button-primary button-large"
-				   value="<?php esc_attr_e( 'Update Password', 'better-wp-security' ); ?>"/>
-		</p>
-
-		<?php
-	}
-
-	/**
-	 * Handle the request to update the user's password.
-	 *
-	 * @param WP_User $user
-	 * @param array   $data POSTed data.
-	 *
-	 * @return WP_Error|null
-	 */
-	public function submit( $user, $data ) {
-
-		if ( empty( $data['pass1'] ) ) {
-			return new WP_Error(
-				'itsec-password-requirements-empty-password',
-				__( 'Please enter your new password.', 'better-wp-security' )
-			);
-		}
-
-		$error = self::validate_password( $user, $data['pass1'] );
-
-		if ( $error->get_error_message() ) {
-			return $error;
-		}
-
-		$error = wp_update_user( array(
-			'ID'        => $user->ID,
-			'user_pass' => $data['pass1']
-		) );
-
-		if ( is_wp_error( $error ) ) {
-			return $error;
-		}
-
-		return null;
+		self::$requirements[ $reason_code ] = $merged;
 	}
 
 	/**
@@ -196,14 +85,24 @@ class ITSEC_Lib_Password_Requirements {
 			return '';
 		}
 
+		$message = '';
+
+		$registered = self::get_registered();
+
+		if ( isset( $registered[ $reason ] ) ) {
+			$settings = self::get_requirement_settings( $reason );
+			$message  = call_user_func( $registered[ $reason ]['reason'], get_user_meta( $user->ID, $registered[ $reason ]['meta'], true ), $settings );
+		}
+
 		/**
 		 * Retrieve a human readable description as to why a password change has been required for the current user.
 		 *
 		 * Modules MUST HTML escape their reason strings before returning them with this filter.
 		 *
-		 * @param string $message
+		 * @param string  $message
+		 * @param WP_User $user
 		 */
-		$message = apply_filters( "itsec_password_change_requirement_description_for_{$reason}", '' );
+		$message = apply_filters( "itsec_password_change_requirement_description_for_{$reason}", $message, $user );
 
 		if ( $message ) {
 			return $message;
@@ -225,18 +124,39 @@ class ITSEC_Lib_Password_Requirements {
 
 		$args = wp_parse_args( $args, array(
 			'error'   => new WP_Error(),
-			'context' => ''
+			'context' => '',
 		) );
 
-		$error = isset( $args['error'] ) ? $args['error'] : new WP_Error();
-
-		$user = $user instanceof stdClass ? $user : ITSEC_Lib::get_user( $user );
+		/** @var WP_Error $error */
+		$error = $args['error'];
+		$user  = $user instanceof stdClass ? $user : ITSEC_Lib::get_user( $user );
 
 		if ( ! $user ) {
 			$error->add( 'invalid_user', esc_html__( 'Invalid User', 'better-wp-security' ) );
 
 			return $error;
 		}
+
+		if ( ! empty( $user->ID ) && wp_check_password( $new_password, get_userdata( $user->ID )->user_pass, $user->ID ) ) {
+			$message = wp_kses( __( '<strong>ERROR</strong>: The password you have chosen appears to have been used before. You must choose a new password.', 'better-wp-security' ), array( 'strong' => array() ) );
+			$error->add( 'pass', $message );
+
+			return $error;
+		}
+
+		require_once( ITSEC_Core::get_core_dir() . '/lib/class-itsec-lib-canonical-roles.php' );
+
+		if ( isset( $args['role'] ) && $user instanceof WP_User ) {
+			$canonical = ITSEC_Lib_Canonical_Roles::get_canonical_role_from_role_and_user( $args['role'], $user );
+		} elseif ( isset( $args['role'] ) ) {
+			$canonical = ITSEC_Lib_Canonical_Roles::get_canonical_role_from_role( $args['role'] );
+		} elseif ( empty( $user->ID ) || ! is_numeric( $user->ID ) ) {
+			$canonical = ITSEC_Lib_Canonical_Roles::get_canonical_role_from_role( get_option( 'default_role', 'subscriber' ) );
+		} else {
+			$canonical = ITSEC_Lib_Canonical_Roles::get_user_role( $user );
+		}
+
+		$args['canonical'] = $canonical;
 
 		/**
 		 * Fires when modules should validate a password according to their rules.
@@ -287,7 +207,26 @@ class ITSEC_Lib_Password_Requirements {
 			return false;
 		}
 
+		$registered = self::get_registered();
+
+		if ( isset( $registered[ $reason ] ) ) {
+			return self::is_requirement_enabled( $reason ) ? $reason : false;
+		}
+
+		if ( ! has_filter( "itsec_password_change_requirement_description_for_{$reason}" ) ) {
+			return false;
+		}
+
 		return $reason;
+	}
+
+	/**
+	 * Globally clear all required password changes with a particular reason code.
+	 *
+	 * @param string $reason
+	 */
+	public static function global_clear_required_password_change( $reason ) {
+		delete_metadata( 'user', 0, 'itsec_password_change_required', $reason, true );
 	}
 
 	/**
@@ -312,6 +251,64 @@ class ITSEC_Lib_Password_Requirements {
 			return $deprecated;
 		}
 
+		if ( ! $changed ) {
+			return strtotime( $user->user_registered );
+		}
+
 		return $changed;
+	}
+
+	/**
+	 * Is a password requirement enabled.
+	 *
+	 * @param string $requirement
+	 *
+	 * @return bool
+	 */
+	public static function is_requirement_enabled( $requirement ) {
+
+		$requirements = self::get_registered();
+
+		if ( ! isset( $requirements[ $requirement ] ) ) {
+			return false;
+		}
+
+		// If the requirement does not have any settings, than it is always enabled.
+		if ( null === $requirements[ $requirement ]['settings_config'] ) {
+			return true;
+		}
+
+		$enabled = ITSEC_Modules::get_setting( 'password-requirements', 'enabled_requirements' );
+
+		if ( ! empty( $enabled[ $requirement ] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
+	 * Get requirement settings.
+	 *
+	 * @param string $requirement
+	 *
+	 * @return array|false
+	 */
+	public static function get_requirement_settings( $requirement ) {
+
+		$requirements = self::get_registered();
+
+		if ( ! isset( $requirements[ $requirement ] ) ) {
+			return false;
+		}
+
+		if ( null === $requirements[ $requirement ]['settings_config'] ) {
+			return false;
+		}
+
+		$all_settings = ITSEC_Modules::get_setting( 'password-requirements', 'requirement_settings' );
+		$settings     = isset( $all_settings[ $requirement ] ) ? $all_settings[ $requirement ] : array();
+
+		return wp_parse_args( $settings, $requirements[ $requirement ]['defaults'] );
 	}
 }

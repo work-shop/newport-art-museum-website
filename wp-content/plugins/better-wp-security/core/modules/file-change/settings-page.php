@@ -1,7 +1,7 @@
 <?php
 
 final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
-	private $script_version = 3;
+	private $script_version = 4;
 
 
 	public function __construct() {
@@ -26,8 +26,9 @@ final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
 			require_once( dirname( __FILE__ ) . '/admin.php' );
 		}
 
+		ITSEC_Lib::enqueue_util();
 		ITSEC_File_Change_Admin::enqueue_scanner();
-		wp_enqueue_script( 'itsec-file-change-settings-script', plugins_url( 'js/settings-page.js', __FILE__ ), array( 'jquery', 'itsec-file-change-scanner' ), $this->script_version, true );
+		wp_enqueue_script( 'itsec-file-change-settings-script', plugins_url( 'js/settings-page.js', __FILE__ ), array( 'jquery', 'itsec-file-change-scanner', 'itsec-util' ), $this->script_version, true );
 		wp_localize_script( 'itsec-file-change-settings-script', 'itsec_file_change_settings', $vars );
 
 
@@ -54,6 +55,11 @@ final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
 			} else {
 				ITSEC_Response::set_success( true );
 			}
+		} elseif ( 'abort' === $data['method'] ) {
+			require_once( dirname( __FILE__ ) . '/scanner.php' );
+			ITSEC_File_Change_Scanner::abort( true );
+
+			ITSEC_Response::set_success( true );
 		} else if ( 'get-filetree-data' === $data['method'] ) {
 			ITSEC_Response::set_response( $this->get_filetree_data( $data ) );
 		}
@@ -81,7 +87,7 @@ final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
 
 		require_once( dirname( __FILE__ ) . '/scanner.php' );
 
-		if ( ITSEC_File_Change_Scanner::is_running() ) {
+		if ( $is_running = ITSEC_File_Change_Scanner::is_running() ) {
 			$status = ITSEC_File_Change_Scanner::get_status();
 
 			$button = array(
@@ -98,7 +104,12 @@ final class ITSEC_File_Change_Settings_Page extends ITSEC_Module_Settings_Page {
 ?>
 	<div class="hide-if-no-js">
 		<p><?php _e( "Press the button below to scan your site's files for changes. Note that if changes are found this will take you to the logs page for details.", 'better-wp-security' ); ?></p>
-		<p><?php $form->add_button( 'one_time_check', $button ); ?></p>
+		<p>
+			<?php $form->add_button( 'one_time_check', $button ); ?>
+			<?php if ( $is_running ) : ?>
+				<?php $form->add_button( 'abort', array( 'value' => _x( 'Cancel', 'Cancel File Change scan.', 'better-wp-security' ), 'class' => 'button' ) ); ?>
+			<?php endif; ?>
+		</p>
 		<div id="itsec_file_change_status"></div>
 	</div>
 

@@ -62,4 +62,19 @@ jQuery( document ).ready( function ( $ ) {
 	}
 
 	initializeScan();
+
+	$( document ).on( 'click', '#itsec-file-change-abort', function () {
+		var $this = $( this );
+
+		$this.prop( 'disabled', true );
+
+		itsecUtil.sendModuleAJAXRequest( 'file-change', { method: 'abort' }, function ( results ) {
+			var $button = $( '#itsec-file-change-one_time_check' );
+			$button.prop( 'disabled', false );
+			$button.prop( 'class', 'button-primary' );
+			$button.val( ITSECFileChangeScannerl10n.button_text );
+
+			$this.remove();
+		} );
+	} );
 } );

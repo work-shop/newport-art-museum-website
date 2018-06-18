@@ -88,6 +88,8 @@ class ITSEC_Scheduler_Cron extends ITSEC_Scheduler {
 		}
 
 		if ( ! $crons = _get_cron_array() ) {
+			ITSEC_Lib::release_lock( 'scheduler' );
+
 			return;
 		}
 
@@ -97,12 +99,14 @@ class ITSEC_Scheduler_Cron extends ITSEC_Scheduler {
 		}
 
 		if ( get_transient( 'doing_cron' ) ) {
+			ITSEC_Lib::release_lock( 'scheduler' );
 			is_multisite() && restore_current_blog();
 
 			return;
 		}
 
 		if ( ITSEC_Lib::get_uncached_option( '_transient_doing_cron' ) ) {
+			ITSEC_Lib::release_lock( 'scheduler' );
 			is_multisite() && restore_current_blog();
 
 			return;

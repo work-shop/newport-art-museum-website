@@ -16,6 +16,7 @@ final class ITSEC_Admin_Page_Loader {
 		add_action( 'wp_ajax_itsec_settings_page', array( $this, 'handle_ajax_request' ) );
 		add_action( 'wp_ajax_itsec_logs_page', array( $this, 'handle_ajax_request' ) );
 		add_action( 'wp_ajax_itsec_help_page', array( $this, 'handle_ajax_request' ) );
+		add_action( 'wp_ajax_itsec_debug_page', array( $this, 'handle_ajax_request' ) );
 		add_action( 'wp_ajax_itsec-set-user-setting', array( $this, 'handle_user_setting' ) );
 
 		// Filters for validating user settings
@@ -23,7 +24,7 @@ final class ITSEC_Admin_Page_Loader {
 	}
 
 	public function add_scripts() {
-		ITSEC_Lib::enqueue_util();
+
 	}
 
 	public function add_styles() {
@@ -44,6 +45,10 @@ final class ITSEC_Admin_Page_Loader {
 
 		if ( ! ITSEC_Core::is_pro() ) {
 			$page_refs[] = add_submenu_page( 'itsec', '', '<span style="color:#2EA2CC">' . __( 'Go Pro', 'better-wp-security' ) . '</span>', $capability, 'itsec-go-pro', array( $this, 'show_page' ) );
+		}
+
+		if ( defined( 'ITSEC_DEBUG' ) && ITSEC_DEBUG ) {
+			$page_refs[] = add_submenu_page( 'itsec', __( 'iThemes Security Debug', 'better-wp-security' ), __( 'Debug' ), $capability, 'itsec-debug', array( $this, 'show_page' ) );
 		}
 
 		foreach ( $page_refs as $page_ref ) {

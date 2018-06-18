@@ -851,3 +851,19 @@ body.security_page_itsec-logs #old-logs-migration-status img {
 body.security_page_itsec-logs #old-logs-migration-status p {
 	line-height: 1.4em;
 }
+#itsec-system-info, #itsec-settings-editor {
+	font-family: monospace;
+	width: 100%;
+	margin: 0;
+	height: 300px;
+	padding: 20px;
+	border-radius: 0;
+	resize: none;
+	font-size: 12px;
+	line-height: 20px;
+	outline: 0;
+}
+
+#itsec-settings-editor:empty {
+	display: none;
+}

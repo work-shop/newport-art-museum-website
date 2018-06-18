@@ -3,7 +3,7 @@ Contributors: ithemes, chrisjean, gerroald, mattdanner, timothyblynjacobs
 Tags: security, security plugin, malware, hack, secure, block, SSL, admin, htaccess, lockdown, login, protect, protection, anti virus, attack, injection, login security, maintenance, permissions, prevention, authentication, administration, password, brute force, ban, permissions, bots, user agents, xml rpc, security log
 Requires at least: 4.7
 Tested up to: 4.9.6
-Stable tag: 7.0.1
+Stable tag: 7.0.2
 Requires PHP: 5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -188,6 +188,24 @@ Free support may be available with the help of the community in the <a href="htt
 5. Free malware scan powered by Sucuri SiteCheck.
 
 == Changelog ==
+
+= 7.0.2 =
+* Enhancement: Add UI to cancel in progress File Scan.
+* Enhancement: Add basic admin debug page to help diagnosing and resolving issues. Particularly with the events.
+* Enhancement: Add debug settings JSON editor.
+* Enhancement: Continually evaluate password strength for users instead of only during registration.
+* Enhancement: Introduce Password Requirements module for managing and enforcing password requirements.
+* Bug Fix: Accessing password requirement settings would not resolve properly in some instances.
+* Bug Fix: Away Mode would not lock out users who were already logged-in during the "away" period.
+* Bug Fix: Enforce the Strong Passwords requirement during Security Check.
+* Bug Fix: Ensure scheduling lock is cleared by the Cron Scheduler when not proceeding with running events.
+* Bug Fix: If a password requirement has been disabled or is no longer available, don't consider the password as needing a change.
+* Bug Fix: Only hide "Acknowledge Weak Password" checkbox if the user was not allowed to use a weak password.
+* Bug Fix: Password strength would not be evaluated if password was set using custom PHP or CLI commands.
+* Bug Fix: Prevent File Change from getting stuck in an infinite rescheduling loop on the first step.
+* Bug Fix: Remove distributed storage table on uninstall.
+* Tweak: Don't write to the tracked files setting if the file hash has not changed.
+* Tweak: If no last password change date is recorded for the user, treat their registration date as the last change date.
 
 = 7.0.1 =
 * Bug Fix: Fixed an "Uncaught Error: Call to undefined function esc_like()" error that could occur when exporting or erasing personal data.
@@ -454,5 +472,5 @@ Free support may be available with the help of the community in the <a href="htt
 
 == Upgrade Notice ==
 
-= 7.0.1 =
-Version 7.0.0 contains important additions to support privacy controls, bug fixes, and various enhancements. It is recommended for all users.
+= 7.0.2 =
+Version 7.0.2 contains important bug fixes and various enhancements. It is recommended for all users.

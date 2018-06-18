@@ -765,3 +765,20 @@
 7.0.1 - 2018-05-25 - Chris Jean & Timothy Jacobs
 	Bug Fix: Fixed an "Uncaught Error: Call to undefined function esc_like()" error that could occur when exporting or erasing personal data.
 	Bug Fix: Skip recovery if File Change storage is empty.
+7.0.2 - 2018-06-14 - Chris Jean & Timothy Jacobs
+	Enhancement: Add UI to cancel in progress File Scan.
+	Enhancement: Add basic admin debug page to help diagnosing and resolving issues. Particularly with the events.
+	Enhancement: Add debug settings JSON editor.
+	Enhancement: Continually evaluate password strength for users instead of only during registration.
+	Enhancement: Introduce Password Requirements module for managing and enforcing password requirements.
+	Bug Fix: Accessing password requirement settings would not resolve properly in some instances.
+	Bug Fix: Away Mode would not lock out users who were already logged-in during the "away" period.
+	Bug Fix: Enforce the Strong Passwords requirement during Security Check.
+	Bug Fix: Ensure scheduling lock is cleared by the Cron Scheduler when not proceeding with running events.
+	Bug Fix: If a password requirement has been disabled or is no longer available, don't consider the password as needing a change.
+	Bug Fix: Only hide "Acknowledge Weak Password" checkbox if the user was not allowed to use a weak password.
+	Bug Fix: Password strength would not be evaluated if password was set using custom PHP or CLI commands.
+	Bug Fix: Prevent File Change from getting stuck in an infinite rescheduling loop on the first step.
+	Bug Fix: Remove distributed storage table on uninstall.
+	Tweak: Don't write to the tracked files setting if the file hash has not changed.
+	Tweak: If no last password change date is recorded for the user, treat their registration date as the last change date.

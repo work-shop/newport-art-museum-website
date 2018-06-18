@@ -1068,8 +1068,10 @@ final class ITSEC_Lib {
 	 * Enqueue the itsec_util script.
 	 *
 	 * Will only be included once per page.
+	 *
+	 * @param array $args
 	 */
-	public static function enqueue_util() {
+	public static function enqueue_util( $args = array() ) {
 
 		static $enqueued = false;
 
@@ -1097,8 +1099,8 @@ final class ITSEC_Lib {
 
 		wp_enqueue_script( 'itsec-util', plugins_url( 'admin-pages/js/util.js', __FILE__ ), array( 'jquery' ), ITSEC_Core::get_plugin_build(), true );
 		wp_localize_script( 'itsec-util', 'itsec_util', array(
-			'ajax_action'  => 'itsec_settings_page',
-			'ajax_nonce'   => wp_create_nonce( 'itsec-settings-nonce' ),
+			'ajax_action'  => isset( $args['action'] ) ? $args['action'] : 'itsec_settings_page',
+			'ajax_nonce'   => wp_create_nonce( isset( $args['nonce'] ) ? $args['nonce'] : 'itsec-settings-nonce' ),
 			'translations' => $translations,
 		) );
 
@@ -1150,6 +1152,34 @@ final class ITSEC_Lib {
 		foreach ( $iterator as $key => $value ) {
 			$array[ $key ] = $value;
 		}
+
+		return $array;
+	}
+
+	/**
+	 * Insert an element after a given key.
+	 *
+	 * @param string|int $key
+	 * @param array      $array
+	 * @param string|int $new_key
+	 * @param mixed      $new_value
+	 *
+	 * @return array
+	 */
+	public static function array_insert_after( $key, $array, $new_key, $new_value ) {
+		if ( array_key_exists( $key, $array ) ) {
+			$new = array();
+			foreach ( $array as $k => $value ) {
+				$new[ $k ] = $value;
+				if ( $k === $key ) {
+					$new[ $new_key ] = $new_value;
+				}
+			}
+
+			return $new;
+		}
+
+		$array[ $new_key ] = $new_value;
 
 		return $array;
 	}

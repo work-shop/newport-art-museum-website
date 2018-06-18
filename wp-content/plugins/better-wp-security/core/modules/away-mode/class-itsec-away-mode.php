@@ -5,7 +5,7 @@ final class ITSEC_Away_Mode {
 	public function run() {
 
 		//Execute away mode functions on admin init
-		add_action( 'itsec_admin_init', array( $this, 'run_active_check' ) );
+		add_action( 'admin_init', array( $this, 'run_active_check' ) );
 		add_action( 'login_init', array( $this, 'run_active_check' ) );
 
 		add_filter( 'itsec_managed_files', array( $this, 'register_managed_file' ) );
@@ -78,6 +78,11 @@ final class ITSEC_Away_Mode {
 	 * @return void
 	 */
 	public function run_active_check() {
+
+		if ( wp_doing_ajax() ) {
+			return;
+		}
+
 		$away_mode_details = self::is_active( true );
 
 		if ( $away_mode_details['active'] ) {

@@ -77,7 +77,7 @@ class ITSEC_File_Change {
 		$hashes = ITSEC_Modules::get_setting( 'file-change', 'expected_hashes', array() );
 		$hash   = @md5_file( $file );
 
-		if ( $hash ) {
+		if ( $hash && ( ! isset( $hashes[ $file ] ) || $hashes[ $file ] !== $hash ) ) {
 			$hashes[ $file ] = $hash;
 			ITSEC_Modules::set_setting( 'file-change', 'expected_hashes', $hashes );
 		}

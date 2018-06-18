@@ -24,7 +24,7 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 		 *
 		 * @access private
 		 */
-		private $plugin_build = 4095;
+		private $plugin_build = 4097;
 
 		/**
 		 * Used to distinguish between a user modifying settings and the API modifying settings (such as from Sync
@@ -161,13 +161,6 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			//Admin bar links
 			if ( ! ITSEC_Modules::get_setting( 'global', 'hide_admin_bar' ) ) {
 				add_action( 'admin_bar_menu', array( $this, 'modify_admin_bar' ), 99 );
-			}
-
-			$disabled = defined( 'ITSEC_DISABLE_PASSWORD_REQUIREMENTS') && ITSEC_DISABLE_PASSWORD_REQUIREMENTS;
-
-			if ( ! $disabled && has_action( 'itsec_validate_password' ) ) {
-				$pass_requirements = new ITSEC_Lib_Password_Requirements();
-				$pass_requirements->run();
 			}
 
 			$login_interstitial = new ITSEC_Lib_Login_Interstitial();
@@ -328,8 +321,13 @@ if ( ! class_exists( 'ITSEC_Core' ) ) {
 			}
 
 			ITSEC_Modules::register_module( 'network-brute-force', "$path/modules/ipcheck", 'default-active' );
+
+			if ( ! defined( 'ITSEC_DISABLE_PASSWORD_REQUIREMENTS') || ! ITSEC_DISABLE_PASSWORD_REQUIREMENTS ) {
+				ITSEC_Modules::register_module( 'password-requirements', "$path/modules/password-requirements/", 'always-active' );
+			}
+
 			ITSEC_Modules::register_module( 'ssl', "$path/modules/ssl" );
-			ITSEC_Modules::register_module( 'strong-passwords', "$path/modules/strong-passwords", 'default-active' );
+			ITSEC_Modules::register_module( 'strong-passwords', "$path/modules/strong-passwords", 'always-active' );
 			ITSEC_Modules::register_module( 'system-tweaks', "$path/modules/system-tweaks" );
 			ITSEC_Modules::register_module( 'wordpress-salts', "$path/modules/salts", 'always-active' );
 			ITSEC_Modules::register_module( 'wordpress-tweaks', "$path/modules/wordpress-tweaks", 'default-active' );
