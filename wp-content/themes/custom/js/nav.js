@@ -18,6 +18,10 @@ function nav( config ) {
 
 	$(document).ready( function() {
 
+		var end = new Date();
+		end.setHours(23,59,59,999);
+		console.log(end);
+
 		navHighlight();
 
 		calculatePositions();
@@ -40,9 +44,9 @@ function nav( config ) {
 			e.preventDefault();
 			$('#sitewide-alert').addClass('hidden');
 			$('body').removeClass('sitewide-alert-on');
-			var cookie = 'nam_show_sitewide_alert';
+			var cookie = 'nam_show_sitewide_alert_2';
 			var d = new Date();
-			d.setTime(d.getTime() + (1 * 24 * 60 * 60 * 1000));
+			d.setHours(23,59,59,999);
 			var expires = 'expires='+d.toUTCString();
 			document.cookie = cookie + '=' + 'false' + ';' + expires + ';path=/';
 		});

@@ -1,7 +1,7 @@
 <div class="contact-sidebar shadowed">
 	<div class="contact-sidebar-content sidebar-box">
 		<h4 class="bold">
-			Want to get in touch?
+			Get in touch
 		</h4>
 		<h4>
 			(401) 848-8200<br>

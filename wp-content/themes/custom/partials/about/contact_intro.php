@@ -2,7 +2,7 @@
 	<div class="row row-full">
 		<div class="col-md-6 bg-brand contact-intro-address">
 			<?php get_template_part('partials/visit/address'); ?>
-				<a href="https://goo.gl/maps/Cg9iTD1eg3q" class="button button-yellow-bordered contact-directions-link">
+				<a href="https://goo.gl/maps/Cg9iTD1eg3q" class="button button-white-bordered contact-directions-link">
 					Get Directions
 				</a>
 		</div>

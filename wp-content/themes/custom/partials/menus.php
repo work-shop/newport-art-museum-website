@@ -53,7 +53,7 @@
 					$items = get_field('exhibitions_menu_featured_exhibitions','option'); 
 					if ($items) : ?>
 						<?php $count = 0; ?>
-						<?php foreach( $posts as $post): // variable must be called $post (IMPORTANT) ?>
+						<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
 							<?php setup_postdata($post); ?>
 							<div class="col-md-4 <?php // if( $count === 1 ): echo ' offset-md-2'; endif ?>">
 								<?php 

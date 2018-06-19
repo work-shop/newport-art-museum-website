@@ -32,8 +32,8 @@
 			</div>
 			<div class="col-12">
 				<div class="slick slick-sponsors">
-					<?php if( have_rows('supporters','60') ): ?>
-						<?php  while ( have_rows('supporters','60') ) : the_row(); ?>
+					<?php if( have_rows('affiliates','60') ): ?>
+						<?php  while ( have_rows('affiliates','60') ) : the_row(); ?>
 							<div class="slick-sponsor-slide">
 								<?php 
 								$image = get_sub_field('sponsor_logo'); 

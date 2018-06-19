@@ -164,7 +164,7 @@ $text-button: (
 	display: inline-block;
 	text-align: center;
 	border: none;
-	@include transition(background .125s);
+	transition: all .125s;
 	@include text-size($text-button);	
 
 	&.button-small{
@@ -204,8 +204,19 @@ $text-button: (
 		}
 	}
 
+	&.button-white-bordered{
+		background: none;
+		border: 1px solid white;
+		color: white;
+
+		&:hover{
+			background: white;
+			color: $brand;
+		}
+	}
+
 	&:hover{
-		background: lighten($brand,15%);
+		background: lighten($brand,0%);
 		cursor: pointer;
 		color: white;
 	}
@@ -213,7 +224,6 @@ $text-button: (
 	&:focus{
 		outline: none;
 		box-shadow: none;
-		border: none;
 	}
 
 	@media screen and (max-width: $sm) {

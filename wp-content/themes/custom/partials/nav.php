@@ -9,7 +9,7 @@
 	<div id="nav-menus">
 		<div id="nav-menu-upper">
 			<ul>
-				<li id="nav-link-shop"><a href="/shop">Shop</a></li>
+				<li id="nav-link-shop" class="hidden"><a href="/shop">Shop</a></li>
 				<li id="nav-link-login"><a href="/login">Login</a></li>
 				<li id="nav-link-cart">
 					<a class="cart-customlocation" title="View Your Shopping Cart" href="<?php echo wc_get_cart_url(); ?>">

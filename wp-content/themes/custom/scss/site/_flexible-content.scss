@@ -216,16 +216,18 @@ $fc-padding: 12vh 0;
 //multi-column
 .fc-background-multi-column-container{
 	display: grid;
+
+
 	
 	&.image-left{
 		&.image-33{
-			grid-template-columns: 33% 67%;
+			grid-template-columns: 40% 60%;
 		}
 		&.image-50{
 			grid-template-columns: 50% 50%;
 		}
 		&.image-66{
-			grid-template-columns: 67% 33%;
+			grid-template-columns: 60% 40%;
 		}		
 
 		@media screen and (max-width: $sm) {
@@ -240,13 +242,13 @@ $fc-padding: 12vh 0;
 
 	&.image-right{
 		&.image-33{
-			grid-template-columns: 67% 33%;
+			grid-template-columns: 60% 40%;
 		}
 		&.image-50{
 			grid-template-columns: 50% 50%;
 		}
 		&.image-66{
-			grid-template-columns: 33% 67%;
+			grid-template-columns: 40% 60%;
 		}		
 
 		@media screen and (max-width: $sm) {
@@ -257,6 +259,14 @@ $fc-padding: 12vh 0;
 			}
 		}
 
+	}
+
+	@media screen and (max-width: $md) {
+		&.image-left,&.image-right{
+			&.image-33,&.image-50,&.image-66{
+				grid-template-columns: 50% 50%;
+			}
+		}
 	}
 
 	.fc-background-heading,.fc-background-subheading,.fc-background-link{
@@ -285,9 +295,6 @@ $fc-padding: 12vh 0;
 		&:last-child{
 			margin-bottom: 10px;
 
-			p{
-				margin-bottom: 0;
-			}
 			.fc-repeating-paragraphs-separator{
 				display: none;
 			}

@@ -422,9 +422,12 @@ body.dropdown-on{
 	@extend .bold;
 	display: block;
 	text-align: center;
-	line-height: $sitewide-alert-height + 3px;
-	vertical-align: middle;
 	text-shadow: 0px 1px 1px #aaa;
+	padding-top: 19px;
+
+	@media screen and (max-width: $sm) {
+		line-height: 1.2;
+	}
 }
 
 .sitewide-alert-on{
@@ -432,10 +435,16 @@ body.dropdown-on{
 		top: $sitewide-alert-height;
 	}
 
+	.hamburger{
+		top: 70px;
+	}
+
 	&.home{
 		#nav{
 			.logo{
-				top: $sitewide-alert-height + 25px;
+				@media screen and (min-width: $sm+1) {
+					top: $sitewide-alert-height + 25px;
+				}
 			}
 
 			&.after{

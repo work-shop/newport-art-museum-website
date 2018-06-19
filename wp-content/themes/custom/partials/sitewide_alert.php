@@ -8,7 +8,7 @@ $sitewide_alert_link = get_field('sitewide_alert_link', 'option');
 	<div id="sitewide-alert" class="bg-yellow">
 		<div class="container-fluid container-fluid-stretch">
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-11 col-sm-12">
 					<?php if( $sitewide_alert_link ): ?>
 						<a href="<?php echo $sitewide_alert_link; ?>">
 						<?php endif; ?>

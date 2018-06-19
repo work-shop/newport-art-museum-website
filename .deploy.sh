@@ -15,6 +15,9 @@ source ./.env
 # Theme Uploads is on the following line
 scp -P $KINSTA_PORT -r ./wp-content/themes/custom $KINSTA_USER@$KINSTA_IP:./public/wp-content/themes
 
+# WP ALL IMPORT image files is on the following line
+# scp -P $KINSTA_PORT -r ./wp-content/uploads/wpallimport/files $KINSTA_USER@$KINSTA_IP:./public/wp-content/uploads/wpallimport/
+
 # Plugin Uploads are on the following two lines
 #scp -P $KINSTA_PORT -r ./wp-content/plugins $KINSTA_USER@$KINSTA_IP:./public/wp-content/
 #scp -P $KINSTA_PORT -r ./wp-content/mu-plugins $KINSTA_USER@$KINSTA_IP:./public/wp-content/

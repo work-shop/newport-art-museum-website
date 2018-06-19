@@ -26,3 +26,13 @@
 .acf-label.acf-accordion-title{
 	background: lighten(#98A2B1, 15%);
 }
+
+//remove taxonomies from post list views, which makes each item too tall
+
+td.column-taxonomy-events-categories,td.column-taxonomy-classes-categories{
+	display: none;
+}
+
+th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxonomy-classes-categories{
+	display: none;
+}

@@ -19,7 +19,7 @@ class NAM_Exhibition extends NAM_Custom_Post_Type {
                                         'revisions'
                                     ),
         'rewrite'                   => array(
-                                        'slug' => 'exhibition',
+                                        'slug' => 'exhibitions',
                                         'with_front' => false,
                                         'feeds' => true,
                                         'pages' => true
