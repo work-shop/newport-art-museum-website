@@ -227,6 +227,7 @@ body.dropdown-on{
 
 .menu-dropdown-graphic-background{
 	@extend .background;
+	background-size: cover;
 }
 
 .menu-dropdown-graphic-heading,.menu-dropdown-graphic-link{

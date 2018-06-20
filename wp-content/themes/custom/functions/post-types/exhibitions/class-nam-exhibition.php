@@ -11,7 +11,7 @@ class NAM_Exhibition extends NAM_Custom_Post_Type {
     public static $post_options = array(
         'menu_icon'                 => 'dashicons-images-alt',
         'hierarchical'              => false,
-        'has_archive'               => true,
+        'has_archive'               => false,
         'menu_position'             => 3,
         'supports'                  => array(
                                         'title',
