@@ -17,6 +17,7 @@ class NAM_Site {
 
         add_filter('show_admin_bar', '__return_false');
         add_filter( 'woocommerce_add_to_cart_fragments', array( $this,'woocommerce_header_add_to_cart_fragment' ) );
+        add_filter('max_srcset_image_width', create_function('', 'return 1;'));
 
 
         new WS_CDN_Url();
