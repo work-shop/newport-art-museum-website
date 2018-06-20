@@ -1,9 +1,6 @@
-<?php 
 
-get_template_part('templates/partials/header'); 
+<?php get_template_part('partials/header'); ?>
 
+<?php get_template_part('partials/404' ); ?>
 
-
-get_template_part('templates/partials', 'footer' ); 
-
-?>
+<?php get_template_part('partials/footer' ); ?>
