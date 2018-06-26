@@ -23,8 +23,8 @@ $list_items = $fc_row['list_items'];
 				<div class="col-xl-8 col-lg-9 col-md-10 fc-col-primary">
 					<div data-accordion-group>
 						<?php foreach ($list_items as $list_item): ?> 
-							<div class="accordion fc-collapsible-list-accordian mult-collapse" data-accordion>
-								<div class="fc-collapsible-list-accordian-label" data-control>
+							<div class="accordion fc-collapsible-list-accordion multi-collapse" data-accordion>
+								<div class="fc-collapsible-list-accordion-label" data-control>
 									<?php if( $list_item['list_item_label'] ): ?>
 										<h4 class="">
 											<?php echo $list_item['list_item_label']; ?>
@@ -32,8 +32,8 @@ $list_items = $fc_row['list_items'];
 										<span class="icon" data-icon="”"></span>
 									<?php endif; ?>
 								</div>
-								<div class="fc-collapsible-list-accordian-body" data-content>
-									<div class="accordian-content-inner">
+								<div class="fc-collapsible-list-accordion-body" data-content>
+									<div class="accordion-content-inner">
 										<?php if( $list_item['list_item_body'] ): ?>
 											<div class="wysiwyg">
 												<?php echo $list_item['list_item_body']; ?>

@@ -1,0 +1,40 @@
+
+
+#join-membership-levels{
+
+	.accordion-content-inner{
+		ul{
+			padding-left: 20px;
+		}
+	}
+}
+
+.membership-link-button{
+	display: block;
+	text-align: center;
+	margin-top: 2.5em;
+	margin-bottom: 1.5em;
+
+	a{
+		background: $brand;
+		color: white;
+		padding: 12px 15px;
+		transition: all .125s;
+		border: 1px solid $brand;
+		border-radius: 2px;
+		text-transform: uppercase;
+		@extend .bold;
+		@extend .tracked-less;
+		font-size: 16px;
+
+		@media screen and (max-width: $sm) {
+			font-size: 12px;
+			padding: 7px 10px;
+		}
+
+		&:hover{
+			background: white;
+			color: $brand;
+		}
+	}
+}

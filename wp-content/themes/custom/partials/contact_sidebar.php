@@ -1,4 +1,4 @@
-<div class="contact-sidebar shadowed">
+<div class="contact-sidebar sidebar shadowed">
 	<div class="contact-sidebar-content sidebar-box">
 		<h4 class="bold">
 			Get in touch

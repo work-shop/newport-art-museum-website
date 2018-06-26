@@ -18,7 +18,7 @@ class NAM_Membership_Tier extends NAM_Custom_Post_Type {
                                         'revisions'
                                     ),
         'rewrite'                   => array(
-                                        'slug' => false,
+                                        'slug' => 'membership-tier',
                                         'with_front' => false,
                                         'feeds' => true,
                                         'pages' => true
