@@ -44,7 +44,7 @@ class NAM_Helpers{
 
 	public static function card( $card_layout, $card_size, $card_type, $card_link, $card_image, $card_title, $card_info ){ ?>
 
-		<div class="card card-type-<?php echo $card_type; ?> card-size-<?php echo $card_size; ?> card-layout-<?php echo $card_layout; ?>">
+		<div class="card card-type-<?php echo $card_type; ?> card-size-<?php echo $card_size; ?> card-layout-<?php echo $card_layout; ?> <?php NAM_Helpers::card_terms(); ?>">
 			<a href="<?php if( $card_link ): echo $card_link; else: the_permalink(); endif; ?>">
 				<div class="card-image">
 					<?php if( $card_image ): ?>
@@ -118,5 +118,18 @@ class NAM_Helpers{
 			</a>
 		</div>
 	<?php }  
+
+
+	public static function card_terms(){
+		$terms = get_the_terms( $post, 'events-categories' );
+		if( $terms ):
+		foreach ($terms as $term) :
+			echo 'filter-';
+			echo $term->slug;
+			echo ' ';
+		endforeach;
+		endif;
+	}
+
 
 } ?>

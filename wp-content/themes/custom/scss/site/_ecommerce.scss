@@ -127,7 +127,7 @@ input{
 	border-color: $message;
 }
 
-.woocommerce-error{
+.woocommerce-error,.bg-error{
 	background: transparentize($error,.9);
 	border-color: $error;
 }

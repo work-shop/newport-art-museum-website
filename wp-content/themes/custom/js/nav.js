@@ -20,7 +20,7 @@ function nav( config ) {
 
 		var end = new Date();
 		end.setHours(23,59,59,999);
-		console.log(end);
+		//console.log(end);
 
 		navHighlight();
 

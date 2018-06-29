@@ -1,0 +1,87 @@
+
+#events{
+
+
+}
+
+.filters{
+	padding-bottom: 0;
+}
+
+
+.filter-target{
+	display: none;
+}
+
+.filter-show{
+	display: block !important;
+}
+
+
+.filter-title{
+	@extend .bold;
+	margin-bottom: .5em;
+}
+
+.filter-button{
+	color: $medium;
+	border: 1px solid $medium;
+	border-radius: 4px;
+	font-size: 16px;
+	padding: 5px 7px 3px 7px;
+	@extend .tracked-less;
+	@extend .bold;
+	margin-right: .25em;
+	margin-bottom: .5em;
+
+	@media screen and (max-width: $md) {
+		font-size: 14px;
+	}
+
+	@media screen and (max-width: $sm) {
+		font-size: 12px;
+	}
+
+	&.filter-active{
+		background: $brand;
+		color: white;
+		border: 1px solid $brand;
+		&:hover{
+			background: #ddd;
+			color: $medium;
+			border: 1px solid $medium;
+		}
+	}
+
+	&:hover{
+		cursor: pointer;
+		background: lighten($brand,30%);
+		color: white;
+		border: 1px solid $medium;
+	}
+
+	&:focus{
+		outline: none;
+		border: 1px solid $medium;
+	}
+}
+
+input[type="text"]{
+	border: 1px solid $medium;
+	border-radius: 4px;
+	color: $medium;
+	padding: 5px 7px 2px 7px;
+}
+
+#filter-messages{
+	display: none;
+	margin-bottom: 6em;
+}
+
+.filter-message{
+	padding: 25px 15px 15px 15px;
+
+	.filter-messages-text{
+		text-align: center;
+	}	
+}

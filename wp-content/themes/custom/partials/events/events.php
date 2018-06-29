@@ -1,10 +1,10 @@
 <?php $posts = NAM_Event::get_posts(); ?>
 
-<section class="block padded" id="events">
+<section class="block pb6" id="events">
 	<div class="container-fluid container-fluid-stretch">
 		<div class="row">
 			<?php foreach ( $posts as $post ) : ?>
-				<div class="col-md-4">
+				<div class="col-md-4 col-xl-3 filter-target filter-event <?php NAM_Helpers::card_terms(); ?>" data-date="<?php $event_date = get_field('event_date'); $event_date = strtotime($event_date); $event_date = date('m/d/Y', $event_date); echo $event_date; ?>">
 					<?php
 					setup_postdata( $post );
 					$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'

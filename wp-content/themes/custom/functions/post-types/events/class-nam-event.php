@@ -14,16 +14,16 @@ class NAM_Event extends NAM_Custom_Post_Type {
         'has_archive'               => false,
         'menu_position'             => 3,
         'supports'                  => array(
-                                        'title',
-                                        'thumbnail',
-                                        'revisions'
-                                    ),
+            'title',
+            'thumbnail',
+            'revisions'
+        ),
         'rewrite'                   => array(
-                                        'slug' => 'events',
-                                        'with_front' => false,
-                                        'feeds' => true,
-                                        'pages' => true
-                                    ),
+            'slug' => 'events',
+            'with_front' => false,
+            'feeds' => true,
+            'pages' => true
+        ),
         'taxonomies'                => array(  )
 
     );
@@ -33,9 +33,21 @@ class NAM_Event extends NAM_Custom_Post_Type {
     );
 
     public static function get_posts() {
+        $today = time();
         return get_posts(array(
-            'posts_per_page' => -1,
-            'post_type' => 'events'
+            'posts_per_page'    => -1,
+            'post_type'         => 'events',
+            'meta_key'          => 'event_date',
+            'orderby'           => 'meta_value',
+            'order'             => 'ASC',
+            'meta_query' => array(
+                array(
+                    'key' => 'event_date',
+                    'value' => date('Ymd', strtotime('now')),
+                    'type' => 'numeric',
+                    'compare' => '>=',
+                )
+            )
         ));
     }
 

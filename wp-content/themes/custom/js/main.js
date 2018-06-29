@@ -4,6 +4,8 @@ global.$ = require('jquery');
 global.jQuery = global.$;
 window.$ = global.$;
 
+var pikaday = require('pikaday');
+
 import { config } from './config.js';
 import { loading } from './loading.js';
 import { viewportLabel } from './viewport-label.js';
@@ -18,6 +20,7 @@ import { slickSlideshows } from './slick-slideshows.js';
 import { jqueryAccordian } from './jquery-accordian.js';
 import { accordian } from './accordian.js';
 import { menuOverflow } from './menu-overflow.js';
+import { filter } from './filter.js';
 import { collection } from './collection.js';
 import { ecommerceHelpers } from './ecommerce-helpers.js';
 import { livereload } from './livereload-client.js';
@@ -40,5 +43,6 @@ jqueryAccordian();
 accordian();
 ecommerceHelpers();
 menuOverflow();
+filter();
 
 //console.log('main.js loaded, with gulp!');
