@@ -1,5 +1,5 @@
 
-<section class="block padded" id="support-donation-tiers">
+<section class="block padded bg-light" id="support-content">
 	<div class="container-fluid container-fluid-stretch">
 		<?php wc_print_notices(); ?>
 		<div class="row">

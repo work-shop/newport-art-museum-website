@@ -1,4 +1,25 @@
 
+.support-letter{
+	
+	*{
+		font-family: $font-serif !important;
+	}
+
+	p{
+		font-size: 27px;
+
+		@media screen and (max-width: $lg) {
+			font-size: 23px;
+		}
+		@media screen and (max-width: $md) {
+			font-size: 19px;
+		}
+		@media screen and (max-width: $sm) {
+			font-size: 17px;
+		}
+	}
+}
+
 .support-sidebar-donation-tiers{
 	margin-top: 2em;
 	margin-bottom: 1em;
@@ -7,7 +28,7 @@
 
 .button-donation-tier{
 	display: inline-block;
-	color: $medium;
+	color: $brand;
 	border: 1px solid $medium;
 	border-radius: 4px;
 	font-size: 16px;
@@ -31,12 +52,15 @@
 		font-size: 12px;
 	}
 
-	&:hover{
-		cursor: pointer;
-		background: lighten($brand,30%);
-		color: white;
-		border: 1px solid $medium;
+	@media screen and (min-width: $sm+1) {
+		&:hover{
+			cursor: pointer;
+			background: lighten($brand,30%);
+			color: white;
+			border: 1px solid $medium;
+		}
 	}
+
 
 	&:focus{
 		outline: none;
