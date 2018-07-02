@@ -1,5 +1,5 @@
 
-$padding-sidebar-box: 40px;
+$padding-sidebar-box: 30px;
 
 .sidebar-box{
 	padding: $padding-sidebar-box;
@@ -15,6 +15,14 @@ $padding-sidebar-box: 40px;
 	@media screen and (max-width: $sm) {
 		padding: $padding-sidebar-box * .25;
 	}
+}
+
+.sidebar-heading{
+	//margin-bottom: 1em;
+}
+
+.sidebar-text{
+	@extend .h5;
 }
 
 .mailchimp-form{

@@ -1,6 +1,7 @@
 
 <section class="block join-membership-levels padded" id="join-membership-levels">
 	<div class="container-fluid container-fluid-stretch">
+		<?php wc_print_notices(); ?>
 		<div class="row">
 			<div class="col-md-8 col-lg-7 join-content">
 				<?php
@@ -40,11 +41,11 @@
 											<?php the_field('membership_level_description'); ?>
 										</div>
 										<div class="accordion-link membership-link-button">
-												<a href="<?php echo $add_to_cart_url; ?>" class="">
-													Join Now
-												</a>
-											</div>
+											<a href="<?php echo $add_to_cart_url; ?>" class="">
+												Join Now
+											</a>
 										</div>
+									</div>
 								</div>
 							</div>
 						<?php endwhile; ?>
@@ -53,7 +54,7 @@
 				<?php endif; ?>
 			</div>
 			<div class="col-md-4 offset-lg-1 join-sidebar">
-				<?php get_template_part('partials/join/join_sidebar' ); ?>
+				<?php get_template_part('partials/sidebar' ); ?>
 			</div>
 		</div>
 	</div>

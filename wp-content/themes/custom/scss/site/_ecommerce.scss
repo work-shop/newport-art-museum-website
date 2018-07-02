@@ -100,7 +100,7 @@ input{
 .notice{
 	background: transparentize($message,.9);
 	border-bottom: 3px solid $brand;
-	padding: .9em 15px 0.5em 15px;
+	padding: 1em 15px 0.5em 15px;
 	@extend .shadowed;
 	margin-bottom: 25px;
 
@@ -110,6 +110,14 @@ input{
 
 	h4{
 		@extend .bold;
+
+		.button{
+			margin-right: 20px;
+			border: 1px solid $brand;
+			color: $brand;
+			background: none;
+			padding: 8px 8px 5px 8px;
+		}
 	}
 
 	.notice-close-link{
@@ -119,6 +127,14 @@ input{
 		.icon:before{
 			color: $dark;
 		}
+	}
+}
+
+.page-id-66,.page-id-70{
+	.notice{
+		margin-bottom: 4em;
+		margin-left: 0;
+		margin-right: 0;
 	}
 }
 

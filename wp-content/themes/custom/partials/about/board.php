@@ -38,7 +38,7 @@
 				</div>
 			</div>
 			<div class="col-md-4 offset-lg-1 staff-sidebar">
-				<?php get_template_part('partials/contact_sidebar' ); ?>
+				<?php get_template_part('partials/sidebar' ); ?>
 			</div>
 		</div>
 	</div>

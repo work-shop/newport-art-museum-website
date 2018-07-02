@@ -1,10 +1,10 @@
 <div class="support-sidebar sidebar shadowed">
 	<div class="contact-sidebar-content sidebar-box">
-		<h4 class="bold">
-			Questions about giving?
+		<h4 class="bold sidebar-heading">
+			<?php the_field('page_sidebar_heading'); ?>
 		</h4>
-		<h4>
-			Email Joanne Rodino at jrodino@newportartmuseum.org or call 401.848.8200 and we will be happy to help you.
+		<h4 class="sidebar-text">
+			<?php the_field('page_sidebar_text'); ?>
 		</h4>
 		<div class="support-sidebar-donation-tiers">
 			<?php
@@ -38,8 +38,8 @@
 			<?php endif; ?>
 		</div>
 	</div>
-
-	<a class="button button-full" href="/contact">
-		Contact Us
-	</a>
+	<?php $link = get_field('page_sidebar_link');
+	if( $link ): ?>
+		<a class="button button-full" href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>"><?php echo $link['title']; ?></a>
+	<?php endif; ?>
 </div>
