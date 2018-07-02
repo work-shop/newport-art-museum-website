@@ -64,9 +64,13 @@ class NAM_Helpers{
 							<?php the_field('news_story_date'); ?>
 						</h5>
 					<?php endif; ?>
-					<h3 class="serif card-text-title">
-						<?php if( $card_title ): echo $card_title; else: the_title(); endif; ?>
-					</h3>
+					<div class="card-text-title-ellipsis">
+						<div>
+							<h3 class="serif card-text-title">
+								<?php if( $card_title ): echo $card_title; else: the_title(); endif; ?>
+							</h3>
+						</div>
+					</div>
 					<div class="nam-dash"></div>
 					<div class="card-text-info">
 						<?php if( $card_type === 'exhibition' ): ?>

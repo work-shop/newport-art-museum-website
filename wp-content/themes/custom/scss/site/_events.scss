@@ -46,18 +46,22 @@
 		background: $brand;
 		color: white;
 		border: 1px solid $brand;
-		&:hover{
-			background: #ddd;
-			color: $medium;
-			border: 1px solid $medium;
+		@media screen and (min-width: $sm+1) {
+			&:hover{
+				background: #ddd;
+				color: $medium;
+				border: 1px solid $medium;
+			}
 		}
 	}
 
-	&:hover{
-		cursor: pointer;
-		background: lighten($brand,30%);
-		color: white;
-		border: 1px solid $medium;
+	@media screen and (min-width: $sm+1) {
+		&:hover{
+			cursor: pointer;
+			background: lighten($brand,30%);
+			color: white;
+			border: 1px solid $medium;
+		}
 	}
 
 	&:focus{

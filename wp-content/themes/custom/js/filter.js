@@ -13,7 +13,19 @@ function filter() {
 	var dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric'};
 
 	$(document).ready( function() {
-		filterCategories('all');
+
+		var filterClassStart = 'all';
+		var urlVars = getUrlVars();
+		var urlCategory = urlVars.category;
+		if( !isEmpty(urlCategory) ){
+			var categoryButtonSelector = '.filter-button[data-target=' + urlCategory + ']';
+			var categoryButtonCheck = $(categoryButtonSelector);
+			if( !isEmpty(categoryButtonCheck) ){
+				$(categoryButtonSelector).addClass('filter-active');
+				filterClassStart = 'filter-' + urlVars.category;
+			}
+		}
+		filterCategories(filterClassStart);
 
 		pikaStart = new Pikaday({ 
 			field: $('.filter-date-start')[0],
@@ -38,11 +50,9 @@ function filter() {
 				filterCategories('all');
 				$(this).removeClass('filter-active');
 			} else{
-				categoryFiltered = true;
 				scrollToFilter();
 				var filterClass = $(this).data('target');
 				filterClass = 'filter-'+filterClass;
-				categoryFilteredCurrent = filterClass;
 				filterCategories(filterClass);
 				filterButtonActivate( $(this), 'categories' );
 			}
@@ -74,6 +84,8 @@ function filter() {
 
 	function filterCategories(filterClass) {
 		clearFilterMessages();
+		categoryFiltered = true;
+		categoryFilteredCurrent = filterClass;
 		var elements = $('.filter-target');
 		var newElements = getElementsByCategory( elements, filterClass );
 		updateElements(newElements);
@@ -203,6 +215,19 @@ function filter() {
 
 	function isEmpty(val){
 		return (val === undefined || val == null || val.length <= 0) ? true : false;
+	}
+
+	// Read a page's GET URL variables and return them as an associative array.
+	function getUrlVars(){
+		var vars = [], hash;
+		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+		for(var i = 0; i < hashes.length; i++)
+		{
+			hash = hashes[i].split('=');
+			vars.push(hash[0]);
+			vars[hash[0]] = hash[1];
+		}
+		return vars;
 	}
 
 

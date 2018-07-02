@@ -29,10 +29,10 @@
 
 //remove taxonomies from post list views, which makes each item too tall
 
-td.column-taxonomy-events-categories,td.column-taxonomy-classes-categories{
+td.column-taxonomy-events-categories,td.column-taxonomy-classes-categories,td.column-taxonomy-classes-days{
 	display: none;
 }
 
-th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxonomy-classes-categories{
+th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxonomy-classes-categories,th.manage-column.column-taxonomy-classes-days{
 	display: none;
 }

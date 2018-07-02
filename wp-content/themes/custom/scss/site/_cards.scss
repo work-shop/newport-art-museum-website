@@ -30,9 +30,8 @@
 
 .card-text{
 	background: $slate;
-	padding: 3vh 2vw;
+	padding: 3vh 1.25vw;
 	border-radius: 0px 0px 2px 2px;
-
 
 	@media screen and (max-width: $md) {
 		padding: 2vh 2vw;
@@ -49,9 +48,40 @@
 	line-height: 1.1;
 }
 
-.card-text-info{
+// .card-text-title-ellipsis{
+// 	overflow: hidden;
+// }
 
-}
+// .card-text-title-ellipsis:before {
+// 	content:"";
+// 	float: left;
+// 	width: 5px; height: 200px; 
+// }
+
+// .card-text-title-ellipsis > *:first-child {
+// 	float: right;
+// 	width: 100%;
+// 	margin-left: -5px; 
+// }		
+
+// .card-text-title-ellipsis:after {
+// 	content: "\02026";  
+// 	box-sizing: content-box;
+// 	-webkit-box-sizing: content-box;
+// 	-moz-box-sizing: content-box;
+// 	float: right; position: relative;
+// 	top: -25px; left: 100%; 
+// 	width: 3em; margin-left: -3em;
+// 	padding-right: 5px;	
+// 	text-align: right;
+// 	background-size: 100% 100%;
+// 	background: -webkit-gradient(linear, left top, right top,
+// 		from(rgba(255, 255, 255, 0)), to(white), color-stop(50%, white));
+// 	background: -moz-linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);			
+// 	background: -o-linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+// 	background: -ms-linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+// 	background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+// }
 
 
 
@@ -201,12 +231,11 @@
 .card-type-class{
 
 	.card-text-title{
-		width: 80%;
-		height: 60px;
+		height: 3.3em;
+	}
 
-		@media screen and (max-width: $sm) {
-			height: 50px;
-		}
+	.card-text-title-ellipsis{
+		//height: 3.3em;
 	}
 
 	.card-text-info{
@@ -214,5 +243,20 @@
 			margin-bottom: 0;
 		}
 	}
+}
+
+
+//event
+
+.card-type-event{
+
+	.card-text-title{
+		height: 3.3em;
+	}
+
+	.card-text-title-ellipsis{
+		//height: 2.2em;
+	}
+
 }
 
