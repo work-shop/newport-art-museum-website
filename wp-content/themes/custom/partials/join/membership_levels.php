@@ -9,15 +9,28 @@
 					'posts_per_page' => '-1'
 				) ); ?>
 				<?php if( $the_query->have_posts() ): ?>
+
 					<h2 class="serif mb1">Membership Levels</h2>
 					<div data-accordion-group>
 						<?php while ( $the_query->have_posts() ) : ?>
 							<?php $the_query->the_post(); ?>
-							<?php $membership_for_sale = true; ?>
+							<?php 
+							$id = $post->ID;
+							$product = wc_get_product($id);
+							$current_price = $product->get_price();
+							$sale_price = $product->get_sale_price();
+							$regular_price = $product->get_regular_price();
+							$sale_start_date = $product->get_date_on_sale_from();
+							$sale_end_date = $product->get_date_on_sale_to();
+							$is_on_sale = $product->is_on_sale();
+							// woocommerce plumbing
+							$add_to_cart_url = $product->add_to_cart_url();
+							$add_to_cart_button_text = $product->add_to_cart_url();
+							?>
 							<div class="accordion multi-collapse" data-accordion>
 								<div class="accordion-label" data-control>
 									<h4 class="accordion-title">
-										<?php the_title(); ?>
+										<?php the_title(); ?> <span class="membership-level-price ml2">$<?php echo $current_price; ?></span>
 									</h4>
 									<span class="icon" data-icon="”"></span>
 								</div>
@@ -26,14 +39,12 @@
 										<div class="wysiwyg">
 											<?php the_field('membership_level_description'); ?>
 										</div>
-										<?php if( $membership_for_sale ): ?>
-											<div class="accordion-link membership-link-button">
-												<a href="#" class="">
-													Join or Renew Now
+										<div class="accordion-link membership-link-button">
+												<a href="<?php echo $add_to_cart_url; ?>" class="">
+													Join Now
 												</a>
 											</div>
-										<?php endif; ?>
-									</div>
+										</div>
 								</div>
 							</div>
 						<?php endwhile; ?>

@@ -8,6 +8,7 @@ function filter() {
 	var categoryFiltered = false;
 	var categoryFilteredCurrent = 'all';
 	var dateFiltered = false;
+	var dayFiltered = false;
 	var pikaStart, pikaEnd;
 	var dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric'};
 
@@ -28,8 +29,9 @@ function filter() {
 			}
 		});
 
-		$('.filter-button').click(function(e) {
+		$('.filter-button-category').click(function(e) {
 			e.preventDefault();
+			console.log('filter-button-category');
 			if( $(this).hasClass('filter-active') ){
 				categoryFiltered = false;
 				categoryFilteredCurrent = 'all';
@@ -42,9 +44,26 @@ function filter() {
 				filterClass = 'filter-'+filterClass;
 				categoryFilteredCurrent = filterClass;
 				filterCategories(filterClass);
-				filterButtonActivate( $(this) );
+				filterButtonActivate( $(this), 'categories' );
 			}
 		});	
+
+		$('.filter-button-day').click(function(e) {
+			console.log('filter-button-day');
+			e.preventDefault();
+			if( $(this).hasClass('filter-active') ){
+				dayFiltered = false;
+				filterDays('all');
+				$(this).removeClass('filter-active');
+			} else{
+				dayFiltered = true;
+				scrollToFilter();
+				var day = $(this).data('target');
+				day = 'filter-'+ day;
+				filterDays(day);
+				filterButtonActivate( $(this), 'days' );
+			}
+		});
 
 		$('.filter-date-input').change( function(){
 			filterDates();
@@ -58,35 +77,29 @@ function filter() {
 		var elements = $('.filter-target');
 		var newElements = getElementsByCategory( elements, filterClass );
 		updateElements(newElements);
-		if(dateFiltered){
-			filterDates();
-		}
+		setTimeout(function() {
+			if(dateFiltered){
+				filterDates(); 
+			}
+			if(dayFiltered){
+				filterDays();
+			}
+		}, 10);
 	}
 
 
-	function getElementsByCategory( elements, filterClass ){
-		var newElements = [];
-
-		$.each(elements, function(index, val) {
-			var element = $(val);
-			if( element.hasClass(filterClass) || filterClass === 'all' ){
-				newElements.push(element);
-			}
-		});
-
-		return newElements;
+	function filterDays(day){
+		clearFilterMessages();
+		var elements = $('.filter-target');
+		if( categoryFiltered ){
+			elements = getElementsByCategory( elements, categoryFilteredCurrent );
+		}
+		var newElements = getElementsByCategory( elements, day );
+		updateElements( newElements );
 	}
 
 
 	function filterDates(){
-		// var startDate = $('.filter-date-start').val();
-		// var endDate = $('.filter-date-end').val();
-		// if( isEmpty(endDate) || isEmpty(startDate) ){
-		// 	return null;
-		// } else{
-		// 	dateFiltered = true;
-		// }
-
 		var startDate = pikaStart._d;
 		var endDate = pikaEnd._d;
 		if( isEmpty(endDate) || isEmpty(startDate) ){
@@ -106,6 +119,20 @@ function filter() {
 
 		var newElements = getElementsByDate( elements, startDate, endDate );
 		updateElements( newElements );
+	}
+
+
+	function getElementsByCategory( elements, filterClass ){
+		var newElements = [];
+
+		$.each(elements, function(index, val) {
+			var element = $(val);
+			if( element.hasClass(filterClass) || filterClass === 'all' ){
+				newElements.push(element);
+			}
+		});
+
+		return newElements;
 	}
 
 
@@ -153,8 +180,15 @@ function filter() {
 	}
 
 
-	function filterButtonActivate(button){
-		$('.filter-active').removeClass('filter-active');
+	function filterButtonActivate(button, context){
+
+		if( context === 'days' ){
+			$('.filter-days .filter-active').removeClass('filter-active');
+		} else if ( context === 'categories' ){
+			$('.filter-categories .filter-active').removeClass('filter-active');
+		}
+
+		
 		button.addClass('filter-active');		
 	}
 

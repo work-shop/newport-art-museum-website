@@ -3,7 +3,7 @@
 
 <?php get_template_part('partials/page/page_nav' ); ?>
 
-<?php get_template_part('partials/classes/classes_filters' ); ?>
+<?php get_template_part('partials/filters' ); ?>
 
 <?php get_template_part('partials/classes/classes' ); ?>
 

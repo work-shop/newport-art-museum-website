@@ -53,6 +53,7 @@ class NAM_Site {
         //NAM_News_Category::register();//leaving out news categories for initial round of development
         NAM_Events_Category::register();
         NAM_Classes_Category::register();
+        NAM_Classes_Days::register();
         NAM_Exhibitions_Category::register();
 
         NAM_Shop_Product::register();

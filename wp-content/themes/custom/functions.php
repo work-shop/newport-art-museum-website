@@ -12,6 +12,7 @@ require_once( __ROOT__ . '/functions/post-types/class-post-types-archive-mapping
 
 require_once( __ROOT__ . '/functions/taxonomies/groups/class-nam-group.php');
 require_once( __ROOT__ . '/functions/taxonomies/classes-categories/class-nam-classes-category.php');
+require_once( __ROOT__ . '/functions/taxonomies/classes-categories/class-nam-classes-days.php');
 require_once( __ROOT__ . '/functions/taxonomies/events-categories/class-nam-events-category.php');
 require_once( __ROOT__ . '/functions/taxonomies/news-categories/class-nam-news-category.php');
 require_once( __ROOT__ . '/functions/taxonomies/exhibitions-categories/class-nam-exhibitions-category.php');

@@ -7,7 +7,7 @@
 
 <?php get_template_part('partials/page/page_intro' ); ?>
 
-<?php get_template_part('partials/support/support_letter' ); ?>
+<?php get_template_part('partials/support/support' ); ?>
 
 <?php get_template_part('partials/flexible_content/flexible_content' ); ?>
 

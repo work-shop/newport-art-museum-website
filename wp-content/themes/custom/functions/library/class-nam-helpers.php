@@ -120,8 +120,8 @@ class NAM_Helpers{
 	<?php }  
 
 
-	public static function card_terms(){
-		$terms = get_the_terms( $post, 'events-categories' );
+	public static function card_terms($taxonomy){
+		$terms = get_the_terms( $post, $taxonomy );
 		if( $terms ):
 		foreach ($terms as $term) :
 			echo 'filter-';

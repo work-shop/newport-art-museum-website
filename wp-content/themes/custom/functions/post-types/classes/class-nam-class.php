@@ -21,28 +21,42 @@ class NAM_Class extends NAM_Custom_Post_Type {
         'has_archive'               => true,
         'menu_position'             => 3,
         'supports'                  => array(
-                                        'title',
-                                        'thumbnail',
-                                        'revisions'
-                                    ),
+            'title',
+            'thumbnail',
+            'revisions'
+        ),
         'rewrite'                   => array(
-                                        'slug' => 'classes',
-                                        'with_front' => false,
-                                        'feeds' => true,
-                                        'pages' => true
-                                    ),
+            'slug' => 'classes',
+            'with_front' => false,
+            'feeds' => true,
+            'pages' => true
+        ),
         'taxonomies'                => array(  )
 
     );
 
     public static $query_options = array(
-        'posts_per_page'            => -1,
-        'offset'                    => 0,
-        'category'                  => '',
-        'category_name'             => '',
-        'orderby'                   => 'menu_order',
-        'suppress_filters'          => false
+
     );
+
+    public static function get_posts() {
+        $today = time();
+        return get_posts(array(
+            'posts_per_page'    => -1,
+            'post_type'         => 'classes',
+            'meta_key'          => 'class_start_date',
+            'orderby'           => 'meta_value',
+            'order'             => 'ASC'
+            // 'meta_query' => array(
+            //     array(
+            //         'key' => 'class_end_date',
+            //         'value' => date('Ymd', strtotime('now')),
+            //         'type' => 'numeric',
+            //         'compare' => '>=',
+            //     )
+            // )
+        ));
+    }
 
 
     /**

@@ -4,7 +4,7 @@
 	<div class="container-fluid container-fluid-stretch">
 		<div class="row">
 			<?php foreach ( $posts as $post ) : ?>
-				<div class="col-md-4 col-xl-3 filter-target filter-event <?php NAM_Helpers::card_terms(); ?>" data-date="<?php $event_date = get_field('event_date'); $event_date = strtotime($event_date); $event_date = date('m/d/Y', $event_date); echo $event_date; ?>">
+				<div class="col-md-4 col-xl-3 filter-target filter-event <?php NAM_Helpers::card_terms('events-categories'); ?>" data-date="<?php $event_date = get_field('event_date'); $event_date = strtotime($event_date); $event_date = date('m/d/Y', $event_date); echo $event_date; ?>">
 					<?php
 					setup_postdata( $post );
 					$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
