@@ -44,7 +44,7 @@ class NAM_Helpers{
 
 	public static function card( $card_layout, $card_size, $card_type, $card_link, $card_image, $card_title, $card_info ){ ?>
 
-		<div class="card card-type-<?php echo $card_type; ?> card-size-<?php echo $card_size; ?> card-layout-<?php echo $card_layout; ?> <?php NAM_Helpers::card_terms(); ?>">
+		<div class="card card-type-<?php echo $card_type; ?> card-size-<?php echo $card_size; ?> card-layout-<?php echo $card_layout; ?> ">
 			<a href="<?php if( $card_link ): echo $card_link; else: the_permalink(); endif; ?>">
 				<div class="card-image">
 					<?php if( $card_image ): ?>

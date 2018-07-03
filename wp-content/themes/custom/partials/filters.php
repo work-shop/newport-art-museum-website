@@ -12,26 +12,25 @@
 				<div class="row filter-content-row">
 					<div class="col">
 						<?php if( $GLOBALS['tree_slug'] === 'events' ):
-							$taxonomy = 'events-categories';
 							$type = 'events';
+							$id = '74';
+							$field1 = 'events_filtering_menu';
+							$field2 = 'event_category';
 						elseif( $GLOBALS['tree_slug'] === 'education'):
-							$taxonomy = 'classes-categories';
 							$type = 'classes';
+							$id = '78';
+							$field1 = 'classes_filtering_menu';
+							$field2 = 'class_category';
 						endif;
-						$terms = get_terms( array(
-							'taxonomy' => $taxonomy,
-							'orderby' => 'name',
-							'order' => 'ASC',
-							'hide_empty' => false,
-						) ); 
 						?>
-						<?php if( $terms ): ?>
+						<?php if( have_rows($field1, $id) ): ?>
 							<div class="filter-categories " id="filter-buttons">
-								<?php foreach ($terms as $term): ?>
-									<button class="filter-button filter-button-category" data-target="<?php echo $term->slug; ?>">
+								<?php  while ( have_rows($field1, $id) ) : the_row(); ?>
+									<?php $term = get_sub_field($field2); ?>
+									<button class="filter-button filter-button-category" data-target="filter-<?php echo $term->slug; ?>">
 										<?php echo $term->name; ?>
 									</button>
-								<?php endforeach; ?>
+								<?php endwhile; ?>
 							</div>
 						<?php endif; ?>
 					</div>
@@ -68,25 +67,25 @@
 						<div class="row">
 							<div class="col">
 								<div class="filter-days">
-									<button class="filter-button filter-button-day" data-target="monday">
+									<button class="filter-button filter-button-day" data-target="filter-monday">
 										Mon											
 									</button>
-									<button class="filter-button filter-button-day" data-target="tuesday">
+									<button class="filter-button filter-button-day" data-target="filter-tuesday">
 										Tue											
 									</button>
-									<button class="filter-button filter-button-day" data-target="wednesday">
+									<button class="filter-button filter-button-day" data-target="filter-wednesday">
 										Wed											
 									</button>
-									<button class="filter-button filter-button-day" data-target="thursday">
+									<button class="filter-button filter-button-day" data-target="filter-thursday">
 										Thu											
 									</button>
-									<button class="filter-button filter-button-day" data-target="friday">
+									<button class="filter-button filter-button-day" data-target="filter-friday">
 										Fri											
 									</button>
-									<button class="filter-button filter-button-day" data-target="saturday">
+									<button class="filter-button filter-button-day" data-target="filter-saturday">
 										Sat											
 									</button>
-									<button class="filter-button filter-button-day" data-target="sunday">
+									<button class="filter-button filter-button-day" data-target="filter-sunday">
 										Sun											
 									</button>
 								</div>

@@ -5,12 +5,15 @@ var Pikaday = require('pikaday');
 function filter() {
 	//console.log('filter.js loaded');
 
+
 	var categoryFiltered = false;
 	var categoryFilteredCurrent = 'all';
 	var dateFiltered = false;
 	var dayFiltered = false;
+	var dayFilteredCurrent = null;
 	var pikaStart, pikaEnd;
 	var dateOptions = { day: '2-digit', month: '2-digit', year: 'numeric'};
+
 
 	$(document).ready( function() {
 
@@ -41,6 +44,7 @@ function filter() {
 			}
 		});
 
+
 		$('.filter-button-category').click(function(e) {
 			e.preventDefault();
 			console.log('filter-button-category');
@@ -52,7 +56,6 @@ function filter() {
 			} else{
 				scrollToFilter();
 				var filterClass = $(this).data('target');
-				filterClass = 'filter-'+filterClass;
 				filterCategories(filterClass);
 				filterButtonActivate( $(this), 'categories' );
 			}
@@ -69,7 +72,6 @@ function filter() {
 				dayFiltered = true;
 				scrollToFilter();
 				var day = $(this).data('target');
-				day = 'filter-'+ day;
 				filterDays(day);
 				filterButtonActivate( $(this), 'days' );
 			}
@@ -79,33 +81,47 @@ function filter() {
 			filterDates();
 		});	
 
-	});
+	});// end document.ready
 
 
 	function filterCategories(filterClass) {
+		console.log('filterCategories');
 		clearFilterMessages();
-		categoryFiltered = true;
-		categoryFilteredCurrent = filterClass;
+
+		if( filterClass !== 'all'){
+			categoryFiltered = true;
+			categoryFilteredCurrent = filterClass;
+		}
+
 		var elements = $('.filter-target');
 		var newElements = getElementsByCategory( elements, filterClass );
 		updateElements(newElements);
+
 		setTimeout(function() {
 			if(dateFiltered){
 				filterDates(); 
 			}
 			if(dayFiltered){
-				filterDays();
+				console.log('filterCategories if dayFiltered');
+				filterDays( dayFilteredCurrent );
 			}
 		}, 10);
 	}
 
 
 	function filterDays(day){
+		console.log('filterDays');
 		clearFilterMessages();
+		dayFilteredCurrent = day;
 		var elements = $('.filter-target');
+		console.log('filterDays Elements: ');
+		console.log(elements);
+
 		if( categoryFiltered ){
+			console.log('filterDays if categoryFiltered');
 			elements = getElementsByCategory( elements, categoryFilteredCurrent );
 		}
+
 		var newElements = getElementsByCategory( elements, day );
 		updateElements( newElements );
 	}
@@ -135,11 +151,13 @@ function filter() {
 
 
 	function getElementsByCategory( elements, filterClass ){
+		console.log('getElementsByCategory with filterClass: ' + filterClass);
 		var newElements = [];
 
 		$.each(elements, function(index, val) {
 			var element = $(val);
 			if( element.hasClass(filterClass) || filterClass === 'all' ){
+				console.log(element);
 				newElements.push(element);
 			}
 		});
@@ -166,6 +184,7 @@ function filter() {
 
 
 	function updateElements(newElements){
+		console.log('updateElements');
 		var elementsFound = false;
 		hideElements();
 
@@ -199,7 +218,6 @@ function filter() {
 		} else if ( context === 'categories' ){
 			$('.filter-categories .filter-active').removeClass('filter-active');
 		}
-
 		
 		button.addClass('filter-active');		
 	}
