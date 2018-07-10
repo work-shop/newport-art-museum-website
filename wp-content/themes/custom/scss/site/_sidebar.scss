@@ -42,3 +42,69 @@ $padding-sidebar-box: 30px;
 		border: 1px solid darken($light,5%);
 	}
 }
+
+
+//single sidebar
+
+
+.single-sidebar{
+
+}
+
+.single-sidebar-top{
+	background: $khaki;
+	padding: 20px 20px 15px 20px;
+	border-bottom: 1px solid darken($light,5%);
+
+	@media screen and (max-width: $md) {
+		padding: 15px 12px 10px 12px;
+	}
+
+	.sidebar-heading{
+		margin-bottom: 0;
+	}
+}
+
+.single-sidebar-middle{
+	background: $khaki;
+	padding: 20px 20px 25px 20px;
+
+	@media screen and (max-width: $md) {
+		padding: 15px 12px 10px 12px;
+	}
+
+	.price{
+		padding-top: .25em;
+	}
+	input{
+		width: 100%;
+		max-width: 66px;
+		float: right;
+		padding: 7px 10px;
+		background: lighten($light, 1%);
+		border-radius: 3px;
+		border: 1px solid darken($light,5%);
+	}
+}
+
+.sidebar-responsive{
+	display: none;
+	@media screen and (max-width: $sm) {
+		display: block;
+		margin-top: 2em;
+		margin-bottom: 2em;
+	}
+}
+
+.nam-dash-desktop{
+	@media screen and (max-width: $sm) {
+		display: none;
+	}
+}
+
+.single-body-right-desktop{
+	@media screen and (max-width: $sm) {
+		display: none;
+	}
+}
+

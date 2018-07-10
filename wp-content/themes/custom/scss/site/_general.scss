@@ -181,6 +181,11 @@ $text-button: (
 		width: 100%;
 		padding: 20px 0;
 		border-radius: 0;
+
+		&:hover{
+			//background: $medium;
+			//color: $white;
+		}
 	}
 
 	&.button-bordered{
@@ -216,7 +221,7 @@ $text-button: (
 	}
 
 	&:hover{
-		background: lighten($brand,0%);
+		background: lighten($brand,20%);
 		cursor: pointer;
 		color: white;
 	}
