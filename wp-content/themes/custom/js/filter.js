@@ -20,9 +20,11 @@ function filter() {
 		var urlVars = getUrlVars();
 		var urlCategory = urlVars.category;
 		if( !isEmpty(urlCategory) ){
-			var categoryButtonSelector = '.filter-button[data-target=' + urlCategory + ']';
+			console.log('urlCategory: ' + urlCategory);
+			var categoryButtonSelector = '.filter-button[data-target=filter-' + urlCategory + ']';
 			var categoryButtonCheck = $(categoryButtonSelector);
 			if( !isEmpty(categoryButtonCheck) ){
+				console.log('categoryButtonCheck true');
 				$(categoryButtonSelector).addClass('filter-active');
 				filterClassStart = 'filter-' + urlVars.category;
 			}
@@ -33,20 +35,20 @@ function filter() {
 			field: $('.filter-date-start')[0],
 			format: 'YYYY-MM-DD',
 			onSelect: function() {
-				//consolge.log(this._d);
+				//console.log(this._d);
 			}
 		});
 		pikaEnd = new Pikaday({ 
 			field: $('.filter-date-end')[0],
 			onSelect: function() {
-				//consolge.log(this._d);
+				//console.log(this._d);
 			}
 		});
 
 
 		$('.filter-button-category').click(function(e) {
 			e.preventDefault();
-			//consolge.log('filter-button-category');
+			//console.log('filter-button-category');
 			if( $(this).hasClass('filter-active') ){
 				categoryFiltered = false;
 				categoryFilteredCurrent = 'all';
@@ -61,7 +63,7 @@ function filter() {
 		});	
 
 		$('.filter-button-day').click(function(e) {
-			//consolge.log('filter-button-day');
+			//console.log('filter-button-day');
 			e.preventDefault();
 			if( $(this).hasClass('filter-active') ){
 				dayFiltered = false;
@@ -84,7 +86,7 @@ function filter() {
 
 
 	function filterCategories(filterClass) {
-		//consolge.log('filterCategories');
+		console.log('filterCategories: ' + filterClass);
 		clearFilterMessages();
 
 		if( filterClass !== 'all'){
@@ -101,7 +103,7 @@ function filter() {
 				filterDates(); 
 			}
 			if(dayFiltered){
-				//consolge.log('filterCategories if dayFiltered');
+				//console.log('filterCategories if dayFiltered');
 				filterDays( dayFilteredCurrent );
 			}
 		}, 10);
@@ -109,15 +111,15 @@ function filter() {
 
 
 	function filterDays(day){
-		//consolge.log('filterDays');
+		//console.log('filterDays');
 		clearFilterMessages();
 		dayFilteredCurrent = day;
 		var elements = $('.filter-target');
-		//consolge.log('filterDays Elements: ');
-		////consolge.log(elements);
+		//console.log('filterDays Elements: ');
+		////console.log(elements);
 
 		if( categoryFiltered ){
-			//consolge.log('filterDays if categoryFiltered');
+			//console.log('filterDays if categoryFiltered');
 			elements = getElementsByCategory( elements, categoryFilteredCurrent );
 		}
 
@@ -150,13 +152,13 @@ function filter() {
 
 
 	function getElementsByCategory( elements, filterClass ){
-		//consolge.log('getElementsByCategory with filterClass: ' + filterClass);
+		//console.log('getElementsByCategory with filterClass: ' + filterClass);
 		var newElements = [];
 
 		$.each(elements, function(index, val) {
 			var element = $(val);
 			if( element.hasClass(filterClass) || filterClass === 'all' ){
-				////consolge.log(element);
+				////console.log(element);
 				newElements.push(element);
 			}
 		});
@@ -171,7 +173,7 @@ function filter() {
 		$.each(elements, function(index, val) {
 			var element = $(val);
 			var date = element.data('date');
-			//consolge.log('if ' + date + ' >= ' + startDate + ' && ' + date + ' <= ' + endDate);
+			//console.log('if ' + date + ' >= ' + startDate + ' && ' + date + ' <= ' + endDate);
 			if( date >= startDate && date <= endDate ){
 				newElements.push(element);
 			} else{
@@ -183,7 +185,7 @@ function filter() {
 
 
 	function updateElements(newElements){
-		//consolge.log('updateElements');
+		//console.log('updateElements');
 		var elementsFound = false;
 		hideElements();
 
@@ -194,7 +196,7 @@ function filter() {
 		});
 
 		if( !elementsFound ){
-			//consolge.log('no elements found');
+			//console.log('no elements found');
 			$('#filter-messages').addClass('filter-show');
 		}
 	}
@@ -240,9 +242,12 @@ function filter() {
 		var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
 		for(var i = 0; i < hashes.length; i++)
 		{
+
 			hash = hashes[i].split('=');
+			console.log(hash);
 			vars.push(hash[0]);
 			vars[hash[0]] = hash[1];
+
 		}
 		return vars;
 	}
