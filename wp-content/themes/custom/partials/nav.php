@@ -10,11 +10,25 @@
 		<div id="nav-menu-upper">
 			<ul>
 				<li id="nav-link-shop" class="hidden"><a href="/shop">Shop</a></li>
-				<li id="nav-link-login"><a href="/login">Login</a></li>
+
+				<li id="nav-link-login">
+					<a href="/my-account">
+						<?php
+						if( is_user_logged_in() ) {
+							//$user = wp_get_current_user();
+							//$user_name = $user->display_name;
+							//echo $user_name;
+							echo 'My Account';
+						} else{
+							echo 'Login';
+						}
+						?>
+					</a>
+				</li>
 				<li id="nav-link-cart">
 					<a class="cart-customlocation" title="View Your Shopping Cart" href="<?php echo wc_get_cart_url(); ?>">
 						<span class="icon" data-icon="i"></span>
-						<span id="cart-number"><?php echo WC()->cart->get_cart_contents_count(); ?>
+						<span id="cart-number"><?php echo WC()->cart->get_cart_contents_count(); ?></span>
 					</a>
 				</li>			
 			</ul>

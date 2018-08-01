@@ -7,21 +7,28 @@
 
 }
 
-.woocommerce-cart-form{
-	//margin-top: 4em;
-}
-
-
 .cart-headings{
 	border-bottom: 1px solid darken($light,15%);
 	padding-bottom: 5px;
 	//margin-bottom: 1.5em;
+
+	@media screen and (max-width: $xs) {
+		*{
+			font-size: 12px;
+		}
+	}
 }
 
 .cart-row{
 	padding-top: 24px;
 	padding-bottom: 20px;
 	border-bottom: 1px solid darken($light,5%);
+
+	@media screen and (max-width: $xs) {
+		*{
+			font-size: 11px;
+		}
+	}
 	
 	&:last-child{
 		//border: none;
@@ -31,6 +38,11 @@
 	.qty{
 		width: 3.631em;
 		text-align: center;
+
+		@media screen and (max-width: $xs) {
+			width: 35px;
+			font-size: 13px;	
+		}
 	}
 }
 
@@ -67,16 +79,27 @@
 	a{
 		@extend .button-full;
 		@extend .shadowed;
+
+		@media screen and (max-width: $sm) {
+			box-shadow: 0 0 0 transparent;
+		}
+	}
+}
+
+.checkout-row{
+	@media screen and (max-width: $sm) {
+		background: $brand;
+		box-shadow: 0px 3px 9px transparentize($slate, .3);
 	}
 }
 
 
 //FORM ELEMENTS
 
-input{
+input,textarea{
 	font-size: 17px;
 	outline: none;
-	border: 1px solid #ddd;
+	border: 1px solid $medium;
 	border-radius: 2px;
 	padding: 4px;
 }
@@ -163,43 +186,230 @@ input{
 		display: block;
 		width: 100%;
 		margin-bottom: .25rem;
+		max-width: 500px;
 	}
 
-	input{
+	input, .woocommerce-input-wrapper,select{
 		display: block;
 		width: 100%;
-		margin-bottom: 1em;
+		margin-bottom: 0em;
+		max-width: 500px;
+	}
+
+	textarea{
+		width: 100%;
+		display: block;
+		min-height: 150px;
+		max-width: 500px;
 	}
 
 }
+
+#payment{
+	padding-top: 20px;
+}
+
+.woocommerce-checkout #payment .payment_method_stripe{
+	label[for=payment_method_stripe]{
+		padding-left: 0 !important;
+		margin-bottom: 30px;
+	}
+
+	.payment-method-title{
+		display: block;
+	}
+
+	img{
+		display: inline-block !important;
+		float: none !important;
+	}
+}
+
 
 .required,abbr.required{
 	color: $error;
 	text-decoration: none;
 }
 
+#checkout-contents-nam{
+	h3{
+		@extend .bold;
+	}
+
+	.form-row{
+		margin-bottom: 3em;
+	}
+
+	#payment{
+		.form-row{
+			margin-bottom: 2em;
+		}
+	}
+
+
+	#billing_address_1_field{
+		margin-bottom: 1em;
+	}
+
+	.woocommerce-form__label-for-checkbox span{
+		@extend .bold;
+	}
+}
+
+.order-form-top{
+	background: $khaki;
+	border-bottom: 1px solid darken($light,7%);		
+	padding: 20px 20px 0px 20px;
+	@media screen and (max-width: $md) {
+		padding: 15px 15px 0px 15px;
+	}
+}
+
+.order-form-body{
+	background: $khaki;
+	border-bottom: 1px solid darken($light,7%);
+	padding: 20px;		
+	@media screen and (max-width: $md) {
+	}
+}
+
+input[name="createaccount"]{
+	display: inline-block;
+	text-align: right;
+	margin-right: 20px;
+	width: auto;
+	position: relative;
+	top: -2px;
+}
+
+.woocommerce-checkout-review-order-table{
+	.cart_item{
+		//padding: 10px 0px;
+	}
+}
+
+.review-order-row{
+	&:after{
+		content: '';
+		display: block;
+		width: 100%;
+		margin: 10px 0px;
+		border-bottom: 1px solid darken($light,7%);		
+	}
+
+	h4{
+		margin-bottom: 0;
+		margin-top: 0;
+	}
+}
+
+.review-order-total{
+	*{
+		@extend .bold;
+	}
+}
+
+.stripe-icon{
+	width: 35px;
+	padding-left: 0;
+	margin-right: 5px;
+}
+
 
 
 //LOGIN
 
-.woocommerce-form-login{
-	width: 360px;
-	//margin: 0 auto 3em auto;
+.woocommerce-form-login, .woocommerce-form-register, .woocommerce-ResetPassword, .lost-password-confirmation{
+	max-width: 360px;	
+	margin: 0 auto 3em auto;
 	margin-bottom: 3em;
-	background: $light;
-	padding: 30px;
+	background: $khaki;
 	border: 1px solid darken($light, 7%);
-	border-radius: 3px;
+	@extend .shadowed;
+	//border-radius: 3px;
+
+	.form-top{
+		border-bottom: 1px solid darken($light,7%);		
+		padding: 30px 30px 10px 30px;
+		@media screen and (max-width: $md) {
+			padding: 15px 15px 5px 15px;
+		}
+	}
+
+	.form-body{
+		border-bottom: 1px solid darken($light,7%);		
+		padding: 30px;
+		@media screen and (max-width: $md) {
+			padding: 15px;
+		}
+	}
+
+	.form-bottom{
+		padding: 30px 30px 10px 30px;
+
+		@media screen and (max-width: $md) {
+			padding: 15px 15px 5px 15px;
+		}
+	}
 
 	button[type="submit"]{
 		margin-bottom: 1em;
-		margin: 1em auto;
+		margin: 2em auto 0em auto;
 		display: block;
+	}
+
+	label{
+		display: block;
+		margin-bottom: 3px;
+	}
+
+	input{
+		width: 100%;
+		color: $dark;
+	}
+
+	.woocommerce-form__label-for-checkbox{
+		text-align: center;
+	}
+
+	input[name="rememberme"]{
+		display: inline-block;
+		text-align: right;
+		margin-right: 20px;
+		width: auto;
+		position: relative;
+		top: -2px;
+	}
+
+	.woocommerce-LostPassword{
+		text-align: center;
+		margin-top: .75em;
 	}
 }
 
-input[name="rememberme"]{
-	display: inline;
-	margin-right: 30px;
-	width: auto;
+.woocommerce-form-register{
+	background: $light;
+	height: 100%;
 }
+
+.woocommerce-ResetPassword{
+	padding: 30px 30px 15px 30px;
+}
+
+.lost-password-confirmation{
+	padding: 30px;
+
+	.button{
+	}
+}
+
+.woocommerce-account{
+	.notice{
+		margin-bottom: 3em;
+
+	}
+}
+
+
+
+

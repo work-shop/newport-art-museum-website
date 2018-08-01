@@ -57,9 +57,9 @@ $class_short_description = get_field('short_description');
                                     Taught by
                                     <?php if( get_field('class_instructor_link_url') ): ?>
                                         <a href="<?php the_field('class_instructor_link_url'); ?>">
-                                    <?php endif; ?>
-                                    <?php the_field('class_instructor_name'); ?>
-                                    <?php if( get_field('class_instructor_link_url') ): ?>
+                                        <?php endif; ?>
+                                        <?php the_field('class_instructor_name'); ?>
+                                        <?php if( get_field('class_instructor_link_url') ): ?>
                                         </a>
                                     <?php endif; ?>
                                 </h4>
@@ -72,12 +72,14 @@ $class_short_description = get_field('short_description');
                             <div class="col">
                                 <div class="nam-dash nam-dash-desktop"></div>
                                 <div class="single-ecommerce-sidebar-sm">
+                                    <?php wc_print_notices(); ?>
                                     <?php get_template_part('partials/single_ecommerce_sidebar'); ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="single-body-left-content">
+                        <?php wc_print_notices(); ?>
                         <?php get_template_part('partials/flexible_content/flexible_content'); ?>
                     </div>
                 </div>

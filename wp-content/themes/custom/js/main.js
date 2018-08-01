@@ -43,6 +43,8 @@ jqueryAccordian();
 accordian();
 ecommerceHelpers();
 menuOverflow();
-filter();
+if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') ){
+	filter();
+}
 
 //console.log('main.js loaded, with gulp!');

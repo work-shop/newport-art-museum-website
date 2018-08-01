@@ -111,7 +111,7 @@ if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
 </div>
 </div><!--/row-->
 
-<div class="row">
+<div class="row checkout-row">
 	<div class="col-md-6 col-lg-4 offset-md-6 offset-lg-8 p0">
 		<div class="wc-proceed-to-checkout">
 			<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>

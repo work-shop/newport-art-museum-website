@@ -43,5 +43,5 @@ endif; ?>
 The museum is currently <span class="ms-status ms-status-<?php echo $museum_status; ?>"><?php echo $museum_status; ?><?php if ( $holiday ): ?> for a holiday<?php endif; ?>.</span>
 <?php if( $museum_status === 'open' ): ?>
 	<br>
-	Our hours today are <span class="ms-open"><?php echo $museum_open; ?> to <span class="ms-close"><?php echo $museum_close; ?>.
+	Our hours today are <span class="ms-open"><?php echo $museum_open; ?></span> to <span class="ms-close"><?php echo $museum_close; ?></span>.
 <?php endif; ?>

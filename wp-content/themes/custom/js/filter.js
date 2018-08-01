@@ -5,7 +5,6 @@ var Pikaday = require('pikaday');
 function filter() {
 	//console.log('filter.js loaded');
 
-
 	var categoryFiltered = false;
 	var categoryFilteredCurrent = 'all';
 	var dateFiltered = false;
@@ -34,20 +33,20 @@ function filter() {
 			field: $('.filter-date-start')[0],
 			format: 'YYYY-MM-DD',
 			onSelect: function() {
-				console.log(this._d);
+				//consolge.log(this._d);
 			}
 		});
 		pikaEnd = new Pikaday({ 
 			field: $('.filter-date-end')[0],
 			onSelect: function() {
-				console.log(this._d);
+				//consolge.log(this._d);
 			}
 		});
 
 
 		$('.filter-button-category').click(function(e) {
 			e.preventDefault();
-			console.log('filter-button-category');
+			//consolge.log('filter-button-category');
 			if( $(this).hasClass('filter-active') ){
 				categoryFiltered = false;
 				categoryFilteredCurrent = 'all';
@@ -62,7 +61,7 @@ function filter() {
 		});	
 
 		$('.filter-button-day').click(function(e) {
-			console.log('filter-button-day');
+			//consolge.log('filter-button-day');
 			e.preventDefault();
 			if( $(this).hasClass('filter-active') ){
 				dayFiltered = false;
@@ -85,7 +84,7 @@ function filter() {
 
 
 	function filterCategories(filterClass) {
-		console.log('filterCategories');
+		//consolge.log('filterCategories');
 		clearFilterMessages();
 
 		if( filterClass !== 'all'){
@@ -102,7 +101,7 @@ function filter() {
 				filterDates(); 
 			}
 			if(dayFiltered){
-				console.log('filterCategories if dayFiltered');
+				//consolge.log('filterCategories if dayFiltered');
 				filterDays( dayFilteredCurrent );
 			}
 		}, 10);
@@ -110,15 +109,15 @@ function filter() {
 
 
 	function filterDays(day){
-		console.log('filterDays');
+		//consolge.log('filterDays');
 		clearFilterMessages();
 		dayFilteredCurrent = day;
 		var elements = $('.filter-target');
-		console.log('filterDays Elements: ');
-		console.log(elements);
+		//consolge.log('filterDays Elements: ');
+		////consolge.log(elements);
 
 		if( categoryFiltered ){
-			console.log('filterDays if categoryFiltered');
+			//consolge.log('filterDays if categoryFiltered');
 			elements = getElementsByCategory( elements, categoryFilteredCurrent );
 		}
 
@@ -151,13 +150,13 @@ function filter() {
 
 
 	function getElementsByCategory( elements, filterClass ){
-		console.log('getElementsByCategory with filterClass: ' + filterClass);
+		//consolge.log('getElementsByCategory with filterClass: ' + filterClass);
 		var newElements = [];
 
 		$.each(elements, function(index, val) {
 			var element = $(val);
 			if( element.hasClass(filterClass) || filterClass === 'all' ){
-				console.log(element);
+				////consolge.log(element);
 				newElements.push(element);
 			}
 		});
@@ -172,7 +171,7 @@ function filter() {
 		$.each(elements, function(index, val) {
 			var element = $(val);
 			var date = element.data('date');
-			console.log('if ' + date + ' >= ' + startDate + ' && ' + date + ' <= ' + endDate);
+			//consolge.log('if ' + date + ' >= ' + startDate + ' && ' + date + ' <= ' + endDate);
 			if( date >= startDate && date <= endDate ){
 				newElements.push(element);
 			} else{
@@ -184,7 +183,7 @@ function filter() {
 
 
 	function updateElements(newElements){
-		console.log('updateElements');
+		//consolge.log('updateElements');
 		var elementsFound = false;
 		hideElements();
 
@@ -195,7 +194,7 @@ function filter() {
 		});
 
 		if( !elementsFound ){
-			console.log('no elements found');
+			//consolge.log('no elements found');
 			$('#filter-messages').addClass('filter-show');
 		}
 	}

@@ -135,5 +135,19 @@ class NAM_Helpers{
 		endif;
 	}
 
+	public static function print_notices( $clear_notices ){
+         $all_notices  = WC()->session->get( 'wc_notices', array() );
+         $notice_types = apply_filters( 'woocommerce_notice_types', array( 'error', 'success', 'notice' ) );
+         foreach ( $notice_types as $notice_type ) {
+            if ( wc_notice_count( $notice_type ) > 0 ) {
+                wc_get_template( "notices/{$notice_type}.php", array(
+                    'messages' => array_filter( $all_notices[ $notice_type ] ),
+                ) );
+            }
+        }
+        if( $clear_notices ):
+        	wc_clear_notices();
+        endif; 
+	}
 
 } ?>
