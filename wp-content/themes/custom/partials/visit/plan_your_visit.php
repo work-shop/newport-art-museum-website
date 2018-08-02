@@ -1,6 +1,6 @@
 <div class="plan-your-visit">
 	<div class="container-fluid container-fluid-stretch">
-		<div class="row">
+		<div class="row hidden">
 			<div class="col-12">
 				<h2 class="serif plan-your-visit-title">Plan Your Visit</h2>
 			</div>
