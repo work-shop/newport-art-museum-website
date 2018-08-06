@@ -2,7 +2,8 @@
 
 <?php
 $id = get_the_ID();
-$product = wc_get_product( $id );
+$product_id = get_field('managed_field_related_post', $id);
+$product = wc_get_product( $product_id );
 // woocommerce values
 // In the woocommerge product API, replacing get_{field_name} with set_{field_name} allows you
 // to update the field in some way based on an action. In general, these won't need to be called directly.
@@ -38,7 +39,7 @@ $class_short_description = get_field('short_description');
                             <?php if( get_field('class_start_date') ): ?>
                                 <h4 class="bold">
                                     <?php the_field('class_start_date'); ?> - <?php the_field('class_end_date'); ?>
-                                    <?php if( get_field('number_of_sessions') ): ?> 
+                                    <?php if( get_field('number_of_sessions') ): ?>
                                         <span class="class-dates-sessions bold">
                                             (<?php the_field('number_of_sessions'); ?> Sessions)
                                         </span>
@@ -92,7 +93,3 @@ $class_short_description = get_field('short_description');
         </div><!-- .row-->
     </div><!-- .container-fluid -->
 </section>
-
-
-
-

@@ -1,7 +1,8 @@
-<?php 
+<?php
 
 $id = get_the_ID();
-$product = wc_get_product( $id );
+$product_id = get_field('managed_field_related_post', $id);
+$product = wc_get_product( $product_id );
 $current_price = $product->get_price();
 $is_in_stock = $product->is_in_stock();
 if(is_singular('event')): $type = 'event'; else: $type = 'class'; endif; ?>
