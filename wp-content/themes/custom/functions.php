@@ -5,6 +5,7 @@ define( '__ROOT__', dirname( __FILE__ ) );
 
 require_once( __ROOT__ . '/functions/class-nam-abstract-taxonomy.php' );
 require_once( __ROOT__ . '/functions/class-nam-abstract-custom-post-type.php' );
+require_once( __ROOT__ . '/functions/class-nam-abstract-shadowed-post-type.php' );
 
 require_once( __ROOT__ . '/functions/library/class-ws-cdn-url.php');
 
@@ -24,6 +25,7 @@ require_once( __ROOT__ . '/functions/post-types/exhibitions/class-nam-exhibition
 require_once( __ROOT__ . '/functions/post-types/classes/class-nam-class.php');
 require_once( __ROOT__ . '/functions/post-types/events/class-nam-event.php');
 require_once( __ROOT__ . '/functions/post-types/news/class-nam-news.php');
+require_once( __ROOT__ . '/functions/post-types/fees/class-nam-fee.php');
 
 require_once( __ROOT__ . '/functions/class-nam-site-admin.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-init.php' );
@@ -34,7 +36,7 @@ require_once( __ROOT__ . '/functions/library/class-ws-flexible-content.php' );
 new NAM_Site();
 new NAM_Site_Admin();
 
-		
+
 
 		add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
 

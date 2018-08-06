@@ -63,6 +63,7 @@ class NAM_Site {
         NAM_Event::register();
         NAM_Class::register();
         NAM_News::register();
+        NAM_Fee::register();
 
     }
 
