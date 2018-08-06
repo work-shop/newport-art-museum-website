@@ -39,7 +39,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * that implement e-commerce functionality programmatically.
      */
     public static function register_shadowed_post_actions() {
-        add_action( 'save_post_' . static::$slug, array( get_called_class(), 'do_product_management_actions' ));
+        add_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
     }
 
     /**
@@ -51,7 +51,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      *       objects are created.
      */
     public static function deregister_shadowed_post_actions() {
-        remove_action( 'save_post_' . static::$slug, array( get_called_class(), 'do_product_management_actions' ));
+        remove_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
     }
 
     /**
@@ -62,6 +62,10 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * @param int $post_id  the id of the post being saved.
      */
     public static function do_product_management_actions( $post_id ) {
+
+        $post_id = (int) $post_id;
+
+        if ( get_post_type( $post_id ) != static::$slug ) { return; }
 
         static::deregister_shadowed_post_actions();
 
@@ -92,7 +96,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function create_shadowing_product( $post_id, $updated_post ) {
 
-        $product_id = wp_insert_post( array(
+        $product_id = (int) wp_insert_post( array(
             'post_title'    => $updated_post->post_title,
             'post_content'  => '',
             'post_status'   => 'publish',
@@ -103,10 +107,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         static::set_shadowing_product_categories( $updated_post->post_title, $post_id, $product_id );
         static::set_shadowing_product_custom_trackers( $updated_post->post_title, $post_id, $product_id );
 
-        update_field( static::$field_keys['managed_field_related_post'], $product_id, $post_id );
+        $result = update_field( static::$field_keys['managed_field_related_post'], array( $product_id ), (int) $post_id );
 
-        //throw new Exception('Testing New Product Creation');
-
+        //throw new Exception('Testing Product Updating');
     }
 
     /**
@@ -124,7 +127,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         static::set_shadowing_product_categories( $updated_post->post_title, $post_id, $shadowing_post->ID );
         static::set_shadowing_product_custom_trackers( $updated_post->post_title, $post_id, $shadowing_post->ID );
 
-        //throw new Exception('Testing Product Updating');
+        throw new Exception('Testing Product Updating');
 
     }
 
@@ -233,8 +236,46 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * @param int $post_id the id of the post that owns this custom product
      * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
      */
-    public abstract static function set_shadowing_product_categories( $title, $post_id, $product_id );
+    public static function set_shadowing_product_categories( $title, $post_id, $product_id ) {
 
+        $categories = static::get_product_categories( $post_id );
+        $term_ids = array();
+
+        foreach( $categories as $category ) {
+
+            if ( $term_object = get_term_by( 'name', $category, 'product_cat' ) ) {
+
+                array_push( $term_ids, (int) $term_object->term_id );
+
+            } else {
+
+                $term = wp_insert_term(
+                    $category,
+                    'product_cat',
+                    array(
+                        'description' => '',
+                        'slug' => sanitize_title_with_dashes( $category )
+                    )
+                );
+
+                array_push( $term_ids, (int) $term['term_id'] );
+
+            }
+
+        }
+
+        wp_set_object_terms( $product_id, $term_ids, 'product_cat' );
+
+    }
+
+    /**
+     * This routine is implemented by subclasses and is responsible for
+     * returning the taxonomies that are relevant to the executing CPT.
+     *
+     * @param int post_id the post id of the post being processed.
+     * @return array an array of category names derived from the categories associated with this Custom Post.
+     */
+    public static abstract function get_product_categories( $post_id );
 
 
 

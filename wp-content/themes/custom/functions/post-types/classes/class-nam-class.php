@@ -85,8 +85,16 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
      *
      * @param int $post_id the id of the post that owns this custom product
      * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
+     * @return array category names
      */
-    public static function set_shadowing_product_categories( $title, $post_id, $product_id ) {
+    public static function get_product_categories( $post_id ) {
+
+        $categories = array_map( function( $term ) { return self::$plural_name . ': ' . $term->name; }, wp_get_post_terms( $post_id, 'classes-categories' ) );
+        array_push( $categories, self::$plural_name );
+
+        var_dump( $categories );
+
+        return $categories;
 
     }
 
