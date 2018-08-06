@@ -7,9 +7,9 @@
  * Author URI: https://woocommerce.com/
  * Text Domain: woocommerce-services
  * Domain Path: /i18n/languages/
- * Version: 1.14.1
+ * Version: 1.15.1
  * WC requires at least: 3.0.0
- * WC tested up to: 3.3.4
+ * WC tested up to: 3.4.3
  *
  * Copyright (c) 2017 Automattic
  *
@@ -473,6 +473,13 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			return $defaults;
 		}
 
+		public function save_defaults_to_shipping_method( $instance_id, $service_id, $zone_id ) {
+			$shipping_method = WC_Shipping_Zones::get_shipping_method( $instance_id );
+			$schema   = $shipping_method->get_service_schema();
+			$defaults = (object) $this->get_service_schema_defaults( $schema->service_settings );
+			WC_Connect_Options::update_shipping_method_option( 'form_settings', $defaults, $service_id, $instance_id );
+		}
+
 		protected function add_method_to_shipping_zone( $zone_id, $method_id ) {
 			$method = $this->get_service_schemas_store()->get_service_schema_by_id( $method_id );
 			if ( empty( $method ) ) {
@@ -483,14 +490,8 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 			$instance_id = $zone->add_shipping_method( $method->method_id );
 			$zone->save();
 
-			$instance = WC_Shipping_Zones::get_shipping_method( $instance_id );
-			if ( empty( $instance ) ) {
-				return;
-			}
-
-			$schema   = $instance->get_service_schema();
-			$defaults = (object) $this->get_service_schema_defaults( $schema->service_settings );
-			WC_Connect_Options::update_shipping_method_option( 'form_settings', $defaults, $method->method_id, $instance_id );
+			// Dismiss the "add a method to zone" pointer
+			$this->nux->dismiss_pointer( 'wc_services_add_service_to_zone' );
 		}
 
 		public function init_core_wizard_shipping_config() {
@@ -652,6 +653,7 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				add_action( 'wc_connect_service_init', array( $this, 'init_service' ), 10, 2 );
 				add_action( 'wc_connect_service_admin_options', array( $this, 'localize_and_enqueue_service_script' ), 10, 2 );
 				add_action( 'woocommerce_shipping_zone_method_added', array( $this, 'shipping_zone_method_added' ), 10, 3 );
+				add_action( 'wc_connect_shipping_zone_method_added', array( $this, 'save_defaults_to_shipping_method' ), 10, 3 );
 				add_action( 'woocommerce_shipping_zone_method_deleted', array( $this, 'shipping_zone_method_deleted' ), 10, 3 );
 				add_action( 'woocommerce_shipping_zone_method_status_toggled', array( $this, 'shipping_zone_method_status_toggled' ), 10, 4 );
 
@@ -663,8 +665,15 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 				}
 			}
 
+			// Changing the postcode, currency, weight or dimension units affect the returned schema from the server.
+			// Make sure to update the service schemas when these options change.
+			// TODO: Add other options that change the schema here, or figure out a way to do it automatically.
+			add_action( 'update_option_woocommerce_store_postcode',  array( $this, 'queue_service_schema_refresh' ) );
+			add_action( 'update_option_woocommerce_currency', array( $this, 'queue_service_schema_refresh' ) );
+			add_action( 'update_option_woocommerce_weight_unit', array( $this, 'queue_service_schema_refresh' ) );
+			add_action( 'update_option_woocommerce_dimension_unit', array( $this, 'queue_service_schema_refresh' ) );
+
 			add_action( 'rest_api_init', array( $this, 'rest_api_init' ) );
-			add_action( 'woocommerce_settings_saved', array( $schemas_store, 'fetch_service_schemas_from_connect_server' ) );
 			add_action( 'wc_connect_fetch_service_schemas', array( $schemas_store, 'fetch_service_schemas_from_connect_server' ) );
 			add_filter( 'woocommerce_hidden_order_itemmeta', array( $this, 'hide_wc_connect_package_meta_data' ) );
 			add_filter( 'is_protected_meta', array( $this, 'hide_wc_connect_order_meta_data' ), 10, 3 );
@@ -685,6 +694,19 @@ if ( ! class_exists( 'WC_Connect_Loader' ) ) {
 
 			$this->taxjar->init();
 			$this->paypal_ec->init();
+		}
+
+		/**
+		 * Queue up a service schema refresh (on shutdown) if there isn't one already.
+		 */
+		public function queue_service_schema_refresh() {
+			$schemas_store = $this->get_service_schemas_store();
+
+			if ( has_action( 'shutdown', array( $schemas_store, 'fetch_service_schemas_from_connect_server' ) ) ) {
+				return;
+			}
+
+			add_action( 'shutdown', array( $schemas_store, 'fetch_service_schemas_from_connect_server' ) );
 		}
 
 		public function tos_rest_init() {

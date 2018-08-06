@@ -410,7 +410,7 @@ class Object_Sync_Sf_Admin {
 	private function fields_settings( $page, $section, $callbacks ) {
 		add_settings_section( $page, ucwords( $page ), null, $page );
 		$salesforce_settings = array(
-			'consumer_key'             => array(
+			'consumer_key'                   => array(
 				'title'    => __( 'Consumer Key', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -423,7 +423,7 @@ class Object_Sync_Sf_Admin {
 				),
 
 			),
-			'consumer_secret'          => array(
+			'consumer_secret'                => array(
 				'title'    => __( 'Consumer Secret', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -435,7 +435,7 @@ class Object_Sync_Sf_Admin {
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_CONSUMER_SECRET',
 				),
 			),
-			'callback_url'             => array(
+			'callback_url'                   => array(
 				'title'    => __( 'Callback URL', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -443,11 +443,14 @@ class Object_Sync_Sf_Admin {
 				'args'     => array(
 					'type'     => 'url',
 					'validate' => 'sanitize_validate_text',
-					'desc'     => '',
+					// translators: %1$s is the admin URL for the Authorize tab
+					'desc'     => sprintf( __( 'In most cases, you will want to use %1$s for this value.', 'object-sync-for-salesforce' ),
+						get_admin_url( null, 'options-general.php?page=object-sync-salesforce-admin&tab=authorize' )
+					),
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_CALLBACK_URL',
 				),
 			),
-			'login_base_url'           => array(
+			'login_base_url'                 => array(
 				'title'    => __( 'Login Base URL', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -463,7 +466,7 @@ class Object_Sync_Sf_Admin {
 					'constant' => 'OBJECT_SYNC_SF_SALESFORCE_LOGIN_BASE_URL',
 				),
 			),
-			'authorize_url_path'       => array(
+			'authorize_url_path'             => array(
 				'title'    => __( 'Authorize URL Path', 'object-sync-for-salesforce' ),
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -476,7 +479,7 @@ class Object_Sync_Sf_Admin {
 					'default'  => $this->default_authorize_url_path,
 				),
 			),
-			'token_url_path'           => array(
+			'token_url_path'                 => array(
 				'title'    => 'Token URL Path',
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -489,7 +492,7 @@ class Object_Sync_Sf_Admin {
 					'default'  => $this->default_token_url_path,
 				),
 			),
-			'api_version'              => array(
+			'api_version'                    => array(
 				'title'    => 'Salesforce API Version',
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -502,7 +505,7 @@ class Object_Sync_Sf_Admin {
 					'default'  => $this->default_api_version,
 				),
 			),
-			'object_filters'           => array(
+			'object_filters'                 => array(
 				'title'    => 'Limit Salesforce Objects',
 				'callback' => $callbacks['checkboxes'],
 				'page'     => $page,
@@ -527,7 +530,33 @@ class Object_Sync_Sf_Admin {
 					),
 				),
 			),
-			'pull_throttle'            => array(
+			'salesforce_field_display_value' => array(
+				'title'    => 'Salesforce Field Display Value',
+				'callback' => $callbacks['select'],
+				'page'     => $page,
+				'section'  => $section,
+				'args'     => array(
+					'type'     => 'select',
+					'validate' => 'sanitize_validate_text',
+					'desc'     => 'When choosing Salesforce fields to map, this value determines how the dropdown will identify Salesforce fields.',
+					'constant' => '',
+					'items'    => array(
+						'field_label' => array(
+							'text'  => __( 'Field Label', 'object-sync-for-salesforce' ),
+							'value' => 'field_label',
+						),
+						/*'field_name'  => array(
+							'text'  => __( 'Field Name', 'object-sync-for-salesforce' ),
+							'value' => 'field_name',
+						),*/
+						'api_name'    => array(
+							'text'  => __( 'API Name', 'object-sync-for-salesforce' ),
+							'value' => 'api_name',
+						),
+					),
+				),
+			),
+			'pull_throttle'                  => array(
 				'title'    => 'Pull throttle (seconds)',
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -540,7 +569,7 @@ class Object_Sync_Sf_Admin {
 					'default'  => $this->default_pull_throttle,
 				),
 			),
-			'debug_mode'               => array(
+			'debug_mode'                     => array(
 				'title'    => 'Debug mode?',
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -552,7 +581,7 @@ class Object_Sync_Sf_Admin {
 					'constant' => '',
 				),
 			),
-			'delete_data_on_uninstall' => array(
+			'delete_data_on_uninstall'       => array(
 				'title'    => 'Delete plugin data on uninstall?',
 				'callback' => $callbacks['text'],
 				'page'     => $page,
@@ -657,15 +686,15 @@ class Object_Sync_Sf_Admin {
 						'desc'     => '',
 						'items'    => array(
 							'minutes' => array(
-								'text'  => 'Minutes',
+								'text'  => __( 'Minutes', 'object-sync-for-salesforce' ),
 								'value' => 'minutes',
 							),
 							'hours'   => array(
-								'text'  => 'Hours',
+								'text'  => __( 'Hours', 'object-sync-for-salesforce' ),
 								'value' => 'hours',
 							),
 							'days'    => array(
-								'text'  => 'Days',
+								'text'  => __( 'Days', 'object-sync-for-salesforce' ),
 								'value' => 'days',
 							),
 						),
@@ -678,7 +707,7 @@ class Object_Sync_Sf_Admin {
 					'page'     => $page,
 					'section'  => $key,
 					'args'     => array(
-						'label'      => 'Clear this queue',
+						'label'      => __( 'Clear this queue', 'object-sync-for-salesforce' ),
 						'desc'       => '',
 						'url'        => esc_url( '?page=object-sync-salesforce-admin&amp;tab=clear_schedule&amp;schedule_name=' . $key ),
 						'link_class' => 'button button-secondary',

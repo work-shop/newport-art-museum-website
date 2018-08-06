@@ -25,7 +25,7 @@ The settings for a WordPress fieldmap work like this:
 7. Push drafts: many WordPress objects create and save drafts while editing is happening. By default, this data is not sent to Salesforce. Checking the box causes it to be synced equally to live items.
 8. Weight: if the same object is mapped multiple times, the weight will determine what happens first. This is in ascending order, so objects with higher numerical values will be mapped after objects with lower numerical values.
 
-Several hooks exist for modifying these options. See the [extending mapping options documentation](./extending-mapping-options.md).
+Several hooks exist for modifying these options, including whether a combo search/dropdown field library is used. See the [extending mapping options documentation](./extending-mapping-options.md).
 
 ### More on WordPress object
 
@@ -35,7 +35,7 @@ The plugin also has hooks to modify what objects are included. You can read more
 
 ### More on Salesforce object
 
-What is contained in this list depends partly on the authenticated Salesforce user's permissions, and partly on what the plugin's settings do with objects that can't be triggered and/or updated (see the [setup documentation](./setup.md) for more. This list is not currently able to be modified by developer hooks.
+What is contained in this list depends partly on the authenticated Salesforce user's permissions, and partly on what the plugin's settings do with objects that can't be triggered and/or updated (see the [setup documentation](./initial-setup.md) for more. This list is not currently able to be modified by developer hooks.
 
 The date fields to trigger a pull request are how the plugin finds Salesforce records in mapped objects that have been updated since the last `wp_cron` run. For example, if you map WordPress users to Salesforce Contacts, this date field will allow the plugin to get all Contacts that have been updated since that last run.
 

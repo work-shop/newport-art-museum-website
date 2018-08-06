@@ -29,6 +29,10 @@ class ITSEC_Password_Requirements_Settings extends ITSEC_Settings {
 
 		foreach ( ITSEC_Lib_Password_Requirements::get_registered() as $code => $requirement ) {
 
+			if ( ! isset( $this->settings['enabled_requirements'][ $code ] ) ) {
+				$this->settings['enabled_requirements'][ $code ] = false;
+			}
+
 			if ( null === $requirement['defaults'] ) {
 				continue;
 			}

@@ -782,3 +782,10 @@
 	Bug Fix: Remove distributed storage table on uninstall.
 	Tweak: Don't write to the tracked files setting if the file hash has not changed.
 	Tweak: If no last password change date is recorded for the user, treat their registration date as the last change date.
+7.0.3 - 2018-06-18 - Chris Jean & Timothy Jacobs
+	Security Fix: Fixed SQL injection vulnerability in the logs page. Note: Admin privileges are required to exploit this vulnerability. Thanks to Çlirim Emini, Penetration Tester at sentry.co.com, for reporting this vulnerability.
+	Bug Fix: Provide default values for enabled requirements.
+7.0.4 - 2018-06-27 - Chris Jean & Timothy Jacobs
+	Enhancement: Add mitigation for the WordPress Attachment File Traversal and Deletion vulnerability.
+	Tweak: Fire a WordPress action whenever settings are updated.
+	Bug Fix: Improved input sanitization on the logs page to prevent triggering warnings.

@@ -3,7 +3,7 @@ Contributors: automattic, mikejolley, jameskoster, claudiosanches, claudiulodro,
 Tags: ecommerce, e-commerce, store, sales, sell, shop, cart, checkout, downloadable, downloads, paypal, storefront, woo commerce
 Requires at least: 4.7
 Tested up to: 4.9
-Stable tag: 3.4.2
+Stable tag: 3.4.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -158,8 +158,61 @@ Yes you can! Join in on our [GitHub repository](https://github.com/woocommerce/w
 
 == Changelog ==
 
+= 3.4.4 - 2018-07-25 =
+* Fix - Only wordwrap plain email content. #20723
+* Fix - Better escaping on product quick edit. #20740
+* Fix - Log file deletion. #20730
+* Fix - Search feature in Webhooks and REST API keys settings. #20706
+* Fix - Notices in REST API keys settings screen. #20706
+* Fix - add a check to prevent WC_Geolite_Integration::get_country_iso() from generating a PHP undefined index notice when unable to determine the country code for a given IP address. #20608
+* Fix - Variable product stock display if parent is stock managed and not the variation. #20661
+* Fix - Correctly hide cost for zero cost shipping methods after placing orders. #20663
+* Fix - Disabled autocomplete to prevent datepicker overlapping. #20687
+* Fix - Prevent a PHP notice in the setup wizard when store state is not selectable. #20695
+* Fix - Fix logic error in WC_Product_CSV_Exporter::get_column_value_stock. #20753
+* Fix - Fixed missing notice about no product variation matching. #20762
+* Fix - Correct PHPDocs in exporter class. #20861
+* Fix - Prevent Mailchimp redirection during the Setup Wizard. #20879
+* Fix - Don't hide coupon form after coupon has been applied. #20889
+* Tweak - Remove (optional) text from Address line 2 field. #20622 #20639
+* Tweak - Removed 100% width for images on single product page using 2017 theme. #20818
+* Tweak - Add margin to best selling product title in the dashboard widget to avoid overlapping the sparkline. #20849
+* Tweak - Re-add woocommerce_order_details_after_customer_details_filter removed during WC 3.2. #20886
+* Dev - Added woocommerce_calculate_item_totals_taxes filter. #20586
+* Dev - Links to next and previous page sent out in HTTP header via REST API fixed for some endpoints. #20686
+* Dev - Better wc_format_phone_number cleaning. #20637
+
+
+= 3.4.3 - 2018-06-20 =
+* Fix - Fix label for the price filter widget on RTL sites. #20417
+* Fix - Checkout: stopPropagation when payment method selected so description tips show on radio buttons. #20432
+* Fix - Shipping zone settings: fixed title for shipping methods without settings. #20441
+* Fix - Ensure custom Webhook topic selections are correctly saved in admin. #20406
+* Fix - Webhook bottom bulk actions. #20445
+* Fix - Fixes multisite orders dashboard widget to use order number rather than ID. #20457
+* Fix - Add check to ensure download log FK does not exist before adding it. Update routine will cleanup any duplicates. #20478
+* Fix - IPv6 support with HTTP_X_FORWARDED_FOR header. #20479
+* Fix - Avoid setting wrong prices when syncing grouped products with children. #20482
+* Fix - Separation of explode and end functions in two lines. End function should get a reference as parameter. #20500
+* Fix - Initialize payment gateways before running bulk actions so gateways can listen for events. #20502
+* Fix - Cast shipping total to a float so incl. tax shows only when needed. #20531
+* Fix - Fix automatic stock status updates based on stock level. #20573
+* Fix - Improved sanitize_special_column_name_regex trim to fix column matching when importing CSVs. #20486
+* Fix - Force importer log table to wrap long columns. #20534
+* Fix - Rest API: Prevent errors if variation parent is invalid and cannot be read. #20572
+* Fix - Rest API: Remove legacy API enabled check from auth endpoint. #20499
+* Fix - Display products on sub-subcategories when sorting parent category by price. #20579
+* Fix - Set order status to refunded when a PayPal transaction is refunded. #20574
+* Fix - fix undefined index in abstract-wc-widget. #20544
+* Fix - Round items for order total when recalculating order values to match cart. #20533
+* Fix - Removed mysql transactions when updating order status, tweaked caching, and improved version transient cleanup to prevent possible deadlocks on checkout. #20537
+* Tweak - Added a message to promote Wootenberg when running Gutenberg feature plugin. #20524
+* Tweak - Added a warning notice before removing personal data from orders in bulk. #20481
+* Dev - generate_select_html and generate_multiselect_html functions again support the usage of integer-keyed arrays as available values. #20569
+* Dev - Allow order billing fields to use a provided 'value'. #20424
+
 = 3.4.2 - 2018-06-05 =
-* Fix - Flexslider gallery fixes for RTL sites, and for variation image switching. #20328 ##20321
+* Fix - Flexslider gallery fixes for RTL sites, and for variation image switching. #20328 #20321
 * Fix - Allow forms to be submitted when the password strength library fails to load. #20362
 * Fix - Personal data exporter: Do not export a customer data group containing no data. #20347
 * Fix - Fix navigation notification in settings when clicking save. #20335
