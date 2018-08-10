@@ -73,20 +73,20 @@ $class_short_description = get_field('short_description');
                             <div class="col">
                                 <div class="nam-dash nam-dash-desktop"></div>
                                 <div class="single-ecommerce-sidebar-sm">
-                                    <?php wc_print_notices(); ?>
+                                    <?php NAM_Helpers::print_notices(false); ?>
                                     <?php get_template_part('partials/single_ecommerce_sidebar'); ?>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="single-body-left-content">
-                        <?php wc_print_notices(); ?>
                         <?php get_template_part('partials/flexible_content/flexible_content'); ?>
                     </div>
                 </div>
             </div>
             <div class="col-md-4 single-body-right single-body-right-desktop">
                 <div class="single-body-right-content">
+                    <?php NAM_Helpers::print_notices(true); ?>
                     <?php get_template_part('partials/single_ecommerce_sidebar'); ?>
                 </div><!-- .single-body-right-content -->
             </div><!-- .single-body-right -->

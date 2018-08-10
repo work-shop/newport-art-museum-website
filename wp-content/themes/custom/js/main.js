@@ -43,7 +43,7 @@ jqueryAccordian();
 accordian();
 ecommerceHelpers();
 menuOverflow();
-if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') ){
+if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') || $('body').hasClass('page-id-74') ){
 	filter();
 }
 

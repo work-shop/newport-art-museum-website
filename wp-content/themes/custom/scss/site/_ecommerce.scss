@@ -101,7 +101,14 @@ input,textarea{
 	outline: none;
 	border: 1px solid $medium;
 	border-radius: 2px;
-	padding: 4px;
+	padding: 6px 5px 4px 5px;
+	color: $dark;
+}
+
+input[type="text"]{
+	color: $dark;
+	padding: 9px 10px 4px 10px;
+
 }
 
 //WOOCOMMERCE DEFAULT STYLES THAT WE NEED
@@ -131,8 +138,9 @@ input,textarea{
 		margin-bottom: 4em;
 	}
 
-	h4{
+	h4,p{
 		@extend .bold;
+		margin-bottom: .25em;
 
 		.button{
 			margin-right: 20px;
@@ -205,21 +213,23 @@ input,textarea{
 
 }
 
+
 #payment{
 	padding-top: 20px;
 }
 
-.woocommerce-checkout #payment .payment_method_stripe{
-	label[for=payment_method_stripe]{
+.woocommerce-checkout #payment .payment_method_eh_stripe_pay{
+	label[for=payment_method_stripe_eh_stripe_pay]{
 		padding-left: 0 !important;
 		margin-bottom: 30px;
 	}
 
 	.payment-method-title{
-		display: block;
+		display: none;
 	}
 
 	img{
+		width: 36px;
 		display: inline-block !important;
 		float: none !important;
 	}
@@ -313,6 +323,35 @@ input[name="createaccount"]{
 	width: 35px;
 	padding-left: 0;
 	margin-right: 5px;
+}
+
+
+
+//THANK YOU/ CONFIRMATION
+
+
+.woocommerce-order-details{
+	@extend .col-12;
+	@extend .col-md-4;
+	h2{
+		@extend .h3;
+		@extend .bold;
+	}
+}
+
+.woocommerce-customer-details{
+	display: none;
+}
+
+
+strong span{
+	@extend .bold;
+}
+
+.woocommerce-order-overview{
+	li{
+		margin-bottom: .25em;
+	}
 }
 
 
@@ -411,5 +450,114 @@ input[name="createaccount"]{
 }
 
 
+//MY ACCOUNT
+
+.woocommerce-account{
+
+	.col2-set{
+		@extend .row;
+	}
+	.col-1,.col-2{
+		@extend .col-md-6;
+		@extend .col-12;
+	}
+
+	h3{
+		@extend .bold;
+	}
+
+	.woocommerce-Address{
+		margin-bottom: 3em;
+
+		.edit{
+			@extend .button;
+			margin-bottom: 1em;
+		}
+	}
+}
+
+.woocommerce-address-fields,.woocommerce-EditAccountForm{
+
+	h3{
+		@extend .bold;
+	}
+
+	label{
+		display: block;
+		margin-bottom: .25em;
+	}
+
+	.form-row{
+		margin-bottom: 2em;
+	}
+
+	.woocommerce-input-wrapper{
+		width: 100%;
+		max-width: 480px;
+		display: block;
+	}
+
+	input, select, textarea{
+		max-width: 480px;
+		width: 100%;
+		display: block;
+		color: $dark;
+	}
+
+	span em{
+		display: block;
+		margin-top: .25em;
+		max-width: 480px;
+	}
+}
+
+.woocommerce-EditAccountForm{
+	h3, legend{
+		@extend .bold;
+	}
+
+	fieldset{
+		margin-top: 4em;
+	}
+}
 
 
+
+//ORDERS
+
+.woocommerce-orders-table{
+	width: 100%;
+
+	thead{
+		border-bottom: 1px solid darken($light,15%);
+		th, th span{
+			@extend .bold;
+			padding-bottom: 10px;
+		}
+	}
+
+	tbody{
+		tr{
+			height: 80px;
+			border-bottom: 1px solid darken($light,5%);
+		}
+	}
+	
+
+}
+
+.woocommerce-OrderUpdates{
+	padding-left: 20px;
+}
+
+.woocommerce-table--order-details{
+
+	tr{
+		height: 35px;
+	}
+	tbody, thead,tfoot{
+		td:nth-child(2),th:nth-child(2){
+			padding-left: 30px;
+		}
+	}
+}

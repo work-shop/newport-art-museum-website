@@ -56,23 +56,7 @@ $event_short_description = get_field('short_description');
         </div>
         <div class="col-md-4 single-body-right single-body-right-desktop">
             <div class="single-body-right-content">
-               <?php 
-                //  $notices = wc_get_notices();
-                //  var_dump($notices);
-                //  foreach($notices as $notice):
-                //     echo $notice;
-                // endforeach; 
-               ?>
-
                <?php NAM_Helpers::print_notices(true); ?>
-
-               <?php //endforeach; ?>
-               <?php //wc_print_notices(); ?>
-
-               <?php //get_template_part('woocommerce/notices/error'); ?>
-               <?php //get_template_part('woocommerce/notices/notice'); ?>
-               <?php //get_template_part('woocommerce/notices/success'); ?>
-
                <?php get_template_part('partials/single_ecommerce_sidebar'); ?>
            </div><!-- .single-body-right-content -->
        </div><!-- .single-body-right -->
