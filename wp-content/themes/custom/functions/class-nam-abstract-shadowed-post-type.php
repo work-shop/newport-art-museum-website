@@ -105,7 +105,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $product_id = (int) wp_insert_post( array(
             'post_title'    => $updated_post->post_title,
             'post_content'  => '',
-            'post_status'   => 'publish',
+            'post_status'   => $updated_post->post_status,
             'post_type'     => 'product',
         ));
 
@@ -129,9 +129,18 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function update_shadowing_product( $post_id, $updated_post, $shadowing_post ) {
 
+        wp_update_post( array(
+            'ID' => $shadowing_post->ID,
+            'post_title' => $updated_post->post_title,
+            'post_status' => $updated_post->post_status,
+            'post_name' => ''
+        ) );
+
         static::set_shadowing_product_object_terms( $updated_post->post_title, $post_id, $shadowing_post->ID );
         static::set_shadowing_product_categories( $updated_post->post_title, $post_id, $shadowing_post->ID );
         static::set_shadowing_product_custom_trackers( $updated_post->post_title, $post_id, $shadowing_post->ID );
+
+        $result = update_field( static::$field_keys['managed_field_related_post'], array( $shadowing_post->ID ), (int) $post_id );
 
         //throw new Exception('Testing Product Updating');
 
@@ -141,7 +150,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * This function removes the shadowed post associated with a given
      * post, in the case that it's parent is being deleted.
      *
-     * @param int $post_id the idea of the post being created.
+     * @param int $post_id the id of the post being created.
      */
     public static function remove_shadowing_product() {
 
@@ -158,10 +167,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_shadowing_product_object_terms( $title, $post_id, $product_id ) {
 
-        var_dump( $product_id );
-
-        static::set_product_type( $title, $post_id, $product_id );
         static::set_product_meta( $title, $post_id, $product_id );
+        static::set_product_type( $title, $post_id, $product_id );
 
     }
 
@@ -177,17 +184,13 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_product_type( $title, $post_id, $product_id ) {
 
-        $fees = get_field( static::$field_keys['fees'], $post_id );
+        $fees = static::get_product_fees( $post_id );
 
         if ( $fees ) {
 
             wp_set_object_terms( $product_id, 'bundle', 'product_type' );
 
-            var_dump( $product_id );
-
-            $product = wc_get_product( $product_id );
-
-            //var_dump( $product );
+            $product = new WC_Product_Bundle( $product_id );
 
             static::set_product_fees( $product, $fees );
 
@@ -211,58 +214,87 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_product_fees( $product, $fees ) {
 
-        $bundled_items = array_map( function( $fee, $i ) use ($product) {
+        $data_items = array_map( function( $fee, $i ) {
 
             return array(
-                'bundled_item_data' => false,
-                'bundle_id' => $product->get_id(),
-                'product_id' => $fee->ID,
-                'menu_order' => $i,
-                'meda_data' => array(
-                    'hide_thumbnail' => 'yes',
-                    'override_title' => 'no',
-                    'override_description' => 'no',
-                    'optional' => 'no',
-                    'priced_individually' => 'yes',
-                    'shipped_individually' => 'no',
-                    'quantity_min' => 1,
-                    'quantity_max' => 1,
-                    'discount' => '',
-                    'single_product_visibility' => 'visible',
-                    'cart_visibility' => 'visible',
-                    'order_visibility' => 'visible',
-                    'single_product_price_visibility' => 'visible',
-                    'cart_price_visibility' => 'visible',
-                    'order_price_visibility' => 'visible'
+                'product_id'    => $fee->get_id(),
+                'meta_data'     => array(
+                    'priced_individually'       => 'yes',
+                    'shipped_individually'      => 'no',
+                    'quantity_min'              => 1,
+                    'quantity_max'              => 1,
+                    'order_visibility'          => 'visible',
+                    'discount'                  => 0,
+                    'order_price_visibility'    => 'visible',
+                    'override_title'            => 'no'
                 )
             );
 
-        }, $fees, array_keys( $fees ) );
+        }, $fees, array_keys( $fees ));
 
-        $props = array(
-            'layout' => 'default',
-            'group_mode' => 'parent',
-            'editable_in_cart' => true,
-            'sold_individually' => false,
-            'sold_individually_context' => 'product',
-            'add_to_cart_form_location' => 'default',
-            'bundled_data_items' => $bundled_items
-        );
-
-        update_post_meta( $product->ID, '_editable_in_cart', true );
-
-        //var_dump( $props );
-        //throw new Exception('Test');
-
-        $product->set_props( $props );
+        $product->set_bundled_data_items( $data_items );
         $product->save();
-        $product->save_meta_data();
 
-        // var_dump( $product );
+
+
+        // $bundled_items = array_map( function( $fee, $i ) use ($product) {
         //
-        // throw new Exception();
+        //     return array(
+        //         'bundled_item_data' => false,
+        //         'bundle_id' => $product->get_id(),
+        //         'product_id' => $fee->ID,
+        //         'menu_order' => $i,
+        //         'meda_data' => array(
+        //             'hide_thumbnail' => 'yes',
+        //             'override_title' => 'no',
+        //             'override_description' => 'no',
+        //             'optional' => 'no',
+        //             'priced_individually' => 'yes',
+        //             'shipped_individually' => 'no',
+        //             'quantity_min' => 1,
+        //             'quantity_max' => 1,
+        //             'discount' => '',
+        //             'single_product_visibility' => 'visible',
+        //             'cart_visibility' => 'visible',
+        //             'order_visibility' => 'visible',
+        //             'single_product_price_visibility' => 'visible',
+        //             'cart_price_visibility' => 'visible',
+        //             'order_price_visibility' => 'visible'
+        //         )
+        //     );
+        //
+        // }, $fees, array_keys( $fees ) );
 
-        //do_action('woocommerce_process_product_meta_bundle', $product->get_id() );
+
+    }
+
+
+    /**
+     * Given a master post id, get the set of Woocommerce Products
+     * associated with that post.
+     *
+     * @param int $post_id the id of the master CPT to get woocommerce fees for.
+     * @return array || boolean false if the object has no fees, array of WC_Products representing fees otherwise.
+     */
+    public static function get_product_fees( $post_id ) {
+
+        $fees = get_field( static::$field_keys['fees'], $post_id );
+
+        if ( $fees ) {
+
+            $fees = array_map( function( $fee ) {
+
+                $product = get_field( static::$field_keys['managed_field_related_post'], $fee->ID );
+
+                return ( $product[0] ) ? wc_get_product( $product[0]->ID ) : false;
+
+            }, $fees );
+
+            $fees = array_filter( $fees ); // NOTE: No callback, means all elements == false are dropped.
+
+        }
+
+        return ( $fees && count( $fees ) > 0 ) ? $fees : false;
 
     }
 
@@ -284,7 +316,6 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $manage_stock = get_field( static::$field_keys['manage_stock'], $post_id );
         $stock_quantity = get_field( static::$field_keys['stock_quantity'], $post_id );
 
-        update_post_meta( $product_id, 'total_sales', '0' );
         update_post_meta( $product_id, '_downloadable', 'no' );
         update_post_meta( $product_id, '_virtual', 'yes' ); // NOTE: once shop products are launched, we'll need to make this non-constant
 
