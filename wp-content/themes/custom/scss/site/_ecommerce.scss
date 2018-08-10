@@ -211,6 +211,18 @@ input[type="text"]{
 		max-width: 500px;
 	}
 
+	.woocommerce-form-login{
+		padding: 30px;
+
+		button[type="submit"]{
+			margin-bottom: 1.5em;
+		}
+
+		.form-row{
+			margin-bottom: 1.5em !important;
+		}
+	}
+
 }
 
 
@@ -449,10 +461,14 @@ strong span{
 	}
 }
 
+.lost_password{
+	text-align: center;
+}
+
 
 //MY ACCOUNT
 
-.woocommerce-account{
+.woocommerce-MyAccount-content{
 
 	.col2-set{
 		@extend .row;
