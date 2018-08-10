@@ -16,6 +16,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         'manage_stock' =>                   'field_5b685c94d33c6',
         'stock_quantity' =>                 'field_5b685cdbd33c7',
 
+        'fees' =>                           'field_5b69be541ef28'
+
         // Discounts
         // Fees and Surcharges
     );
@@ -76,9 +78,13 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
             static::create_shadowing_product( $post_id, $updated_post );
 
+        } else if ( count( $shadow_post ) == 1 ) {
+
+            static::update_shadowing_product( $post_id, $updated_post, $shadow_post[0] );
+
         } else {
 
-            static::update_shadowing_product( $post_id, $updated_post, $shadow_post );
+            throw new Exception( 'Shadowing Post Error – multiple products associated with this post.' );
 
         }
 
@@ -127,7 +133,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         static::set_shadowing_product_categories( $updated_post->post_title, $post_id, $shadowing_post->ID );
         static::set_shadowing_product_custom_trackers( $updated_post->post_title, $post_id, $shadowing_post->ID );
 
-        throw new Exception('Testing Product Updating');
+        //throw new Exception('Testing Product Updating');
 
     }
 
@@ -152,7 +158,111 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_shadowing_product_object_terms( $title, $post_id, $product_id ) {
 
+        var_dump( $product_id );
+
         static::set_product_type( $title, $post_id, $product_id );
+        static::set_product_meta( $title, $post_id, $product_id );
+
+    }
+
+    /**
+     * This function dispatches particular configuration actions based on
+     * The type of product being added. If the product has registered fees,
+     * This routine creates a bundled product which wraps the fees with
+     * the specified base product. Otherwise, the product is set to simple.
+     *
+     * @param string title the Title of this post.
+     * @param int $post_id the id of the post that owns this custom product
+     * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
+     */
+    public static function set_product_type( $title, $post_id, $product_id ) {
+
+        $fees = get_field( static::$field_keys['fees'], $post_id );
+
+        if ( $fees ) {
+
+            wp_set_object_terms( $product_id, 'bundle', 'product_type' );
+
+            var_dump( $product_id );
+
+            $product = wc_get_product( $product_id );
+
+            //var_dump( $product );
+
+            static::set_product_fees( $product, $fees );
+
+        } else {
+
+            wp_set_object_terms( $product_id, 'simple', 'product_type' );
+
+        }
+
+    }
+
+/**
+ */
+
+    /**
+     * This routine constructs the bundle items for a given bundled product.
+     * @see This routine is build off of `WC_PB_Meta_Box_Product_Data::process_bundle_data`
+     *
+     * @param WC_Product $product the product to bundle.
+     * @param array $fees an array of wp_post
+     */
+    public static function set_product_fees( $product, $fees ) {
+
+        $bundled_items = array_map( function( $fee, $i ) use ($product) {
+
+            return array(
+                'bundled_item_data' => false,
+                'bundle_id' => $product->get_id(),
+                'product_id' => $fee->ID,
+                'menu_order' => $i,
+                'meda_data' => array(
+                    'hide_thumbnail' => 'yes',
+                    'override_title' => 'no',
+                    'override_description' => 'no',
+                    'optional' => 'no',
+                    'priced_individually' => 'yes',
+                    'shipped_individually' => 'no',
+                    'quantity_min' => 1,
+                    'quantity_max' => 1,
+                    'discount' => '',
+                    'single_product_visibility' => 'visible',
+                    'cart_visibility' => 'visible',
+                    'order_visibility' => 'visible',
+                    'single_product_price_visibility' => 'visible',
+                    'cart_price_visibility' => 'visible',
+                    'order_price_visibility' => 'visible'
+                )
+            );
+
+        }, $fees, array_keys( $fees ) );
+
+        $props = array(
+            'layout' => 'default',
+            'group_mode' => 'parent',
+            'editable_in_cart' => true,
+            'sold_individually' => false,
+            'sold_individually_context' => 'product',
+            'add_to_cart_form_location' => 'default',
+            'bundled_data_items' => $bundled_items
+        );
+
+        update_post_meta( $product->ID, '_editable_in_cart', true );
+
+        //var_dump( $props );
+        //throw new Exception('Test');
+
+        $product->set_props( $props );
+        $product->save();
+        $product->save_meta_data();
+
+        // var_dump( $product );
+        //
+        // throw new Exception();
+
+        //do_action('woocommerce_process_product_meta_bundle', $product->get_id() );
 
     }
 
@@ -163,9 +273,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * @param int $post_id the id of the post that owns this custom product
      * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
      */
-    public static function set_product_type( $title, $post_id, $product_id ) {
+    public static function set_product_meta( $title, $post_id, $product_id ) {
 
-        wp_set_object_terms( $product_id, 'simple', 'product_type' );
+
 
         $price = get_field( static::$field_keys['price'], $post_id );
         $sale_price = get_field( static::$field_keys['sale_price'], $post_id );

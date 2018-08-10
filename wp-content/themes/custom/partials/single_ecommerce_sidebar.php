@@ -1,7 +1,7 @@
 <?php
 
 $id = get_the_ID();
-$product_id = get_field('managed_field_related_post', $id);
+$product_id = get_field('managed_field_related_post', $id)[0];
 $product = wc_get_product( $product_id );
 $current_price = $product->get_price();
 $is_in_stock = $product->is_in_stock();
