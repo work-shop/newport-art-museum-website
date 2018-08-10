@@ -10,4 +10,9 @@ if( NAM_Helpers::is_tree(74) || is_tax( 'events-categories' ) ||is_post_type_arc
 if( NAM_Helpers::is_tree(70) ): $GLOBALS['tree_slug'] = 'join'; $GLOBALS['include_page_nav'] = true; endif;
 if( NAM_Helpers::is_tree(66) ): $GLOBALS['tree_slug'] = 'support'; $GLOBALS['include_page_nav'] = true; endif;
 if( NAM_Helpers::is_tree(4) || is_tax( 'products-categories' ) ): $GLOBALS['tree_slug'] = 'shop'; $GLOBALS['include_page_nav'] = true; endif;
+if( NAM_Helpers::is_tree(7) ): $GLOBALS['tree_slug'] = 'my_account'; 
+	if( is_user_logged_in() ) :
+		$GLOBALS['include_page_nav'] = true; 
+	endif;
+endif;
 ?>

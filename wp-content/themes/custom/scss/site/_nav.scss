@@ -118,7 +118,11 @@ body.dropdown-on{
 	}
 
 	@media screen and (max-width: $sm) {
-		display: none;
+		//display: none;
+		width: 0;
+		height: 0;
+		margin-top: 0;
+		margin-bottom: 0;
 	}
 	
 	ul{
@@ -151,10 +155,19 @@ body.dropdown-on{
 			}
 
 			@media screen and (max-width: $xs) {
-				display: none;
+				//display: none;
 			}		
 		}
 
+	}
+
+	#nav-link-cart{
+		@media screen and (max-width: $sm) {
+			position: fixed;
+			top: 21px;
+			right: 66px;
+			z-index: 10;
+		}
 	}
 }
 
@@ -263,6 +276,12 @@ body.dropdown-on{
 
 		}
 
+		&#my-account-mobile.logged-out{
+			a:after{
+				content: '';
+			}
+		}
+
 		.sub-menu{
 			display: none;
 			padding-bottom: 15px;
@@ -293,6 +312,13 @@ body.dropdown-on{
 			}
 		}
 
+	}
+
+	#my-account-mobile{
+		display: none;
+		@media screen and (max-width: $sm) {
+			display: block;
+		}
 	}
 }
 
