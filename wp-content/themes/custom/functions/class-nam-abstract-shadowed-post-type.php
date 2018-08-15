@@ -251,6 +251,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_subscription_meta( $post_id, $product_id ) {
 
+        $price = get_field( static::$field_keys['price'], $post_id );
+
+        update_post_meta( $product_id, '_subscription_price', (double) $price );
         update_post_meta( $product_id, '_subscription_sign_up_fee', 0 );
         update_post_meta( $product_id, '_subscription_period', 'year' );
         update_post_meta( $product_id, '_subscription_period_interval', 1 );

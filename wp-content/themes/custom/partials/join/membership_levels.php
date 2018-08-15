@@ -15,9 +15,10 @@
 					<div data-accordion-group>
 						<?php while ( $the_query->have_posts() ) : ?>
 							<?php $the_query->the_post(); ?>
-							<?php 
+							<?php
 							$id = $post->ID;
-							$product = wc_get_product($id);
+                            $product_id = get_field('managed_field_related_post', $id)[0];
+                            $product = wc_get_product( $product_id );
 							$current_price = $product->get_price();
 							$sale_price = $product->get_sale_price();
 							$regular_price = $product->get_regular_price();
@@ -50,7 +51,7 @@
 							</div>
 						<?php endwhile; ?>
 						<?php wp_reset_postdata(); ?>
-					</div>	
+					</div>
 				<?php endif; ?>
 			</div>
 			<div class="col-md-4 offset-lg-1 join-sidebar">

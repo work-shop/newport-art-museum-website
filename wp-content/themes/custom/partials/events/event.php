@@ -1,15 +1,21 @@
 <?php
 
 $id = get_the_ID();
-$product = wc_get_product( $id );
+$product_id = get_field('managed_field_related_post', $id)[0];
 
-// woocommerce values
-// In the woocommerge product API, replacing get_{field_name} with set_{field_name} allows you
-// to update the field in some way based on an action. In general, these won't need to be called directly.
-/** The full product API is available [here](https://docs.woocommerce.com/wc-apidocs/class-WC_Product.html) */
-$current_price = $product->get_price();
+if ( $product_id ) :
 
-$is_in_stock = $product->is_in_stock();
+    $product = wc_get_product( $product_id );
+
+    // woocommerce values
+    // In the woocommerge product API, replacing get_{field_name} with set_{field_name} allows you
+    // to update the field in some way based on an action. In general, these won't need to be called directly.
+    /** The full product API is available [here](https://docs.woocommerce.com/wc-apidocs/class-WC_Product.html) */
+    $current_price = $product->get_price();
+
+    $is_in_stock = $product->is_in_stock();
+
+endif;
 
 $event_date = get_field('event_date');
 $event_start_time = get_field('event_start_time');
@@ -63,7 +69,3 @@ $event_short_description = get_field('short_description');
    </div><!-- .row-->
 </div><!-- .container-fluid -->
 </section>
-
-
-
-

@@ -4,6 +4,8 @@
 $id = get_the_ID();
 $product_id = get_field('managed_field_related_post', $id)[0];
 $product = wc_get_product( $product_id );
+
+
 // woocommerce values
 // In the woocommerge product API, replacing get_{field_name} with set_{field_name} allows you
 // to update the field in some way based on an action. In general, these won't need to be called directly.

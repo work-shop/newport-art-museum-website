@@ -2,10 +2,16 @@
 
 $id = get_the_ID();
 $product_id = get_field('managed_field_related_post', $id)[0];
-$product = wc_get_product( $product_id );
-$current_price = $product->get_price();
-$is_in_stock = $product->is_in_stock();
-if(is_singular('event')): $type = 'event'; else: $type = 'class'; endif; ?>
+
+if ( $product_id )  {
+
+    $product = wc_get_product( $product_id );
+    $current_price = $product->get_price();
+    $is_in_stock = $product->is_in_stock();
+
+}
+
+if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif; ?>
 
 <div class="sidebar single-sidebar shadowed single-sidebar-<?php echo $type; ?>">
     <div class="single-sidebar-top">
