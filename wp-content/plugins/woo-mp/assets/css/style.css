@@ -1,0 +1,224 @@
+.postbox .woo-mp-rating-request {
+    display: block !important;
+    float: right;
+    font-weight: normal;
+}
+
+#woo-mp .inside {
+    margin: 0px;
+    padding: 18px 12px 24px 12px;
+}
+
+#woo-mp .notice {
+    margin: 0px 0px 18px 0px;
+}
+
+#woo-mp .notice-main {
+    display: flex;
+    margin: -5px;
+}
+
+#woo-mp .notice-main > * {
+    margin: 5px
+}
+
+#woo-mp .notice-content {
+    flex: 1;
+}
+
+#woo-mp .notice-details {
+    overflow: auto;
+}
+
+#woo-mp .notice ul {
+    list-style: disc;
+    padding-left: 40px;
+}
+
+#woo-mp .notice ul ul {
+    list-style: circle;
+}
+
+#woo-mp-main .button-link {
+    height: inherit;
+    line-height: inherit;
+    text-decoration: none;
+}
+
+#woo-mp-main .button-link:hover,
+#woo-mp-main .button-link:focus {
+    background-color: transparent;
+    transform: none;
+}
+
+#woo-mp-main [aria-expanded]:after {
+    display: inline-block;
+    width: 20px;
+    height: 0;
+    font-size: 20px;
+    font-family: dashicons;
+    text-decoration: inherit;
+    font-weight: 400;
+    font-style: normal;
+    vertical-align: top;
+    text-align: center;
+    transition: color .1s ease-in 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+#woo-mp-main .button-link[aria-expanded]:after {
+    line-height: 1;
+}
+
+#woo-mp-main [aria-expanded="false"]:after {
+    content: "\f140";
+}
+
+#woo-mp-main [aria-expanded="true"]:after {
+    content: "\f142";
+}
+
+#woo-mp-main .nav-tab-wrapper {
+    margin-bottom: 18px;
+    padding: 0px;
+}
+
+#woo-mp-main .nav-tab {
+    background-color: #f1f1f1;
+    font-weight: normal;
+}
+
+#woo-mp-main .nav-tab:hover {
+    background-color: #f9f9f9;
+}
+
+#woo-mp-main .nav-tab:focus {
+    box-shadow: none;
+}
+
+#woo-mp-main .nav-tab-active,
+#woo-mp-main .nav-tab-active:hover {
+    background-color: #ffffff;
+    border-bottom: 1px solid #ffffff;
+}
+
+#woo-mp-main .tab-content:not(.tab-content-active) {
+    display: none;
+}
+
+#woo-mp-main .charge-form,
+#woo-mp-main .refund {
+    max-width: 300px;
+}
+
+#woo-mp-main .invalid:focus,
+#woo-mp-main .invalid.select2-container-active {
+    border-color: #ffc107;
+    box-shadow: 0 0 2px #ff9800;
+}
+
+#woo-mp-main .field-container:not(:last-of-type) {
+    margin-bottom: 10px;
+}
+
+#woo-mp-main .half {
+    display: inline-block;
+    width: calc(50% - 2px);
+}
+
+#woo-mp-main .third {
+    display: inline-block;
+    width: calc(33.2% - 2px);
+}
+
+#woo-mp-main label {
+    display: block;
+    margin-bottom: 3px;
+    padding-left: 2px;
+    color: #777;
+}
+
+#woo-mp-main *::-webkit-inner-spin-button {
+    margin-top: 1px;
+}
+
+#woo-mp-main .field:not([type="checkbox"]), #woo-mp-main .select2-container {
+    width: 100% !important;
+}
+
+#woo-mp-main input[type="text"],
+#woo-mp-main input[type="number"],
+#woo-mp-main input[type="tel"] {
+    height: 28px;
+}
+
+#woo-mp-main .charge-amount-field-and-btn-container {
+    display: flex;
+}
+
+#woo-mp-main .charge-amount-field-and-btn-container .field {
+    padding-right: 22px;
+}
+
+#woo-mp-main .charge-amount-suggestions-btn {
+    margin: 1px -2px 0px -26px;
+    padding: 0px !important;
+    width: 26px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: #777;
+}
+
+#woo-mp-main .charge-amount-suggestions-btn:focus {
+    outline: none;
+}
+
+#woo-mp-main .charge-amount-suggestions-btn:before {
+    vertical-align: text-bottom;
+    width: auto;
+    height: auto;
+    font-size: 14px;
+}
+
+#woo-mp-main .ui-autocomplete {
+    border: 1px solid #5b9dd9;
+    font-size: 1em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+#woo-mp-main .ui-autocomplete .ui-menu-item {
+    padding: 4px 10px;
+    white-space: normal;
+}
+
+#woo-mp-main .ui-autocomplete .ui-state-focus {
+    margin: 0px;
+    border: none;
+    background: #dddddd;
+}
+
+#woo-mp-main .charge-amount-container .ui-autocomplete {
+    position: relative;
+}
+
+#woo-mp-main .tax-exempt-checkbox {
+    float: right;
+    margin: 0px;
+}
+
+#woo-mp-main .upgrade-text {
+    font-size: 18px;
+    text-align: center;
+    margin-top: 0px;
+}
+
+#woo-mp-main .upgrade-button {
+    width: 100%;
+    text-align: center;
+}
+
+#woo-mp-main .blockUI.blockOverlay:before {
+    font-size: 28px;
+}

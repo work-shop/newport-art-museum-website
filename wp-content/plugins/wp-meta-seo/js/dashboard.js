@@ -8,7 +8,8 @@ jQuery(document).ready(function ($) {
         dataType: 'json',
         data: {
             action: 'wpms',
-            task: 'dash_permalink'
+            task: 'dash_permalink',
+            wpms_nonce: wpms_localize.wpms_nonce
         },
         success: function (res) {
             $('.wpms_dash_permalink .percent_1').html(res +'%');
@@ -28,7 +29,8 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             data: {
                 action: 'wpms',
-                task: 'dash_newcontent'
+                task: 'dash_newcontent',
+                wpms_nonce: wpms_localize.wpms_nonce
             },
             success: function (res) {
                 $('.wpms_dash_newcontent .percent_1').html(res[0] +'%');
@@ -49,7 +51,8 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             data: {
                 action: 'wpms',
-                task: 'dash_linkmeta'
+                task: 'dash_linkmeta',
+                wpms_nonce: wpms_localize.wpms_nonce
             },
             success: function (res) {
                 $('.wpms_dash_linkmeta .percent_1').html(res[0] +'%');
@@ -70,7 +73,8 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             data: {
                 action: 'wpms',
-                task: 'dash_metatitle'
+                task: 'dash_metatitle',
+                wpms_nonce: wpms_localize.wpms_nonce
             },
             success: function (res) {
                 $('.wpms_dash_metatitle .percent_1').html(res[0] +'%');
@@ -96,7 +100,8 @@ jQuery(document).ready(function ($) {
                 page : page,
                 imgs_statis : imgs_statis,
                 imgs_metas_statis : imgs_meta,
-                imgs_count : imgs_count
+                imgs_count : imgs_count,
+                wpms_nonce: wpms_localize.wpms_nonce
             },
             success: function (res) {
                 if(typeof res.status === "undefined"){
@@ -126,7 +131,8 @@ jQuery(document).ready(function ($) {
             dataType: 'json',
             data: {
                 action: 'wpms',
-                task: 'dash_metadesc'
+                task: 'dash_metadesc',
+                wpms_nonce: wpms_localize.wpms_nonce
             },
             success: function (res) {
                 $('.wpms_dash_metadesc .percent_1').html(res[0] +'%');
