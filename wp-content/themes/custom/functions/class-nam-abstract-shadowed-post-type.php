@@ -194,6 +194,12 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
             static::set_product_fees( $product, $fees );
 
+        } else if ( static::$slug == 'membership-tier' ) {
+
+            wp_set_object_terms( $product_id, 'subscription', 'product_type' );
+
+            static::set_subscription_meta( $post_id, $product_id );
+
         } else {
 
             wp_set_object_terms( $product_id, 'simple', 'product_type' );
@@ -237,6 +243,23 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
     }
 
+
+    /**
+     * Given a
+     *
+     *
+     */
+    public static function set_subscription_meta( $post_id, $product_id ) {
+
+        update_post_meta( $product_id, '_subscription_sign_up_fee', 0 );
+        update_post_meta( $product_id, '_subscription_period', 'year' );
+        update_post_meta( $product_id, '_subscription_period_interval', 1 );
+        update_post_meta( $product_id, '_subscription_length', 0 );
+        update_post_meta( $product_id, '_subscription_trial_period', '' );
+        update_post_meta( $product_id, '_subscription_limit', 'no' );
+        update_post_meta( $product_id, '_subscription_one_time_shipping', 'no' );
+
+    }
 
     /**
      * Given a master post id, get the set of Woocommerce Products
