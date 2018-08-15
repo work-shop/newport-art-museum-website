@@ -16,7 +16,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         'manage_stock' =>                   'field_5b685c94d33c6',
         'stock_quantity' =>                 'field_5b685cdbd33c7',
 
-        'fees' =>                           'field_5b69be541ef28'
+        'fees' =>                           'field_5b7470acd3e33'
 
         // Discounts
         // Fees and Surcharges
@@ -234,37 +234,6 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         $product->set_bundled_data_items( $data_items );
         $product->save();
-
-
-
-        // $bundled_items = array_map( function( $fee, $i ) use ($product) {
-        //
-        //     return array(
-        //         'bundled_item_data' => false,
-        //         'bundle_id' => $product->get_id(),
-        //         'product_id' => $fee->ID,
-        //         'menu_order' => $i,
-        //         'meda_data' => array(
-        //             'hide_thumbnail' => 'yes',
-        //             'override_title' => 'no',
-        //             'override_description' => 'no',
-        //             'optional' => 'no',
-        //             'priced_individually' => 'yes',
-        //             'shipped_individually' => 'no',
-        //             'quantity_min' => 1,
-        //             'quantity_max' => 1,
-        //             'discount' => '',
-        //             'single_product_visibility' => 'visible',
-        //             'cart_visibility' => 'visible',
-        //             'order_visibility' => 'visible',
-        //             'single_product_price_visibility' => 'visible',
-        //             'cart_price_visibility' => 'visible',
-        //             'order_price_visibility' => 'visible'
-        //         )
-        //     );
-        //
-        // }, $fees, array_keys( $fees ) );
-
 
     }
 

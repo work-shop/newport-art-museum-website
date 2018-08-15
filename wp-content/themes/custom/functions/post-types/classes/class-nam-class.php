@@ -92,8 +92,6 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
         $categories = array_map( function( $term ) { return self::$plural_name . ': ' . $term->name; }, wp_get_post_terms( $post_id, 'classes-categories' ) );
         array_push( $categories, self::$plural_name );
 
-        var_dump( $categories );
-
         return $categories;
 
     }
