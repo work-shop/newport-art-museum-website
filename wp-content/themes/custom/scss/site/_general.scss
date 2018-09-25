@@ -15,6 +15,10 @@ body{
 	&.sitewide-alert-on{
 		padding-top: $nav-height + $sitewide-alert-height;	
 
+		@media screen and (max-width: $md) {
+			padding-top: $nav-height-md + $sitewide-alert-height;
+		}
+
 		@media screen and (max-width: $sm) {
 			padding-top: $nav-height-mobile + $sitewide-alert-height;	
 		}
@@ -22,6 +26,10 @@ body{
 
 	&.home.sitewide-alert-on{
 		padding-top: + $sitewide-alert-height;
+
+		@media screen and (max-width: $md) {
+			padding-top: $nav-height-md  + $sitewide-alert-height;
+		}
 
 		@media screen and (max-width: $sm) {
 			padding-top: $nav-height-mobile + $sitewide-alert-height;	
