@@ -673,7 +673,7 @@ class Jutranslation
         echo '<input type="hidden" name="extension" value="' . esc_attr($addons[$plugin]->extension_slug) . '" />';
         echo '<input type="hidden" name="extension_language" value="' . esc_attr($language) . '" />';
         echo '<input type="hidden" name="extension_version" value="' . esc_attr($version) . '" />';
-        // phpcs:ignore WordPress.XSS.EscapeOutput -- Value wrong
+        // phpcs:ignore WordPress.Security.EscapeOutput -- Value wrong
         echo '<textarea style="display: none" name="strings">' . htmlentities($strings) . '</textarea>';
         echo '</form>';
         //Add waiting image

@@ -448,7 +448,7 @@ class ImageHelper
         // query post
         $posts = $wpdb->get_results('SELECT ID, post_title, post_content, post_type, post_date
 					FROM ' . $wpdb->posts . '
-					WHERE ' . implode(' AND ', $where) . ' ORDER BY ID'); // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+					WHERE ' . implode(' AND ', $where) . ' ORDER BY ID'); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
 
         $results = self::IPrepare($imgs, $posts);
         //Update some value into fields in wp_postmeta

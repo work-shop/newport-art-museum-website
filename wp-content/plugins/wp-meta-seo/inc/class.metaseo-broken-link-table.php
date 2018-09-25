@@ -148,7 +148,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg('paged', $current_url);
 
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['orderby'])) {
             $current_orderby = $_GET['orderby'];
         } else {
@@ -208,7 +208,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
                 $class = "class='" . esc_attr(join(' ', $class)) . "'";
             }
 
-            // phpcs:disable WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+            // phpcs:disable WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
             if ($column_key === 'cb') {
                 echo '<th scope="col" ' . $id . ' ' . $class . ' style="padding:8px 10px;">' . $column_display_name . '</th>';
             } else {
@@ -227,7 +227,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
     {
         global $wpdb;
         $where = array('1=1');
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (!empty($_REQUEST['sltype']) && $_REQUEST['sltype'] !== 'all') {
             if ($_REQUEST['sltype'] !== 'other') {
                 $where[] = $wpdb->prepare('type = %s', array($_REQUEST['sltype']));
@@ -312,7 +312,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             $orderStr = ' ORDER BY ' . esc_sql($orderStr) . ' ';
         }
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $total_items           = $wpdb->get_var('SELECT COUNT(id) FROM ' . $wpdb->prefix . 'wpms_links WHERE ' . implode(' AND ', $where) . $orderStr);
         $columns               = $this->get_columns();
         $hidden                = array();
@@ -333,7 +333,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             'per_page'    => $per_page
         ));
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $this->items = $wpdb->get_results($query);
     }
 
@@ -347,7 +347,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
             require_once(WPMETASEO_ADDON_PLUGIN_DIR . 'inc/page/custom_redirect_form.php');
         }
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (empty($_REQUEST['txtkeyword']) && !$this->has_items()) {
             return;
         }
@@ -394,7 +394,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             'not_yet_redirect' => esc_html__('Not yet redirected', 'wp-meta-seo'),
             'already_redirect' => esc_html__('Already redirected', 'wp-meta-seo')
         );
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $curent_redirect = isset($_REQUEST['sl_redirect']) ? $_REQUEST['sl_redirect'] : 'all';
         ?>
         <label for="filter-by-redirect"
@@ -434,7 +434,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
             $brokens['custom_redirect_url'] = esc_html__('Custom redirect URL', 'wp-meta-seo');
         }
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $curent_broken = isset($_REQUEST['sl_broken']) ? $_REQUEST['sl_broken'] : 'all';
         ?>
         <label for="filter-by-broken"
@@ -470,7 +470,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             'image' => esc_html__('Image', 'wp-meta-seo'),
             'other' => esc_html__('Other', 'wp-meta-seo')
         );
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $curent_type = isset($_REQUEST['sltype']) ? $_REQUEST['sltype'] : 'all';
         ?>
         <label for="filter-by-type"
@@ -601,7 +601,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
                                   <span>' . esc_html__('Check', 'wp-meta-seo') . '</span></a>'
                             );
 
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo $this->row_actions($row_action, false);
                             $iii = 0;
                             $jjj = 0;
@@ -794,7 +794,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
                                 $source_inner = '<span style="float: left;margin-right: 5px;">
 <i class="material-icons metaseo_help_status" data-alt="External URL indexed">link</i></span>';
                                 $source_inner .= esc_html__('404 automaticaly indexed', 'wp-meta-seo');
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo '<td colspan="3">' . $source_inner . '</td>';
                             } else {
                                 if ($rec->type === 'comment' || $rec->type === 'comment_content_url'
@@ -847,9 +847,9 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
 
                                 echo '<td colspan="3">';
                                 if (!empty($source)) {
-                                    // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                    // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                     echo $source_inner;
-                                    // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                    // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                     echo $this->row_actions($row_action, false);
                                 } else {
                                     if ($rec->type === 'add_custom' || $rec->type === 'add_rule') {
@@ -879,7 +879,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
     {
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $redirect    = false;
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_POST['search'])) {
             $current_url = add_query_arg(
                 array(
@@ -1566,7 +1566,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
         $where   = array();
         $where[] = 'post_type IN (\'' . $post_types . '\')';
         $where[] = 'post_status = "publish"';
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $total_posts  = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where));
         $percent_post = 33.33;
         if (!empty($total_posts)) {
@@ -1577,7 +1577,7 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             $percent_post = 33.33;
         }
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $results = $wpdb->get_results($wpdb->prepare('SELECT ID, post_title, post_excerpt, post_content, post_name, post_type, post_status FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where) . 'LIMIT %d OFFSET %d', array(
             $limit_post,
             $off_set

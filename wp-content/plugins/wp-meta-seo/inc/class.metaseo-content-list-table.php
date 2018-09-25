@@ -44,7 +44,7 @@ class MetaSeoContentListTable extends WP_List_Table
 
             <input type="hidden" name="page" value="metaseo_content_meta"/>
             <input type="hidden" name="page" value="metaseo_content_meta"/>
-            <?php // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            <?php // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             ?>
             <?php if (!empty($_REQUEST['post_status'])) : ?>
                 <input type="hidden" name="post_status" value="<?php echo esc_attr($_REQUEST['post_status']); ?>"/>
@@ -79,7 +79,7 @@ class MetaSeoContentListTable extends WP_List_Table
     protected function extra_tablenav($which) // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps -- extends from WP_List_Table class
     {
         echo '<div class="alignleft actions">';
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $selected = !empty($_REQUEST['post_type_filter']) ? $_REQUEST['post_type_filter'] : - 1;
 
         $options = '<option value="-1">Show All Post Types</option>';
@@ -103,7 +103,7 @@ class MetaSeoContentListTable extends WP_List_Table
          class="wpmsbtn wpmsbtn_small btn_do_copy post_do_copy"
           value="' . esc_attr__('Content title as meta title', 'wp-meta-seo') . '"><span class="spinner"></span>';
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $selected_duplicate = !empty($_REQUEST['wpms_duplicate_meta']) ? $_REQUEST['wpms_duplicate_meta'] : 'none';
         $options_dups       = array(
             'none'            => esc_html__('All meta information', 'wp-meta-seo'),
@@ -119,23 +119,23 @@ class MetaSeoContentListTable extends WP_List_Table
             }
         }
         $sl_duplicate .= '</select>';
-        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
         echo sprintf('<select name="post_type_filter" class="metaseo-filter">%1$s</select>', $options);
-        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
         echo $sl_duplicate;
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)
             && (is_plugin_active('sitepress-multilingual-cms/sitepress.php')
                 || is_plugin_active('polylang/polylang.php'))) {
-            // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             $lang    = !empty($_REQUEST['wpms_lang_list']) ? $_REQUEST['wpms_lang_list'] : '0';
             $sl_lang = apply_filters('wpms_get_languagesList', '', $lang);
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
             echo $sl_lang;
         }
 
         echo '<input type="submit" name="do_filter" id="post-query-submit"
          class="wpmsbtn wpmsbtn_small wpmsbtn_secondary" value="' . esc_html__('Filter', 'wp-meta-seo') . '">';
-        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
         echo $sl_bulk . $btn_bulk;
         echo '</div>';
     }
@@ -226,7 +226,7 @@ class MetaSeoContentListTable extends WP_List_Table
     {
         global $wpdb;
         $this->post_types = $this->getPostTypes();
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $post_type = isset($_REQUEST['post_type_filter']) ? $_REQUEST['post_type_filter'] : '';
         if ($post_type === '-1') {
             $post_type = '';
@@ -251,7 +251,7 @@ class MetaSeoContentListTable extends WP_List_Table
         $where      = array();
         $where[]    = 'post_type IN (\'' . $post_type . '\')';
         $where[]    = 'post_status IN (\'' . $all_states . '\')';
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $keyword = !empty($_GET['s']) ? $_GET['s'] : '';
         if (isset($keyword) && $keyword !== '') {
             $where[] = $wpdb->prepare('(post_title LIKE %s OR mt.meta_value LIKE %s OR md.meta_value LIKE %s)', array(
@@ -262,9 +262,9 @@ class MetaSeoContentListTable extends WP_List_Table
         }
 
         //Order By block
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $orderby = !empty($_GET['orderby']) ? ($_GET['orderby']) : 'post_title';
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $order = !empty($_GET['order']) ? ($_GET['order']) : 'asc';
 
         $sortable      = $this->get_sortable_columns();
@@ -285,7 +285,7 @@ class MetaSeoContentListTable extends WP_List_Table
             $orderStr = ' ORDER BY ' . esc_sql($orderStr) . ' ';
         }
 
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['wpms_duplicate_meta']) && $_GET['wpms_duplicate_meta'] !== 'none') {
             if ($_GET['wpms_duplicate_meta'] === 'duplicate_title') {
                 $where[] = 'mt.meta_key = "_metaseo_metatitle" AND mt.meta_value IN (SELECT DISTINCT meta_value FROM ' . $wpdb->postmeta . ' WHERE meta_key="_metaseo_metatitle" AND meta_value != "" GROUP BY meta_value HAVING COUNT(*) >= 2)';
@@ -301,7 +301,7 @@ class MetaSeoContentListTable extends WP_List_Table
                  . ' LEFT JOIN (SELECT * FROM ' . $wpdb->postmeta . ' WHERE meta_key = "_metaseo_metakeywords") mk ON mk.post_id = p.ID ';
         $query .= ' WHERE ' . implode(' AND ', $where);
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $total_items = $wpdb->get_var($query);
 
         $query = 'SELECT DISTINCT ID, post_title, post_name, post_type,  post_status, mt.meta_value AS metatitle, md.meta_value AS metadesc ,mk.meta_value AS metakeywords '
@@ -311,7 +311,7 @@ class MetaSeoContentListTable extends WP_List_Table
                  . ' LEFT JOIN (SELECT * FROM ' . $wpdb->postmeta . ' WHERE meta_key = "_metaseo_metakeywords") mk ON mk.post_id = p.ID';
         // query post by lang with polylang plugin
         if (is_plugin_active(WPMSEO_ADDON_FILENAME) && is_plugin_active('polylang/polylang.php')) {
-            // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             if (isset($_GET['wpms_lang_list']) && $_GET['wpms_lang_list'] !== '0') {
                 $query .= $wpdb->prepare(' INNER JOIN (SELECT * FROM ' . $wpdb->term_relationships . ' as ml
                  INNER JOIN (SELECT * FROM ' . $wpdb->terms . ' WHERE slug = %s)
@@ -322,7 +322,7 @@ class MetaSeoContentListTable extends WP_List_Table
 
         // query post by lang with WPML plugin
         if (is_plugin_active(WPMSEO_ADDON_FILENAME) && is_plugin_active('sitepress-multilingual-cms/sitepress.php')) {
-            // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             if (isset($_GET['wpms_lang_list']) && $_GET['wpms_lang_list'] !== '0') {
                 $query .= $wpdb->prepare(' INNER JOIN (SELECT * FROM ' . $wpdb->prefix . 'icl_translations
                  WHERE element_type LIKE %s AND language_code = %s) t
@@ -333,7 +333,7 @@ class MetaSeoContentListTable extends WP_List_Table
 
         $query .= ' WHERE ' . implode(' AND ', $where) . $orderStr;
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (!empty($_REQUEST['metaseo_posts_per_page'])) {
             $_per_page = intval($_REQUEST['metaseo_posts_per_page']);
         } else {
@@ -355,7 +355,7 @@ class MetaSeoContentListTable extends WP_List_Table
             add_user_meta(get_current_user_id(), 'metaseo_posts_per_page', $per_page);
         }
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $paged = !empty($_GET['paged']) ? $_GET['paged'] : '';
         if (empty($paged) || !is_numeric($paged) || $paged <= 0) {
             $paged = 1;
@@ -379,7 +379,7 @@ class MetaSeoContentListTable extends WP_List_Table
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array($columns, $hidden, $sortable);
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $this->items = $wpdb->get_results($query);
     }
 
@@ -442,7 +442,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 '<td %2$s><div class="action-wrapper">
 <strong id="' . esc_attr('post-title-' . $rec->ID) . '">%1$s</strong>',
                                 esc_html($post_title),
-                                $attributes // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                $attributes // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             );
 
                             $post_type_object = get_post_type_object($rec->post_type);
@@ -481,7 +481,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 }
                             }
 
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo $this->row_actions($actions);
                             echo '</div></td>';
 
@@ -518,7 +518,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 '<div class="title-len" id="%1$s"></div>',
                                 esc_attr('metaseo-metatitle-len' . $rec->ID)
                             );
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo sprintf('<td %2$s>%1$s</td>', $input, $attributes);
                             break;
 
@@ -534,7 +534,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 '<div class="keywords-len" id="%1$s"></div>',
                                 esc_attr('metaseo-metakeywords-len' . $rec->ID)
                             );
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo sprintf('<td %2$s>%1$s</td>', $input, $attributes);
                             break;
 
@@ -550,7 +550,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 '<div class="desc-len" id="%1$s"></div>',
                                 esc_attr('metaseo-metadesc-len' . $rec->ID)
                             );
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo sprintf('<td %2$s>%1$s</td>', $input, $attributes);
                             break;
 
@@ -563,7 +563,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 $input = '<input checked class="metaseo_post_index"
                                  name="index[]" type="checkbox" value="' . esc_attr($rec->ID) . '">';
                             }
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo sprintf('<td %2$s>%1$s</td>', $input, $attributes);
                             break;
 
@@ -576,7 +576,7 @@ class MetaSeoContentListTable extends WP_List_Table
                                 $input = '<input checked class="metaseo_post_follow"
                                  name="follow[]" type="checkbox" value="' . esc_attr($rec->ID) . '">';
                             }
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                             echo sprintf('<td %2$s>%1$s</td>', $input, $attributes);
                             break;
                     }
@@ -596,7 +596,7 @@ class MetaSeoContentListTable extends WP_List_Table
     {
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $redirect    = false;
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_POST['do_filter'])) {
             if (isset($_POST['post_type_filter'])) {
                 $current_url = add_query_arg(array('post_type_filter' => $_POST['post_type_filter']), $current_url);
@@ -667,7 +667,7 @@ class MetaSeoContentListTable extends WP_List_Table
             }
 
             $metakeys = ltrim($metakeys, ' OR ');
-            // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
             $posts_metas = $wpdb->get_results('SELECT post_id as pID, meta_key, meta_value FROM ' . $wpdb->postmeta . ' WHERE  ' . $metakeys . ' ORDER BY meta_key');
 
             if (is_array($posts_metas) && count($posts_metas) > 0) {

@@ -31,7 +31,7 @@ class NAM_Helpers{
 			<?php endif; ?>
 		</div>
 		<div class="menu-dropdown-graphic-2">
-			<?php $image = get_field('about_menu_image', 'option'); ?>
+			<?php //$image = get_field('about_menu_image', 'option'); ?>
 			<?php if( $image ): ?>
 				<div class="menu-dropdown-graphic-background" style="background-image: url('<?php echo $image['sizes']['large']; ?>')">
 				</div>

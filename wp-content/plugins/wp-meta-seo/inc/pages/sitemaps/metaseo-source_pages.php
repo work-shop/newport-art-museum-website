@@ -109,7 +109,7 @@
             }
 
             echo '</div>';
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoSitemap::viewPriority and MetaSeoSitemap::viewFrequency
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoSitemap::viewPriority and MetaSeoSitemap::viewFrequency
             echo '<div style="margin-left:200px">' . $slpr . $slfr . '</div>';
             echo '</div>';
         }

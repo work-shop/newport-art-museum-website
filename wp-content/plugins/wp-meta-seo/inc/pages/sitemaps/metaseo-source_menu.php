@@ -32,7 +32,7 @@
         }
         echo '<div class="wrap_sitemap_option">';
         echo '<input name="_metaseo_settings_sitemap[wpms_check_firstsave]" type="hidden" value="1">';
-        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoSitemap::viewMenus
+        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoSitemap::viewMenus
         echo $viewmenu;
         echo '</div>';
     }

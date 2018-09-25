@@ -8,7 +8,7 @@ if (!empty($this->google_alanytics)) :
                 <?php esc_html_e('Google Analytics Report', 'wp-meta-seo') ?>
             </a>
             <?php
-            // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             if (empty($_GET['view'])) {
                 echo '<div class="indicator" style="bottom: 0; left: 0;width:100%"></div>';
             }
@@ -20,7 +20,7 @@ if (!empty($this->google_alanytics)) :
                 <?php esc_html_e('Tracking code', 'wp-meta-seo') ?>
             </a>
             <?php
-            // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             if (isset($_GET['view']) && $_GET['view'] === 'wpmsga_trackcode') {
                 echo '<div class="indicator" style="bottom: 0; left: 0;width:100%"></div>';
             }

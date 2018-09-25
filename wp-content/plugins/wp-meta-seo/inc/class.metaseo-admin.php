@@ -298,7 +298,7 @@ class MetaSeoAdmin
     public function saveCategoryMeta($term_id)
     {
         global $pagenow;
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- Nonce used in next lines
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- Nonce used in next lines
         if ($pagenow === 'edit-tags.php' || (isset($_POST['action'], $_POST['screen']) && $_POST['action'] === 'add-tag' && $_POST['screen'] === 'edit-category')) {
             if (empty($_POST['wpms_nonce'])
                 || !wp_verify_nonce($_POST['wpms_nonce'], 'wpms_nonce')) {
@@ -2683,14 +2683,21 @@ class MetaSeoAdmin
             );
         }
 
+        if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
+            $addon_active = 1;
+        } else {
+            $addon_active = 0;
+        }
         // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
         wp_localize_script('wpmetaseoAdmin', 'wpms_localize', array(
+            'addon_active'                 => $addon_active,
             'ajax_url'                     => admin_url('admin-ajax.php'),
             'settings'                     => $this->settings,
             'wpms_cat_metatitle_length'    => MPMSCAT_TITLE_LENGTH,
             'wpms_cat_metadesc_length'     => MPMSCAT_DESC_LENGTH,
             'wpms_cat_metakeywords_length' => MPMSCAT_KEYWORDS_LENGTH,
-            'wpms_nonce'                   => wp_create_nonce('wpms_nonce')
+            'wpms_nonce'                   => wp_create_nonce('wpms_nonce'),
+            'home_url'                     => home_url()
         ));
     }
 
@@ -2978,7 +2985,7 @@ class MetaSeoAdmin
     public function loadPage()
     {
         if (isset($_GET['page'])) {
-            // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             switch ($_GET['page']) {
                 case 'metaseo_google_analytics':
                     echo "<div class='error wpms_msg_ublock'><p>";

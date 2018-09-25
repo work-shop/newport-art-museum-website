@@ -55,10 +55,10 @@ class MetaSeoImageListTable extends WP_List_Table
                     if (is_plugin_active(WPMSEO_ADDON_FILENAME)
                         && (is_plugin_active('sitepress-multilingual-cms/sitepress.php')
                             || is_plugin_active('polylang/polylang.php'))) {
-                        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+                        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
                         $lang    = !empty($_REQUEST['wpms_lang_list']) ? $_REQUEST['wpms_lang_list'] : '0';
                         $sl_lang = apply_filters('wpms_get_languagesList', '', $lang);
-                        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
+                        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
                         echo $sl_lang;
                     }
                     ?>
@@ -72,10 +72,10 @@ class MetaSeoImageListTable extends WP_List_Table
                     if (is_plugin_active(WPMSEO_ADDON_FILENAME)
                         && (is_plugin_active('sitepress-multilingual-cms/sitepress.php')
                             || is_plugin_active('polylang/polylang.php'))) {
-                        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+                        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
                         $lang    = !empty($_REQUEST['wpms_lang_list']) ? $_REQUEST['wpms_lang_list'] : '0';
                         $sl_lang = apply_filters('wpms_get_languagesList', '', $lang);
-                        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
+                        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
                         echo $sl_lang;
                     }
                     ?>
@@ -112,7 +112,7 @@ class MetaSeoImageListTable extends WP_List_Table
             </div>
 
             <input type="hidden" name="page" value="metaseo_image_meta"/>
-            <?php // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            <?php // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             ?>
             <?php if (!empty($_REQUEST['post_status'])) : ?>
                 <input type="hidden" name="post_status" value="<?php echo esc_attr($_REQUEST['post_status']); ?>"/>
@@ -191,7 +191,7 @@ class MetaSeoImageListTable extends WP_List_Table
         list($columns, $hidden, $sortable) = $this->get_column_info();
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg('paged', $current_url);
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['orderby'])) {
             $current_orderby = $_GET['orderby'];
         } else {
@@ -251,7 +251,7 @@ class MetaSeoImageListTable extends WP_List_Table
                 $class = "class='" . esc_attr(join(' ', $class)) . "'";
             }
 
-            // phpcs:disable WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+            // phpcs:disable WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
             if ($column_key === 'col_id') {
                 echo '<th scope="col" ' . $id . ' ' . $class . ' ' . $style . ' colspan="1">' . $column_display_name . '</th>';
             } elseif ($column_key === 'col_image_name') {
@@ -297,7 +297,7 @@ class MetaSeoImageListTable extends WP_List_Table
         global $wpdb;
         $this->months = $this->getMonths();
         $where        = array();
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $where[] = ' post_type="attachment" AND ((post_mime_type="image/jpeg") OR (post_mime_type="image/jpg")
          OR (post_mime_type="image/png") OR (post_mime_type="image/gif")) ';
         if (!empty($_REQUEST['search'])) {
@@ -359,7 +359,7 @@ class MetaSeoImageListTable extends WP_List_Table
                   ON t.element_id = posts.ID ', array('post_%', $_GET['wpms_lang_list']));
             }
         }
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $total_items = $wpdb->get_var('SELECT COUNT(ID) FROM ' . $wpdb->posts . ' as posts ' . $join . ' WHERE ' . implode(' AND ', $where) . $orderStr);
         $query       = 'SELECT DISTINCT ID, post_title as title, post_name as name, post_content as des,
  post_excerpt as legend, guid, post_type , post_mime_type, post_status, mt.meta_value AS alt
@@ -388,7 +388,7 @@ class MetaSeoImageListTable extends WP_List_Table
             add_user_meta(get_current_user_id(), 'metaseo_imgs_per_page', $per_page);
         }
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $paged = !empty($_GET['paged']) ? ($_GET['paged']) : '';
 
         if (empty($paged) || !is_numeric($paged) || $paged <= 0) {
@@ -412,9 +412,9 @@ class MetaSeoImageListTable extends WP_List_Table
         $hidden                = array();
         $sortable              = $this->get_sortable_columns();
         $this->_column_headers = array($columns, $hidden, $sortable);
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $this->items = $wpdb->get_results($query);
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['slmeta']) && ($_GET['slmeta'] === 'missing_information' || $_GET['slmeta'] === 'resizeimages')) {
             foreach ($this->items as $item) {
                 $item->alt = get_post_meta($item->ID, '_wp_attachment_image_alt', true);
@@ -429,7 +429,7 @@ class MetaSeoImageListTable extends WP_List_Table
      */
     public function searchBox1()
     {
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (empty($_REQUEST['txtkeyword']) && !$this->has_items()) {
             return;
         }
@@ -477,7 +477,7 @@ class MetaSeoImageListTable extends WP_List_Table
             return;
         }
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $m = isset($_REQUEST['sldate']) ? $_REQUEST['sldate'] : 0;
         ?>
         <label for="filter-by-date"
@@ -518,7 +518,7 @@ class MetaSeoImageListTable extends WP_List_Table
      */
     public function metaFilter($name)
     {
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $m = isset($_REQUEST['slmeta']) ? $_REQUEST['slmeta'] : 0;
         ?>
         <label>
@@ -630,7 +630,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                     '<img src="' . esc_url($thumb_url) . '" width="100px" height="100px" class="metaseo-image"
   data-name="' . esc_attr($img_name . $type) . '" data-img-post-id="' . esc_attr($rec->ID) . '" />'
                                 );
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="3">%1$s</td>', $img, $attributes);
                                 break;
 
@@ -648,7 +648,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                                         <span class="spinner"></span>
                                                         </span>';
                                 $info .= '</div>';
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="4">%1$s</td>', $info, $attributes);
                                 break;
 
@@ -661,7 +661,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                                                         <span class="popup-close" title="Close">x</span>
                                     <div class="popup-content"></div>
                              </div>';
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="5" style="position:relative">%1$s</td>', $info, $attributes);
                                 break;
 
@@ -672,7 +672,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                 $input .= ('<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>');
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
                                 break;
 
@@ -683,7 +683,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                 $input .= ('<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>');
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
                                 break;
 
@@ -694,7 +694,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                 $input .= '<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>';
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
                                 break;
 
@@ -705,7 +705,7 @@ class MetaSeoImageListTable extends WP_List_Table
                                 $input .= ('<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>');
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
                                 break;
                         }
@@ -1052,7 +1052,7 @@ class MetaSeoImageListTable extends WP_List_Table
     {
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $redirect    = false;
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_POST['search']) && $_POST['search'] === 'Search') {
             $current_url = add_query_arg(
                 array(
@@ -1557,7 +1557,7 @@ class MetaSeoImageListTable extends WP_List_Table
                             $where[] = "post_content LIKE '%<img%>%'";
                             $where[] = $w;
                             // query post
-                            // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+                            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
                             $posts             = $wpdb->get_results('SELECT ID, post_title, post_content, post_type, post_date FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where) . ' ORDER BY ID');
                             $imgs              = array($old_name . $oldpart->ext => $postID);
                             $posts_contain_img = array();

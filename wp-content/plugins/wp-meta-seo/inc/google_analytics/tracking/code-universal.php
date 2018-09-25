@@ -11,7 +11,7 @@
 /* Prohibit direct script loading */
 defined('ABSPATH') || die('No direct script access allowed!');
 $profile = WpmsGaTools::getSelectedProfile($google_alanytics['profile_list'], $google_alanytics['tableid_jail']);
-// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped, Squiz.ControlStructures.ForEachLoopDeclaration.SpaceAfterOpen, Squiz.ControlStructures.ForEachLoopDeclaration.SpaceBeforeClose, PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace, PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace, Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace, Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore, Generic.WhiteSpace.ScopeIndent.IncorrectExact -- Render google analytics script structure on frontend
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.Incorrect, WordPress.Security.EscapeOutput.OutputNotEscaped, Squiz.ControlStructures.ForEachLoopDeclaration.SpaceAfterOpen, Squiz.ControlStructures.ForEachLoopDeclaration.SpaceBeforeClose, PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace, PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace, Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace, Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore, Generic.WhiteSpace.ScopeIndent.IncorrectExact -- Render google analytics script structure on frontend
 ?>
 <script>
     (function (i, s, o, g, r, a, m) {

@@ -478,7 +478,7 @@ class MetaSeoSitemap
     {
         $lang    = $this->settings_sitemap['wpms_sitemap_include_lang'];
         $sl_lang = apply_filters('wpms_get_languagesList', '', $lang, 'multiple');
-        // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
+        // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::listLanguageSelect
         echo $sl_lang;
     }
 
@@ -1665,7 +1665,7 @@ ORDER BY p.post_date DESC', array('publish', $post_type, $taxo, $cat->slug)));
                             $check_menu[] = 'sitemap_menus_' . $term->term_id;
                             echo '<div id="' . esc_attr('sitemap_menus_' . $term->term_id) . '" class="wpms_sitemap_menus">';
                             $viewmenu = $this->viewMenusFrontend($term, $ids_menu);
-                            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method viewMenusFrontend
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method viewMenusFrontend
                             echo $viewmenu;
 
                             echo '</div>';

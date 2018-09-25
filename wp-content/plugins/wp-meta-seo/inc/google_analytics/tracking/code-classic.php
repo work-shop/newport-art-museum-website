@@ -11,7 +11,7 @@
 /* Prohibit direct script loading */
 defined('ABSPATH') || die('No direct script access allowed!');
 $profile = WpmsGaTools::getSelectedProfile($google_alanytics['profile_list'], $google_alanytics['tableid_jail']);
-// phpcs:disable Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace, Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore -- Render google analytics script structure on frontend
+// phpcs:disable Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace, Generic.WhiteSpace.ScopeIndent.IncorrectExact, Generic.WhiteSpace.ScopeIndent.Incorrect, Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore -- Render google analytics script structure on frontend
 ?>
 <script type="text/javascript">
     var _gaq = _gaq || [];

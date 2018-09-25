@@ -161,7 +161,7 @@ class MetaSeoBreadcrumb
         if ($return) {
             return $html; // for return has true
         } else {
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method generateBreadcrumb
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method generateBreadcrumb
             echo $html; // for return has false
         }
     }

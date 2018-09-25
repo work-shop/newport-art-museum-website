@@ -242,8 +242,8 @@ jQuery(document).ready(function ($) {
                 if (res.status) {
                     $this.closest('td').find('.wpms-inline-editor-content').hide();
                     //if(res.type != '404_automaticaly'){
-                    $this.closest('td').find('.link_html').html(new_link).attr('href', new_link);
-                    $this.closest('td').find('.link_html_redirect').html(link_redirect).attr('href', link_redirect);
+                    $this.closest('td').find('.link_html').html(new_link).attr('href', wpms_localize.home_url + '/' + new_link);
+                    $this.closest('td').find('.link_html_redirect').html(link_redirect).attr('href', wpms_localize.home_url + '/' + link_redirect);
                     $this.closest('tr').find('.col_status').html(res.status_text);
 
                     var status = res.status_text;

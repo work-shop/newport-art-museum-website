@@ -91,7 +91,7 @@ class MetaSeoFront
                 $tracking_code = trim($this->gaDisconnect['wpmsga_code_tracking']);
                 if (!empty($tracking_code)) {
                     echo '<script type="text/javascript">';
-                    // phpcs:ignore WordPress.XSS.EscapeOutput -- Content has saved by user when save Analytics JS code
+                    // phpcs:ignore WordPress.Security.EscapeOutput -- Content has saved by user when save Analytics JS code
                     echo strip_tags(stripslashes($this->gaDisconnect['wpmsga_code_tracking']));
                     echo '</script>';
                 } else {

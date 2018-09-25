@@ -4,7 +4,7 @@
  * Plugin Name: WP Meta SEO
  * Plugin URI: http://www.joomunited.com/wordpress-products/wp-meta-seo
  * Description: WP Meta SEO is a plugin for WordPress to fill meta for content, images and main SEO info in a single view.
- * Version: 3.7.4
+ * Version: 3.7.6
  * Text Domain: wp-meta-seo
  * Domain Path: /languages
  * Author: JoomUnited
@@ -90,7 +90,7 @@ if (!defined('WPMSEO_VERSION')) {
     /**
      * Plugin version
      */
-    define('WPMSEO_VERSION', '3.7.4');
+    define('WPMSEO_VERSION', '3.7.6');
 }
 
 if (!defined('WPMS_CLIENTID')) {
@@ -391,7 +391,7 @@ if (is_admin()) {
         );
 
         foreach ($patterns as $k => $pattern) {
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in some method in class MetaSeoOpenGraph
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in some method in class MetaSeoOpenGraph
             echo $pattern[1];
         }
     }
@@ -416,7 +416,7 @@ if (is_admin()) {
         do_action('wpmsseo_head');
 
         if (!empty($old_wp_query)) {
-            // phpcs:ignore WordPress.Variables.GlobalVariables.OverrideProhibited -- This combines all the output on the frontend
+            // phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited -- This combines all the output on the frontend
             $GLOBALS['wp_query'] = $old_wp_query;
             unset($old_wp_query);
         }
@@ -636,176 +636,166 @@ add_action('template_redirect', 'wpmsTemplateRedirect');
 function wpmsTemplateRedirect()
 {
     global $wpdb;
-    if (is_404()) {
-        if (isset($_SERVER['REQUEST_URI'])) {
-            $url   = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
-            if (isset($_SERVER['HTTPS']) &&
-                ($_SERVER['HTTPS'] === 'on' || (int) $_SERVER['HTTPS'] === 1) ||
-                isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-                $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
-                $protocol = 'https://';
-            } else {
-                $protocol = 'http://';
-            }
-            $esc_url = str_replace(array('http://', 'https://'), $protocol, esc_url($url));
-            $check = $wpdb->get_results($wpdb->prepare(
-                'SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE (link_url=%s OR link_url=%s OR link_url=%s)',
-                array(
-                    $url,
-                    $esc_url,
-                    $_SERVER['REQUEST_URI']
-                )
-            ));
+    // redirect by rule
 
-            if (count($check) === 0) {
-                // insert url
-                $insert = array(
-                    'link_url'        => ($url),
-                    'status_code'     => '404 Not Found',
-                    'status_text'     => '404 Not Found',
-                    'type'            => '404_automaticaly',
-                    'broken_indexed'  => 1,
-                    'broken_internal' => 0,
-                    'warning'         => 0,
-                    'dismissed'       => 0
-                );
-
-                $wpdb->insert($wpdb->prefix . 'wpms_links', $insert);
-            } else {
-                // update url
-                $links_broken = $wpdb->get_row($wpdb->prepare(
-                    'SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE (link_url=%s OR link_url=%s OR link_url=%s) ',
-                    array(
-                        $url,
-                        $esc_url,
-                        $_SERVER['REQUEST_URI']
-                    )
-                ));
-
-                if (!empty($links_broken)) {
-                    $value = array('hit' => (int) $links_broken->hit + 1);
-                    $wpdb->update(
-                        $wpdb->prefix . 'wpms_links',
-                        $value,
-                        array('id' => $links_broken->id),
-                        array('%d'),
-                        array('%d')
-                    );
-
-                    if (($url === $links_broken->link_url || esc_url($url) === $links_broken->link_url)
-                        && $links_broken->link_url_redirect !== '') {
-                        if ($links_broken->type === 'add_custom') {
-                            $status_redirect = $links_broken->meta_title;
-                        } else {
-                            $status_redirect = 302;
-                        }
-                        if (empty($status_redirect)) {
-                            $status_redirect = 302;
-                        }
-                        wp_redirect($links_broken->link_url_redirect, $status_redirect);
-                        exit();
-                    }
-                }
-            }
-        }
-
-        $defaul_settings_404 = array(
-            'wpms_redirect_homepage' => 0,
-            'wpms_type_404'          => 'none',
-            'wpms_page_redirected'   => 'none'
-        );
-        $wpms_settings_404   = get_option('wpms_settings_404');
-
-        if (is_array($wpms_settings_404)) {
-            $defaul_settings_404 = array_merge($defaul_settings_404, $wpms_settings_404);
-        }
-
-        // redirect url by settings
-        if (isset($defaul_settings_404['wpms_redirect_homepage'])
-            && (int) $defaul_settings_404['wpms_redirect_homepage'] === 1) {
-            wp_redirect(get_home_url());
-            exit();
-        } else {
-            if (isset($defaul_settings_404['wpms_type_404'])) {
-                switch ($defaul_settings_404['wpms_type_404']) {
-                    case 'wp-meta-seo-page':
-                        global $wpdb;
-                        $wpms_page = $wpdb->get_row($wpdb->prepare(
-                            'SELECT * FROM ' . $wpdb->prefix . 'posts WHERE post_title = %s AND post_excerpt = %s',
-                            array(
-                                '404 Error, content does not exist anymore',
-                                'metaseo_404_page'
-                            )
-                        ));
-                        if (!empty($wpms_page)) {
-                            $link_redirect = get_permalink($wpms_page->ID);
-                            if ($link_redirect) {
-                                wp_redirect($link_redirect);
-                                exit();
-                            }
-                        }
-                        break;
-
-                    case 'custom_page':
-                        if (isset($defaul_settings_404['wpms_page_redirected'])
-                            && $defaul_settings_404['wpms_page_redirected'] !== 'none') {
-                            $link_redirect = get_permalink($defaul_settings_404['wpms_page_redirected']);
-                            if ($link_redirect) {
-                                wp_redirect($link_redirect);
-                                exit();
-                            }
-                        }
-                        break;
-                }
-            }
-        }
+    $url = '';
+    if (isset($_SERVER['REQUEST_URI'])) {
+        $url = $_SERVER['REQUEST_URI'];
     }
 
-    // redirect by rule
-    if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
-        $url = $_SERVER['REQUEST_URI'];
-        $params = explode('/', $url);
-        $rule_url = '';
-        if (isset($params[2])) {
-            $rule_url = '/' . $params[2] . '/';
-        }
-        if (!is_home() && !is_front_page()) {
-            $matches         = false;
-            $all_links       = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE link_url != %s AND link_url != "" AND (link_url LIKE %s || link_url LIKE %s)', array(
-                '/',
-                '%' . $url . '%',
-                '%' . $rule_url . '%'
-            )));
-            $target          = '';
-            $status_redirect = 302;
-            foreach ($all_links as $link) {
-                $link->link_url = str_replace('/*', '/(.*)', $link->link_url);
-                if ((preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', $url, $matches) > 0) || (preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', urldecode($url), $matches) > 0)) {    // Check if our match wants this URL
-                    $target = $link->link_url_redirect;
-                    if ($link->type === 'add_custom') {
-                        $status_redirect = $link->meta_title;
+    if (!is_home() && !is_front_page()) {
+        $redirects       = $wpdb->get_results($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE (link_url = %s AND link_url != "/") OR type = "add_rule" OR type = "add_custom"', array(
+            $url
+        )));
+        $target          = '';
+        $status_redirect = 302;
+        foreach ($redirects as $link) {
+            $link->link_url = str_replace(' ', '%20', $link->link_url);
+            $matches        = false;
+            // phpcs:ignore Generic.PHP.NoSilencedErrors.Discouraged -- remove warning if match the URL
+            if ((($link->link_url === $url || $link->link_url === rtrim($url, '/') || $link->link_url === urldecode($url))) || (@preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', $url, $matches) > 0) || (@preg_match('@' . str_replace('@', '\\@', $link->link_url) . '@', urldecode($url), $matches) > 0)) {
+                $target = $link->link_url_redirect;
+                if ($link->type === 'add_custom') {
+                    if (!is_plugin_active(WPMSEO_ADDON_FILENAME)) {
+                        return;
                     }
-                    break;
+                    $status_redirect = $link->meta_title;
                 }
 
-                if (home_url($url) === $link->link_url || home_url($url) === home_url($link->link_url)) {
-                    $target = $link->link_url_redirect;
-
-                    if ($link->type === 'add_custom') {
-                        $status_redirect = $link->meta_title;
-                        wp_redirect($target, $status_redirect);
-                        exit();
-                    }
-                    break;
-                }
+                break;
             }
+        }
 
-            if (!empty($target)) {
-                if (empty($status_redirect)) {
-                    $status_redirect = 302;
+        if ($target) {
+            if (empty($status_redirect)) {
+                $status_redirect = 302;
+            }
+            wp_redirect($target, $status_redirect);
+            exit();
+        } else {
+            if (is_404()) {
+                if (isset($_SERVER['REQUEST_URI'])) {
+                    $url = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+                    if (isset($_SERVER['HTTPS']) &&
+                        ($_SERVER['HTTPS'] === 'on' || (int) $_SERVER['HTTPS'] === 1) ||
+                        isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
+                        $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https') {
+                        $protocol = 'https://';
+                    } else {
+                        $protocol = 'http://';
+                    }
+                    $esc_url = str_replace(array('http://', 'https://'), $protocol, esc_url($url));
+                    $check   = $wpdb->get_results($wpdb->prepare(
+                        'SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE (link_url=%s OR link_url=%s OR link_url=%s)',
+                        array(
+                            $url,
+                            $esc_url,
+                            $_SERVER['REQUEST_URI']
+                        )
+                    ));
+
+                    if (count($check) === 0) {
+                        // insert url
+                        $insert = array(
+                            'link_url'        => ($url),
+                            'status_code'     => '404 Not Found',
+                            'status_text'     => '404 Not Found',
+                            'type'            => '404_automaticaly',
+                            'broken_indexed'  => 1,
+                            'broken_internal' => 0,
+                            'warning'         => 0,
+                            'dismissed'       => 0
+                        );
+
+                        $wpdb->insert($wpdb->prefix . 'wpms_links', $insert);
+                    } else {
+                        // update url
+                        $links_broken = $wpdb->get_row($wpdb->prepare(
+                            'SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE (link_url=%s OR link_url=%s OR link_url=%s) ',
+                            array(
+                                $url,
+                                $esc_url,
+                                $_SERVER['REQUEST_URI']
+                            )
+                        ));
+
+                        if (!empty($links_broken)) {
+                            $value = array('hit' => (int) $links_broken->hit + 1);
+                            $wpdb->update(
+                                $wpdb->prefix . 'wpms_links',
+                                $value,
+                                array('id' => $links_broken->id),
+                                array('%d'),
+                                array('%d')
+                            );
+
+                            if (($url === $links_broken->link_url || esc_url($url) === $links_broken->link_url)
+                                && $links_broken->link_url_redirect !== '') {
+                                if (!empty($links_broken->meta_title)) {
+                                    $status_redirect = $links_broken->meta_title;
+                                } else {
+                                    $status_redirect = 302;
+                                }
+                                if (empty($status_redirect)) {
+                                    $status_redirect = 302;
+                                }
+                                wp_redirect($links_broken->link_url_redirect, $status_redirect);
+                                exit();
+                            }
+                        }
+                    }
                 }
-                wp_redirect($target, $status_redirect);
-                exit();
+
+                $defaul_settings_404 = array(
+                    'wpms_redirect_homepage' => 0,
+                    'wpms_type_404'          => 'none',
+                    'wpms_page_redirected'   => 'none'
+                );
+                $wpms_settings_404   = get_option('wpms_settings_404');
+
+                if (is_array($wpms_settings_404)) {
+                    $defaul_settings_404 = array_merge($defaul_settings_404, $wpms_settings_404);
+                }
+
+                // redirect url by settings
+                if (isset($defaul_settings_404['wpms_redirect_homepage'])
+                    && (int) $defaul_settings_404['wpms_redirect_homepage'] === 1) {
+                    wp_redirect(get_home_url());
+                    exit();
+                } else {
+                    if (isset($defaul_settings_404['wpms_type_404'])) {
+                        switch ($defaul_settings_404['wpms_type_404']) {
+                            case 'wp-meta-seo-page':
+                                global $wpdb;
+                                $wpms_page = $wpdb->get_row($wpdb->prepare(
+                                    'SELECT * FROM ' . $wpdb->prefix . 'posts WHERE post_title = %s AND post_excerpt = %s',
+                                    array(
+                                        '404 Error, content does not exist anymore',
+                                        'metaseo_404_page'
+                                    )
+                                ));
+                                if (!empty($wpms_page)) {
+                                    $link_redirect = get_permalink($wpms_page->ID);
+                                    if ($link_redirect) {
+                                        wp_redirect($link_redirect);
+                                        exit();
+                                    }
+                                }
+                                break;
+
+                            case 'custom_page':
+                                if (isset($defaul_settings_404['wpms_page_redirected'])
+                                    && $defaul_settings_404['wpms_page_redirected'] !== 'none') {
+                                    $link_redirect = get_permalink($defaul_settings_404['wpms_page_redirected']);
+                                    if ($link_redirect) {
+                                        wp_redirect($link_redirect);
+                                        exit();
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
             }
         }
     }

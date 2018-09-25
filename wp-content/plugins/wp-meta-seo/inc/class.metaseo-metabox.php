@@ -50,7 +50,7 @@ class WPMSEOMetabox extends WPMSEOMeta
      */
     public function savePostData($post_id)
     {
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- Nonce used in next lines
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- Nonce used in next lines
         if (isset($_POST['metaseo_wpmseo_title'])) {
             if (empty($_POST['_wpnonce'])
                 || !wp_verify_nonce($_POST['_wpnonce'], 'update-post_' . $post_id)) {
@@ -437,7 +437,7 @@ class WPMSEOMetabox extends WPMSEOMeta
         $this->doTab('general', $content);
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
             if ($check_connected) {
-                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::gscKeywords
+                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method MetaSeoAddonAdmin::gscKeywords
                 echo apply_filters('wpmsaddon_google_search_keywords', '', $post->post_content, $service);
             }
         }
@@ -659,7 +659,7 @@ class WPMSEOMetabox extends WPMSEOMeta
      */
     private function getMetaboxPost()
     {
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['post'])) {
             $post_id = (int) $_GET['post'];
             $post    = get_post($post_id);
@@ -708,13 +708,13 @@ class WPMSEOMetabox extends WPMSEOMeta
             <?php endif; ?>
             <table class="form-table">
                 <?php
-                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method doMetaBox
+                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method doMetaBox
                 echo $content;
                 ?>
             </table>
             <?php
             if ($id === 'general') {
-                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method pageAnalysis
+                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method pageAnalysis
                 echo $this->pageAnalysis($post);
                 $settings = get_option('_metaseo_settings');
                 if (!empty($settings['metaseo_follow'])) {
@@ -732,7 +732,7 @@ class WPMSEOMetabox extends WPMSEOMeta
                     <i class="material-icons alignright metaseo_help" id="deschelp"
                      data-alt="' . esc_attr__('Nofollow provides a way for webmasters to tell search engines:
                       don\'t follow this link. So it may influence the link target’s ranking', 'wp-meta-seo') . '"
-                      style="color:#32373C" data-hasqtip="2">chat_bubble</i></span>' . $slf . '</p>'; // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                      style="color:#32373C" data-hasqtip="2">chat_bubble</i></span>' . $slf . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                 }
 
                 if (!empty($settings['metaseo_index'])) {
@@ -751,7 +751,7 @@ class WPMSEOMetabox extends WPMSEOMeta
                     <i class="material-icons alignright metaseo_help" id="deschelp"
                      data-alt="' . esc_attr__('Allow search engines robots to index this content,
                       as default your content is indexed', 'wp-meta-seo') . '"
-                      style="color:#32373C" data-hasqtip="2">chat_bubble</i></span>' . $sli . '</p>'; // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                      style="color:#32373C" data-hasqtip="2">chat_bubble</i></span>' . $sli . '</p>'; // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                 }
             }
             ?>

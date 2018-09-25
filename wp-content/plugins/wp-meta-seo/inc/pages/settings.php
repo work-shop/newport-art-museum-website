@@ -101,7 +101,7 @@ wp_enqueue_script('jquery-qtip');
             </table>
             <?php
             if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
-                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/link_settings.php' file
+                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/link_settings.php' file
                 echo $link_settings_html;
             }
             ?>
@@ -251,9 +251,9 @@ wp_enqueue_script('jquery-qtip');
 
         <?php
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/email_settings.php' file
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/email_settings.php' file
             echo $html_tabemail;
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/local_business.php' file
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/local_business.php' file
             echo $local_business_html;
         }
         ?>

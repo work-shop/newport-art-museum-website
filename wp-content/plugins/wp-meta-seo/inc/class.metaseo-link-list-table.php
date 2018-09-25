@@ -59,7 +59,7 @@ class MetaSeoLinkListTable extends WP_List_Table
             <?php endif ?>
 
             <input type="hidden" name="page" value="metaseo_image_meta"/>
-            <?php // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            <?php // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             ?>
             <?php if (!empty($_REQUEST['post_status'])) : ?>
                 <input type="hidden" name="post_status" value="<?php echo esc_attr($_REQUEST['post_status']); ?>"/>
@@ -148,15 +148,15 @@ class MetaSeoLinkListTable extends WP_List_Table
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $current_url = remove_query_arg('paged', $current_url);
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['orderby'])) {
-            // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
             $current_orderby = $_GET['orderby'];
         } else {
             $current_orderby = '';
         }
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_GET['order']) && 'desc' === $_GET['order']) {
             $current_order = 'desc';
         } else {
@@ -211,7 +211,7 @@ class MetaSeoLinkListTable extends WP_List_Table
                 $class = "class='" . esc_attr(join(' ', $class)) . "'";
             }
 
-            // phpcs:disable WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+            // phpcs:disable WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
             if ($column_key === 'col_id') {
                 echo '<th scope="col" ' . $id . ' ' . $class . ' ' . $style . ' colspan="1">' . $column_display_name . '</th>';
             } elseif ($column_key === 'col_image_name') {
@@ -240,7 +240,7 @@ class MetaSeoLinkListTable extends WP_List_Table
             $post_type = esc_sql($post_type);
         }
         $post_types = implode("', '", $post_types);
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $months = $wpdb->get_results('SELECT DISTINCT YEAR( post_date ) AS year, MONTH( post_date ) AS month FROM ' . $wpdb->posts . ' WHERE post_type IN (\'' . $post_types . '\') ORDER BY post_date DESC');
         return $months;
     }
@@ -256,7 +256,7 @@ class MetaSeoLinkListTable extends WP_List_Table
         $this->months = $this->getMonths();
 
         $where = array('1=1');
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $keyword = !empty($_GET['txtkeyword']) ? $_GET['txtkeyword'] : '';
         if (isset($keyword) && $keyword !== '') {
             $where[] .= $wpdb->prepare('(link_text LIKE %s OR link_url LIKE %s)', array(
@@ -299,7 +299,7 @@ class MetaSeoLinkListTable extends WP_List_Table
             add_user_meta(get_current_user_id(), 'metaseo_broken_link_per_page', $per_page);
         }
 
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $paged = !empty($_GET['paged']) ? $_GET['paged'] : '';
         if (empty($paged) || !is_numeric($paged) || $paged <= 0) {
             $paged = 1;
@@ -323,7 +323,7 @@ class MetaSeoLinkListTable extends WP_List_Table
             $orderStr = ' ORDER BY ' . esc_sql($orderStr) . ' ';
         }
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $total_items           = $wpdb->get_var('SELECT COUNT(id) FROM ' . $wpdb->prefix . 'wpms_links WHERE ' . implode(' AND ', $where) . $orderStr);
         $columns               = $this->get_columns();
         $hidden                = array();
@@ -344,7 +344,7 @@ class MetaSeoLinkListTable extends WP_List_Table
             'per_page'    => $per_page
         ));
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $this->items = $wpdb->get_results($query);
     }
 
@@ -355,7 +355,7 @@ class MetaSeoLinkListTable extends WP_List_Table
      */
     public function searchBox1()
     {
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (empty($_REQUEST['txtkeyword']) && !$this->has_items()) {
             return;
         }
@@ -422,7 +422,7 @@ class MetaSeoLinkListTable extends WP_List_Table
      */
     public function sourceFilter()
     {
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $link_source = isset($_GET['metaseo_link_source']) ? $_GET['metaseo_link_source'] : 0;
         ?>
         <label>
@@ -456,7 +456,7 @@ class MetaSeoLinkListTable extends WP_List_Table
         if (!$month_count || (1 === (int) $month_count && 0 === (int) $this->months[0]->month)) {
             return;
         }
-        // phpcs:ignore WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         $m = isset($_REQUEST['sldate']) ? $_REQUEST['sldate'] : 0;
         ?>
         <label for="filter-by-date"
@@ -531,7 +531,7 @@ class MetaSeoLinkListTable extends WP_List_Table
                                 echo '<td class="col_id" colspan="3">';
                                 echo '<a target="_blank"
                              href="' . esc_url(get_edit_post_link($rec->source_id)) . '">' . esc_html($post->post_title) . '</a>';
-                                // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same function)
+                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo $this->row_actions($row_action, false);
                                 echo '</td>';
                             }
@@ -586,7 +586,7 @@ class MetaSeoLinkListTable extends WP_List_Table
         $current_url = set_url_scheme('http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI']);
         $redirect    = false;
 
-        // phpcs:disable WordPress.CSRF.NonceVerification.NoNonceVerification -- No action, nonce is not required
+        // phpcs:disable WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
         if (isset($_POST['search']) && $_POST['search'] === 'Search') {
             $current_url = add_query_arg(
                 array(

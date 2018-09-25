@@ -19,7 +19,7 @@
                     require(WPMETASEO_ADDON_PLUGIN_DIR . 'inc/page/sitemaps/posts_custom.php');
                     $html = ob_get_contents();
                     ob_end_clean();
-                    // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/sitemaps/posts_custom.php' file
+                    // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/sitemaps/posts_custom.php' file
                     echo $html;
                 }
             }
@@ -28,7 +28,7 @@
             require(WPMETASEO_ADDON_PLUGIN_DIR . 'inc/page/sitemaps/custom_url.php');
             $html = ob_get_contents();
             ob_end_clean();
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/sitemaps/custom_url.php' file
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in 'wp-meta-seo-addon/inc/page/sitemaps/custom_url.php' file
             echo $html;
         }
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {

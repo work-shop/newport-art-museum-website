@@ -117,9 +117,6 @@ $plugin_imgRecycle_file = 'imagerecycle-pdf-image-compression/wp-image-recycle.p
                 if (!class_exists('MetaSeoAddonAdmin')) {
                     require_once WPMETASEO_ADDON_PLUGIN_DIR . '/inc/class.metaseo-addon-admin.php';
                 }
-                $metaseo_addon  = new MetaSeoAddonAdmin();
-                $duplicateTitle = $metaseo_addon->getDuplicateMetatitle();
-                $duplicateDesc  = $metaseo_addon->getDuplicateMetadesc();
                 require_once WPMETASEO_ADDON_PLUGIN_DIR . '/inc/page/dashboard/duplicate_metatitle_widgets.php';
                 require_once WPMETASEO_ADDON_PLUGIN_DIR . '/inc/page/dashboard/duplicate_metadesc_widgets.php';
             }

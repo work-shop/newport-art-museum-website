@@ -53,7 +53,7 @@ if (isset($_GET['action'])) {
         ));
 
         if (is_wp_error($api)) {
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Variable is object|array|WP_Error
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Variable is object|array|WP_Error
             wp_die($api);
         }
 
@@ -101,7 +101,7 @@ if (isset($_GET['action'])) {
                 );
                 exit;
             } else {
-                // phpcs:ignore WordPress.XSS.EscapeOutput -- Variable is WP_Error|null
+                // phpcs:ignore WordPress.Security.EscapeOutput -- Variable is WP_Error|null
                 wp_die($result);
             }
         }
@@ -181,7 +181,7 @@ if (!file_exists(WP_PLUGIN_DIR . '/imagerecycle-pdf-image-compression')) {
                 <br/>In order to start the optimization process, please install the WordPress plugin. Enjoy!</p>
             <p></p>
             <p>
-                <?php echo $button; // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same file) ?>
+                <?php echo $button; // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same file) ?>
             </p>
         </div>
     </div>
@@ -210,7 +210,7 @@ if (!file_exists(WP_PLUGIN_DIR . '/imagerecycle-pdf-image-compression')) {
                 Enjoy!</p>
             <p></p>
             <p>
-                <?php echo $button; // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in previous line (same file) ?>
+                <?php echo $button; // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same file) ?>
             </p>
         </div>
     </div>

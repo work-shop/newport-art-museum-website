@@ -49,7 +49,7 @@ class MetaSeoDashboard
         $where[]    = 'post_type IN (\'' . $post_types . '\')';
         $where[]    = 'post_content <> ""';
         $where[]    = 'post_content LIKE "%<img%>%"';
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $posts = $wpdb->get_results('SELECT ID,post_content FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where) . ' ORDER BY ID');
         if (count($posts) > 0) {
             $doc = new DOMDocument();
@@ -140,7 +140,7 @@ class MetaSeoDashboard
     {
         $rank = $this->getRank($url);
         if ($rank !== '') {
-            // phpcs:ignore WordPress.XSS.EscapeOutput -- Content escaped in the method getRank
+            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in the method getRank
             echo $rank;
         } else {
             esc_html_e('We can\'t get rank of this site from Alexa.com!', 'wp-meta-seo');
@@ -277,7 +277,7 @@ class MetaSeoDashboard
         $where      = array();
         $where[]    = 'post_type IN (\'' . $post_types . '\')';
         $where[]    = 'post_status IN (\'' . $all_states . '\')';
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $total_posts = $wpdb->get_var('SELECT COUNT(ID) FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where));
         return $total_posts;
     }
@@ -312,7 +312,7 @@ class MetaSeoDashboard
                       . ' FROM ' . $wpdb->posts . ' as p'
                       . ' LEFT JOIN (SELECT * FROM ' . $wpdb->postmeta . ' WHERE meta_key = "_metaseo_metatitle" AND meta_value != "") mt ON mt.post_id = p.ID ';
         $query      .= ' WHERE ' . implode(' AND ', $where);
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $ps = $wpdb->get_results($query);
 
         $metatitle_filled = 0;
@@ -380,7 +380,7 @@ class MetaSeoDashboard
                    . ' FROM ' . $wpdb->posts . ' as p'
                    . ' LEFT JOIN (SELECT * FROM ' . $wpdb->postmeta . ' WHERE meta_key = "_metaseo_metadesc" AND meta_value != "") mt ON mt.post_id = p.ID ';
         $query   .= ' WHERE ' . implode(' AND ', $where);
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $wpms_posts      = $wpdb->get_results($query);
         $metadesc_filled = 0;
         if (!empty($wpms_posts)) {
@@ -692,7 +692,7 @@ class MetaSeoDashboard
         $where[]    = 'post_type IN (\'' . $post_types . '\')';
         $where[]    = 'post_content <> "" AND post_content LIKE "%<img%>%"';
 
-        // phpcs:ignore WordPress.WP.PreparedSQL.NotPrepared -- Variable has been prepare
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $posts = $wpdb->get_results($wpdb->prepare('SELECT ID,post_content FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where) . ' ORDER BY ID LIMIT %d OFFSET %d', array(
             $limit,
             $offset

@@ -11,7 +11,7 @@
 /* Prohibit direct script loading */
 defined('ABSPATH') || die('No direct script access allowed!');
 $domaindata = WpmsGaTools::getRootDomain(esc_html(get_option('siteurl')));
-// phpcs:disable WordPress.XSS.EscapeOutput.OutputNotEscaped, Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis, PSR2.Methods.FunctionCallSignature.SpaceBeforeOpenBracket, Squiz.WhiteSpace.ScopeClosingBrace.Indent, Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen, PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace, PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace, Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace, Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore, Generic.WhiteSpace.ScopeIndent.IncorrectExact -- Render google analytics script structure on frontend
+// phpcs:disable Generic.WhiteSpace.ScopeIndent.Incorrect, WordPress.Security.EscapeOutput.OutputNotEscaped, Squiz.ControlStructures.ControlSignature.SpaceAfterCloseParenthesis, PSR2.Methods.FunctionCallSignature.SpaceBeforeOpenBracket, Squiz.WhiteSpace.ScopeClosingBrace.Indent, Squiz.WhiteSpace.ControlStructureSpacing.SpacingAfterOpen, PSR2.ControlStructures.ControlStructureSpacing.SpaceBeforeCloseBrace, PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace, Squiz.ControlStructures.ControlSignature.NewlineAfterOpenBrace, Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore, Generic.WhiteSpace.ScopeIndent.IncorrectExact -- Render google analytics script structure on frontend
 ?>
 <script type="text/javascript">
     (function ($) {

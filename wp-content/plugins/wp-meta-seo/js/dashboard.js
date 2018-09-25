@@ -117,8 +117,55 @@ jQuery(document).ready(function ($) {
 
                     wpms_dash_widgets++;
                     if(wpms_dash_widgets === 5){
-                        wpms_dash_widgets_metadesc();
+                        if (parseInt(wpms_localize.addon_active) === 0) {
+                            wpms_dash_widgets_metadesc();
+                        } else {
+                            wpms_dash_widgets_duplicate_title();
+                        }
                     }
+                }
+            }
+        });
+    }
+
+    function wpms_dash_widgets_duplicate_title(){
+        $.ajax({
+            url: ajaxurl,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'dash_duplicate_title',
+                wpms_nonce: wpms_localize.wpms_nonce
+            },
+            success: function (res) {
+                $('.wpms_dash_duplicate_metatitle .percent_1').html(res.percent +'%');
+                $('.wpms_dash_duplicate_metatitle .percent_2 span.percent').html(res.count_post_duplicate + '/' + res.total_items);
+                $('.wpms_dash_duplicate_metatitle .percent_3').css('width',res.percent + '%');
+
+                wpms_dash_widgets++;
+                if(wpms_dash_widgets === 6){
+                    wpms_dash_widgets_duplicate_desc();
+                }
+            }
+        });
+    }
+
+    function wpms_dash_widgets_duplicate_desc(){
+        $.ajax({
+            url: ajaxurl,
+            method: 'POST',
+            dataType: 'json',
+            data: {
+                action: 'dash_duplicate_desc',
+                wpms_nonce: wpms_localize.wpms_nonce
+            },
+            success: function (res) {
+                $('.wpms_dash_duplicate_metadesc .percent_1').html(res.percent +'%');
+                $('.wpms_dash_duplicate_metadesc .percent_2 span.percent').html(res.count_post_duplicate + '/' + res.total_items);
+                $('.wpms_dash_duplicate_metadesc .percent_3').css('width',res.percent + '%');
+                wpms_dash_widgets++;
+                if(wpms_dash_widgets === 7){
+                    wpms_dash_widgets_metadesc();
                 }
             }
         });
