@@ -109,6 +109,12 @@
 		background: transparentize($khaki, .4);
 	}
 
+	@media screen and (max-width: $md) {
+		#plan-your-visit-col-location{
+			display: none;
+		}
+	}
+
 	.plan-your-visit-currently{
 		margin-bottom: 2em;
 	}

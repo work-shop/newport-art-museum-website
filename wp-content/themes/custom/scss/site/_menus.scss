@@ -7,6 +7,10 @@ $menu-graphic-padding: 20px;
 	.menu-links-container{
 		max-width: none;
 	}
+
+	@media screen and (max-width: $sm) {
+		display: none;
+	}
 }
 
 

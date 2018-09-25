@@ -14,10 +14,18 @@ body{
 
 	&.sitewide-alert-on{
 		padding-top: $nav-height + $sitewide-alert-height;	
+
+		@media screen and (max-width: $sm) {
+			padding-top: $nav-height-mobile + $sitewide-alert-height;	
+		}
 	}
 
 	&.home.sitewide-alert-on{
 		padding-top: + $sitewide-alert-height;
+
+		@media screen and (max-width: $sm) {
+			padding-top: $nav-height-mobile + $sitewide-alert-height;	
+		}
 	}
 }
 

@@ -10,7 +10,7 @@ $sitewide_alert_link = get_field('sitewide_alert_link', 'option');
 			<div class="row">
 				<div class="col-11 col-sm-12">
 					<?php if( $sitewide_alert_link ): ?>
-						<a href="<?php echo $sitewide_alert_link; ?>">
+						<a href="<?php echo $sitewide_alert_link['url']; ?>">
 						<?php endif; ?>
 						<span class="sitewide-alert-message">
 							<?php echo $sitewide_alert_message; ?>
