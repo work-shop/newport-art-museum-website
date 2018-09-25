@@ -96,28 +96,43 @@
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
 		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-three">
-			<div class="container-fluid contrainer-fluid-stretch">
-				<div class="row menu-dropdown-cards-upper">
-					<div class="col-md-6">
-						<h3 class="serif menu-dropdown-graphic-heading">Upcoming Events</h3>
-					</div>
-					<div class="col-md-6">
-						<div class="menu-dropdown-graphic-link righted">
-							<a href="/events">See All Events 
-								<span class="menu-dropdown-graphic-link-arrow">-></span>
-							</a>
+			<?php $show_events_page_temporary_message = get_field('show_events_page_temporary_message','74'); ?>
+			<?php if( $show_events_page_temporary_message ): ?>
+				<?php $events_page_temporary_message = get_field('events_page_temporary_message','74'); ?>
+				<div class="container-fluid container-fluid-stretch">
+					<div class="row mt3">
+						<div class="col-lg-10">
+							<div class="bg-error p2">
+								<h4 class="error mb0 bold">
+									<?php echo $events_page_temporary_message; ?>
+								</h4>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div class="row menu-dropdown-cards-lower">
-					<?php
-					$items = get_field('events_menu_featured_events','option'); 
-					if ($items) : ?>
-						<?php $count = 0; ?>
-						<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
-							<?php setup_postdata($post); ?>
-							<div class="col-md-4">
-								<?php 
+				<?php else: ?>
+					<div class="container-fluid contrainer-fluid-stretch">
+						<div class="row menu-dropdown-cards-upper">
+							<div class="col-md-6">
+								<h3 class="serif menu-dropdown-graphic-heading">Upcoming Events</h3>
+							</div>
+							<div class="col-md-6">
+								<div class="menu-dropdown-graphic-link righted">
+									<a href="/events">See All Events 
+										<span class="menu-dropdown-graphic-link-arrow">-></span>
+									</a>
+								</div>
+							</div>
+						</div>
+						<div class="row menu-dropdown-cards-lower">
+							<?php
+							$items = get_field('events_menu_featured_events','option'); 
+							if ($items) : ?>
+								<?php $count = 0; ?>
+								<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
+									<?php setup_postdata($post); ?>
+									<div class="col-md-4">
+										<?php 
 								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
 								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
 								$card_type = 'event';  //'event', 'class', 'product', 'news' 
@@ -130,55 +145,54 @@
 					<?php endif; ?>
 				</div>
 			</div>
-		</div>
-	</menu>
+		<?php endif; //temporary message ?>
+	</div>
+</menu>
 
-	<menu id="menu-education" class="menu-dropdown off" data-dropdown="education" >
-		<div class="menu-dropdown-links">
-			<?php $GLOBALS['links'] = get_field('education_menu_links', 'option'); ?>
-			<?php $GLOBALS['links_additional'] = get_field('education_menu_additional_links', 'option'); ?>
-			<?php get_template_part('partials/menus_links' ); ?>
-		</div>
-		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-three">
-			<?php 
-			$show_classes_page_temporary_message = get_field('show_classes_page_temporary_message','78');
-			?>
-			<?php if( $show_classes_page_temporary_message ): ?>
-				<?php $classes_page_temporary_message = get_field('classes_page_temporary_message','78'); ?>
-					<div class="container-fluid container-fluid-stretch">
-						<div class="row mt3">
-							<div class="col-lg-10">
-								<div class="bg-error p2">
-									<h4 class="error mb0 bold">
-										<?php echo $classes_page_temporary_message; ?>
-									</h4>
-								</div>
+<menu id="menu-education" class="menu-dropdown off" data-dropdown="education" >
+	<div class="menu-dropdown-links">
+		<?php $GLOBALS['links'] = get_field('education_menu_links', 'option'); ?>
+		<?php $GLOBALS['links_additional'] = get_field('education_menu_additional_links', 'option'); ?>
+		<?php get_template_part('partials/menus_links' ); ?>
+	</div>
+	<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-three">
+		<?php $show_classes_page_temporary_message = get_field('show_classes_page_temporary_message','78'); ?>
+		<?php if( $show_classes_page_temporary_message ): ?>
+			<?php $classes_page_temporary_message = get_field('classes_page_temporary_message','78'); ?>
+			<div class="container-fluid container-fluid-stretch">
+				<div class="row mt3">
+					<div class="col-lg-10">
+						<div class="bg-error p2">
+							<h4 class="error mb0 bold">
+								<?php echo $classes_page_temporary_message; ?>
+							</h4>
+						</div>
+					</div>
+				</div>
+			</div>
+			<?php else: ?>
+				<div class="container-fluid contrainer-fluid-stretch">
+					<div class="row menu-dropdown-cards-upper">
+						<div class="col-md-6">
+							<h3 class="serif menu-dropdown-graphic-heading">Upcoming Classes</h3>
+						</div>
+						<div class="col-md-6">
+							<div class="menu-dropdown-graphic-link righted">
+								<a href="/classes">See All Classes 
+									<span class="menu-dropdown-graphic-link-arrow">-></span>
+								</a>
 							</div>
 						</div>
 					</div>
-				<?php else: ?>
-					<div class="container-fluid contrainer-fluid-stretch">
-						<div class="row menu-dropdown-cards-upper">
-							<div class="col-md-6">
-								<h3 class="serif menu-dropdown-graphic-heading">Upcoming Classes</h3>
-							</div>
-							<div class="col-md-6">
-								<div class="menu-dropdown-graphic-link righted">
-									<a href="/classes">See All Classes 
-										<span class="menu-dropdown-graphic-link-arrow">-></span>
-									</a>
-								</div>
-							</div>
-						</div>
-						<div class="row menu-dropdown-cards-lower">
-							<?php
-							$items = get_field('education_menu_featured_classes','option'); 
-							if ($items) : ?>
-								<?php $count = 0; ?>
-								<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
-									<?php setup_postdata($post); ?>
-									<div class="col-md-4">
-										<?php 
+					<div class="row menu-dropdown-cards-lower">
+						<?php
+						$items = get_field('education_menu_featured_classes','option'); 
+						if ($items) : ?>
+							<?php $count = 0; ?>
+							<?php foreach( $items as $post): // variable must be called $post (IMPORTANT) ?>
+								<?php setup_postdata($post); ?>
+								<div class="col-md-4">
+									<?php 
 								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
 								$card_size = 'menu'; //'wide', 'medium', 'small', 'menu'
 								$card_type = 'class';  //'event', 'class', 'product', 'news' 

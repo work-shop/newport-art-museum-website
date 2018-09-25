@@ -30,6 +30,17 @@
 		}
 	}
 
+
+
+	&.sitewide-alert-on{
+		&.dropdown-on{
+			#nav .logo{
+				top: $sitewide-alert-height;
+				left: 0;
+			}
+		}
+	}
+
 }
 
 #home-hero{
