@@ -216,18 +216,22 @@ $fc-padding: 12vh 0;
 //multi-column
 .fc-background-multi-column-container{
 	display: grid;
-
-
+	display: -ms-grid;
 	
 	&.image-left{
 		&.image-33{
 			grid-template-columns: 40% 60%;
+			-ms-grid-columns: 40% 60%;
+
 		}
 		&.image-50{
 			grid-template-columns: 50% 50%;
+			-ms-grid-columns: 50% 50%;
+
 		}
 		&.image-66{
 			grid-template-columns: 60% 40%;
+			-ms-grid-columns: 60% 40%;
 		}		
 
 		@media screen and (max-width: $sm) {
@@ -243,12 +247,15 @@ $fc-padding: 12vh 0;
 	&.image-right{
 		&.image-33{
 			grid-template-columns: 60% 40%;
+			-ms-grid-columns: 60% 40%;
 		}
 		&.image-50{
 			grid-template-columns: 50% 50%;
+			-ms-grid-columns: 50% 50%;
 		}
 		&.image-66{
 			grid-template-columns: 40% 60%;
+			-ms-grid-columns: 40% 60%;
 		}		
 
 		@media screen and (max-width: $sm) {
@@ -265,6 +272,7 @@ $fc-padding: 12vh 0;
 		&.image-left,&.image-right{
 			&.image-33,&.image-50,&.image-66{
 				grid-template-columns: 50% 50%;
+				-ms-grid-columns: 50% 50%;
 			}
 		}
 	}

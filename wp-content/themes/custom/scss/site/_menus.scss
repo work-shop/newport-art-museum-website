@@ -206,7 +206,10 @@ body.dropdown-on{
 
 .menu-dropdown-graphic-two-column{
 	display: grid;
+	display: -ms-grid;
+
 	grid-template-columns: 50% 50%;
+	-ms-grid-columns:  50% 50%;
 
 	.menu-dropdown-graphic-1{
 		padding-left: $container-fluid-padding;
