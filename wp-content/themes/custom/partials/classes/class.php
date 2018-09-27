@@ -30,7 +30,7 @@ $class_short_description = get_field('short_description');
         <div class="row">
             <div class="col-md-8 single-body-left">
                 <div class="single-body-left-link">
-                    <a href="/classes">Back To Classes</a>
+                    <a href="/education/classes">Back To Classes</a>
                 </div>
                 <div class="single-body-left-main">
                     <div class="event-single-introduction single-introduction">

@@ -15,7 +15,7 @@ $nav-background: lighten($brand,0%);
 	left: 0;
 	width: 100%;
 	height: $nav-height;
-	overflow: hidden;
+	//overflow: hidden;
 	background: $nav-background;
 	z-index: 7;
 	transition: all .1s;
@@ -41,6 +41,7 @@ $nav-background: lighten($brand,0%);
 	@media screen and (max-width: $sm) {
 		height: $nav-height-mobile;
 		background: none;
+		overflow: hidden;
 	}
 
 }
