@@ -219,6 +219,7 @@ $fc-padding: 12vh 0;
 	display: -ms-grid;
 	
 	&.image-left{
+
 		&.image-33{
 			grid-template-columns: 40% 60%;
 			-ms-grid-columns: 40% 60%;
@@ -245,6 +246,7 @@ $fc-padding: 12vh 0;
 	}
 
 	&.image-right{
+		
 		&.image-33{
 			grid-template-columns: 60% 40%;
 			-ms-grid-columns: 60% 40%;
@@ -286,6 +288,14 @@ $fc-padding: 12vh 0;
 .fc-background-multi-column-1,.fc-background-multi-column-2{
 	position: relative;
 	padding: 12vh 4vw;
+}
+
+.fc-background-multi-column-1{
+	-ms-grid-column: 1;
+}
+
+.fc-background-multi-column-2{
+	-ms-grid-column: 2;
 }
 
 

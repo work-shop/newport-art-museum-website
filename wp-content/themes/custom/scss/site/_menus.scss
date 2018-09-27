@@ -212,7 +212,8 @@ body.dropdown-on{
 	-ms-grid-columns:  50% 50%;
 
 	.menu-dropdown-graphic-1{
-		-ms-grid-column: 2;
+		-ms-grid-column: 1;
+
 		padding-left: $container-fluid-padding;
 		padding-top: 4em;
 
@@ -226,6 +227,7 @@ body.dropdown-on{
 	}
 
 	.menu-dropdown-graphic-2{
+		-ms-grid-column: 2;
 		margin: $menu-graphic-padding;
 		position: relative;
 	}
