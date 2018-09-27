@@ -20,7 +20,7 @@
 			</div>
 		</div>
 		<div class="row">
-			<div class="col-md-6 col-lg-3 col-xl-3 mb3" id="plan-your-visit-col-location">
+			<div class="col-md-6 col-lg-4 col-xl-3 mb3" id="plan-your-visit-col-location">
 				<h4 class="plan-your-visit-heading mb2">
 					Location
 				</h4>
@@ -63,7 +63,7 @@
 					?>
 				</h4>		
 			</div>			
-			<div class="col-md-6 col-lg-5 col-xl-5">
+			<div class="col-md-6 col-lg-4 col-xl-5">
 				<h4 class="plan-your-visit-heading mb2">
 					Hours
 				</h4>

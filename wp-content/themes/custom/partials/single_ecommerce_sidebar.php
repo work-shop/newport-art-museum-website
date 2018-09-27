@@ -36,15 +36,31 @@ if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif
                         <?php endif; ?>
                         <?php //end type event ?>
                         <?php elseif( $type === 'class'): ?>
-                            <?php if ( $is_in_stock ) : ?>
-                                Registration
+                            <?php $show_individual_class_temporary_message = get_field('show_individual_class_temporary_message','78'); ?>
+                            <?php if( $show_individual_class_temporary_message ): ?>
+                                <?php $individual_class_temporary_message = get_field('individual_class_temporary_message','78'); ?>
+                                <div class="message error">
+                                    <h4 class="error">
+                                        <?php echo $individual_class_temporary_message; ?>
+                                    </h4>
+                                </div>
                                 <?php else: ?>
-                                    <span class="error bold m1 display-block">This Class is Full.</span>
-                                <?php endif; ?>
-                            <?php endif; //end type class ?>
-                        </h4>
-                    </div>
-                    <?php if ( $is_in_stock ) : ?>
-                        <?php include( locate_template('partials/ecommerce/single_add_to_cart.php') ); ?>
-                    <?php endif; ?>
-</div><!-- .sidebar -->
+                                    <?php if ( $is_in_stock ) : ?>
+                                        Registration
+                                        <?php else: ?>
+                                            <span class="error bold m1 display-block">This Class is Full.</span>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                <?php endif; //end type class ?>
+                            </h4>
+                        </div>
+                        <?php if( $show_individual_class_temporary_message ): ?>
+                            <?php if ( get_field('temporary_registration_link') ) : ?>
+                               <a href="<?php the_field('temporary_registration_link'); ?>" class="button button-full">Register on ASAP Connected</a>
+                           <?php endif; ?>
+                        <?php else: ?>
+                            <?php if ( $is_in_stock ) : ?>
+                                <?php include( locate_template('partials/ecommerce/single_add_to_cart.php') ); ?>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                    </div><!-- .sidebar -->

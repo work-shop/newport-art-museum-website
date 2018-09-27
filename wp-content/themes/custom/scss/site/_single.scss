@@ -45,6 +45,7 @@ $single-body-left-padding-sm: 10px;
 		position: relative;
 		top: -150px;
 		padding-top: 0;
+		padding-bottom: 100px;
 	}
 
 	.single-body-right{
@@ -57,6 +58,14 @@ $single-body-left-padding-sm: 10px;
 	#news-single-body{
 		.single-body-left{
 			top: -185px;
+
+			@media screen and (max-width: $md) {
+				top: -100px;
+			}
+
+			@media screen and (max-width: $sm) {
+				top: -80px;
+			}
 		}
 	}
 
@@ -83,13 +92,17 @@ $single-body-left-padding-sm: 10px;
 	.single-body-left-link{
 		box-shadow: 0px -2px 4px transparentize($slate, .5);
 		padding: 13px $single-body-left-padding 11px $single-body-left-padding;
+
+		@media screen and (max-width: $sm) {
+			padding: 10px 20px 7px 20px;
+		}
 	}	
 
 }
 
 
 .single-body-left-link{
-	background: $brand;
+	background: transparentize($brand, .1);
 	display: inline-block;
 	padding: 10px 20px 7px 20px;
 
@@ -105,7 +118,7 @@ $single-body-left-padding-sm: 10px;
 }
 
 .single-body-left-main{
-	background: white;
+	background: rgba(255,255,255,.95);
 	padding-top: $single-body-left-padding;
 
 	.nam-dash{
