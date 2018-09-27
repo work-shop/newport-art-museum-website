@@ -14,23 +14,28 @@
 					<?php $count = 0; ?>
 					<?php while ( $the_query->have_posts() ) : ?>
 						<?php $the_query->the_post(); ?>
-						<?php 
+						<?php
 						$id = $post->ID;
-						$product = wc_get_product($id);
-						$current_price = $product->get_price();
-						$sale_price = $product->get_sale_price();
-						$regular_price = $product->get_regular_price();
-						$sale_start_date = $product->get_date_on_sale_from();
-						$sale_end_date = $product->get_date_on_sale_to();
-						$is_on_sale = $product->is_on_sale();
-							// woocommerce plumbing
-						$add_to_cart_url = $product->add_to_cart_url();
-						$add_to_cart_button_text = $product->add_to_cart_url();
+                        $product_id = get_field('managed_field_related_post', $id)[0];
+                        if ( $product_id ) :
+    						$product = wc_get_product($product_id);
+    						$current_price = $product->get_price();
+    						$sale_price = $product->get_sale_price();
+    						$regular_price = $product->get_regular_price();
+    						$sale_start_date = $product->get_date_on_sale_from();
+    						$sale_end_date = $product->get_date_on_sale_to();
+    						$is_on_sale = $product->is_on_sale();
+    							// woocommerce plumbing
+    						$add_to_cart_url = $product->add_to_cart_url();
+    						$add_to_cart_button_text = $product->add_to_cart_url();
 						?>
-						<button class="button-donation-tier <?php if($count == 0): $currentDonationUrl = $add_to_cart_url; echo 'active'; endif; ?>" data-cart-url="<?php echo $add_to_cart_url; ?>">
-							$<?php echo $current_price; ?>
-						</button>
-						<?php $count++; ?>
+    						<button class="button-donation-tier <?php if($count == 0): $currentDonationUrl = $add_to_cart_url; echo 'active'; endif; ?>" data-cart-url="<?php echo $add_to_cart_url; ?>">
+    							$<?php echo $current_price; ?>
+    						</button>
+						<?php
+                        endif;
+                        $count++;
+                        ?>
 					<?php endwhile; ?>
 					<?php wp_reset_postdata(); ?>
 				<?php endif; ?>
