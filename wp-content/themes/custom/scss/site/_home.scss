@@ -4,10 +4,11 @@
 .home {
 	padding-top: 0;
 
-	@media screen and (min-width: $md) {
+	@media screen and (min-width: $md) and (min-height: 701px) {
 		#nav{
 			transition: background .1s .1s;
 			background: none;
+			//display: none;
 
 			.logo{
 				position: fixed;
@@ -74,7 +75,7 @@
 	}
 
 	.home-hero-link-button{
-		padding: 15px 25px 13px 25px;
+		padding: 15px 25px 14px 25px;
 		//background: transparentize($slate, .1);
 		border-radius: 3px;
 		transition: all .1s;

@@ -142,31 +142,6 @@ $text-button: (
 	xl: (15px, 12px)
 	);
 
-// .button{
-// 	display: block;
-
-// 	a,.button{
-// 		@include text-size($text-button);	
-// 		background: $brand;
-// 		padding: 10px 10px;
-// 		font-family: $font-main;
-// 		color: $dark;
-// 		@extend .uppercase;	
-// 		border-radius: 2px;
-// 		display: inline-block;
-// 		text-align: center;
-// 		border: 2px solid $brand;
-// 		@include transition(background .125s);
-
-// 		&:hover{
-// 			background: white;
-// 		}
-
-// 		@media screen and (max-width: $sm) {
-// 			padding: 3px 8px;
-// 		}
-// 	}
-// }
 
 .button{
 	background: $brand;
