@@ -108,8 +108,10 @@ input,textarea{
 input[type="text"]{
 	color: $dark;
 	padding: 9px 10px 4px 10px;
-
 }
+
+
+
 
 //WOOCOMMERCE DEFAULT STYLES THAT WE NEED
 
@@ -204,6 +206,13 @@ input[type="text"]{
 		max-width: 500px;
 	}
 
+	.woocommerce-SavedPaymentMethods-new{
+		margin-bottom: 1em;
+		input{
+			display: inline-block;
+		}
+	}
+
 	textarea{
 		width: 100%;
 		display: block;
@@ -230,10 +239,26 @@ input[type="text"]{
 	padding-top: 20px;
 }
 
-.woocommerce-checkout #payment .payment_method_eh_stripe_pay{
-	label[for=payment_method_stripe_eh_stripe_pay]{
-		padding-left: 0 !important;
-		margin-bottom: 30px;
+.woocommerce-checkout #payment{
+	// label[for=payment_method_stripe_eh_stripe_pay]{
+	// 	padding-left: 0 !important;
+	// 	margin-bottom: 30px;
+	// }
+
+	input[type="radio"],input[type="checkbox"]{
+		display: inline-block !important;
+		margin-right: 10px;
+	}
+
+	input[type="radio"] + label,input[type="checkbox"] + label{
+		display: inline-block;
+		width: auto;
+		position: relative;
+		top: 2px;
+	}
+
+	input[type="radio"]#payment-method-stripe{
+		display: none !important;
 	}
 
 	.payment-method-title{
