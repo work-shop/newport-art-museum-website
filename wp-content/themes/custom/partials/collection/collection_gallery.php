@@ -11,7 +11,8 @@
 					$artwork_medium = get_sub_field('artwork_medium'); 
 					$artwork_description = get_sub_field('artwork_description'); 
 					?>
-					<div class="artwork-image" style="background-image: url('<?php echo $image['sizes']['home_hero']; ?>')">
+					<div class="artwork-image">
+						<img src="<?php echo $image['sizes']['page_hero']; ?>">
 					</div>
 					<div class="artwork-content" >
 						<div class="artwork-content-upper">
@@ -27,22 +28,27 @@
 							</div>
 							<div class="row row-full">
 								<h5 class="artwork-title white">
-									<span class="bold"><?php echo $artwork_artist; ?></span>, <?php echo $artwork_title; ?>
-								</h5>
-							</div>
-						</div>
-						<div class="artwork-content-lower">
-							<h5 class="white artwork-description">
-								<?php echo $artwork_description; ?>
+									<span class="bold">
+										<?php echo $artwork_artist; ?></span><?php if( $artwork_title ): ?>, 
+									<span class="artwork-title-title italic">
+										<?php echo $artwork_title; ?>
+									</span>
+								<?php endif; ?>
 							</h5>
 						</div>
 					</div>
-					<div class="artwork-content-bottom">
+					<div class="artwork-content-lower">
+						<h5 class="white artwork-description">
+							<?php echo $artwork_description; ?>
+						</h5>
 					</div>
 				</div>
-				<?php $count++; ?>
-			<?php endwhile; ?>
-		</div>
-	<?php endif; ?>
+				<div class="artwork-content-bottom">
+				</div>
+			</div>
+			<?php $count++; ?>
+		<?php endwhile; ?>
+	</div>
+<?php endif; ?>
 </section>
 

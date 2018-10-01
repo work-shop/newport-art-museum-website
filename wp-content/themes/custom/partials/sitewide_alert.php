@@ -5,7 +5,7 @@ $sitewide_alert_message = get_field('sitewide_alert_message', 'option');
 $sitewide_alert_link = get_field('sitewide_alert_link', 'option');
 ?>
 <?php if( $show_sitewide_alert ): ?>
-	<div id="sitewide-alert" class="bg-yellow">
+	<div id="sitewide-alert" class="">
 		<div class="container-fluid container-fluid-stretch">
 			<div class="row">
 				<div class="col-11 col-sm-12">

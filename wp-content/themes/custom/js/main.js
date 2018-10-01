@@ -29,7 +29,7 @@ import { livereload } from './livereload-client.js';
 livereload();
 
 loading(config.loading);
-//viewportLabel(config.viewportLabel);
+viewportLabel(config.viewportLabel);
 linksNewtab(config.linksNewtab);
 dropdowns(config.dropdowns);
 nav(config.stickyNav);

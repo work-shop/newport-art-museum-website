@@ -4,13 +4,19 @@
 
 //PAGE NAV
 $page-nav-height: 160px;
+$page-nav-height-lg: 120px;
 
 #page-nav{
-	min-height: $page-nav-height;
+	//min-height: $page-nav-height;
 	background: $khaki;
 	padding-top: 60px;
 	padding-bottom: 30px;
 	border-bottom: 1px solid darken($light,7%);
+
+	@media screen and (max-width: $lg) {
+		padding-top: 30px;
+		padding-bottom: 20px;
+	}
 
 	@media screen and (max-width: $sm) {
 		min-height: auto;
@@ -20,6 +26,16 @@ $page-nav-height: 160px;
 
 	.container-fluid{
 		max-width: none;
+
+		@media screen and (max-width: $lg) {
+			padding-left: $container-fluid-padding-md;
+			padding-right: $container-fluid-padding-md;
+		}
+
+		@media screen and (max-width: $sm) {
+			padding-left: $container-fluid-padding-mobile;
+			padding-right: $container-fluid-padding-mobile;	
+		}
 	}
 
 	li{

@@ -5,18 +5,13 @@ $artwork-content-lower-height: 300px;
 $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-height;
 
 .slick-collection{
-	height: calc(98vh - #{$nav-height} - #{$page-nav-height});
+	//height: calc(98vh - #{$nav-height} - #{$page-nav-height});
 	overflow: hidden;
 
 	.slick-collection-slide{
 		position: relative;
 
 		.artwork-image{
-			height: calc(98vh - #{$nav-height} - #{$page-nav-height});
-			background-size: contain;
-			background-position: center center;
-			background-repeat: no-repeat;
-			background-color: $dark;
 		}
 
 		&.open{
@@ -46,11 +41,11 @@ $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-
 		transition: height .25s;
 		overflow: hidden;
 
-		@media screen and (min-width: $md+1px) {
+		@media screen and (min-width: $lg+1px) {
 			height: $artwork-content-upper-height;
 		}
 
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			right: $container-fluid-padding;
 			width: 100%;
 			position: static;
@@ -60,7 +55,7 @@ $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-
 	}
 
 	.artwork-content-upper-controls{
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			display: none;
 		}
 	}
@@ -77,11 +72,11 @@ $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-
 	.artwork-content-upper{
 		background: $slate;
 
-		@media screen and (min-width: $md+1px) {
+		@media screen and (min-width: $lg+1px) {
 			height: $artwork-content-upper-height;
 		}
 
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			height: auto;
 		}
 	}
@@ -89,7 +84,7 @@ $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-
 	.artwork-content-upper,.artwork-content-lower{
 		padding: 20px 30px;
 
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			padding: 20px 30px 10px 30px;
 		}
 	}
@@ -98,7 +93,7 @@ $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-
 		height: 250px;
 		overflow: scroll;
 
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			display: none;
 		}
 	}
@@ -141,17 +136,17 @@ $artwork-content-height: $artwork-content-upper-height + $artwork-content-lower-
 
 body.sitewide-alert-on{
 	.slick-collection{
-		height: calc(98vh - #{$nav-height} - #{$page-nav-height} - #{$sitewide-alert-height});
+		//height: calc(98vh - #{$nav-height} - #{$page-nav-height} - #{$sitewide-alert-height});
 
 		.artwork-image{
-			height: calc(98vh - #{$nav-height} - #{$page-nav-height} - #{$sitewide-alert-height});
+			//height: calc(98vh - #{$nav-height} - #{$page-nav-height} - #{$sitewide-alert-height});
 		}
 
 		@media screen and (max-width: $sm) {
-			height: calc(98vh - #{$nav-height-mobile} - #{$sitewide-alert-height});
+			//height: calc(98vh - #{$nav-height-mobile} - #{$sitewide-alert-height});
 
 			.artwork-image{
-				height: calc(98vh - #{$nav-height-mobile} - #{$page-nav-height}- #{$sitewide-alert-height});
+				//height: calc(98vh - #{$nav-height-mobile} - #{$page-nav-height}- #{$sitewide-alert-height});
 			}
 		}
 	}

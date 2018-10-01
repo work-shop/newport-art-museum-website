@@ -4,7 +4,7 @@ body{
 	background-color: $body-background-color;
 	padding-top: $nav-height;	
 
-	@media screen and (max-width: $md) {
+	@media screen and (max-width: $lg) {
 		padding-top: $nav-height-md;
 	}
 
@@ -24,7 +24,7 @@ body{
 
 		}
 
-		@media screen and (max-width: $md) {
+		@media screen and (max-width: $lg) {
 			padding-top: $nav-height-md + $sitewide-alert-height;
 		}
 

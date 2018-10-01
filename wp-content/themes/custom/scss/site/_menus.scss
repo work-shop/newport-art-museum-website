@@ -25,12 +25,12 @@ $menu-graphic-padding: 20px;
 	position: fixed;
 	transform: translate(0,-100vh) rotateX(0deg);
 	transform-origin: 0 0;
-	transition: transform .25s;
+	transition: transform .41s;
 	z-index: -9;
 	opacity: 0;
 	overflow: hidden;
 
-	@media screen and (max-width: $md) {
+	@media screen and (max-width: $lg) {
 		top: $nav-height-md;
 	}
 
@@ -49,6 +49,10 @@ $menu-graphic-padding: 20px;
 		background: white;
 		padding: 15px 0 15px 0;
 		border-bottom: 3px solid darken($light, 10%);
+
+		@media screen and (max-width: $lg) {
+			padding: 8px 0 8px 0;
+		}
 
 		ul{
 			width: 95%;
@@ -72,6 +76,10 @@ $menu-graphic-padding: 20px;
 			height: 34px;
 			margin-right: 3vw;
 			margin-bottom: 0;
+
+			@media screen and (max-width: $lg) {
+				height: 28px;
+			}
 
 			@media screen and (max-width: $sm) {
 				margin-right: 5vw;
@@ -105,13 +113,6 @@ $menu-graphic-padding: 20px;
 					border-bottom: 2px solid $brand;
 				}
 
-				@media screen and (max-width: $lg) {
-					font-size: 17px;	
-				}
-
-				@media screen and (max-width: $md) {
-					font-size: 15px;	
-				}
 			}
 		}
 	}
@@ -129,7 +130,7 @@ $menu-graphic-padding: 20px;
 		top: $sitewide-alert-height + $nav-height;
 	}
 
-	@media screen and (max-width: $md) {
+	@media screen and (max-width: $lg) {
 		.menu-dropdown{
 			top: $sitewide-alert-height + $nav-height-md;
 		}
@@ -151,6 +152,7 @@ $menu-graphic-padding: 20px;
 	&:hover{
 		cursor: url("../images/close.png"), auto;
 	}
+
 }
 
 main, footer{
@@ -174,8 +176,8 @@ body.dropdown-on{
 
 .menu-dropdown-graphic{
 
-	@media screen and (max-width: $sm) {
-		display: none;
+	@media (max-width: $lg), (max-height: 700px){
+		display: none !important;
 	}
 
 	.container-fluid{
