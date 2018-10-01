@@ -11,8 +11,7 @@
 					$artwork_medium = get_sub_field('artwork_medium'); 
 					$artwork_description = get_sub_field('artwork_description'); 
 					?>
-					<div class="artwork-image">
-						<img src="<?php echo $image['sizes']['page_hero']; ?>">
+					<div class="artwork-image" style="background-image: url('<?php echo $image['sizes']['home_hero']; ?>')">
 					</div>
 					<div class="artwork-content" >
 						<div class="artwork-content-upper">

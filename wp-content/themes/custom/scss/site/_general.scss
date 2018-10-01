@@ -15,6 +15,15 @@ body{
 	&.sitewide-alert-on{
 		padding-top: $nav-height + $sitewide-alert-height;	
 
+		.vhfull{
+			height: calc(100vh - #{$nav-height} - #{$sitewide-alert-height});
+
+			@media screen and (max-width: $sm) {
+				height: calc(100vh - #{$nav-height-mobile} - #{$sitewide-alert-height});
+			}
+
+		}
+
 		@media screen and (max-width: $md) {
 			padding-top: $nav-height-md + $sitewide-alert-height;
 		}
