@@ -242,13 +242,13 @@ body.dropdown-on{
 				padding: 0 15px;
 			}
 
-			// @media screen and (max-width: $lg) {
-			// 	height: 57px;
-			// 	padding: 0 8px;
-			// }			
-
 			@media screen and (max-width: $lg) {
 				height: 53px;
+				padding: 0 8px;
+			}			
+
+			@media screen and (max-width: $md) {
+				height: 45px;
 				padding: 0 6px;
 				letter-spacing: .02em;
 			}
