@@ -30,7 +30,7 @@ $gallery_title = $fc_row['gallery_title'];
 				<?php foreach ($gallery as $image): ?> 
 					<div class="slick-slide fc-gallery-slide">
 						<div class="fc-gallery-slide-image-container">
-							<div class="fc-gallery-slide-image" style="background-image: url('<?php echo $image['sizes']['page_hero']; ?>');">
+							<div class="fc-gallery-slide-image" style="background-image: url('<?php echo $image['sizes']['fc_gallery']; ?>');">
 							</div>
 						</div>
 						<div class="fc-gallery-slide-caption-container">
