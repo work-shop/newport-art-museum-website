@@ -50,7 +50,7 @@ wc_print_notices();
 			</div>
 			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
 				<a href="/my-account/subscriptions" class="bold display-block centered white bg-brand p1 pt3 pb3">
-					Memerships
+					Memberships
 				</a>
 			</div>
 			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">

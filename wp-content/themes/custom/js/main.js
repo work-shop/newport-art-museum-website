@@ -1,10 +1,8 @@
 'use strict';
 
 global.$ = require('jquery');
-global.jQuery = global.$;
-window.$ = global.$;
-
-var pikaday = require('pikaday');
+// global.jQuery = global.$;
+// window.$ = global.$;
 
 import { config } from './config.js';
 import { loading } from './loading.js';
