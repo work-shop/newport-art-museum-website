@@ -163,6 +163,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</h4>
 	</div>
 </div>
-<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>
+<div class="review-order-row row">
+	<div class="col">
+		<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>
+	</div>
+</div>
 </div>
 </div>

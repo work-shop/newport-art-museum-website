@@ -38,33 +38,30 @@ wc_print_notices();
 		//do_action( 'woocommerce_account_content' );
 		?>
 		<div class="row">
-			<div class="col col-xs-6">
-				<div class="bg-medium p1 pt3 pb3">
-					<a href="/my-account/orders" class="bold display-block centered white">
-						Review Order History
-					</a>
-				</div>
+			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
+				<a href="/my-account/orders" class="bold display-block centered white bg-brand p1 pt3 pb3">
+					Review Order History
+				</a>
 			</div>
-			<div class="col col-xs-6">
-				<div class="bg-medium p1 pt3 pb3">
-					<a href="/my-account/edit-account" class="bold display-block centered white">
-						Edit Account Details
-					</a>
-				</div>
+			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
+				<a href="/my-account/edit-account" class="bold display-block centered white bg-brand p1 pt3 pb3">
+					Edit Account Details
+				</a>
 			</div>
-			<div class="col col-xs-6">
-				<div class="bg-medium p1 pt3 pb3">
-					<a href="/my-account/edit-account" class="bold display-block centered white">
-						Change Password
-					</a>
-				</div>
+			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
+				<a href="/my-account/subscriptions" class="bold display-block centered white bg-brand p1 pt3 pb3">
+					Memerships
+				</a>
 			</div>
-			<div class="col col-xs-6">
-				<div class="bg-medium p1 pt3 pb3">
-					<a href="/contact" class="bold display-block centered white">
-						Get Help With My Account
-					</a>
-				</div>
+			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
+				<a href="/my-account/edit-account" class="bold display-block centered white bg-brand p1 pt3 pb3">
+					Change Password
+				</a>
+			</div>
+			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
+				<a href="/contact" class="bold display-block centered white bg-brand p1 pt3 pb3">
+					Get Help With My Account
+				</a>
 			</div>
 
 		</div>

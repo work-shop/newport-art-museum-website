@@ -46,8 +46,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thanks, your order has been received.', 'woocommerce' ), $order ); ?></p>
 				</div>
 
-				<div class="row mt2 mb2">
-					<div class="col-12 col-md-4">
+				<div class="row mt3 mb4">
+					<div class="col-12 col-md-6">
 
 						<ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
 
@@ -82,23 +82,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 					</ul>
 				</div>
+				<div class="col-12 col-md-6">
+					<h3 class="bold">
+						Questions about<br>
+						your order? 
+					</h3>
+					<div class="button">
+						<a href="/contact" class="white">
+							Contact Us
+						</a>
+					</div>
+				</div>
+				<div class="col-12 mt3">
+					<div class="thankyou-separator"></div>
+				</div>
+			</div>
 
 		<?php endif; ?>
 
+		<div class="row">
 
-			<?php // do_action( 'woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id() ); ?>
-			<?php do_action( 'woocommerce_thankyou', $order->get_id() ); ?>
+			<div class="col">
 
-			<div class="col-12 col-md-4">
-				<h3 class="bold">
-					Questions about<br>
-					your order? 
-				</h3>
-				<div class="button">
-					<a href="/contact" class="white">
-						Contact Us
-					</a>
-				</div>
+				<?php // do_action( 'woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id() ); ?>
+				<?php do_action( 'woocommerce_thankyou', $order->get_id() ); ?>
+
 			</div>
 
 		</div>

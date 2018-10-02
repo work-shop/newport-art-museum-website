@@ -364,15 +364,17 @@ input[name="createaccount"]{
 
 
 
+
 //THANK YOU/ CONFIRMATION
 
 
-.woocommerce-order-details{
-	@extend .col-12;
-	@extend .col-md-4;
+.woocommerce{
+	//@extend .col-12;
+	//@extend .col-md-4;
 	h2{
 		@extend .h3;
 		@extend .bold;
+		margin-bottom: 1em;
 	}
 }
 
@@ -503,17 +505,30 @@ strong span{
 		@extend .col-12;
 	}
 
+}
+
+.my-account-link-boxes{
+	&:hover{
+		a{
+			background: lighten($brand, 45%);
+
+		}
+	}
+}
+
+.woocommerce{
 	h3{
 		@extend .bold;
+		margin-bottom: 1em;
 	}
+}
 
-	.woocommerce-Address{
-		margin-bottom: 3em;
+.woocommerce-Address{
+	margin-bottom: 3em;
 
-		.edit{
-			@extend .button;
-			margin-bottom: 1em;
-		}
+	.edit{
+		@extend .button;
+		margin-bottom: 1em;
 	}
 }
 
@@ -566,7 +581,7 @@ strong span{
 
 //ORDERS
 
-.woocommerce-orders-table{
+.woocommerce-orders-table,.my_account_subscriptions,.shop_table_responsive,.woocommerce-table--order-details,#order_review table,.view-subscription .shop_table.order_details{
 	width: 100%;
 
 	thead{
@@ -581,10 +596,62 @@ strong span{
 		tr{
 			height: 80px;
 			border-bottom: 1px solid darken($light,5%);
+
+			@media screen and (max-width: $sm) {
+				font-size: 12px;
+			}
+		}
+	}
+
+	.button{
+		margin-right: .5em;
+		padding: 7px 8px 4px 8px;
+
+		@media screen and (max-width: $sm) {
+			padding: 5px 6px 2px 6px;
 		}
 	}
 	
 
+}
+
+
+//pay for an order that's pending
+
+.woocommerce-order-pay{
+
+	.shop_table,#payment{
+		margin-bottom: 2em;
+	}
+}
+
+
+
+.thankyou-separator{
+	border-bottom: 1px solid darken($light,15%);
+}
+
+.woocommerce-table--order-details,#order_review table,.view-subscription .shop_table.order_details{
+	tfoot{
+		background: $khaki;
+		border-bottom: 1px solid darken($light,25%);
+
+		tr{
+			height: 45px;
+
+			th{
+				text-indent: 10px;
+			}
+
+			&:last-child{
+				height: 60px;
+				background: darken($khaki, 3%);
+				*{
+					@extend .bold;
+				}
+			}
+		}
+	}
 }
 
 .woocommerce-OrderUpdates{
@@ -599,6 +666,25 @@ strong span{
 	tbody, thead,tfoot{
 		td:nth-child(2),th:nth-child(2){
 			padding-left: 30px;
+		}
+	}
+}
+
+
+//subscription
+
+.subscription_details{
+	width: 100%;
+	max-width: 700px;
+	tr{
+		height: 40px;
+	}
+
+	.button{
+		padding: 7px 8px 4px 8px;
+
+		@media screen and (max-width: $sm) {
+			padding: 5px 6px 2px 6px;
 		}
 	}
 }
