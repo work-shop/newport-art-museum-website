@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 
 				<div class="row mt3 mb4">
-					<div class="col-12 col-md-6">
+					<div class="col-12 col-md-6 mb2">
 
 						<ul class="woocommerce-order-overview woocommerce-thankyou-order-details order_details">
 
