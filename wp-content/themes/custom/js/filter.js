@@ -20,11 +20,9 @@ function filter() {
 		var urlVars = getUrlVars();
 		var urlCategory = urlVars.category;
 		if( !isEmpty(urlCategory) ){
-			//console.log('urlCategory: ' + urlCategory);
 			var categoryButtonSelector = '.filter-button[data-target=filter-' + urlCategory + ']';
 			var categoryButtonCheck = $(categoryButtonSelector);
 			if( !isEmpty(categoryButtonCheck) ){
-				//console.log('categoryButtonCheck true');
 				$(categoryButtonSelector).addClass('filter-active');
 				filterClassStart = 'filter-' + urlVars.category;
 			}
@@ -33,13 +31,14 @@ function filter() {
 
 		pikaStart = new Pikaday({ 
 			field: $('.filter-date-start')[0],
-			format: 'YYYY-MM-DD',
+			format: 'MM/DD/YYYY',
 			onSelect: function() {
 				//console.log(this._d);
 			}
 		});
 		pikaEnd = new Pikaday({ 
 			field: $('.filter-date-end')[0],
+			format: 'MM/DD/YYYY',
 			onSelect: function() {
 				//console.log(this._d);
 			}
@@ -79,10 +78,22 @@ function filter() {
 		});
 
 		$('.filter-date-input').change( function(){
-			//console.log('change');
-			//console.log($(this).val());
+
+			//get the values from the inputs to see if someone has deleted the date
+			var startValue = $.trim($('.filter-date-start').val());
+			var endValue = $.trim($('.filter-date-end').val());
+			//check if the input values are empty, reset datepicker objects if so
+			if( isEmpty(startValue) ){
+				pikaStart._d = undefined;
+			}
+			if( isEmpty(endValue) ){
+				pikaEnd._d = undefined;
+			}
+
 			filterDates();
+
 		});	
+
 
 	});// end document.ready
 
@@ -117,8 +128,6 @@ function filter() {
 		clearFilterMessages();
 		dayFilteredCurrent = day;
 		var elements = $('.filter-target');
-		//console.log('filterDays Elements: ');
-		////console.log(elements);
 
 		if( categoryFiltered ){
 			//console.log('filterDays if categoryFiltered');
@@ -131,37 +140,31 @@ function filter() {
 
 
 	function filterDates(){
-		var startDate = pikaStart._d;
-		var endDate = pikaEnd._d;
-		//console.log(startDate);
-		//console.log(endDate);
 
-		// var startValue = $('.filter-date-start').val();
-		// startValue = $.trim(startValue);
-		// var endValue = $('.filter-date-end').val();
-		// endValue = $.trim(endValue);
-
-		// if( isEmpty(startValue) && endValue ){
-		// 	console.log('both fields empty');
-		// }
-		if( isEmpty(endDate) || isEmpty(startDate) ){
-			//console.log('either or both pika date empty');
-			return null;
-		} else{
-			dateFiltered = true;
-		}
-		startDate = startDate.toLocaleDateString('en-US', dateOptions);
-		endDate = endDate.toLocaleDateString('en-US', dateOptions);
-
+		dateFiltered = true;
 		clearFilterMessages();
 
+		var startDate = pikaStart._d;
+		var endDate = pikaEnd._d;
+
+		if( isEmpty(startDate) ){
+			startDate = '01/01/1900';
+		}else{
+			startDate = startDate.toLocaleDateString('en-US', dateOptions);
+		}
+		if( isEmpty(endDate) ){
+			endDate = '12/31/2099';
+		}else{
+			endDate = endDate.toLocaleDateString('en-US', dateOptions);
+
+		}		
 		var elements = $('.filter-target');
 		if( categoryFiltered ){
 			elements = getElementsByCategory( elements, categoryFilteredCurrent );
 		}
-
 		var newElements = getElementsByDate( elements, startDate, endDate );
 		updateElements( newElements );
+
 	}
 
 
@@ -247,7 +250,7 @@ function filter() {
 
 
 	function isEmpty(val){
-		return (val === undefined || val == null || val.length <= 0) ? true : false;
+		return (typeof(val) === 'undefined' || val == null || val.length <= 0) ? true : false;
 	}
 
 	// Read a page's GET URL variables and return them as an associative array.
