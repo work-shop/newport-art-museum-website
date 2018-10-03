@@ -303,6 +303,10 @@ input,textarea,select{
 	}
 }
 
+.woocommerce-checkout #payment .payment_method_stripe label[for=payment_method_stripe] {
+    padding-left: 0;
+}
+
 
 .required,abbr.required{
 	color: $error;
