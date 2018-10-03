@@ -110,6 +110,14 @@ input[type="text"]{
 	padding: 9px 10px 4px 10px;
 }
 
+input,textarea,select{
+	&:focus{
+		border: 2px solid $brand;
+		outline: none;
+		box-shadow: none;
+	}
+}
+
 
 
 
@@ -237,6 +245,29 @@ input[type="text"]{
 
 #payment{
 	padding-top: 20px;
+
+	.woocommerce-error{
+		padding: 1em;
+		margin-bottom: 1em;
+		*{
+			@extend .bold;
+			color: darken($error,10%);
+		}
+	}
+}
+
+#stripe-payment-data{
+	p{
+
+		&:first-child{
+			display: none;
+		}
+		
+	}
+}
+
+.payment_box{
+	margin-top: 1.5em;
 }
 
 .woocommerce-checkout #payment{

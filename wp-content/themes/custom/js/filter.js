@@ -20,11 +20,11 @@ function filter() {
 		var urlVars = getUrlVars();
 		var urlCategory = urlVars.category;
 		if( !isEmpty(urlCategory) ){
-			console.log('urlCategory: ' + urlCategory);
+			//console.log('urlCategory: ' + urlCategory);
 			var categoryButtonSelector = '.filter-button[data-target=filter-' + urlCategory + ']';
 			var categoryButtonCheck = $(categoryButtonSelector);
 			if( !isEmpty(categoryButtonCheck) ){
-				console.log('categoryButtonCheck true');
+				//console.log('categoryButtonCheck true');
 				$(categoryButtonSelector).addClass('filter-active');
 				filterClassStart = 'filter-' + urlVars.category;
 			}
@@ -79,6 +79,8 @@ function filter() {
 		});
 
 		$('.filter-date-input').change( function(){
+			//console.log('change');
+			//console.log($(this).val());
 			filterDates();
 		});	
 
@@ -86,7 +88,7 @@ function filter() {
 
 
 	function filterCategories(filterClass) {
-		console.log('filterCategories: ' + filterClass);
+		//console.log('filterCategories: ' + filterClass);
 		clearFilterMessages();
 
 		if( filterClass !== 'all'){
@@ -131,13 +133,25 @@ function filter() {
 	function filterDates(){
 		var startDate = pikaStart._d;
 		var endDate = pikaEnd._d;
+		//console.log(startDate);
+		//console.log(endDate);
+
+		// var startValue = $('.filter-date-start').val();
+		// startValue = $.trim(startValue);
+		// var endValue = $('.filter-date-end').val();
+		// endValue = $.trim(endValue);
+
+		// if( isEmpty(startValue) && endValue ){
+		// 	console.log('both fields empty');
+		// }
 		if( isEmpty(endDate) || isEmpty(startDate) ){
+			//console.log('either or both pika date empty');
 			return null;
 		} else{
 			dateFiltered = true;
 		}
-		startDate = startDate.toLocaleDateString("en-US", dateOptions);
-		endDate = endDate.toLocaleDateString("en-US", dateOptions);
+		startDate = startDate.toLocaleDateString('en-US', dateOptions);
+		endDate = endDate.toLocaleDateString('en-US', dateOptions);
 
 		clearFilterMessages();
 
@@ -245,7 +259,7 @@ function filter() {
 		{
 
 			hash = hashes[i].split('=');
-			console.log(hash);
+			//console.log(hash);
 			vars.push(hash[0]);
 			vars[hash[0]] = hash[1];
 
