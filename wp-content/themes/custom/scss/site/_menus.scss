@@ -17,21 +17,22 @@ $menu-graphic-padding: 20px;
 .menu-dropdown{
 	margin: 0;
 	padding: 0;
-	//height: $dropdown-height;
 	width: 100%;
 	top: $nav-height;
 	background: transparentize($khaki, .05);
 	box-shadow: 0px 4px 35px darken($slate,15%);
 	position: fixed;
-	transform: translate(0,-100vh) rotateX(0deg);
+	transform: translate(0,-$nav-height);
 	transform-origin: 0 0;
-	transition: transform .41s;
 	z-index: -9;
 	opacity: 0;
 	overflow: hidden;
+	transition: opacity .2s, transform .4s; //transition out
 
 	@media screen and (max-width: $lg) {
 		top: $nav-height-md;
+		//transition: none;
+		transition: opacity .1s, transform .2s; //transition out
 	}
 
 	@media screen and (max-width: $sm) {
@@ -40,8 +41,13 @@ $menu-graphic-padding: 20px;
 
 	&.on{
 		z-index: 6;
-		transform: translate(0,0) rotateX(0);
+		transform: translate(0,0);
 		opacity: 1;
+		transition: opacity .2s, transform .4s; //transition in
+
+		@media screen and (max-width: $lg) {
+			transition: opacity .1s, transform .2s; //transition in
+		}
 	}
 
 	.menu-dropdown-links{
@@ -150,7 +156,7 @@ $menu-graphic-padding: 20px;
 	transition: transform .25s;
 
 	&:hover{
-		cursor: url("../images/close.png"), auto;
+		//cursor: url("../images/close.png"), auto;
 	}
 
 }
@@ -163,10 +169,16 @@ body.dropdown-on{
 
 	main,footer{
 		opacity: .5;
+
+		@media screen and (max-width: $lg) {
+			opacity: 1;
+		}
+		
 	}
 
 	#blanket-dropdown{
 		transform: translate(0,0);
+		transition: transform .25s;
 	}
 	
 }

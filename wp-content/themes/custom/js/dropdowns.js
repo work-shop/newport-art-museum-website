@@ -5,7 +5,7 @@ function dropdowns( config ) {
 
 	$(document).ready( function() {
 
-		var dropdownDelay = 400, timer;
+		var dropdownDelay = 100, timer;
 
 		$( config.linkSelector ).hover(
 			function() {
@@ -22,9 +22,21 @@ function dropdowns( config ) {
 			}
 			);
 
-		$(config.blanketSelector).click(function(){
-			closeDropdown();
-		});
+		// $(config.blanketSelector).click(function(){
+		// 	closeDropdown();
+		// });
+
+		$( config.blanketSelector ).hover(
+			function() {
+				if( $(window).width() > 767){
+					closeDropdown();
+				}
+			}, function() {
+				if( $(window).width() > 767){
+					
+				}
+			}
+			);
 
 		$('.dropdown-link').click(function(){
 			closeDropdown();
@@ -35,14 +47,9 @@ function dropdowns( config ) {
 
 	//open the dropdown
 	function openDropdown( link ){
-		//console.log(link);
 		var linkTarget = link.data('dropdown-target');
-		//console.log(linkTarget);
 		var dropdownTarget = 'menu[data-dropdown="' + linkTarget + '"]';
-		//console.log(dropdownTarget);
 		var dropdown = $(dropdownTarget);
-		//console.log(dropdown);
-
 		closeDropdown();
 
 		if($('body').hasClass(config.bodyOffClass)){
@@ -56,14 +63,12 @@ function dropdowns( config ) {
 
 	//close the dropdown
 	function closeDropdown(){
-
 		if($('body').hasClass(config.bodyOnClass)){
 			$( config.linkSelector ).removeClass('on').addClass('off');
 			$(config.dropdownSelector).removeClass('on').addClass('off');
 			$(config.blanketSelector).removeClass('on').addClass('off');			
 			$('body').removeClass(config.bodyOnClass).addClass(config.bodyOffClass);
 		}
-
 	}
 
 }

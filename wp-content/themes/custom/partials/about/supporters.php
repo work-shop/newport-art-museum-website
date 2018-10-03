@@ -1,12 +1,12 @@
-<section class="block padded" id="about-supporters">
-	<div class="container-fluid">
-		<div class="row supporters mb5">
-			<div class="col-12 mb3">
-				<h2 class="serif centered">Supporters</h2>
-			</div>
-			<div class="col-12">
-				<div class="slick slick-sponsors">
-					<?php if( have_rows('supporters','60') ): ?>
+<?php if( have_rows('supporters','60') ): ?>
+	<section class="block padded" id="about-supporters">
+		<div class="container-fluid">
+			<div class="row supporters mb5">
+				<div class="col-12 mb3">
+					<h2 class="serif centered">Supporters</h2>
+				</div>
+				<div class="col-12">
+					<div class="slick slick-sponsors">
 						<?php  while ( have_rows('supporters','60') ) : the_row(); ?>
 							<div class="slick-sponsor-slide">
 								<?php 
@@ -22,17 +22,17 @@
 								<?php endif; ?>
 							</div>
 						<?php endwhile; ?>
-					<?php endif; ?>
+					</div>
 				</div>
 			</div>
-		</div>
-		<div class="row affiliations">
-			<div class="col-12 mb3">
-				<h2 class="serif centered">Affiliations</h2>
-			</div>
-			<div class="col-12">
-				<div class="slick slick-sponsors">
-					<?php if( have_rows('affiliates','60') ): ?>
+		<?php endif; ?>
+		<?php if( have_rows('affiliates','60') ): ?>
+			<div class="row affiliations">
+				<div class="col-12 mb3">
+					<h2 class="serif centered">Affiliations</h2>
+				</div>
+				<div class="col-12">
+					<div class="slick slick-sponsors">
 						<?php  while ( have_rows('affiliates','60') ) : the_row(); ?>
 							<div class="slick-sponsor-slide">
 								<?php 
@@ -48,9 +48,10 @@
 								<?php endif; ?>
 							</div>
 						<?php endwhile; ?>
-					<?php endif; ?>
+
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-</section>
+	</section>
+	<?php endif; ?>
