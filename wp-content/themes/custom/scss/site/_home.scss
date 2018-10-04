@@ -31,7 +31,11 @@
 		}
 	}
 
-
+	&.dropdown-on{
+		#nav{
+			background: $nav-background;
+		}
+	}
 
 	&.sitewide-alert-on{
 		&.dropdown-on{
