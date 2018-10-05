@@ -32,9 +32,9 @@
 						Getting here
 					</a>
 					<br>
-					<a href="/visit/nearby-attractions" class="button button-bordered mb1 plan-your-visit-nearby-attractions" >
+<!-- 					<a href="/visit/nearby-attractions" class="button button-bordered mb1 plan-your-visit-nearby-attractions" >
 						Nearby Attractions
-					</a>
+					</a> -->
 				</div>
 			</div>
 			<div class="admissions col-md-6 col-lg-4 col-xl-4 mb3">
