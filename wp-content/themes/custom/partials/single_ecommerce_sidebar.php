@@ -29,6 +29,8 @@ if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif
                     <?php else: ?>
 
                         <?php if( get_field('registration_required') ): ?>
+                            
+                            <?php if(false): //temporarily don't display registration details ?>
                             <?php if ( $is_in_stock ) : ?>
                                 Tickets
                                 <?php if ( !$current_price > 0 ): ?>
@@ -40,6 +42,9 @@ if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif
                                 <?php else: ?>
                                     <span class="error bold m1 display-block">This Event is Sold Out.</span>
                                 <?php endif; ?>
+                            <?php endif; ?>
+
+
                                 <?php else: ?>
                                     <span class="bold display-block m1">
                                         This Event is Free and Open to the Public, No Registration or Tickets Required.
