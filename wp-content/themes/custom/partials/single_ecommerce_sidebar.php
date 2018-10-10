@@ -80,7 +80,7 @@ if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif
                              <?php endif; ?>
                              <?php elseif( $show_individual_event_temporary_message ): ?>
                                 <?php if ( get_field('temporary_registration_link') ) : ?>
-                                 <a href="<?php the_field('temporary_registration_link'); ?>" class="button button-full">Register on ASAP Connected</a>
+                                 <a href="<?php the_field('temporary_registration_link'); ?>" class="button button-full">Register</a>
                              <?php endif; ?>
                              <?php else: ?>
                                 <?php if ( $is_in_stock ) : ?>
