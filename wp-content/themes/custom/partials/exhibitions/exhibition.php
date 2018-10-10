@@ -14,34 +14,36 @@
 							<?php the_field('short_description'); ?>
 						</h3>
 						<div class="row">
+							<?php if( get_field('exhibition_start_date') || get_field('exhibition_end_date') ): ?>
 							<div class="col-md-6">
 								<h4 class="bold">
-									<?php the_field('exhibition_start_date'); ?> - <?php the_field('exhibition_end_date'); ?>
+									<?php the_field('exhibition_start_date'); ?> <?php if( get_field('exhibition_start_date') && get_field('exhibition_end_date') ): echo ' - '; endif; ?> <?php the_field('exhibition_end_date'); ?> 
 								</h4>
 							</div>
-							<div class="col-md-6">
-								<h4>
-									<?php the_field('exhibition_location'); ?>
-								</h4>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col">
-								<div class="nam-dash">
-								</div>
-							</div>
+						<?php endif; ?>
+						<div class="col-md-6">
+							<h4>
+								<?php the_field('exhibition_location'); ?>
+							</h4>
 						</div>
 					</div>
-					<div class="single-body-left-content">
-						<?php get_template_part('partials/flexible_content/flexible_content'); ?>
+					<div class="row">
+						<div class="col">
+							<div class="nam-dash">
+							</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div class="col-md-4 single-body-right">
-				<div class="single-body-right-content">
-				
+				<div class="single-body-left-content">
+					<?php get_template_part('partials/flexible_content/flexible_content'); ?>
 				</div>
 			</div>
 		</div>
+		<div class="col-md-4 single-body-right">
+			<div class="single-body-right-content">
+				
+			</div>
+		</div>
 	</div>
+</div>
 </section>
