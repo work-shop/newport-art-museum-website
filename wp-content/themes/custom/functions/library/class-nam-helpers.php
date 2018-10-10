@@ -78,7 +78,7 @@ class NAM_Helpers{
 								<?php the_field('exhibition_location'); ?>
 							</h5>
 							<h5 class="card-text-exhibition-dates bold">
-								<?php the_field('exhibition_start_date'); ?> - <?php the_field('exhibition_end_date'); ?> 
+								<?php the_field('exhibition_start_date'); ?> <?php if( get_field('exhibition_start_date') && get_field('exhibition_end_date') ): echo ' - '; endif; ?> <?php the_field('exhibition_end_date'); ?> 
 							</h5>
 						<?php elseif( $card_type === 'event' ): ?>
 							<h5 class="card-text-event-date bold mb0">
