@@ -178,7 +178,7 @@
 						</div>
 						<div class="col-md-6">
 							<div class="menu-dropdown-graphic-link righted">
-								<a href="/classes">See All Classes 
+								<a href="/education/classes">See All Classes 
 									<span class="menu-dropdown-graphic-link-arrow">-></span>
 								</a>
 							</div>

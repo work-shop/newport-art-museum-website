@@ -69,7 +69,6 @@ $class_short_description = get_field('short_description');
                             <?php endif; ?>
                             <?php if( get_field('class_pricing_1') ): ?>
                                 <!-- <div class="nam-dash"></div> -->
-                                <br>
                                 <h4 class="class-pricing-1 bold">
                                     <?php the_field('class_pricing_1'); ?>  
                                 </h4>
@@ -85,9 +84,11 @@ $class_short_description = get_field('short_description');
                                 </h4>
                             <?php endif; ?>
                         </h4>
-                        <h3 class="class-single-short-description mt1">
-                            <?php echo $class_short_description; ?>
-                        </h3>
+                        <?php if( $class_short_description ): ?>
+                            <h3 class="class-single-short-description mt1">
+                                <?php echo $class_short_description; ?>
+                            </h3>
+                        <?php endif; ?>
                         <div class="row">
                             <div class="col">
                                 <div class="nam-dash nam-dash-desktop"></div>
