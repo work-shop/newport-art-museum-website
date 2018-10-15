@@ -1,7 +1,7 @@
 <section class="block filters filters-<?php echo $GLOBALS['tree_slug']; ?> padded" id="filters">
 	<div class="container-fluid container-fluid-stretch">
-		<div class="row">
-			<div class="col-md-9 col-lg-8 col-xl-7 filter-category mb2" id="filters-primary">
+		<div class="row-broken clearfix">
+			<div class="filter-primary filter-category mb2" id="filters-primary">
 				<div class="row">
 					<div class="col">
 						<h4 class="medium filter-title">
@@ -36,10 +36,12 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-md-3 col-lg-4 col-xl-5 mb2" id="filter-secondary">
+			<div class="filter-secondary mb2" id="filter-secondary">
 				<?php if( $type === 'events' ): ?>
 					<div class="row filter-dates">
-						<div class="col-xl-6">
+						<div class="col col-sm-6">
+							<div class="">
+								<div>
 							<h4 class="medium filter-title">
 								Starting:
 							</h4>
@@ -47,13 +49,19 @@
 								<input type="text" placeholder="Start Date" class="filter-date-input filter-date-start" />
 							</div>
 						</div>
-						<div class="col-xl-6">
+						</div>
+						</div>
+						<div class="col col-sm-6">
+							<div class="">
+								<div>
 							<h4 class="medium filter-title">
 								Until:
 							</h4>
 							<div class="filters-date-end mb2" id="filters-date-end">
 								<input type="text" placeholder="End Date" class="filter-date-input filter-date-end" />
 							</div>
+						</div>
+						</div>
 						</div>
 					</div>
 					<?php elseif( $type === 'classes'): ?>

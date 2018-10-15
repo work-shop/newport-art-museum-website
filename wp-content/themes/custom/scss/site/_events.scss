@@ -8,6 +8,36 @@
 	padding-bottom: 0;
 }
 
+$filter-secondary: 480px;
+$filter-secondary-2: 320px;
+
+.filter-primary{
+	width: calc(100% - #{$filter-secondary} );
+	padding-right: 40px;
+	float: left;
+	@media screen and (max-width: 1440px) {
+		width: calc(100% - #{$filter-secondary-2} );
+	}
+	@media screen and (max-width: $sm) {
+		width: 100%;
+		float: none;
+	}
+}
+
+.filter-secondary{
+	width: $filter-secondary;
+	float: left;
+	@media screen and (max-width: 1440px) {
+		width: $filter-secondary-2;
+	}
+	@media screen and (max-width: $sm) {
+		width: 100%;
+		float: none;
+		max-width: 300px;
+	}
+
+}
+
 
 .filter-target{
 	display: none;
@@ -34,7 +64,7 @@
 	margin-right: .25em;
 	margin-bottom: .5em;
 
-	@media screen and (max-width: $md) {
+	@media screen and (max-width: $lg) {
 		font-size: 14px;
 	}
 
@@ -75,6 +105,17 @@ input[type="text"]{
 	border-radius: 4px;
 	color: $medium;
 	padding: 5px 7px 2px 7px;
+	width: 100%;
+
+	@media screen and (max-width: $lg) {
+		max-width: 110px;
+		font-size: 15px;
+		padding: 3px 4px 0px 4px;
+	}
+
+	@media screen and (max-width: $md) {
+		font-size: 13px;
+	}
 }
 
 #filter-messages{

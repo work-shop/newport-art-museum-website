@@ -21,6 +21,15 @@ $fc-padding: 12vh 0;
 		position: relative;
 		border: 1px solid;
 		border-radius: 2px;
+		font-size: 17px;
+
+		@media screen and (max-width: $lg) {
+			font-size: 15px;
+		}
+
+		@media screen and (max-width: $md) {
+			font-size: 13px;
+		}
 
 		&:hover{
 			transform: scale(1.07);

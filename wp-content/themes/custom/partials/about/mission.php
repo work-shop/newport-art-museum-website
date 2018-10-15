@@ -8,9 +8,9 @@
 					<div class="block-background about-quote-image" style="background-image: url('<?php echo $image['sizes']['large']; ?>');">
 					</div>
 					<div class="about-quote-text">
-						<h1 class="white serif m0">
+						<h2 class="white serif m0">
 							<?php echo $text; ?>
-						</h1>
+						</h2>
 						<div class="nam-dash mt2 mb2"></div>
 						<h4 class="white"><?php the_sub_field('quoted_person'); ?></h4>
 						<h4 class="white"><?php the_sub_field('quoted_person_title'); ?></h4>
@@ -21,20 +21,20 @@
 		<div class="col-md-6 col-lg-7 bg-khaki">
 			<div class="about-mission-vision">
 				<div class="about-mission-content mb4">
-					<h2 class="serif">
+					<h3 class="serif">
 						Our Mission
-					</h2>
-					<h3>
-						<?php the_field('mission'); ?>
 					</h3>
+					<h4>
+						<?php the_field('mission'); ?>
+					</h4>
 				</div>
 				<div class="about-vision-content">
-					<h2 class="serif">
+					<h3 class="serif">
 						Our Vision
-					</h2>
-					<h3>
-						<?php the_field('vision'); ?>
 					</h3>
+					<h4>
+						<?php the_field('vision'); ?>
+					</h4>
 				</div>
 			</div>
 		</div>

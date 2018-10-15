@@ -27,12 +27,12 @@ $menu-graphic-padding: 20px;
 	z-index: -9;
 	opacity: 0;
 	overflow: hidden;
-	transition: opacity .2s, transform .4s; //transition out
+	transition: opacity .4s, transform .4s; //transition out
 
 	@media screen and (max-width: $lg) {
 		top: $nav-height-md;
 		//transition: none;
-		transition: opacity .1s, transform .2s; //transition out
+		transition: opacity .2s, transform .3s; //transition out
 	}
 
 	@media screen and (max-width: $sm) {
@@ -43,10 +43,10 @@ $menu-graphic-padding: 20px;
 		z-index: 6;
 		transform: translate(0,0);
 		opacity: 1;
-		transition: opacity .2s, transform .4s; //transition in
+		transition: opacity .5s, transform .4s; //transition in
 
 		@media screen and (max-width: $lg) {
-			transition: opacity .1s, transform .2s; //transition in
+			transition: opacity .2s, transform .3s; //transition in
 		}
 	}
 
@@ -57,7 +57,7 @@ $menu-graphic-padding: 20px;
 		border-bottom: 3px solid darken($light, 10%);
 
 		@media screen and (max-width: $lg) {
-			padding: 8px 0 8px 0;
+			padding: 30px 0 30px 0;
 		}
 
 		ul{

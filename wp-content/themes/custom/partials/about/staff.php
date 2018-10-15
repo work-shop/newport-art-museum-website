@@ -8,12 +8,18 @@
 						<div class="staff-list">
 							<?php  while ( have_rows('staff_1') ) : the_row(); ?>
 								<div class="staff-person">
-									<h4 class="staff-name m0">
-										<?php the_sub_field('name'); ?>
-									</h4>
-									<h5 class="staff-title medium m0">
-										<?php the_sub_field('title'); ?>
-									</h5>
+									<?php if( get_sub_field('email') ): ?>
+										<a href="mailto:<?php the_sub_field('email'); ?>" target="_blank">
+										<?php endif; ?>
+										<h4 class="staff-name m0">
+											<?php the_sub_field('name'); ?>
+										</h4>
+										<h5 class="staff-title medium m0">
+											<?php the_sub_field('title'); ?>
+										</h5>
+										<?php if( get_sub_field('email') ): ?>
+										</a>
+									<?php endif; ?>
 								</div>
 							<?php endwhile; ?>
 						</div>
@@ -25,12 +31,18 @@
 						<div class="staff-list">
 							<?php  while ( have_rows('staff_2') ) : the_row(); ?>
 								<div class="staff-person">
-									<h4 class="staff-name m0">
-										<?php the_sub_field('name'); ?>
-									</h4>
-									<h5 class="staff-title medium m0">
-										<?php the_sub_field('title'); ?>
-									</h5>
+									<?php if( get_sub_field('email') ): ?>
+										<a href="mailto:<?php the_sub_field('email'); ?>" target="_blank">
+										<?php endif; ?>
+										<h4 class="staff-name m0">
+											<?php the_sub_field('name'); ?>
+										</h4>
+										<h5 class="staff-title medium m0">
+											<?php the_sub_field('title'); ?>
+										</h5>
+										<?php if( get_sub_field('email') ): ?>
+										</a>
+									<?php endif; ?>
 								</div>
 							<?php endwhile; ?>
 						</div>
@@ -42,12 +54,18 @@
 						<div class="staff-list">
 							<?php  while ( have_rows('staff_3') ) : the_row(); ?>
 								<div class="staff-person">
-									<h4 class="staff-name m0">
-										<?php the_sub_field('name'); ?>
-									</h4>
-									<h5 class="staff-title medium m0">
-										<?php the_sub_field('title'); ?>
-									</h5>
+									<?php if( get_sub_field('email') ): ?>
+										<a href="mailto:<?php the_sub_field('email'); ?>" target="_blank">
+										<?php endif; ?>
+										<h4 class="staff-name m0">
+											<?php the_sub_field('name'); ?>
+										</h4>
+										<h5 class="staff-title medium m0">
+											<?php the_sub_field('title'); ?>
+										</h5>
+										<?php if( get_sub_field('email') ): ?>
+										</a>
+									<?php endif; ?>
 								</div>
 							<?php endwhile; ?>
 						</div>
@@ -59,12 +77,18 @@
 						<div class="staff-list">
 							<?php  while ( have_rows('staff_4') ) : the_row(); ?>
 								<div class="staff-person">
-									<h4 class="staff-name m0">
-										<?php the_sub_field('name'); ?>
-									</h4>
-									<h5 class="staff-title medium m0">
-										<?php the_sub_field('title'); ?>
-									</h5>
+									<?php if( get_sub_field('email') ): ?>
+										<a href="mailto:<?php the_sub_field('email'); ?>" target="_blank">
+										<?php endif; ?>
+										<h4 class="staff-name m0">
+											<?php the_sub_field('name'); ?>
+										</h4>
+										<h5 class="staff-title medium m0">
+											<?php the_sub_field('title'); ?>
+										</h5>
+										<?php if( get_sub_field('email') ): ?>
+										</a>
+									<?php endif; ?>
 								</div>
 							<?php endwhile; ?>
 						</div>

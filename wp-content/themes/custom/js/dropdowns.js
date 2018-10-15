@@ -5,7 +5,7 @@ function dropdowns( config ) {
 
 	$(document).ready( function() {
 
-		var dropdownDelay = 100, timer;
+		var dropdownDelay = 250, timer;
 
 		$( config.linkSelector ).hover(
 			function() {

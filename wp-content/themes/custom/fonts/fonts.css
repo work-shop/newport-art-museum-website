@@ -1,4 +1,4 @@
-
+/*
 @font-face {
 	font-family: 'modern_pictograms_proregular';
 	src: url('modernpictogramspro_234.eot');
@@ -8,3 +8,66 @@
 	font-weight: normal;
 	font-style: normal;
 }
+
+@font-face {
+    font-family: "Akkurat Bold";
+    src: url("../fonts/lineto-akkurat-bold.eot");
+    src: url("../fonts/lineto-akkurat-bold.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/lineto-akkurat-bold.woff2") format("woff2"),
+         url("../fonts/lineto-akkurat-bold.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Akkurat Bold Italic";
+    src: url("../fonts/lineto-akkurat-bolditalic.eot");
+    src: url("../fonts/lineto-akkurat-bolditalic.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/lineto-akkurat-bolditalic.woff2") format("woff2"),
+         url("../fonts/lineto-akkurat-bolditalic.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Akkurat Italic";
+    src: url("../fonts/lineto-akkurat-italic.eot");
+    src: url("../fonts/lineto-akkurat-italic.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/lineto-akkurat-italic.woff2") format("woff2"),
+         url("../fonts/lineto-akkurat-italic.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Akkurat Light";
+    src: url("../fonts/lineto-akkurat-light.eot");
+    src: url("../fonts/lineto-akkurat-light.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/lineto-akkurat-light.woff2") format("woff2"),
+         url("../fonts/lineto-akkurat-light.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Akkurat Light Italic";
+    src: url("../fonts/lineto-akkurat-lightitalic.eot");
+    src: url("../fonts/lineto-akkurat-lightitalic.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/lineto-akkurat-lightitalic.woff2") format("woff2"),
+         url("../fonts/lineto-akkurat-lightitalic.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: "Akkurat";
+    src: url("../fonts/lineto-akkurat-regular.eot");
+    src: url("../fonts/lineto-akkurat-regular.eot?#iefix") format("embedded-opentype"),
+         url("../fonts/lineto-akkurat-regular.woff2") format("woff2"),
+         url("../fonts/lineto-akkurat-regular.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+*/

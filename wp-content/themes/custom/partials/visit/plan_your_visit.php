@@ -27,7 +27,10 @@
 				<div class="plan-your-visit-address address mb1">
 					<?php get_template_part('partials/visit/address'); ?>
 				</div>
-				<div class="plan-your-visit-location-links">
+				<div class="plan-your-visit-address-school address mb1">
+					<?php get_template_part('partials/visit/address_school'); ?>
+				</div>
+				<div class="plan-your-visit-location-links hidden">
 					<a href="/visit/getting-here" class="button button-bordered mb1 plan-your-visit-getting-here">
 						Getting here
 					</a>

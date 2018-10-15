@@ -21,7 +21,7 @@
 		@extend .mask-brand;
 	}
 
-	h1{
+	h2{
 		line-height: 1.3;
 	}
 
@@ -38,19 +38,30 @@
 		padding: 60px 20px;
 	}
 
-	h2{
+	h3{
 		margin-bottom: 1em;
+	}
+
+	h4{
+		max-width: 560px;
+		line-height: 1.6;
 	}
 }
 
 .slick-sponsors{
 	.slick-sponsor-slide{
-		padding: 20px;
+		padding: 25px;
 
 		@media screen and (max-width: $sm) {
 			padding: 5px;
 		}
 	}
+}
+
+
+.supporters-list{
+	column-count: 2;
+	column-gap: 40px;
 }
 
 
