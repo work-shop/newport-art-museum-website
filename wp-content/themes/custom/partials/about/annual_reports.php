@@ -9,7 +9,7 @@
 					<div class="col-6 col-md-4 mb3">
 						<div class="bg-brand ">
 							<?php $file = get_sub_field('annual_report_file'); ?>
-							<a href="<?php echo $file['url']; ?>" class="p2 d-flex align-items-center justify-content-center">
+							<a href="<?php echo $file['url']; ?>" target="_blank" class="p2 d-flex align-items-center justify-content-center">
 								<h4 class="annual-report-title white mb0">
 									<?php the_sub_field('annual_report_title'); ?>
 								</h4>
