@@ -11,31 +11,64 @@
 $filter-secondary: 480px;
 $filter-secondary-2: 320px;
 
-.filter-primary{
-	width: calc(100% - #{$filter-secondary} );
-	padding-right: 40px;
-	float: left;
-	@media screen and (max-width: 1440px) {
-		width: calc(100% - #{$filter-secondary-2} );
+.page-id-74{
+
+	.filter-primary{
+		width: calc(100% - #{$filter-secondary} );
+		padding-right: 40px;
+		float: left;
+		@media screen and (max-width: 1440px) {
+			width: calc(100% - #{$filter-secondary-2} );
+		}
+		@media screen and (max-width: $sm) {
+			width: 100%;
+			float: none;
+		}
 	}
-	@media screen and (max-width: $sm) {
-		width: 100%;
-		float: none;
+
+	.filter-secondary{
+		width: $filter-secondary;
+		float: left;
+		@media screen and (max-width: 1440px) {
+			width: $filter-secondary-2;
+		}
+		@media screen and (max-width: $sm) {
+			width: 100%;
+			float: none;
+			max-width: 300px;
+		}
+
 	}
+
 }
 
-.filter-secondary{
-	width: $filter-secondary;
-	float: left;
-	@media screen and (max-width: 1440px) {
-		width: $filter-secondary-2;
-	}
-	@media screen and (max-width: $sm) {
-		width: 100%;
-		float: none;
-		max-width: 300px;
+.page-id-78{
+	.filter-primary{
+		//width: calc(100% - 500px );
+		padding-right: 40px;
+		float: left;
+		@media screen and (max-width: 1440px) {
+			//width: calc(100% - #{$filter-secondary-2} );
+		}
+		@media screen and (max-width: $sm) {
+			width: 100%;
+			float: none;
+		}
 	}
 
+	.filter-secondary{
+		width: 500px;
+		float: left;
+		@media screen and (max-width: 1440px) {
+			//width: $filter-secondary-2;
+		}
+		@media screen and (max-width: $sm) {
+			width: 100%;
+			float: none;
+			//max-width: 300px;
+		}
+
+	}
 }
 
 

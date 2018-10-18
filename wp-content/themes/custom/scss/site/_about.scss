@@ -62,6 +62,11 @@
 .supporters-list{
 	column-count: 2;
 	column-gap: 40px;
+
+	.supporter{
+		display: inline-block;
+		width: 100%;
+	}
 }
 
 

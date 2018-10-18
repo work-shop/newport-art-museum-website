@@ -96,7 +96,7 @@ function sass_bundle( development ) {
             gulp.src( sass_entrypoint )
                 .pipe( sass({
                     includePaths: [ slick_includePaths ].concat( bourbon_includePaths ),
-                    outputStyle: ( development ) ? 'expanded' : 'compressed'
+                    outputStyle: 'expanded'
                 }).on('error', sass.logError ) )
                 .pipe( autoprefixer({
                     browsers: [

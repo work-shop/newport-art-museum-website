@@ -32,7 +32,7 @@ $menu-graphic-padding: 20px;
 	@media screen and (max-width: $lg) {
 		top: $nav-height-md;
 		//transition: none;
-		transition: opacity .2s, transform .3s; //transition out
+		transition: opacity .3s, transform .4s; //transition out
 	}
 
 	@media screen and (max-width: $sm) {
@@ -46,7 +46,7 @@ $menu-graphic-padding: 20px;
 		transition: opacity .5s, transform .4s; //transition in
 
 		@media screen and (max-width: $lg) {
-			transition: opacity .2s, transform .3s; //transition in
+			transition: opacity .3s, transform .4s; //transition in
 		}
 	}
 

@@ -24,30 +24,52 @@
 					<div class="row">
 						<div class="col-md-6">
 							<?php if( have_rows('footer_menu_links_column_1','option') ): ?>
-								<?php while( have_rows('footer_menu_links_column_1','option') ): the_row(); ?>
-									<?php $link = get_sub_field('link'); ?>
-									<ul>
+								<ul>
+									<?php while( have_rows('footer_menu_links_column_1','option') ): the_row(); ?>
+										<?php $link = get_sub_field('link'); ?>
 										<li>
 											<a href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>">
 												<?php echo $link['title']; ?>
 											</a>
 										</li>
-									</ul>
-								<?php endwhile; ?>
+									<?php endwhile; ?>
+									<li class="footer-social-items desktop">
+										<a href="https://www.facebook.com/NewportArtMuseum/" target="_blank">
+											<img src="<?php bloginfo( 'template_directory' );?>/images/facebook.png" class="social-icon">
+										</a> 
+										<a href="https://twitter.com/NewportArtMuse" target="_blank">
+											<img src="<?php bloginfo( 'template_directory' );?>/images/twitter.png" class="social-icon">
+										</a>
+										<a href="https://www.instagram.com/newportartmuseum/" target="_blank">
+											<img src="<?php bloginfo( 'template_directory' );?>/images/instagram.png" class="social-icon">
+										</a>
+									</li>
+								</ul>
 							<?php endif; ?>
 						</div>
 						<div class="col-md-6">
 							<?php if( have_rows('footer_menu_links_column_2','option') ): ?>
-								<?php while( have_rows('footer_menu_links_column_2','option') ): the_row(); ?>
-									<?php $link = get_sub_field('link'); ?>
-									<ul>
+								<ul>
+									<?php while( have_rows('footer_menu_links_column_2','option') ): the_row(); ?>
+										<?php $link = get_sub_field('link'); ?>
 										<li>
 											<a href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>">
 												<?php echo $link['title']; ?>
 											</a>
 										</li>
-									</ul>
-								<?php endwhile; ?>
+									<?php endwhile; ?>
+									<li class="footer-social-items mobile">
+										<a href="https://www.facebook.com/NewportArtMuseum/" target="_blank">
+											<img src="<?php bloginfo( 'template_directory' );?>/images/facebook.png" class="social-icon">
+										</a> 
+										<a href="https://twitter.com/NewportArtMuse" target="_blank">
+											<img src="<?php bloginfo( 'template_directory' );?>/images/twitter.png" class="social-icon">
+										</a>
+										<a href="https://www.instagram.com/newportartmuseum/" target="_blank">
+											<img src="<?php bloginfo( 'template_directory' );?>/images/instagram.png" class="social-icon">
+										</a>
+									</li>
+								</ul>
 							<?php endif; ?>
 						</div>
 					</div>

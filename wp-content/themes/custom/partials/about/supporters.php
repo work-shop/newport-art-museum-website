@@ -1,13 +1,42 @@
 <?php if( have_rows('supporters','60') ): ?>
-	<section class="block padded bg-light" id="about-supporters">
+	<section class="block pt6 pb0 bg-light" id="about-supporters-foundation">
 		<div class="container-fluid">
-			<div class="row supporters mb5">
-				<div class="col-12 mb3">
-					<h2 class="serif centered">Supporters</h2>
+			<div class="row supporters">
+				<div class="col-12 mb1">
+					<h2 class="serif">Foundation Support</h2>
 				</div>
 				<div class="supporters-list col-12">
 					<?php  while ( have_rows('supporters','60') ) : the_row(); ?>
-						<div class="supporter mb3">
+						<div class="supporter mb2">
+							<?php 
+							$link = get_sub_field('sponsor_link'); 
+							?>
+							<?php if( $link ): ?>
+								<a href="<?php echo $link; ?>">
+								<?php endif; ?>
+								<h3 class="supporter-title">
+									<?php the_sub_field('sponsoring_organization'); ?>
+								</h3>
+								<?php if( $link ): ?>
+								</a>
+							<?php endif; ?>
+						</div>
+					<?php endwhile; ?>
+				</div>
+			</div>
+		</div>
+	</section>
+<?php endif; ?>
+<?php if( have_rows('supporters_2','60') ): ?>
+	<section class="block pt2 pb4 bg-light" id="about-supporters-corporate">
+		<div class="container-fluid">
+			<div class="row supporters">
+				<div class="col-12 mb1">
+					<h2 class="serif">Corporate Support</h2>
+				</div>
+				<div class="supporters-list col-12">
+					<?php  while ( have_rows('supporters_2','60') ) : the_row(); ?>
+						<div class="supporter mb2">
 							<?php 
 							$link = get_sub_field('sponsor_link'); 
 							?>
@@ -32,7 +61,7 @@
 		<div class="container-fluid">
 			<div class="row affiliations">
 				<div class="col-12 mb3">
-					<h2 class="serif centered">Affiliations</h2>
+					<h2 class="serif">Affiliations</h2>
 				</div>
 				<div class="col-12">
 					<div class="slick slick-sponsors">
