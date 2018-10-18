@@ -60,12 +60,38 @@
 
 
 .supporters-list{
+	// display: flex;
+	//flex-wrap: wrap;
+	// flex-direction: column;
 	column-count: 2;
-	column-gap: 40px;
+	column-fill: auto;
 
 	.supporter{
-		display: inline-block;
+		//flex: 1 0 50%;
+		//flex: 1;
+		//max-width: 15em;
 		width: 100%;
+		display: inline-block;
+		// border: 1px solid red;
+	}
+
+	.supporter-title{
+		font-size: 24px;
+		max-width: 15em;
+		padding-right: 40px;
+		color: $brand;
+
+		@media screen and (max-width: $lg) {
+			font-size: 21px;
+		}
+
+		@media screen and (max-width: $md) {
+			font-size: 17px;
+		}
+
+		@media screen and (max-width: $sm) {
+			font-size: 15px;
+		}
 	}
 }
 
