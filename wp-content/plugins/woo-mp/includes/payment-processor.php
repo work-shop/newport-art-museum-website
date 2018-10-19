@@ -8,9 +8,8 @@ defined( 'ABSPATH' ) || die;
  * This is the parent class for payment processors.
  */
 class Payment_Processor {
-    
-    public    $id = '';
-    protected $title = '';
+
+    protected $method_title;
     protected $order_id;
     protected $order;
     protected $amount;
@@ -19,40 +18,35 @@ class Payment_Processor {
     protected $description;
     protected $trans_id;
     protected $last_four_digits;
-    protected $held_for_review = FALSE;
-    public    $unknown_error;
+    protected $held_for_review = false;
 
     /**
      * Set up initial values.
+     * 
+     * @param array $params The payment information.
+     * 
+     * [
+     *     'order_id' => 123,
+     *     'amount'   => 1.23,
+     *     'currency' => 'USD'
+     *     'last_4'   => 1234  // The last four digits of the card number being charged.
+     * ]
+     * 
+     * See the gateway's \Woo_MP\Payment_Processor implementation for gateway-specific parameters.
      */
-    protected function __construct() {
-        $this->order_id      = $_POST['order_id'];
-        $this->order         = new Woo_MP_Order( wc_get_order( $this->order_id ) );
-        $this->amount        = $_POST['amount'];
-        $this->currency      = $_POST['currency'];
-        $this->unknown_error = 'Sorry, there was an error. If you open a support topic, please include the following:<br>';
-        $this->capture       = get_option( 'woo_mp_capture_payments', 'yes' ) == 'yes';
-        $this->description   = get_option( 'woo_mp_transaction_description', get_option( 'blogname', '' ) );
+    protected function __construct( $params, $method_title = '' ) {
+        $this->method_title     = $method_title;
+        $this->order_id         = $params['order_id'];
+        $this->order            = new Woo_MP_Order( wc_get_order( $this->order_id ) );
+        $this->amount           = $params['amount'];
+        $this->currency         = $params['currency'];
+        $this->last_four_digits = $params['last_4'];
+        $this->capture          = get_option( 'woo_mp_capture_payments', 'yes' ) == 'yes';
+        $this->description      = get_option( 'woo_mp_transaction_description', get_option( 'blogname', '' ) );
     }
 
     /**
-     * Send response to client.
-     *
-     * @param string $status  The status of the transaction.
-     * @param string $message Optional message to display to the client.
-     * @param array  $data    Optional additional data.
-     */
-    public function respond( $status, $message = '', $data = [] ) {
-        wp_send_json( [
-            'status'  => $status,
-            'message' => $message,
-            'data'    => $data
-        ] );
-    }
-
-    /**
-     * Do whatever needs to be done after a successful transaction, and then
-     * respond to the client.
+     * Do whatever needs to be done after a successful transaction.
      */
     protected function do_success() {
         $this->add_charge_note();
@@ -69,11 +63,9 @@ class Payment_Processor {
         Notices::add( [
             'message'     => $message,
             'type'        => 'success',
-            'dismissible' => TRUE,
+            'dismissible' => true,
             'post_id'     => $this->order_id
         ] );
-
-        $this->respond( 'success' );
     }
 
     /**
@@ -107,32 +99,23 @@ class Payment_Processor {
             'held_for_review' => $this->held_for_review
         ] );
 
-        $should_save_wc_payment = FALSE;
+        $should_save_wc_payment = false;
 
         switch ( get_option( 'woo_mp_save_wc_payment_when', 'first_payment' ) ) {
             case 'first_payment':
-                $should_save_wc_payment = ! (
-                    \Woo_MP\is_wc3() ? $this->order->get_date_paid( 'edit' ) : $this->order->paid_date
-                );
+                $should_save_wc_payment = ! $this->order->get_date_paid( 'edit' );
                 break;
             case 'every_payment':
-                $should_save_wc_payment = TRUE;
+                $should_save_wc_payment = true;
                 break;
         }
 
         if ( $should_save_wc_payment ) {
-            if ( \Woo_MP\is_wc3() ) {
-                $this->order->set_payment_method( $this->title );
-                $this->order->set_payment_method_title( $this->title );
-                $this->order->set_transaction_id( $this->trans_id );
-                $this->order->set_date_paid( time() );
-                $this->order->save();
-            } else {
-                update_post_meta( $this->order_id, '_payment_method', $this->title );
-                update_post_meta( $this->order_id, '_payment_method_title', $this->title );
-                update_post_meta( $this->order_id, '_transaction_id', $this->trans_id );
-                update_post_meta( $this->order_id, '_paid_date', current_time( 'mysql' ) );
-            }
+            $this->order->set_payment_method( $this->method_title );
+            $this->order->set_payment_method_title( $this->method_title );
+            $this->order->set_transaction_id( $this->trans_id );
+            $this->order->set_date_paid( time() );
+            $this->order->save();
         }
     }
 
@@ -143,20 +126,20 @@ class Payment_Processor {
         $update_order_status_when = get_option( 'woo_mp_update_order_status_when' );
         $update_order_status_to   = get_option( 'woo_mp_update_order_status_to', 'wc-completed' );
 
-        $should_update_status = FALSE;
+        $should_update_status = false;
 
         if ( $update_order_status_when === 'any_transaction' ) {
-            $should_update_status = TRUE;
+            $should_update_status = true;
         } elseif ( $update_order_status_when === 'total_amount_charged' ) {
             if ( $this->order->get_total_amount_paid() >= $this->order->get_total() ) {
-                $should_update_status = TRUE;
+                $should_update_status = true;
             }
         }
 
         if ( $should_update_status ) {
 
             // Patch https://github.com/woocommerce/woocommerce/issues/20057.
-            if ( \Woo_MP\is_wc3() && version_compare( WC_VERSION, '3.4.0', '<' ) ) {
+            if ( is_wc3() && version_compare( WC_VERSION, '3.4.0', '<' ) ) {
                 if ( ! $this->order->get_date_created( 'edit' ) ) {
                     $this->order->set_date_created( time() );
                 }
@@ -181,10 +164,10 @@ class Payment_Processor {
                 return;
         }
 
-        if ( \Woo_MP\is_wc3() ) {
+        if ( is_wc3() ) {
             wc_maybe_reduce_stock_levels( $this->order_id );
         } else {
-            if ( ! get_post_meta( $this->order_id, '_order_stock_reduced', TRUE ) ) {
+            if ( ! get_post_meta( $this->order_id, '_order_stock_reduced', true ) ) {
                 $this->order->reduce_order_stock();
             }
         }

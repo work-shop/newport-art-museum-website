@@ -5,7 +5,7 @@ namespace Woo_MP;
 defined( 'ABSPATH' ) || die;
 
 /**
- * Provides a single entry for accessing payment gateways.
+ * Provides a single entry point for accessing payment gateways.
  */
 class Payment_Gateways {
 
@@ -15,10 +15,32 @@ class Payment_Gateways {
      * @var array
      */
     private static $gateways = [
-        'stripe'        => \Woo_MP\Payment_Processors\Stripe\Stripe_Payment_Processor::class,
-        'authorize_net' => \Woo_MP\Payment_Processors\Authorize_Net\Authorize_Net_Payment_Processor::class,
-        'eway'          => \Woo_MP\Payment_Processors\Eway\Eway_Payment_Processor::class
+        'stripe'        => \Woo_MP\Payment_Gateways\Stripe\Payment_Gateway::class,
+        'authorize_net' => \Woo_MP\Payment_Gateways\Authorize_Net\Payment_Gateway::class,
+        'eway'          => \Woo_MP\Payment_Gateways\Eway\Payment_Gateway::class
     ];
+
+    /**
+     * Get all payment gateway IDs.
+     * 
+     * @return array Gateway IDs.
+     */
+    public static function get_all_ids() {
+        return array_keys( self::$gateways );
+    }
+
+    /**
+     * Get the active payment gateway ID.
+     * 
+     * @return string|null The gateway ID.
+     */
+    public static function get_active_id() {
+        $id = get_option( 'woo_mp_payment_processor' );
+
+        if ( in_array( $id, self::get_all_ids() ) ) {
+            return $id;
+        }
+    }
 
     /**
      * Get all payment gateways.
@@ -37,8 +59,8 @@ class Payment_Gateways {
      * @return object|null An instance of the gateway.
      */
     public static function get_active() {
-        if ( isset( self::$gateways[ get_option( 'woo_mp_payment_processor' ) ] ) ) {
-            return new self::$gateways[ get_option( 'woo_mp_payment_processor' ) ];
+        if ( self::get_active_id() ) {
+            return new self::$gateways[ self::get_active_id() ];
         }
     }
 

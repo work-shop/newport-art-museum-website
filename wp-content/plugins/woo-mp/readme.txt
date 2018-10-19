@@ -4,7 +4,7 @@ Tags: backend, manual, phone, payment, woocommerce
 Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 5.5
-Stable tag: 1.12.3
+Stable tag: 1.13.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,14 @@ Yes.
 5. The Authorize.Net settings page.
 
 == Changelog ==
+= 1.14.0 =
+* Declare support for WooCommerce 3.5.
+* Add support for multisite.
+* Add support for renaming the plugin directory and the main plugin file.
+* Display PHP and JavaScript errors encountered while processing payments.
+* Add CSRF protection.
+* Don't deactivate the plugin when a system requirement is not met.
+* Update the Stripe SDK to the latest version.
 = 1.13.0 =
 * Automatically reduce order item stock levels after a payment. There is now a setting to control this feature.
 * Add charge amount autocomplete suggestions. The amount field now contains a button which will open a menu allowing you to easily populate the field with either the order total or the amount of the order total that has not been paid yet (if applicable). You can also open this menu by pressing the up/down arrow keys while the field is focused.

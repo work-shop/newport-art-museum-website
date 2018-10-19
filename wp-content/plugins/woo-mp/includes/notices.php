@@ -32,22 +32,22 @@ class Notices {
      * @param array $notice Associative array of the following format:
      * 
      * [
-     *     'message'     => NULL,
+     *     'message'     => null,
      *     'type'        => 'info', // Can be: 'error', 'warning', 'success', 'info'
-     *     'inline'      => FALSE,  // Whether the notice will be displayed inline or at the top of the page.
+     *     'inline'      => false,  // Whether the notice will be displayed inline or at the top of the page.
      *                              // This will not work if the current request is an AJAX request.
-     *     'dismissible' => FALSE,
-     *     'post_id'     => NULL    // A post ID to limit the notice to.
+     *     'dismissible' => false,
+     *     'post_id'     => null    // A post ID to limit the notice to.
      *                              // This will cause the notice to only be displayed if the current post is as specified.
      * ]
      */
     public static function add( $notice ) {
         $notice += [
-            'message'     => NULL,
+            'message'     => null,
             'type'        => 'info',
-            'inline'      => FALSE,
-            'dismissible' => FALSE,
-            'post_id'     => NULL
+            'inline'      => false,
+            'dismissible' => false,
+            'post_id'     => null
         ];
 
         if ( ! defined( 'DOING_AJAX' ) && $notice['inline'] ) {
@@ -69,7 +69,7 @@ class Notices {
 
         // Some versions of WordPress will return an ID from 'get_the_ID' within loops.
         if ( $notice['post_id'] && ( get_the_ID() != $notice['post_id'] || get_current_screen()->base != 'post' ) ) {
-            return FALSE;
+            return false;
         }
 
         $classes = [
@@ -87,7 +87,7 @@ class Notices {
 
         <?php
 
-        return TRUE;
+        return true;
     }
 
     /**

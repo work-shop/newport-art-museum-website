@@ -2,8 +2,8 @@
 Contributors: whiteshadow
 Tags: admin, dashboard, menu, security, wpmu
 Requires at least: 4.1
-Tested up to: 4.9.5
-Stable tag: 2.6.4
+Tested up to: 4.9.8
+Stable tag: 2.7
 
 Lets you directly edit the WordPress admin menu. You can re-order, hide or rename existing menus, add custom menus and more.
 
@@ -82,6 +82,24 @@ Here are some usage tips and other things that can be good to know when using th
 == Changelog ==
 
 [Get the latest version here.](http://adminmenueditor.com/updates/)
+
+= 2.7 (2018-10-01) =
+##### Added
+* Added new "Import" and "Export" tabs. Now you can import and export most of the plugin settings, not just the admin menu and widgets.
+
+= 2.6.6 (2018-08-14) =
+##### Fixed
+* Fixed a bug where very long submenus wouldn't be scrollable if the current item was one that was moved to the current submenu from a different top level menu.
+* Fixed an obscure bug where clicking on an item in the current submenu could cause the entire submenu to "jump" up or down.
+* Fixed AME not highlighting the correct menu item when there was a space in any of the query parameter values.
+* Fixed another bug where the plugin didn't highlight the correct item if it was the first item in a submenu and also a custom item.
+
+= 2.6.5 (2018-05-25) =
+##### Added
+* Added a "Documentation" link below the plugin description. For people concerned about the recent GDPR legislation, the documentation now includes a page explaining [how the plugin processes personal data](https://adminmenueditor.com/documentation/data-processing-notes/).
+
+##### Fixed
+* Fixed a security issue where non-privileged users who were given access to a menu item that requires the "manage_options" capability would then also be able to access the special "All Settings" page (options.php).
 
 = 2.6.4 (2018-05-03) =
 ##### Added

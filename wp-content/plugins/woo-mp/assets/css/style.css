@@ -24,6 +24,7 @@
 
 #woo-mp .notice-content {
     flex: 1;
+    overflow: auto;
 }
 
 #woo-mp .notice-details {
@@ -37,6 +38,14 @@
 
 #woo-mp .notice ul ul {
     list-style: circle;
+}
+
+#woo-mp-main .raw-error {
+    display: block;
+    overflow: auto;
+    margin: 5px 0px;
+    max-height: 100px;
+    white-space: pre-wrap;
 }
 
 #woo-mp-main .button-link {
@@ -180,6 +189,14 @@
     width: auto;
     height: auto;
     font-size: 14px;
+}
+
+#woo-mp-main .charge-amount-suggestions-btn:before {
+    transition: transform 400ms cubic-bezier(.02, .01, .47, 1);
+}
+
+#woo-mp-main .charge-amount-suggestions-btn-open:before {
+    transform: rotate(180deg);
 }
 
 #woo-mp-main .ui-autocomplete {

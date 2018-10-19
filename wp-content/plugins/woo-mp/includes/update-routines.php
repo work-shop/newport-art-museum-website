@@ -16,7 +16,6 @@ class Update_Routines {
      */
     private $update_routines = [
         '1.9.0' => [
-            'v_190_fix_default_payment_processor',
             'v_190_prefix_order_status'
         ]
     ];
@@ -43,16 +42,6 @@ class Update_Routines {
         }
 
         update_option( 'woo_mp_data_version', WOO_MP_VERSION );
-    }
-
-    /**
-     * A previous version of this plugin had 'all' as the default payment processor.
-     * That is not a valid option.
-     */
-    private function v_190_fix_default_payment_processor() {
-        if ( WOO_MP_PAYMENT_PROCESSOR == 'all' ) {
-            update_option( 'woo_mp_payment_processor', FALSE );
-        }
     }
 
     /**

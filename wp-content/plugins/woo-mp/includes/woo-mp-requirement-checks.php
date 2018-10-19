@@ -45,73 +45,59 @@ class Woo_MP_Requirement_Checks {
     /**
      * Run requirement verification routines.
      * 
-     * @return bool TRUE if all requirements are met, FALSE otherwise.
+     * @return bool true if all requirements are met, false otherwise.
      */
     public static function run() {
         if ( version_compare( PHP_VERSION, self::PHP_MIN_REQUIRED, '<' ) ) {
-            self::do_unsupported( 'This plugin requires PHP version ' . self::PHP_MIN_REQUIRED .' or above. You have version ' . PHP_VERSION . '. Please contact your website administrator, web developer, or hosting company to get your server updated.' );
-        
-            return FALSE;
-        }
-        
-        if ( version_compare( $GLOBALS['wp_version'], self::WORDPRESS_MIN_REQUIRED, '<' ) ) {
-            self::do_unsupported( 'This plugin requires WordPress version ' . self::WORDPRESS_MIN_REQUIRED . ' or above. You have version ' . $GLOBALS['wp_version'] . '. Please contact your website administrator, web developer, or hosting company to get your website updated.' );
-        
-            return FALSE;
-        }
-        
-        if ( ! in_array( 'woocommerce/woocommerce.php', get_option( 'active_plugins' ) ) ) {
-            self::do_unsupported( 'This plugin requires WooCommerce to be installed and active.' );
-        
-            return FALSE;
-        }
-        
-        if ( version_compare( get_option( 'woocommerce_version' ), self::WOOCOMMERCE_MIN_REQUIRED, '<' ) ) {
-            self::do_unsupported( 'This plugin requires WooCommerce version ' . self::WOOCOMMERCE_MIN_REQUIRED . ' or above. You have version ' . get_option( 'woocommerce_version' ) . '.' );
-        
-            return FALSE;
+            self::$message = sprintf(
+                'WooCommerce Manual Payment requires PHP version %s or above. You have version %s.' .
+                ' Please contact your website administrator, web developer,' .
+                ' or hosting company to get your server updated.',
+                self::PHP_MIN_REQUIRED,
+                PHP_VERSION
+            );
+        } elseif ( version_compare( $GLOBALS['wp_version'], self::WORDPRESS_MIN_REQUIRED, '<' ) ) {
+            self::$message = sprintf(
+                'WooCommerce Manual Payment requires WordPress version %s or above. You have version %s.' .
+                ' Please contact your website administrator, web developer,' .
+                ' or hosting company to get your website updated.',
+                self::WORDPRESS_MIN_REQUIRED,
+                $GLOBALS['wp_version']
+            );
+        } elseif (
+            ! in_array(
+                'woocommerce/woocommerce.php',
+                array_merge(
+                    get_option( 'active_plugins', [] ),
+                    array_keys( get_site_option( 'active_sitewide_plugins', [] ) )
+                )
+            )
+        ) {
+            self::$message =
+                'WooCommerce Manual Payment requires WooCommerce to be installed and active.'
+            ;
+        } elseif ( version_compare( get_option( 'woocommerce_version' ), self::WOOCOMMERCE_MIN_REQUIRED, '<' ) ) {
+            self::$message = sprintf(
+                'WooCommerce Manual Payment requires WooCommerce version %s or above. You have version %s.',
+                self::WOOCOMMERCE_MIN_REQUIRED,
+                get_option( 'woocommerce_version' )
+            );
         }
 
-        return TRUE;
+        if ( self::$message ) {
+            add_action( 'admin_notices', array( __CLASS__, 'output_notice' ) );
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
-     * Deactivate the plugin and display a notice.
-     * 
-     * @param string $message A message explaining which requirement was not met.
+     * Display notice.
      */
-    private static function do_unsupported( $message ) {
-
-        // Wait until someone can actually see the notice before displaying it.
-        if ( defined( 'DOING_AJAX' ) ) {
-            return;
-        }
-
-        add_action( 'admin_init', array( __CLASS__, 'deactivate' ) );
-        add_action( 'admin_notices', array( __CLASS__, 'deactivate_notice' ) );
-
-        self::$message = $message;
-
-        // Remove the "Plugin activated." notice (if the user has just activated the plugin).
-        unset( $_GET['activate'] );
-        unset( $_GET['activate-multi'] );
-    }
-
-    /**
-     * Deactivate the plugin.
-     */
-    public static function deactivate() {
-        deactivate_plugins( WOO_MP_BASENAME );
-    }
-
-    /**
-     * Display deactivation notice.
-     */
-    public static function deactivate_notice() {
-        printf(
-            '<div class="error"><p>WooCommerce Manual Payment has been deactivated. %s</p></div>',
-            wp_kses_post( self::$message )
-        );
+    public static function output_notice() {
+        echo '<div class="error"><p>' . wp_kses_post( self::$message ) . '</p></div>';
     }
 
 }
