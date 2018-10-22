@@ -1,19 +1,25 @@
 jQuery(function($) {
 
-    wooMP.$main        = $('#woo-mp #woo-mp-main');
-    wooMP.$cardNum     = $('#woo-mp #cc-num');
-    wooMP.$cardExp     = $('#woo-mp #cc-exp');
-    wooMP.$cardCVC     = $('#woo-mp #cc-cvc');
+    var currentAction               = null;
+    var chargeSucceeded             = false;
 
-    $chargeNotice      = $('#woo-mp #charge-notice');
-    $chargeAmount      = $('#woo-mp #charge-amount');
-    $chargeBtn         = $('#woo-mp #charge-btn');
+    wooMP.$main                     = $('#woo-mp #woo-mp-main');
+    wooMP.$cardNum                  = $('#woo-mp #cc-num');
+    wooMP.$cardExp                  = $('#woo-mp #cc-exp');
+    wooMP.$cardCVC                  = $('#woo-mp #cc-cvc');
 
-    var noticeTemplate = _.template($('#notice-template').html());
+    var $chargeNotice               = $('#woo-mp #charge-notice');
+    var $chargeAmount               = $('#woo-mp #charge-amount');
+    var $chargeAmountSuggestionsBtn = $('#charge-amount-suggestions-btn');
+    var $chargeBtn                  = $('#woo-mp #charge-btn');
+
+    var noticeTemplate              = _.template($('#notice-template').html());
 
     init();
 
     function init() {
+        window.addEventListener('error', handleJSError);
+
         $('.nav-tab').click(showTab);
         $(document).on('click', '[data-toggle="collapse"]', toggleCollapse);
 
@@ -29,6 +35,42 @@ jQuery(function($) {
         $chargeBtn.click(submit);
 
         $( '#woo-mp-rating-request a' ).click(rated);
+    }
+
+    function handleJSError(error) {
+        try {
+            if (currentAction === 'charge') {
+                var basicMessage =
+                    'Sorry, there was an error. The transaction appears to have ' +
+                    (chargeSucceeded ? 'been successful' : 'failed') +
+                    '. You can check your payment processor account to confirm.';
+
+                var errorLocation = error.filename + ':' + error.lineno + (error.colno ? ':' + error.colno : '');
+                var stackTrace    = (error.error || {}).stack;
+
+                var fullMessage = basicMessage + '<br><br>' + formatErrorData({ Error: error.message });
+
+                var details = '<p>' + formatErrorData({
+                    Location:      errorLocation,
+                    'Stack Trace': stackTrace
+                }) + '</p>';
+
+                wooMP.handleError(fullMessage, null, details);
+            }
+        } catch (secondaryError) {
+            if (console.error) {
+                console.error(secondaryError);
+            }
+
+            alert(
+                basicMessage +
+                '\n\nError:\n' + error.message +
+                '\n\nLocation:\n' + errorLocation +
+                (stackTrace ? '\n\nStack Trace:\n' + stackTrace : '')
+            );
+
+            location.reload();
+        }
     }
 
     function showTab() {
@@ -65,6 +107,7 @@ jQuery(function($) {
         var suggestions             = [];
         var shouldUpdateSuggestions = true;
         var autocompleteMenuIsOpen  = false;
+        var closeButtonClicked      = false;
 
         $chargeAmount.on('keydown', function (event) {
             if (! autocompleteMenuIsOpen) {
@@ -74,31 +117,44 @@ jQuery(function($) {
             }
         });
 
+        $chargeAmount.blur(function (event) {
+            if (
+                autocompleteMenuIsOpen &&
+                (event.relatedTarget || document.activeElement || {}).id === $chargeAmountSuggestionsBtn[0].id
+            ) {
+                closeButtonClicked = true;
+            }
+        });
+
         $chargeAmount.autocomplete({
             disabled:  true,
             minLength: 0,
             position:  { my: 'left top+2' },
             source:    function (request, respond) {
                 if (shouldUpdateSuggestions) {
-                    $.get(wooMP.AJAXURL, {action: 'woo_mp_get_charge_amount_suggestions', order_id: $('#post_ID').val()})
-                        .done(function (response) {
-                            if (! $.isPlainObject(response) || $.isEmptyObject(response)) {
-                                return;
-                            }
+                    $.get(wooMP.AJAXURL, {
+                        action:   'woo_mp_get_charge_amount_suggestions',
+                        order_id: $('#post_ID').val(),
+                        currency: wooMP.currency
+                    })
+                    .done(function (response) {
+                        if (! $.isPlainObject(response) || $.isEmptyObject(response)) {
+                            return;
+                        }
 
-                            suggestions = [];
+                        suggestions = [];
 
-                            $.each(response, function (label, value) {
-                                suggestions.push({
-                                    label: label + ':<span class="alignright">' + formatMoney(value) + '</span>',
-                                    value: value
-                                });
+                        $.each(response, function (label, value) {
+                            suggestions.push({
+                                label: label + ':<span class="alignright">' + formatMoney(value) + '</span>',
+                                value: value
                             });
-
-                            shouldUpdateSuggestions = false;
-
-                            respond(suggestions);
                         });
+
+                        shouldUpdateSuggestions = false;
+
+                        respond(suggestions);
+                    });
                 } else {
                     respond(suggestions);
                 }
@@ -109,12 +165,14 @@ jQuery(function($) {
             open:      function () {
                 if (! autocompleteMenuIsOpen) {
                     $('.charge-amount-container .ui-autocomplete').hide().slideDown('fast');
+                    $chargeAmountSuggestionsBtn.addClass('charge-amount-suggestions-btn-open');
                 }
 
                 autocompleteMenuIsOpen = true;
             },
             close:     function () {
                 $('.charge-amount-container .ui-autocomplete').show().delay(100).slideUp('fast');
+                $chargeAmountSuggestionsBtn.removeClass('charge-amount-suggestions-btn-open');
 
                 autocompleteMenuIsOpen = false;
 
@@ -138,10 +196,15 @@ jQuery(function($) {
             shouldUpdateSuggestions = true;
         });
 
-        $('#charge-amount-suggestions-btn').click(function () {
+        $chargeAmountSuggestionsBtn.click(function () {
             $chargeAmount.focus();
-            $chargeAmount.autocomplete('enable');
-            $chargeAmount.autocomplete('search', '');
+
+            if (closeButtonClicked) {
+                closeButtonClicked = false;
+            } else {
+                $chargeAmount.autocomplete('enable');
+                $chargeAmount.autocomplete('search', '');
+            }
         });
 
         $chargeAmount.on('keydown', updateButton);
@@ -164,8 +227,11 @@ jQuery(function($) {
     }
 
     function submit() {
-        $('#woo-mp #charge input').removeClass('invalid');
+        currentAction   = 'charge';
+        chargeSucceeded = false;
 
+        $('#woo-mp #charge input').removeClass('invalid');
+        
         if (! valid()) return;
 
         wooMP.blockUI();
@@ -231,10 +297,13 @@ jQuery(function($) {
 
     wooMP.processPayment = function (paymentData, successCallback) {
         var data = {
-            action:   'woo_mp_charge',
-            order_id: $('#post_ID').val(),
-            amount:   wooMP.formatMoneyForProcessing($chargeAmount.val()),
-            currency: wooMP.currency
+            action:     'woo_mp_charge',
+            _wpnonce:   wooMP.nonces.woo_mp_charge,
+            gateway_id: wooMP.gatewayID,
+            order_id:   $('#post_ID').val(),
+            amount:     wooMP.formatMoneyForProcessing($chargeAmount.val()),
+            currency:   wooMP.currency,
+            last_4:     wooMP.$cardNum.val().slice(-4)
         };
 
         // Combine the default data with the payment data from the individual payment processor.
@@ -244,19 +313,56 @@ jQuery(function($) {
 
         $.post(wooMP.AJAXURL, data)
             .done(function (response) {
-                if (response.status == 'success') {
-                    successCallback(response);
-                } else {
-                    if (response.message) {
-                        wooMP.catchError(response.message, response.data);
-                    } else {
-                        wooMP.handleError('Sorry, there was an unknown error. Please check your PHP log file.');
-                    }
+                if (!response) {
+                    wooMP.handleError(wooMP.generateUnknownTransactionErrorMessage(
+                        'Sorry, there was no response from the server.'
+                    ));
+
+                    return;
                 }
+
+                if (!response.status) {
+                    var message = wooMP.generateUnknownTransactionErrorMessage(
+                        "Sorry, we can't determine the status of the operation.",
+                        {Response: response}
+                    );
+
+                    wooMP.handleError(message);
+
+                    return;
+                }
+
+                if (response.status !== 'success') {
+                    if (response.message) {
+                        wooMP.catchError(response.message, response.code, response.data);
+                    } else {
+                        var message = wooMP.generateUnknownTransactionErrorMessage(
+                            'Sorry, there was an error.',
+                            {Response: response}
+                        );
+    
+                        wooMP.handleError(message);
+                    }
+
+                    return;
+                }
+
+                successCallback(response);
             })
-            .fail(function () {
-                wooMP.handleError('Sorry, there was an unknown error. Please check your PHP log file.');
-            })
+            .fail(function (jqXHR) {
+                var message = '';
+
+                if (jqXHR.status === 403) {
+                    message = 'Sorry, it appears your session has expired. Please refresh the page and try again.';
+                } else {
+                    message = wooMP.generateUnknownTransactionErrorMessage('Sorry, there was an error.', {
+                        Error:    jqXHR.statusText,
+                        Response: jqXHR.responseText
+                    });
+                }
+
+                wooMP.handleError(message);
+            });
     }
 
     wooMP.blockUI = function () {
@@ -269,8 +375,26 @@ jQuery(function($) {
         });
     }
 
+    wooMP.generateUnknownTransactionErrorMessage = function (basicMessage, data) {
+        var message = basicMessage +
+            " We don't know whether the transaction was successful. " +
+            'Please check your payment processor account to confirm. ' +
+            'You may be able to find additional information in your PHP error log.';
+
+        var formattedData = formatErrorData(data);
+
+        if (formattedData) {
+            message += '<br><br>' + formattedData;
+        }
+
+        return message;
+    }
+
     wooMP.handleError = function (message, field, details) {
         notice($chargeNotice, 'error', message, details);
+
+        currentAction   = null;
+        chargeSucceeded = false;
 
         if (field) {
             $('#' + field).addClass('invalid').focus();
@@ -300,12 +424,33 @@ jQuery(function($) {
         });
     }
 
+    function formatErrorData(data) {
+        var formattedData = '';
+
+        $.each(data, function (key, value) {
+            if (value || value === 0) {
+                if (typeof value === 'object' || typeof value === 'array') {
+                    value = JSON.stringify(value, null, 4);
+                }
+
+                formattedData += key + ':<code class="raw-error">' + _.escape(value) + '</code>';
+            }
+        });
+
+        return formattedData;
+    }
+
     function doSuccess() {
+        chargeSucceeded = true;
 
         // If we're on the 'Add new order' page, then location.reload() would create a new order.
         // Using location.href also has the added benefit of scrolling the page to the top, where
         // the user can see the success notice and the order note.
         location.href = 'post.php?post=' + $('#post_ID').val() + '&action=edit';
+
+        // This code has no effect. It exists to demonstrate how the status tracking system works.
+        // This line would be needed after an operation that does not require a page reload.
+        currentAction = null;
     }
 
     function rated() {

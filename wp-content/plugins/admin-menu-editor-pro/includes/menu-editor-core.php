@@ -116,6 +116,11 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 	private $current_tab = '';
 
 	/**
+	 * @var ameModule[] List of modules that were loaded for the current request.
+	 */
+	private $loaded_modules = array();
+
+	/**
 	 * @var array List of capabilities that are used in the default admin menu. Used to detect meta capabilities.
 	 */
 	private $caps_used_in_menu = array();
@@ -311,6 +316,9 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 			$this->access_test_runner = new ameAccessTestRunner($this, $this->get);
 		}
 
+		//Additional links below the plugin description.
+		add_filter('plugin_row_meta', array($this, 'add_plugin_row_meta_links'), 10, 2);
+
 		//Utility actions. Modules can use them in their templates.
 		add_action('admin_menu_editor-display_tabs', array($this, 'display_editor_tabs'));
 		add_action('admin_menu_editor-display_header', array($this, 'display_settings_page_header'));
@@ -372,7 +380,8 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 			/** @noinspection PhpIncludeInspection */
 			include ($module['path']);
 			if ( !empty($module['className']) ) {
-				new $module['className']($this);
+				$instance = new $module['className']($this);
+				$this->loaded_modules[] = $instance;
 			}
 		}
 
@@ -385,6 +394,13 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 		$this->tabs = apply_filters('admin_menu_editor-tabs', $firstTabs);
 		//The "Settings" tab is always last.
 		$this->tabs['settings'] = 'Settings';
+	}
+
+	/**
+	 * @return ameModule[]
+	 */
+	public function get_loaded_modules() {
+		return $this->loaded_modules;
 	}
 
   /**
@@ -1213,6 +1229,7 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 	 *
 	 * @param array|null $custom_menu
 	 * @param string|null $config_id Supported values: 'network-admin', 'global' or 'site'
+	 * @throws InvalidMenuException
 	 */
 	function set_custom_menu($custom_menu, $config_id = null) {
 		if ( $config_id === null ) {
@@ -3495,6 +3512,18 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 	}
 
 	/**
+	 * Update multiple plugin configuration values. Saves immediately.
+	 *
+	 * @param array $options An dictionary of key => value pairs.
+	 */
+	public function set_many_plugin_options($options) {
+		foreach($options as $key => $value) {
+			$this->options[$key] = $value;
+		}
+		$this->save_options();
+	}
+
+	/**
 	 * Log a security-related message.
 	 *
 	 * @param string|array $message The message to add tot he log, or an array of messages.
@@ -4075,6 +4104,23 @@ class WPMenuEditor extends MenuEd_ShadowPluginFramework {
 		}
 
 		return $cap_power;
+	}
+
+	public function add_plugin_row_meta_links($pluginMeta, $pluginFile) {
+		$isRelevant = ($pluginFile == $this->plugin_basename);
+
+		if ( $isRelevant && $this->current_user_can_edit_menu() ) {
+			$documentationUrl = $this->is_pro_version()
+				? 'https://adminmenueditor.com/documentation/'
+				: 'https://adminmenueditor.com/free-version-docs/';
+			$pluginMeta[] = sprintf(
+				'<a href="%s">%s</a>',
+				esc_attr($documentationUrl),
+				'Documentation'
+			);
+		}
+
+		return $pluginMeta;
 	}
 
 	private function get_active_modules() {

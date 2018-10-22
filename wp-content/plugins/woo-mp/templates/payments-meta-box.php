@@ -2,15 +2,15 @@
 
 <div id="woo-mp-main">
 
-    <?php require WOO_MP_PATH . '/templates/payment-tabs.php'; ?>
+    <?php $this->template( 'payment-tabs' ); ?>
 
     <div id="charge" class="charge tab-content tab-content-active">
 
         <div id="charge-notice" hidden></div>
 
         <div class="charge-form">
-        
-            <?php require WOO_MP_PATH . '/templates/' . WOO_MP_PAYMENT_PROCESSOR . '-charge-form.php'; ?>
+
+            <?php $this->template( 'charge-form' ); ?>
 
         </div>
 
@@ -21,15 +21,15 @@
         <?php
 
         if ( WOO_MP_PRO ) {
-            require WOO_MP_PRO_PATH . '/templates/' . WOO_MP_PAYMENT_PROCESSOR .'-refund.php';
+            $this->template( 'refund' );
         } else {
-            require WOO_MP_PATH . '/templates/upgrade.php';
+            $this->template( 'upgrade' );
         }
 
         ?>
 
     </div>
 
-    <?php require WOO_MP_PATH . '/templates/notice-template.php'; ?>
+    <?php $this->template( 'notice-template' ); ?>
 
 </div>

@@ -10,45 +10,25 @@ defined( 'ABSPATH' ) || die;
  * 
  * Use it like a regular WooCommerce order object.
  */
-class Woo_MP_Order {
+class Woo_MP_Order extends WC_Compatibility\WC_Order {
 
     /**
-     * The core order object.
+     * Get a list of charge properties and their default values.
      * 
-     * This will normally be an instance of 'WC_Order'.
+     * This is for normalizing charge records across versions.
      * 
-     * @var mixed
+     * @return array The properties and their defaults.
      */
-    private $order;
-
-    /**
-     * Set the order object to enhance.
-     * 
-     * @param mixed $order The order object (normally an instance of 'WC_Order').
-     */
-    public function __construct( $order ) {
-        $this->order = $order;
-    }
-
-    /**
-     * Get a property from the core order object.
-     * 
-     * @param  string $name The property to get.
-     * @return mixed        The property value.
-     */
-    public function __get( $name ) {
-        return $this->order->$name;
-    }
-
-    /**
-     * Call a method on the core order object.
-     * 
-     * @param  string $name      The method to call.
-     * @param  array  $arguments The arguments to pass to the method.
-     * @return mixed             The return value of the core method.
-     */
-    public function __call( $name, $arguments ) {
-        return call_user_func_array( [ $this->order, $name ], $arguments );
+    private function get_charge_defaults() {
+        return [
+            'id'              => '',
+            'date'            => current_time( 'M d, Y' ),
+            'last4'           => '',
+            'amount'          => 0,
+            'currency'        => '',
+            'captured'        => false,
+            'held_for_review' => false
+        ];
     }
 
     /**
@@ -57,10 +37,18 @@ class Woo_MP_Order {
      * @return array All manual payments.
      */
     public function get_woo_mp_payments() {
-        return json_decode(
-            get_post_meta( \Woo_MP\wc3( $this, 'id' ), 'woo-mp-' . WOO_MP_PAYMENT_PROCESSOR . '-charges', TRUE ) ?: '[]',
-            TRUE
+        $payments = json_decode(
+            $this->get_meta( 'woo-mp-' . WOO_MP_PAYMENT_PROCESSOR . '-charges', true ) ?: '[]',
+            true
         );
+
+        $charge_defaults = $this->get_charge_defaults();
+
+        foreach ( $payments as $key => $payment ) {
+            $payments[ $key ] += $charge_defaults;
+        }
+
+        return $payments;
     }
 
     /**
@@ -73,39 +61,37 @@ class Woo_MP_Order {
      *     'last4'           => '',    // The last four digits of the card that was charged.
      *     'amount'          => 0,     // The payment amount.
      *     'currency'        => '',    // The currency the payment was made in. This should be a 3-digit code.
-     *     'captured'        => FALSE, // Whether the charge was captured.
-     *     'held_for_review' => FALSE  // Whether the charge was held for review.
+     *     'captured'        => false, // Whether the charge was captured.
+     *     'held_for_review' => false  // Whether the charge was held for review.
      * ]
      */
     public function add_woo_mp_payment( $payment ) {
-        $payment += [
-            'id'              => '',
-            'date'            => current_time( 'M d, Y' ),
-            'last4'           => '',
-            'amount'          => 0,
-            'currency'        => '',
-            'captured'        => FALSE,
-            'held_for_review' => FALSE
-        ];
+        $payment += $this->get_charge_defaults();
 
         $payments = $this->get_woo_mp_payments();
 
         $payments[] = $payment;
 
-        update_post_meta(
-            \Woo_MP\wc3( $this, 'id' ),
-            'woo-mp-' . WOO_MP_PAYMENT_PROCESSOR . '-charges',
-            json_encode( $payments )
-        );
+        $this->update_meta_data( 'woo-mp-' . WOO_MP_PAYMENT_PROCESSOR . '-charges', json_encode( $payments ) );
     }
 
     /**
      * Get the total amount paid.
      * 
-     * @return float The amount.
+     * @param  string $currency The currency code of the payments to include in the calculation.
+     *                          Default is order currency.
+     * @return float            The amount.
      */
-    public function get_total_amount_paid() {
-        return array_sum( array_column( $this->get_woo_mp_payments(), 'amount' ) );
+    public function get_total_amount_paid( $currency = '' ) {
+        if ( ! $currency ) {
+            $currency = $this->get_currency();
+        }
+
+        $payments = array_filter( $this->get_woo_mp_payments(), function ( $payment ) use ( $currency ) {
+            return $payment['currency'] === $currency;
+        } );
+
+        return array_sum( array_column( $payments, 'amount' ) );
     }
 
     /**
@@ -116,7 +102,7 @@ class Woo_MP_Order {
      * @return float The amount.
      */
     public function get_total_amount_unpaid() {
-        return $this->order->get_total() - $this->get_total_amount_paid();
+        return $this->get_total() - $this->get_total_amount_paid();
     }
 
 }

@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || die;
  * @param array  $deps      An array of registered script handles this script depends on.
  * @param bool   $in_footer Whether to enqueue the script before </body> instead of in the <head>.
  */
-function script( $handle, $src = '', $deps = [], $in_footer = FALSE ) {
+function script( $handle, $src = '', $deps = [], $in_footer = false ) {
     wp_enqueue_script( 'woo-mp-' . $handle, $src, $deps, WOO_MP_VERSION, $in_footer );
 }
 
@@ -31,21 +31,10 @@ function style( $handle, $src = '', $deps = [], $media = 'all' ) {
 }
 
 /**
- * Returns TRUE if the version of WooCommerce is 3.0.0 or above, FALSE otherwise.
+ * Returns true if the version of WooCommerce is 3.0.0 or above, false otherwise.
  *
  * @return bool The answer.
  */
 function is_wc3() {
     return version_compare( WC_VERSION, '3.0.0', '>' );
-}
-
-/**
- * Handle WooCommerce 3.0.0 property getters.
- *
- * @param  object $object   The object to get the property from.
- * @param  string $property The property to get.
- * @return mixed            The property.
- */
-function wc3( $object, $property ) {
-    return is_wc3() ? $object->{"get_$property"}() : $object->$property;
 }
