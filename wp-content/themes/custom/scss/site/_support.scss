@@ -20,6 +20,19 @@
 	}
 }
 
+.support-content{
+	@media screen and (max-width: $sm) {
+		order: 1;
+	}
+}
+
+.support-sidebar{
+	@media screen and (max-width: $sm) {
+		order: 0;
+		margin-bottom: 30px;
+	}
+}
+
 .support-sidebar-donation-tiers{
 	margin-top: 2em;
 	margin-bottom: 1em;
