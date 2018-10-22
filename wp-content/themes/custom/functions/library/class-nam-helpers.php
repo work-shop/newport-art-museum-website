@@ -98,6 +98,7 @@ class NAM_Helpers{
 								<h5 class="card-text-class-dates bold">
 									<?php the_field('class_start_date'); ?> - <?php the_field('class_end_date'); ?>
 									<?php if( get_field('number_of_sessions') ): ?> 
+										<br>
 										<span class="card-text-class-dates-sessions bold">
 											(<?php the_field('number_of_sessions'); ?> Sessions)
 										</span>
