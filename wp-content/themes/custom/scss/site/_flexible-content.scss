@@ -1,8 +1,12 @@
-$fc-padding: 9vh 0 3vh 0;
+$fc-padding: 7vh 0 7vh 0;
 
 .fc{
 	padding: $fc-padding;
 	//border: 1px solid $light;
+
+	&:last-child{
+		padding-bottom: 14vh;
+	}
 
 	p{
 		line-height: 1.65;
