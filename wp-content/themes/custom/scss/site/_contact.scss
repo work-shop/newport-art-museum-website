@@ -24,12 +24,19 @@
 
 	address{
 		color: white;
+		//white-space: nowrap;
 	}
 }
 
 .contact-directory-item{
 	padding-top: 30px;
 	padding-bottom: 40px;
+
+	.contact-email-address{
+		h5{
+			white-space: nowrap;
+		}
+	}
 
 	@media screen and (max-width: $sm) {
 		padding-top: 25px;

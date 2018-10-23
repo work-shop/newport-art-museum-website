@@ -55,7 +55,7 @@ $page-nav-height-lg: 120px;
 		a{
 			color: $medium;
 			display: block;
-			padding: 0 .6vw;
+			padding: 0 1vw 0 0;
 			font-size: 18px;
 
 			@media screen and (max-width: $md) {

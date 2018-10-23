@@ -34,12 +34,19 @@ $padding-sidebar-box: 30px;
 	.mc-field-group{
 		margin-bottom: 1em;
 	}
+
+	input{
+		width: 100%;
+		max-width: none !important;
+	}
+
 	input[type="text"],input[type="email"]{
 		width: 100%;
 		padding: 7px 10px;
 		background: lighten($light, 1%);
 		border-radius: 3px;
 		border: 1px solid darken($light,5%);
+		color: $dark !important;
 	}
 }
 

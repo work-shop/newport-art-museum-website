@@ -11,16 +11,16 @@
 			<div class="contact-directory-list">
 				<?php  while ( have_rows('contact_directory') ) : the_row(); ?>
 					<div class="row contact-directory-item">
-						<div class="col-md-4 contact-title">
+						<div class="col-lg-3 contact-title">
 							<h4 class="bold"><?php the_sub_field('contact_title'); ?></h4>
 						</div>
-						<div class="col-md-3 contact-person">
+						<div class="col-lg-3 contact-person">
 							<h4><?php the_sub_field('contact_person'); ?></h4>
 						</div>
-						<div class="col-md-2 contact-phone-number">
+						<div class="col-lg-2 contact-phone-number">
 							<h5><?php the_sub_field('contact_phone_number'); ?></h5>
 						</div>
-						<div class="col-md-3 contact-email-address">
+						<div class="col-lg-4 contact-email-address">
 							<h5><?php the_sub_field('contact_email_address'); ?></h5>
 						</div>
 					</div>
