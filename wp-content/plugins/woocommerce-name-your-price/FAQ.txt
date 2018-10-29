@@ -1,0 +1,5 @@
+FAQ
+
+Hi is it possible that with your plugin here: https://docs.woocommerce.com/document/name-your-price/ that you can automatically enter a value via a URL query string? 
+
+&nyp=99

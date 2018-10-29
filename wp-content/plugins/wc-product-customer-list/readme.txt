@@ -2,8 +2,8 @@
 Contributors: kokomoweb, freemius
 Tags: woocommerce, customer list, who bought, admin order list, product-specific, export customers to csv, email customers, customer list, customer, list, print, front-end, tickets, shows, courses, customers, shortcode
 Requires at least: 4.0
-Tested up to: 4.9.7
-Stable tag: 2.7.7
+Tested up to: 4.9.8
+Stable tag: 2.7.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -42,6 +42,7 @@ Great for sending out e-mails or getting a list of customers for courses, for sh
 = Premium version: =
 
 * Support for Custom Fields
+* Support for WooCommerce Custom Fields (RightPress)
 * Support for WooTours
 * Support for WooEvents
 * Support for YITH WooCommerce Product Add-ons
@@ -75,7 +76,7 @@ To upgrade the plugin to the premium version, simply click on "upgrade" under th
 To display the list in the front end, simply use the following shortcode: [customer_list] along with the following attributes and their "true" or "false" value:
 
 * **product** : The ID of the product for which you wish to display the customer list. If you do not put an ID number, it will use the ID of the current product (if used on a product page)
-* **table_title** : Add a title that will be added at the top of the list. Uses h3 tags that can be styled via css.
+* **table_title** : Add a title that will be added at the top of the list. Uses <h3> tags that can be styled via css.
 * **order_status** : The order status for which the shortcode will display your customers. If you have more than one, seperate them with commas. Options are: wc-completed, wc-processing, wc-on-hold, wc-pending, wc-cancelled, wc-refunded, wc-failed. Default is "wc-completed".
 * **show_titles** : Display the titles of each column in the head of the table. Titles cannot be modified at this time.
 * **order_number** : The ID of the order. Can be a variation ID in the premium version of the plugin.
@@ -122,7 +123,7 @@ To display the list in the front end, simply use the following shortcode: [custo
 * **sortable** : Activates datatables script and enables sorting by column. Default: false.
 * **export_pdf** : Adds button to export the list as PDF. Default: false.
 * **export_csv** : Adds button to export the list as CSV. Default: false.
-* **email_customers** : Adds button to e-mail all customers with your e-mail client (b.c.c.). Default: false.
+* **email_all** : Adds button to e-mail all customers with your e-mail client (b.c.c.). Default: false.
 * **copy** : Adds button to copy table data to clipboard. Default: false.
 * **print** : Adds button to print the table. Default: false.
 * **search** : Adds option to search the list. Default: false.
@@ -160,6 +161,11 @@ Many hooks and filters. Documentation coming soon.
 2. The settings page.
 
 == Changelog ==
+
+= 2.7.8 =
+* Fix for shortcode on WPML
+* Add support for RightPress
+* Add "split by row" option for RightPress
 
 = 2.7.7 =
 * Updated datatables to latest version
