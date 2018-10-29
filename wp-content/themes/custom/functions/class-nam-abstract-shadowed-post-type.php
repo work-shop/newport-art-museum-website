@@ -16,7 +16,11 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         'manage_stock' =>                   'field_5b685c94d33c6',
         'stock_quantity' =>                 'field_5b685cdbd33c7',
 
-        'fees' =>                           'field_5b7470acd3e33'
+        'fees' =>                           'field_5b7470acd3e33',
+
+        'name_your_price_product' =>        'field_5bd76c14ec5b8',
+        'minimum_price' =>                  'field_5bd76f19ec5b9',
+        'suggested_price' =>                'field_5bd76f94ec5bb'
 
         // Discounts
         // Fees and Surcharges
@@ -310,6 +314,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $sale_to = get_field( static::$field_keys['sale_to'], $post_id );
         $manage_stock = get_field( static::$field_keys['manage_stock'], $post_id );
         $stock_quantity = get_field( static::$field_keys['stock_quantity'], $post_id );
+        $name_your_price = get_field( static::$field_keys['name_your_price_product'], $post_id );
+        $nyp_minumum_price = get_field( static::$field_keys['minumum_price'], $post_id );
+        $nyp_suggested_price = get_field( static::$field_keys['suggested_price'], $post_id );
 
         update_post_meta( $product_id, '_downloadable', 'no' );
         update_post_meta( $product_id, '_virtual', 'yes' ); // NOTE: once shop products are launched, we'll need to make this non-constant
@@ -325,6 +332,16 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             update_post_meta( $product_id, '_sale_price', '' );
             update_post_meta( $product_id, '_sale_price_dates_from', '' );
             update_post_meta( $product_id, '_sale_price_dates_to', '' );
+        }
+
+        if ( $name_your_price ) {
+            update_post_meta( $product_id, '_nyp', 'yes' );
+            update_post_meta( $product_id, '_minimum_price', (double) $nyp_minumum_price );
+            update_post_meta( $product_id, '_suggested_price', (double) $nyp_suggested_price );
+        } else {
+            update_post_meta( $product_id, '_nyp', '' );
+            update_post_meta( $product_id, '_minimum_price', '');
+            update_post_meta( $product_id, '_suggested_price', '');
         }
 
         update_post_meta( $product_id, '_purchase_note', '' );
