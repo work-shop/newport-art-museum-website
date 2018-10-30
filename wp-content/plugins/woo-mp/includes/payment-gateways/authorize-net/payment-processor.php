@@ -183,6 +183,8 @@ class Payment_Processor extends \Woo_MP\Payment_Processor {
             ];
         }
 
+        $request = apply_filters( 'woo_mp_authorize_net_charge_request', $request, $this->order->get_core_order() );
+
         $response = $this->request( $request );
 
         $this->trans_id         = $response['response']['transactionResponse']['transId'];

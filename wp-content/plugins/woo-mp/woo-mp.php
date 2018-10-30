@@ -3,7 +3,7 @@
 /**
  * Plugin Name: WooCommerce Manual Payment
  * Description: Process payments right from the backend. No need to leave the WooCommerce Edit Order screen.
- * Version: 1.14.0
+ * Version: 1.15.0
  * Author: bfl
  * Requires at least: 4.4
  * Tested up to: 4.9
@@ -25,7 +25,7 @@ if ( ! is_admin() || is_network_admin() ) {
     return;
 }
 
-define( 'WOO_MP_VERSION', '1.14.0' );
+define( 'WOO_MP_VERSION', '1.15.0' );
 define( 'WOO_MP_PATH', dirname( __FILE__ ) );
 define( 'WOO_MP_URL', plugins_url( '', __FILE__ ) );
 define( 'WOO_MP_BASENAME', basename( dirname( __FILE__ ) ) . '/' . basename( __FILE__ ) );

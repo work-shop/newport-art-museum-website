@@ -1109,6 +1109,15 @@ class MetaSeoSitemap
             chmod(ABSPATH, 0755);
         }
 
+        /**
+         * Filter run before save sitemap to xml file
+         *
+         * @param object The current xml object
+         *
+         * @return object
+         */
+        $xml = apply_filters('wpms_save_sitemap_xml', $xml);
+
         if (is_multisite()) {
             $home_url = preg_replace(
                 '/[^a-zA-ZА-Яа-я0-9\s]/',
@@ -2397,8 +2406,12 @@ ORDER BY p.post_date DESC', array($post_type)));
             }
         }
 
-        // Don't ping if blog is not public.
-        do_action('wpms_submit_sitemap');
+        /**
+         * Regenerate sitemaps
+         *
+         * @param array Sitemap settings
+         */
+        do_action('wpms_regenerate_sitemaps', $this->settings_sitemap);
         wp_send_json(array('status' => true, 'message' => 'success'));
     }
 
@@ -2573,6 +2586,12 @@ ORDER BY p.post_date DESC', array($post_type)));
 
         update_option('_metaseo_settings_sitemap', $settings_sitemap);
 
+        /**
+         * Save sitemap settings
+         *
+         * @param array Sitemap settings
+         */
+        do_action('wpms_save_sitemap_settings', $settings_sitemap);
         wp_send_json(true);
     }
 }

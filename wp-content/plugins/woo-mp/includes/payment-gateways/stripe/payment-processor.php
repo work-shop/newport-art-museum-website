@@ -39,6 +39,8 @@ class Payment_Processor extends \Woo_MP\Payment_Processor {
         $secret_key = get_option( 'woo_mp_stripe_secret_key' );
         \Stripe\Stripe::setApiKey( $secret_key );
 
+        \Stripe\Stripe::setApiVersion( '2018-09-24' );
+
         $http_client = new HTTP_Client();
         \Stripe\ApiRequestor::setHttpClient( $http_client );
     }
@@ -65,6 +67,8 @@ class Payment_Processor extends \Woo_MP\Payment_Processor {
             $charge_info['metadata']['Customer Name'] = $name;
             $charge_info['metadata']['Customer Email'] = $email;
         }
+
+        $charge_info = apply_filters( 'woo_mp_stripe_charge_request', $charge_info, $this->order->get_core_order() );
 
         try {
             $charge = \Stripe\Charge::create( $charge_info );

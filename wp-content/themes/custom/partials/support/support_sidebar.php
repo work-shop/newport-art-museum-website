@@ -24,7 +24,7 @@
 					$sale_start_date = $product->get_date_on_sale_from();
 					$sale_end_date = $product->get_date_on_sale_to();
 					$is_on_sale = $product->is_on_sale();
-							// woocommerce plumbing
+					// woocommerce plumbing
 					$add_to_cart_url = $product->add_to_cart_url();
 					$add_to_cart_button_text = $product->add_to_cart_url();
 					?>

@@ -30,26 +30,23 @@ class Payment_Gateway extends \Woo_MP\Payment_Gateway {
             [
                 'title' => __( 'Login ID', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your Authorize.Net API Login ID.', 'woo-mp' ),
                 'id'    => 'woo_mp_authorize_net_login_id',
                 'css'   => $text_style
             ],
             [
                 'title' => __( 'Transaction Key', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your Authorize.Net Transaction Key.', 'woo-mp' ),
                 'id'    => 'woo_mp_authorize_net_transaction_key',
                 'css'   => $text_style
             ],
             [
                 'title' => __( 'Client Key', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your Authorize.Net Client Key.', 'woo-mp' ),
                 'id'    => 'woo_mp_authorize_net_client_key',
                 'css'   => $text_style
             ],
             [
-                'title' => __( 'Test Mode', 'woo-mp' ),
+                'title' => __( 'Sandbox Mode', 'woo-mp' ),
                 'type'  => 'checkbox',
                 'desc'  => __( 'Enable sandbox mode.', 'woo-mp' ),
                 'id'    => 'woo_mp_authorize_net_test_mode'
@@ -62,12 +59,13 @@ class Payment_Gateway extends \Woo_MP\Payment_Gateway {
                 'type'  => 'title'
             ],
             [
-                'title'   => __( 'Title', 'woo-mp' ),
-                'type'    => 'text',
-                'desc'    => __( 'Choose a payment method title.', 'woo-mp' ),
-                'id'      => 'woo_mp_authorize_net_title',
-                'default' => 'Credit Card (Authorize.Net)',
-                'css'     => $text_style
+                'title'    => __( 'Title', 'woo-mp' ),
+                'type'     => 'text',
+                'desc'     => __( 'Choose a payment method title.', 'woo-mp' ),
+                'id'       => 'woo_mp_authorize_net_title',
+                'default'  => 'Credit Card (Authorize.Net)',
+                'desc_tip' => true,
+                'css'      => $text_style
             ],
             [
                 'title'         => __( 'Include Order Details', 'woo-mp' ),

@@ -56,4 +56,15 @@ class WC_Order {
         return call_user_func_array( [ $this->class, $name ], $arguments );
     }
 
+    /**
+     * Get the core order object.
+     * 
+     * This will normally be an instance of 'WC_Order'.
+     * 
+     * @return object The object.
+     */
+    public function get_core_order() {
+        return $this->order;
+    }
+
 }

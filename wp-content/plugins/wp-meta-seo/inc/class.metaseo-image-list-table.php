@@ -1349,28 +1349,53 @@ class MetaSeoImageListTable extends WP_List_Table
             );
 
             if ($meta_type !== 'alt_text') {
+                /**
+                 * Filter before update meta for image
+                 *
+                 * @param string  Meta value
+                 * @param integer Image ID
+                 * @param string  Field name
+                 * @param array   Extra informations
+                 *
+                 * @return string
+                 *
+                 * @ignore Hook already documented
+                 */
+                $meta_value = apply_filters('wpms_update_image_meta', $meta_value, $post_id, $aliases[$meta_type], array('source'=>'ajax_update'));
+
                 $data = array('ID' => $post_id, $aliases[$meta_type] => $meta_value);
                 if (wp_update_post($data)) {
                     $response->updated = true;
                     $response->msg     = $label . esc_html__(' was saved', 'wp-meta-seo');
                 }
             } else {
-                update_post_meta($post_id, $aliases[$meta_type], $meta_value);
-                $response->updated = true;
-                $response->msg     = $label . esc_html__(' was saved', 'wp-meta-seo');
-            }
+                /**
+                 * Filter before update meta for image
+                 *
+                 * @param string  Meta value
+                 * @param integer Image ID
+                 * @param string  Field name
+                 * @param array   Extra informations
+                 *
+                 * @return string
+                 *
+                 * @ignore Hook already documented
+                 */
+                $meta_value = apply_filters('wpms_update_image_meta', $meta_value, $post_id, $aliases[$meta_type], array('source'=>'ajax_update'));
 
-            if ($meta_type === 'alt_text') {
+                update_post_meta($post_id, $aliases[$meta_type], $meta_value);
                 $settings = get_option('_metaseo_settings');
                 if (!isset($settings['metaseo_overridemeta']) || (!empty($settings['metaseo_overridemeta'])
                                                                   && (int) $settings['metaseo_overridemeta'] === 1)) {
                     // call function auto override in content
-
                     self::autoUpdatePostContent($post_id, $meta_type, $meta_value);
                     $response->type    = 'auto_override';
                     $response->pid     = $post_id;
                     $response->imgname = $_POST['img_name'];
                 }
+
+                $response->updated = true;
+                $response->msg     = $label . esc_html__(' was saved', 'wp-meta-seo');
             }
         } else {
             $response->msg = esc_html__('There is a problem when update image meta!', 'wp-meta-seo');
@@ -1611,6 +1636,13 @@ class MetaSeoImageListTable extends WP_List_Table
                             update_post_meta($postID, '_wp_attached_file', $newFileName);
                             update_post_meta($postID, '_wp_attachment_metadata', $attached_metadata);
 
+                            /**
+                             * Update image name
+                             *
+                             * @param integer Image ID
+                             * @param string  Image new name
+                             */
+                            do_action('wpms_update_image_name', $postID, $newFileName);
                             $response->updated = true;
                             $response->msg     = esc_html__('Image name was changed', 'wp-meta-seo');
                         } else {

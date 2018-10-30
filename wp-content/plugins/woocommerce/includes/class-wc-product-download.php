@@ -21,9 +21,9 @@ class WC_Product_Download implements ArrayAccess {
 	 * @var array
 	 */
 	protected $data = array(
-		'id'   => '',
-		'name' => '',
-		'file' => '',
+		'id'     => '',
+		'name'   => '',
+		'file'   => '',
 	);
 
 	/**
@@ -161,7 +161,7 @@ class WC_Product_Download implements ArrayAccess {
 	/**
 	 * Set file.
 	 *
-	 * @param string $value File.
+	 * @param string $value File URL/Path.
 	 */
 	public function set_file( $value ) {
 		switch ( $this->get_type_of_file_path( $value ) ) {
@@ -245,7 +245,7 @@ class WC_Product_Download implements ArrayAccess {
 	 * OffsetSet.
 	 *
 	 * @param string $offset Offset.
-	 * @param mixed  $value  Value.
+	 * @param mixed  $value Offset value.
 	 */
 	public function offsetSet( $offset, $value ) {
 		switch ( $offset ) {

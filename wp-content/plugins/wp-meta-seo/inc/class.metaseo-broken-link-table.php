@@ -1673,6 +1673,10 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
 
         $link_settings['wpms_lastRun_scanlink'] = time();
         update_option('wpms_link_settings', $link_settings);
+        /**
+         * Scan link
+         */
+        do_action('wpms_scan_link');
         wp_send_json(array('status' => true));
     }
 
@@ -1847,6 +1851,11 @@ class MetaSeoBrokenLinkTable extends WP_List_Table
             $wpms_nonce = $_POST['wpms_nonce'];
         }
 
+        /**
+         * Add custom redirect
+         *
+         * @param string nonce
+         */
         do_action('wpms_add_custom_redirect', $wpms_nonce);
         wp_send_json(array('status' => true, 'message' => esc_html__('Done!', 'wp-meta-seo')));
     }

@@ -1,0 +1,556 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: WP Desk Helper\n"
+"POT-Creation-Date: 2018-06-20 15:51+0200\n"
+"PO-Revision-Date: 2018-06-20 15:53+0200\n"
+"Last-Translator: Piotr Jabłonowski <piotr.jablonowski@wpdesk.net>\n"
+"Language-Team: \n"
+"Language: pl_PL\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.0.8\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: wpdesk-helper.php\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SearchPathExcluded-1: inc/wpdesk-logger.php\n"
+"X-Poedit-SearchPathExcluded-2: inc/wpdesk-tracker\n"
+"X-Poedit-SearchPathExcluded-3: vendor/10up\n"
+
+#: classes/class-helper.php:87 classes/class-helper.php:150
+#: classes/class-helper.php:151
+#: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:142
+msgid "Settings"
+msgstr "Ustawienia"
+
+#: classes/class-helper.php:89
+#: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:135
+msgid "Docs"
+msgstr "Docs"
+
+#: classes/class-helper.php:90
+#: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:129
+msgid "Support"
+msgstr "Wsparcie"
+
+#: classes/class-helper.php:143 classes/class-helper.php:144
+msgid "Licenses"
+msgstr "Licencje"
+
+#: classes/class-helper.php:161
+msgid "Debug"
+msgstr "Debug"
+
+#: classes/class-helper.php:162
+msgid "WP Desk Debug Log"
+msgstr "WP Desk Debug Log"
+
+#: classes/class-helper.php:166
+msgid "Plugin usage tracking"
+msgstr "Dane użytkowania wtyczek"
+
+#: classes/class-helper.php:169
+msgid "Allow WP Desk to track plugin usage"
+msgstr "Pozwól WP Desk na zbieranie danych użytkowania wtyczek"
+
+#: classes/class-helper.php:189 classes/class-helper.php:211
+msgid "Enable"
+msgstr "Włącz"
+
+#: classes/class-helper.php:193
+#, php-format
+msgid "No sensitive data is tracked, %sread more%s."
+msgstr "Żadne wrażliwe dane nie będą zbierane, %sprzeczytaj więcej%s."
+
+#: classes/class-helper.php:213
+#, php-format
+msgid "Writes error log to %s."
+msgstr "Zapisuje log błędów do %s."
+
+#: classes/class-helper.php:222
+msgid "WP Desk Helper Settings"
+msgstr "Ustawienia WP Desk Helper"
+
+#: classes/class-helper.php:256
+#, php-format
+msgid "Invalid response from WP Desk server: %s"
+msgstr "Błędna odpowiedź serwera Wp Desk: %s"
+
+#: classes/class-helper.php:264
+#, php-format
+msgid "%sInvalid response: <pre>%s</pre>"
+msgstr "%sBłędna odpowiedź: <pre>%s</pre>"
+
+#: classes/class-helper.php:342 classes/class-helper.php:359
+#: classes/class-wc-api-manager-menu.php:197
+msgid "Plugin activated. "
+msgstr "Wtyczka została włączona. "
+
+#: classes/class-helper.php:374 classes/class-wc-api-manager-menu.php:205
+msgid "Connection failed to the License Key API server. Try again later."
+msgstr "Nie udało się połączyć z serwerem licencji. Spróbuj później."
+
+#: classes/class-helper.php:485 classes/class-wc-api-manager-menu.php:350
+msgid "Plugin license deactivated. "
+msgstr "Licencja wtyczki dezaktywowana. "
+
+#: classes/class-helper.php:585
+#, php-format
+msgid ""
+"Can not enable WP Desk Debug log! Cannot create directory %s or this "
+"directory is not writeable!"
+msgstr ""
+"Nie można włączyć WP Desk Debug log! Nie można utworzyć katalogu %s lub brak "
+"uprawnień do zapisu w tym katalogu!"
+
+#: classes/class-helper.php:592
+#, php-format
+msgid "WP Desk Debug Log is enabled. %sPlease disable it after testing%s."
+msgstr "WP Desk Debug Log jest włączony. %sWyłącz go po testach%s."
+
+#: classes/class-wc-api-manager-menu.php:74
+#: classes/class-wc-api-manager-menu.php:79
+msgid "Save Changes"
+msgstr "Zapisz zmiany"
+
+#: classes/class-wc-api-manager-menu.php:96
+msgid "API License Activation"
+msgstr "Aktywacja licencji"
+
+#: classes/class-wc-api-manager-menu.php:98
+msgid "API License Key Status"
+msgstr "Status licencji"
+
+#: classes/class-wc-api-manager-menu.php:101
+msgid "API License Key"
+msgstr "Klucz licencyjny"
+
+#: classes/class-wc-api-manager-menu.php:104
+msgid "API License email"
+msgstr "E-mail dla licencji"
+
+#: classes/class-wc-api-manager-menu.php:111
+msgid "API License Deactivation"
+msgstr "Dezaktywacja licencji"
+
+#: classes/class-wc-api-manager-menu.php:114
+msgid "Deactivate API License Key"
+msgstr "Dezaktywuj klucz licencyjny"
+
+#: classes/class-wc-api-manager-menu.php:311
+msgid ""
+"The license could not be deactivated. Use the License Deactivation tab to "
+"manually deactivate the license before activating a new license."
+msgstr ""
+"Licencja nie może być dezaktywowana. Użyj ręcznej dezaktywacji licencji "
+"przed aktywacją nowej licencji."
+
+#: classes/class-wc-api-manager-menu.php:435
+msgid "Deactivates an API License Key so it can be used on another blog."
+msgstr ""
+"Dezaktywuje klucz licencyjny, dzięki czemu może być użyty na innej stronie."
+
+#: classes/class-wc-api-manager.php:175
+msgid "License Activation"
+msgstr "Aktywacja licencji"
+
+#: classes/class-wc-api-manager.php:176
+msgid "License Deactivation"
+msgstr "Dezaktywacja licencji"
+
+#: classes/class-wc-api-manager.php:437
+#, php-format
+msgid ""
+"The %s%s%s License Key has not been activated, so the plugin is inactive! "
+"%sClick here%s to activate the license key and the plugin."
+msgstr ""
+"Klucz licencyjny wtyczki %s%s%s nie został aktywowany, więc wtyczka jest "
+"nieaktywna! %sKliknij tutaj%s, aby aktywować klucz licencyjny wtyczki."
+
+#: classes/class-wc-api-manager.php:458
+#, php-format
+msgid ""
+"<b>Warning!</b> You're blocking external requests which means you won't be "
+"able to get %s updates. Please add %s to %s."
+msgstr ""
+"<b>Uwaga!</b> Blokujesz zewnętrzne połączenia i nie będziesz otrzymywać "
+"aktualizacji wtyczki: %s. Proszę dodaj host %s do %s."
+
+#: classes/class-wc-plugin-update.php:442
+#, php-format
+msgid ""
+"The license key for %s has expired. You can reactivate or purchase a license "
+"key from your account <a href=\"%s\" target=\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s wygasła. Aby odnowić licencję, <a href=\"%s\" target="
+"\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:456
+#, php-format
+msgid ""
+"The subscription for %s is on-hold. You can reactivate the subscription from "
+"your account <a href=\"%s\" target=\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s jest wstrzymana. Możesz zarządzać licencjami <a href="
+"\"%s\" target=\"_blank\">tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:470
+#, php-format
+msgid ""
+"The subscription for %s has been cancelled. You can renew the subscription "
+"from your account <a href=\"%s\" target=\"_blank\">dashboard</a>. A new "
+"license key will be emailed to you after your order has been completed."
+msgstr ""
+"Licencja na wtyczkę: %s została anulowana. Aby odnowić licencję, <a href=\"%s"
+"\" target=\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:484
+#, php-format
+msgid ""
+"The subscription for %s has expired. You can reactivate the subscription "
+"from your account <a href=\"%s\" target=\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s wygasła. Aby odnowić licencję, <a href=\"%s\" target="
+"\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:498
+#, php-format
+msgid ""
+"The subscription for %s has been suspended. You can reactivate the "
+"subscription from your account <a href=\"%s\" target=\"_blank\">dashboard</"
+"a>."
+msgstr ""
+"Licencja na wtyczkę: %s została zawieszona. Aby odnowić licencję, <a href="
+"\"%s\" target=\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:512
+#, php-format
+msgid ""
+"The subscription for %s is still pending. You can check on the status of the "
+"subscription from your account <a href=\"%s\" target=\"_blank\">dashboard</"
+"a>."
+msgstr ""
+"Licencja na wtyczkę: %s jest przetwarzana. Aby sprawdzić status licencji, <a "
+"href=\"%s\" target=\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:526
+#, php-format
+msgid ""
+"The subscription for %s has been placed in the trash and will be deleted "
+"soon. You can purchase a new subscription from your account <a href=\"%s\" "
+"target=\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s została anulowana. Aby odnowić licencję, <a href=\"%s"
+"\" target=\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:540
+#, php-format
+msgid ""
+"A subscription for %s could not be found. You can purchase a subscription "
+"from your account <a href=\"%s\" target=\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s nie została znaleziona. Możesz zarządzać licencjami "
+"<a href=\"%s\" target=\"_blank\">tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:554
+#, php-format
+msgid ""
+"A license key for %s could not be found. Maybe you forgot to enter a license "
+"key when setting up %s, or the key was deactivated in your account. You can "
+"reactivate or purchase a license key from your account <a href=\"%s\" target="
+"\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s nie została znaleziona. Być może zapomniałeś wpisać "
+"klucza licencyjnego przy aktywacji: %s lub klucz został dezaktywowany. "
+"Możesz zarządzać licencjami <a href=\"%s\" target=\"_blank\">tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:569
+#, php-format
+msgid ""
+"Download permission for %s has been revoked possibly due to a license key or "
+"subscription expiring. You can reactivate or purchase a license key from "
+"your account <a href=\"%s\" target=\"_blank\">dashboard</a>."
+msgstr ""
+"Możliwość pobrania wtyczki: %s została zablokowana. Aby odnowić licencję, <a "
+"href=\"%s\" target=\"_blank\">kliknij tutaj</a>."
+
+#: classes/class-wc-plugin-update.php:583
+#, php-format
+msgid ""
+"%s has not been activated. Go to the settings page and enter the license key "
+"and license email to activate %s."
+msgstr ""
+"Wtyczka %s nie została aktywowana. Przejdź do ustawień i wpisz klucz "
+"licencyjny i e-mail, aby aktywować %s."
+
+#: classes/class-wc-plugin-update.php:597
+#, php-format
+msgid ""
+"You changed the subscription for %s, so you will need to enter your new API "
+"License Key in the settings page. The License Key should have arrived in "
+"your email inbox, if not you can get it by logging into your account <a href="
+"\"%s\" target=\"_blank\">dashboard</a>."
+msgstr ""
+"Licencja na wtyczkę: %s została zmieniona. Możesz zarządzać licencjami <a "
+"href=\"%s\" target=\"_blank\">tutaj</a>."
+
+#: classes/class-wpdesk-helper-list-table.php:36
+msgid "No WP Desk plugins found."
+msgstr "Nie znaleziono wtyczek WP Desk."
+
+#: classes/class-wpdesk-helper-list-table.php:49
+msgid "Plugin"
+msgstr "Wtyczka"
+
+#: classes/class-wpdesk-helper-list-table.php:50
+msgid "License Status"
+msgstr "Status licencji"
+
+#: classes/class-wpdesk-helper-list-table.php:51
+msgid "License Data"
+msgstr "Dane licencji"
+
+#: classes/class-wpdesk-helper-list-table.php:71
+msgid "Deactivated"
+msgstr "Nieaktywna"
+
+#: classes/class-wpdesk-helper-list-table.php:73
+msgid "Activated"
+msgstr "Aktywna"
+
+#: classes/inspire/plugin4.php:218
+msgid ""
+"An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
+"\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+msgstr ""
+"Wystąpił nieoczekiwany błąd HTTP podczas zapytania API.</p> <p><a href=\"?\" "
+"onclick=\"document.location.reload(); return false;\">Spróbuj ponownie</a>"
+
+#: classes/inspire/plugin4.php:223
+msgid "An unknown error occurred"
+msgstr "Wystąpił nieznany błąd"
+
+#: classes/inspire/plugin4.php:387
+msgid "Ustawienia"
+msgstr "Ustawienia"
+
+#: classes/inspire/plugin4.php:388
+msgid "Dokumentacja"
+msgstr "Dokumentacja"
+
+#: classes/inspire/plugin4.php:389
+msgid "Wsparcie"
+msgstr "Wsparcie"
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:162
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run on PHP versions older than %s. Please "
+"contact your host and ask them to upgrade."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać w wersjach PHP starszych niż %s. "
+"Skontaktuj się z administratorem hostingu i poproś o aktualizację."
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:166
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run on WordPress versions older than %s. "
+"Please update WordPress."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać w wersjach WordPress starszych niż "
+"%s. Prosimy o aktualizację WordPress."
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:170
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run on WooCommerce versions older than "
+"%s. Please update WooCommerce."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać w wersjach WooCommerce starszych "
+"niż %s. Prosimy o aktualizację WooCommerce."
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:174
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run without OpenSSL module version at "
+"least %s. Please update OpenSSL module."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać bez aktywacji OpenSSL co najmniej "
+"w wersji %s. Zaktualizuj wersję OpenSSL."
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:262
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run without %s active. Please install and "
+"activate %s plugin."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać bez aktywacji %s. Zainstaluj i "
+"aktywuj wtyczkę %s."
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:298
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run without %s php module installed. "
+"Please contact your host and ask them to install %s."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać bez modułu php: %s. Skontaktuj się "
+"z administratorem hostingu i poproś o instalację %s."
+
+#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:326
+#, php-format
+msgid ""
+"The &#8220;%s&#8221; plugin cannot run without %s php setting set to %s. "
+"Please contact your host and ask them to set %s."
+msgstr ""
+"Wtyczka &#8220;%s&#8221; nie może działać bez ustawienia php %s ustawionego "
+"na %s. Skontaktuj się z administratorem hostingu i poproś o ustawienie %s."
+
+#: wpdesk_helper_templates/license-actions.php:6
+msgid "Key:"
+msgstr "Klucz:"
+
+#: wpdesk_helper_templates/license-actions.php:10
+msgid "Email:"
+msgstr "E-mail:"
+
+#: wpdesk_helper_templates/license-actions.php:17
+msgid "Activate"
+msgstr "Aktywuj"
+
+#: wpdesk_helper_templates/license-actions.php:19
+msgid "Deactivate"
+msgstr "Dezaktywuj"
+
+#: wpdesk_helper_templates/licenses.php:6
+msgid "WP Desk Licenses"
+msgstr "Licencje WP Desk"
+
+#: wpdesk_helper_templates/licenses.php:16
+#, php-format
+msgid ""
+"Get your license keys <a href=\"%s\" target=\"_blank\">here</a>. You can "
+"activate/deactivate license keys <strong>unlimited times on different "
+"domains</strong> as long as you have an active subscription."
+msgstr ""
+"Pobierz klucze licencyjne <a href=\"%s\" target=\"_blank\">tutaj</a>. Możesz "
+"aktywować i dezaktywować klucze licencyjne <strong>dowolną ilość razy na "
+"różnych domenach</strong>, pod warunkiem, że licencja jest aktywna."
+
+#. Author of the plugin/theme
+#: wpdesk_helper_templates/wpdesk-page.php:7
+msgid "WP Desk"
+msgstr "WP Desk"
+
+#: wpdesk_helper_templates/wpdesk-page.php:9
+msgid "Refresh"
+msgstr "Odśwież"
+
+#: wpdesk_helper_templates/wpdesk-page.php:12
+msgid "Error: "
+msgstr "Błąd: "
+
+#: wpdesk_helper_templates/wpdesk-page.php:15
+msgid ""
+"To diagnose problem we suggest run this commands from command line on your "
+"server:"
+msgstr ""
+"Aby zdiagnozować problem, proponujemy uruchomić to polecenie z wiersza "
+"poleceń na serwerze:"
+
+#: wpdesk_helper_templates/wpdesk-page.php:74
+msgid "Download plugin"
+msgstr "Pobierz wtyczkę"
+
+#: wpdesk_helper_templates/wpdesk-page.php:80
+msgid "Activate plugin"
+msgstr "Włącz wtyczkę"
+
+#: wpdesk_helper_templates/wpdesk-page.php:86
+msgid "Activate key"
+msgstr "Aktywuj licencję"
+
+#: wpdesk_helper_templates/wpdesk-page.php:92
+msgid "Configure"
+msgstr "Skonfiguruj"
+
+#: wpdesk_helper_templates/wpdesk-page.php:101
+msgid "Update plugin"
+msgstr "Aktualizuj wtyczkę"
+
+#. Plugin Name of the plugin/theme
+msgid "WP Desk Helper"
+msgstr "WP Desk Helper"
+
+#. Plugin URI of the plugin/theme
+#. Author URI of the plugin/theme
+msgid "https://www.wpdesk.net/"
+msgstr "https://www.wpdesk.pl/"
+
+#. Description of the plugin/theme
+msgid "Enables WP Desk plugin activation and updates."
+msgstr "Umożliwia aktywację i aktualizacje wtyczek WP Desk."
+
+#~ msgid "Get your license keys <a href=\"%s\" target=\"_blank\">here</a>."
+#~ msgstr ""
+#~ "Pobierz klucze licencyjne do aktywacji wtyczek <a href=\"%s\" target="
+#~ "\"_blank\">tutaj</a>."
+
+#~ msgid "Documentation"
+#~ msgstr "Dokumentacja"
+
+#~ msgid "http://www.wpdesk.net/"
+#~ msgstr "https://www.wpdesk.pl/"
+
+#~ msgid "Hey %s,"
+#~ msgstr "Cześć %s,"
+
+#, fuzzy
+#~| msgid "Plugin"
+#~ msgid "Plugin Usage"
+#~ msgstr "Wtyczka"
+
+#, fuzzy
+#~| msgid "Update plugin"
+#~ msgid "I found a better plugin"
+#~ msgstr "Aktualizuj wtyczkę"
+
+#, fuzzy
+#~| msgid "Deactivate"
+#~ msgid "Skip &amp; Deactivate"
+#~ msgstr "Dezaktywuj"
+
+#, fuzzy
+#~| msgid "Deactivate"
+#~ msgid "Submit &amp; Deactivate"
+#~ msgstr "Dezaktywuj"
+
+#, fuzzy
+#~| msgid "Error: "
+#~ msgid "Error"
+#~ msgstr "Błąd:"
+
+#~ msgid "http://www.wpdesk.pl/"
+#~ msgstr "http://www.wpdesk.pl/"
+
+#~ msgid "WP Desk Debug Log is enabled. %sPlease disable it after testing.%s"
+#~ msgstr "WP Desk Debug Log jest włączony. %sWyłącz go po testach.%s"
+
+#, fuzzy
+#~ msgid "Writes error log to file %s."
+#~ msgstr "Zapisuje log błędów do %s."
+
+#~ msgid "WP Desk Plugins"
+#~ msgstr "Wtyczki WP Desk"
+
+#~ msgid "http://www.wpdesk.pl/sklep/wpdesk-helper/"
+#~ msgstr "http://www.wpdesk.pl/sklep/wpdesk-helper/"
+
+#~ msgid "Product"
+#~ msgstr "Produkt"

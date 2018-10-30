@@ -32,7 +32,7 @@
 							<div class="accordion multi-collapse" data-accordion>
 								<div class="accordion-label" data-control>
 									<h4 class="accordion-title">
-										<?php the_title(); ?> <span class="membership-level-price ml2">$<?php echo $current_price; ?></span>
+										<span class="bold mr2"><?php the_title(); ?></span> <span class="membership-level-price">$<?php echo $current_price; ?></span>
 									</h4>
 									<span class="icon" data-icon="”"></span>
 								</div>

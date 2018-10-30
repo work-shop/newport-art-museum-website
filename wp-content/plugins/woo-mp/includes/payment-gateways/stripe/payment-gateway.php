@@ -30,14 +30,12 @@ class Payment_Gateway extends \Woo_MP\Payment_Gateway {
             [
                 'title' => __( 'Secret Key', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your Stripe Secret Key.', 'woo-mp' ),
                 'id'    => 'woo_mp_stripe_secret_key',
                 'css'   => $text_style
             ],
             [
                 'title' => __( 'Publishable Key', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your Stripe Publishable Key.', 'woo-mp' ),
                 'id'    => 'woo_mp_stripe_publishable_key',
                 'css'   => $text_style
             ],
@@ -49,12 +47,13 @@ class Payment_Gateway extends \Woo_MP\Payment_Gateway {
                 'type'  => 'title'
             ],
             [
-                'title'   => __( 'Title', 'woo-mp' ),
-                'type'    => 'text',
-                'desc'    => __( 'Choose a payment method title.', 'woo-mp' ),
-                'id'      => 'woo_mp_stripe_title',
-                'default' => 'Credit Card (Stripe)',
-                'css'     => $text_style
+                'title'    => __( 'Title', 'woo-mp' ),
+                'type'     => 'text',
+                'desc'     => __( 'Choose a payment method title.', 'woo-mp' ),
+                'id'       => 'woo_mp_stripe_title',
+                'default'  => 'Credit Card (Stripe)',
+                'desc_tip' => true,
+                'css'      => $text_style
             ],
             [
                 'title'   => __( 'Include Customer Name and Email', 'woo-mp' ),

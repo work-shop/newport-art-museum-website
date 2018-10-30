@@ -38,6 +38,10 @@
 	margin-bottom: 1em;
 }
 
+.support-sidebar-write-in-donation{
+	margin-bottom: 2em;
+}
+
 
 .button-donation-tier{
 	display: inline-block;
@@ -80,3 +84,11 @@
 		border: 1px solid $medium;
 	}
 }
+
+#nyp-fields{
+	input[type="text"]{
+		width: 100%;
+		max-width: none;
+	}
+}
+

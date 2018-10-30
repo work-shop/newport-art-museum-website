@@ -189,9 +189,6 @@
     width: auto;
     height: auto;
     font-size: 14px;
-}
-
-#woo-mp-main .charge-amount-suggestions-btn:before {
     transition: transform 400ms cubic-bezier(.02, .01, .47, 1);
 }
 

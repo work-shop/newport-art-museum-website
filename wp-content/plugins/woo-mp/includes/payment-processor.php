@@ -64,6 +64,7 @@ class Payment_Processor {
             'message'     => $message,
             'type'        => 'success',
             'dismissible' => true,
+            'persist'     => true,
             'post_id'     => $this->order_id
         ] );
     }
@@ -115,8 +116,9 @@ class Payment_Processor {
             $this->order->set_payment_method_title( $this->method_title );
             $this->order->set_transaction_id( $this->trans_id );
             $this->order->set_date_paid( time() );
-            $this->order->save();
         }
+
+        $this->order->save();
     }
 
     /**

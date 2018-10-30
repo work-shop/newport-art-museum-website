@@ -97,7 +97,7 @@ class Settings extends \WC_Settings_Page {
                     'type'    => 'checkbox',
                 ],
                 [
-                    'title'    => __( 'Update Order Status When:', 'woo-mp' ),
+                    'title'    => __( 'Update Order Status When', 'woo-mp' ),
                     'desc'     => __( 'Choose when you want order statuses to be updated.', 'woo-mp' ),
                     'id'       => 'woo_mp_update_order_status_when',
                     'type'     => 'select',
@@ -110,7 +110,7 @@ class Settings extends \WC_Settings_Page {
                     ]
                 ],
                 [
-                    'title'    => __( 'Update Order Status To:', 'woo-mp' ),
+                    'title'    => __( 'Update Order Status To', 'woo-mp' ),
                     'desc'     => __( 'Choose which status orders should be updated to when the above condition is fulfilled.', 'woo-mp' ),
                     'id'       => 'woo_mp_update_order_status_to',
                     'type'     => 'select',
@@ -120,21 +120,21 @@ class Settings extends \WC_Settings_Page {
                     'options'  => wc_get_order_statuses()
                 ],
                 [
-                    'title'    => __( 'Save WooCommerce Payment Record When:', 'woo-mp' ),
-                    'desc'     => __( 'Choose when you want an official (native) WooCommerce payment record to be saved to an order. Please note that WooCommerce only supports one official payment per order. This means that if you choose to save a record any time a payment is made, previous payment information will be overwritten. You will still be able to see past payments in the <em>Order notes</em> section.', 'woo-mp' ),
+                    'title'    => __( 'Save WooCommerce Payment Record When', 'woo-mp' ),
+                    'desc'     => __( 'Choose when you want an official (native) WooCommerce payment record to be saved to an order. Please note that WooCommerce only supports one official payment per order. This means that if you choose to save a record any time a payment or authorization is made, previous payment information will be overwritten. You will still be able to see past payments in the <em>Order notes</em> section.', 'woo-mp' ),
                     'id'       => 'woo_mp_save_wc_payment_when',
                     'type'     => 'select',
                     'class'    => 'wc-enhanced-select',
                     'desc_tip' => true,
                     'default'  => 'first_payment',
                     'options'  => [
-                        'first_payment' => __( 'The first payment is made', 'woo-mp' ),
-                        'every_payment' => __( 'Any payment is made (see help tip)', 'woo-mp' ),
-                        'never'         => __( 'Never', 'woo-mp' )
+                        'first_payment' => __( 'The first payment or authorization is made', 'woo-mp' ),
+                        'every_payment' => __( 'Any payment or authorization is made (see help tip)', 'woo-mp' ),
+                        'never'         => __( "Don't save WooCommerce payment records", 'woo-mp' )
                     ]
                 ],
                 [
-                    'title'    => __( 'Reduce Stock Levels When:', 'woo-mp' ),
+                    'title'    => __( 'Reduce Stock Levels When', 'woo-mp' ),
                     'desc'     => __( 'Choose when you want order item stock levels to be reduced. Stock levels will never be reduced more than once. Please note that this option only applies when stock management is enabled at both the global and product level.', 'woo-mp' ),
                     'id'       => 'woo_mp_reduce_stock_levels_when',
                     'type'     => 'select',

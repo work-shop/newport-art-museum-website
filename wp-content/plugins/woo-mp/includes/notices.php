@@ -29,6 +29,8 @@ class Notices {
     /**
      * Add a notice.
      * 
+     * This method should be called before the 'admin_notices' hook, unless the notice being added is inline.
+     * 
      * @param array $notice Associative array of the following format:
      * 
      * [
@@ -37,6 +39,9 @@ class Notices {
      *     'inline'      => false,  // Whether the notice will be displayed inline or at the top of the page.
      *                              // This will not work if the current request is an AJAX request.
      *     'dismissible' => false,
+     *     'persist'     => false,  // Whether the notice will persist until shown.
+     *                              // A notice would normally be lost if it was added during an AJAX operation or if
+     *                              // the 'post_id' condition was not met.
      *     'post_id'     => null    // A post ID to limit the notice to.
      *                              // This will cause the notice to only be displayed if the current post is as specified.
      * ]
@@ -47,6 +52,7 @@ class Notices {
             'type'        => 'info',
             'inline'      => false,
             'dismissible' => false,
+            'persist'     => false,
             'post_id'     => null
         ];
 
@@ -102,10 +108,12 @@ class Notices {
     }
 
     /**
-     * Save all queued notices.
+     * Save persistent notices.
      */
     public static function save_notices() {
-        update_option( 'woo_mp_notices', self::$notices );
+        update_option( 'woo_mp_notices', array_filter( self::$notices, function ( $notice ) {
+            return $notice['persist'];
+        } ) );
     }
 
 }

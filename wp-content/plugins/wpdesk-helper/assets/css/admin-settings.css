@@ -1,0 +1,50 @@
+.main h3, .sidebar h3 { color: black; background-color: #e5f3ff; padding: 4px 8px; }
+.sidebar { border: 2px solid #e5f3ff; width: 20%; float: right; padding: 0px 10px 0px 10px; margin: 15px 10px 0px 0px; }
+.main { float: left; width: 70%; }
+ul.celist{ list-style-type: square; list-style-position:inside; }
+.hidden {visibility:hidden;}
+.alert { background-color: #fffedf; font-weight: bold; padding: 10px; text-align: center; }
+.icon-pos {
+	padding-right:10px;
+	padding-left:10px;
+	/* Positions icon from the top */
+	position: relative;
+	top: 3px;
+}
+
+/* Plugins */
+.wpdesk .plugin-card {
+    text-align: center;
+    width: calc(33.33% - 12px);
+}
+
+.wpdesk .plugin-card:nth-child(2n) {
+    margin-right: 8px;
+}
+
+.wpdesk .plugin-card:nth-child(2n+1) {
+    clear: none;
+}
+
+.wpdesk .plugin-card:nth-child(3n) {
+    margin-left: 8px !important;
+    margin-right: 0;
+}
+
+.wpdesk .plugin-card img {
+    max-width: 100%;
+}
+
+/* Licences */
+p.mb0 {
+    margin-bottom: 0;
+}
+
+.wrap table.fixed {
+    table-layout: auto;
+}
+
+.column-product_license input[type='text'] {
+    max-width: 100%;
+    width: 360px;
+}

@@ -11,7 +11,7 @@ class Woo_MP {
 
         $this->define_constants();
         $this->includes();
-		$this->init_hooks();
+        $this->init_hooks();
     }
 
     /**
@@ -85,9 +85,26 @@ class Woo_MP {
     }
 
     private function init_hooks() {
+        add_action( 'in_admin_header', [ $this, 'setup_notice' ] );
         add_filter( 'plugin_action_links_' . WOO_MP_BASENAME, [ $this, 'add_action_links' ] );
         add_action( 'add_meta_boxes_shop_order', [ $this, 'register_meta_box' ] );
         add_filter( 'woocommerce_get_settings_pages', [ $this, 'add_settings_page' ] );
+    }
+
+    /**
+     * Display a welcome notice.
+     */
+    public function setup_notice() {
+        if ( ! Payment_Gateways::get_active_id() ) {
+            Notices::add( [
+                'message' =>
+                    'To get started with WooCommerce Manual Payment, ' .
+                    '<a href="admin.php?page=wc-settings&tab=manual_payment">select your payment processor</a> ' .
+                    'and fill out your API keys. ' . WOO_MP_CONFIG_HELP .
+                    " Once that's done, you'll be able to process payments directly from the " .
+                    '<strong>Payment</strong> section at the bottom of the <strong>Edit order</strong> screen.'
+            ] );
+        }
     }
 
     /**

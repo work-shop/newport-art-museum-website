@@ -30,14 +30,12 @@ class Payment_Gateway extends \Woo_MP\Payment_Gateway {
             [
                 'title' => __( 'API Key', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your eWAY API Key.', 'woo-mp' ),
                 'id'    => 'woo_mp_eway_api_key',
                 'css'   => $text_style
             ],
             [
                 'title' => __( 'API Password', 'woo-mp' ),
                 'type'  => 'text',
-                'desc'  => __( 'Your eWAY API Password.', 'woo-mp' ),
                 'id'    => 'woo_mp_eway_api_password',
                 'css'   => $text_style
             ],
@@ -55,12 +53,13 @@ class Payment_Gateway extends \Woo_MP\Payment_Gateway {
                 'type'  => 'title'
             ],
             [
-                'title'   => __( 'Title', 'woo-mp' ),
-                'type'    => 'text',
-                'desc'    => __( 'Choose a payment method title.', 'woo-mp' ),
-                'id'      => 'woo_mp_eway_title',
-                'default' => 'Credit Card (eWAY)',
-                'css'     => $text_style
+                'title'    => __( 'Title', 'woo-mp' ),
+                'type'     => 'text',
+                'desc'     => __( 'Choose a payment method title.', 'woo-mp' ),
+                'id'       => 'woo_mp_eway_title',
+                'default'  => 'Credit Card (eWAY)',
+                'desc_tip' => true,
+                'css'      => $text_style
             ],
             [
                 'title'         => __( 'Include Order Details', 'woo-mp' ),

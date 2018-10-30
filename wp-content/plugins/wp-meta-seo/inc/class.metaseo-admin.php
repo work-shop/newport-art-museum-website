@@ -1303,6 +1303,13 @@ class MetaSeoAdmin
         }
 
         $circliful = ceil(100 * ($check) / 7);
+        /**
+         * Reload analytics
+         *
+         * @param integer Post ID
+         * @param array   All the datas
+         */
+        do_action('wpms_reload_analytics', $_POST['datas']['post_id'], $_POST['datas']);
         wp_send_json(array('circliful' => $circliful, 'output' => $output, 'check' => $check));
     }
 
@@ -1428,6 +1435,14 @@ class MetaSeoAdmin
                 );
                 remove_action('post_updated', array('MetaSeoBrokenLinkTable', 'updatePost'));
                 wp_update_post($my_post);
+                /**
+                 * Update link title
+                 *
+                 * @param integer Link ID
+                 * @param string  Link meta title
+                 * @param integer Post ID
+                 */
+                do_action('wpms_update_link_title', $_POST['link_id'], $_POST['meta_title'], $link_detail->source_id);
                 wp_send_json(array('status' => true));
             }
         }
@@ -1451,6 +1466,14 @@ class MetaSeoAdmin
         }
         if (isset($_POST['page_id']) && isset($_POST['index'])) {
             update_post_meta($_POST['page_id'], '_metaseo_metaindex', $_POST['index']);
+            /**
+             * Update index/noindex for robots meta tag of a page
+             *
+             * @param integer Page ID
+             * @param string  Page meta index
+             * @param integer Page index value
+             */
+            do_action('wpms_update_page_index', $_POST['page_id'], '_metaseo_metaindex', $_POST['index']);
             wp_send_json(array('status' => true));
         }
         wp_send_json(array('status' => false));
@@ -1473,6 +1496,15 @@ class MetaSeoAdmin
         }
         if (isset($_POST['page_id']) && isset($_POST['follow'])) {
             update_post_meta((int) $_POST['page_id'], '_metaseo_metafollow', $_POST['follow']);
+
+            /**
+             * Update follow/nofollow for robots meta tag of a page
+             *
+             * @param integer Page ID
+             * @param string  Page meta follow
+             * @param integer Page follow value
+             */
+            do_action('wpms_update_page_follow', $_POST['page_id'], '_metaseo_metafollow', $_POST['follow']);
             wp_send_json(array('status' => true));
         }
         wp_send_json(array('status' => false));
@@ -1495,6 +1527,13 @@ class MetaSeoAdmin
         }
         if (isset($_POST['link_id'])) {
             $this->doUpdateFollow($_POST['link_id'], $_POST['follow']);
+            /**
+             * Update follow/nofollow for rel attribute of a link
+             *
+             * @param integer Link ID
+             * @param integer Link follow
+             */
+            do_action('wpms_update_link_follow', $_POST['link_id'], $_POST['follow']);
             wp_send_json(array('status' => true));
         }
         wp_send_json(array('status' => false));
@@ -1528,6 +1567,15 @@ class MetaSeoAdmin
                 $follow = 1;
                 foreach ($_POST['linkids'] as $linkId) {
                     $this->doUpdateFollow($linkId, $follow);
+                    /**
+                     * Update follow/nofollow for rel attribute of a link
+                     *
+                     * @param integer Link ID
+                     * @param integer Link follow
+                     *
+                     * @ignore Hook already documented
+                     */
+                    do_action('wpms_update_link_follow', $linkId, $follow);
                 }
                 break;
 
@@ -1543,6 +1591,15 @@ class MetaSeoAdmin
                     } else {
                         $this->doUpdateFollow($link->id, $follow);
                         $i ++;
+                        /**
+                         * Update follow/nofollow for rel attribute of a link
+                         *
+                         * @param integer Link ID
+                         * @param integer Link follow
+                         *
+                         * @ignore Hook already documented
+                         */
+                        do_action('wpms_update_link_follow', $link->id, $follow);
                     }
                 }
 
@@ -1556,6 +1613,15 @@ class MetaSeoAdmin
 
                 foreach ($_POST['linkids'] as $linkId) {
                     $this->doUpdateFollow($linkId, $follow);
+                    /**
+                     * Update follow/nofollow for rel attribute of a link
+                     *
+                     * @param integer Link ID
+                     * @param integer Link follow
+                     *
+                     * @ignore Hook already documented
+                     */
+                    do_action('wpms_update_link_follow', $linkId, $follow);
                 }
                 break;
 
@@ -1571,6 +1637,15 @@ class MetaSeoAdmin
                     } else {
                         $this->doUpdateFollow($link->id, $follow);
                         $i ++;
+                        /**
+                         * Update follow/nofollow for rel attribute of a link
+                         *
+                         * @param integer Link ID
+                         * @param integer Link follow
+                         *
+                         * @ignore Hook already documented
+                         */
+                        do_action('wpms_update_link_follow', $link->id, $follow);
                     }
                 }
                 break;
@@ -2289,6 +2364,19 @@ class MetaSeoAdmin
         $postID        = intval($_POST['postid']);
         $value         = trim($_POST['value']);
         $response->msg = esc_html__('Modification was saved', 'wp-meta-seo');
+
+        /**
+         * Filter before update meta for post/page
+         *
+         * @param string  Meta value
+         * @param integer Post ID
+         * @param string  Meta key
+         * @param array   Extra informations
+         *
+         * @return string
+         */
+        $value = apply_filters('wpms_update_content_meta', $value, $postID, $metakey, array('source'=>'update_meta'));
+
         if ($metakey === 'metatitle') {
             if (!update_post_meta($postID, '_metaseo_metatitle', $value)) {
                 $response->updated = false;
@@ -2740,10 +2828,11 @@ class MetaSeoAdmin
         );
 
         /**
-         * Filter: 'metaseo_manage_options_capability'
-         * - Allow changing the capability users need to view the settings pages
+         * Allow changing the capability users need to view the settings pages
          *
-         * @api string unsigned The capability
+         * @api string Default capability
+         *
+         * @return string
          */
         $manage_options_cap = apply_filters('metaseo_manage_options_capability', 'manage_options');
 
@@ -3406,11 +3495,37 @@ class MetaSeoAdmin
                     $i_info_url = pathinfo($attachment->guid);
                     switch ($_POST['mtype']) {
                         case 'image_alt':
-                            update_post_meta($attachment->ID, '_wp_attachment_image_alt', $i_info_url['filename']);
+                            $value = $i_info_url['filename'];
+                            /**
+                             * Filter before update meta for image
+                             *
+                             * @param string  Meta value
+                             * @param integer Image ID
+                             * @param string  Meta key
+                             * @param array   Extra informations
+                             *
+                             * @return string
+                             */
+                            $value = apply_filters('wpms_update_image_meta', $value, $attachment->ID, '_wp_attachment_image_alt', array('source'=>'bulk_copy_alt'));
+                            update_post_meta($attachment->ID, '_wp_attachment_image_alt', $value);
                             break;
 
                         case 'image_title':
-                            wp_update_post(array('ID' => $attachment->ID, 'post_title' => $i_info_url['filename']));
+                            $value = $i_info_url['filename'];
+                            /**
+                             * Filter before update meta for image
+                             *
+                             * @param string  Meta value
+                             * @param integer Image ID
+                             * @param string  Post title field name
+                             * @param array   Extra informations
+                             *
+                             * @return string
+                             *
+                             * @ignore Hook already documented
+                             */
+                            $value = apply_filters('wpms_update_image_meta', $value, $attachment->ID, 'post_title', array('source'=>'bulk_copy_title'));
+                            wp_update_post(array('ID' => $attachment->ID, 'post_title' => $value));
                             break;
                     }
                 }
@@ -3439,7 +3554,21 @@ class MetaSeoAdmin
                         if (!empty($mposts_empty_alt)) {
                             foreach ($mposts_empty_alt as $post) {
                                 $i_info_url = pathinfo($post->guid);
-                                update_post_meta($post->ID, '_wp_attachment_image_alt', $i_info_url['filename']);
+                                $value = $i_info_url['filename'];
+                                /**
+                                 * Filter before update meta for image
+                                 *
+                                 * @param string  Meta value
+                                 * @param integer Image ID
+                                 * @param string  Meta key
+                                 * @param array   Extra informations
+                                 *
+                                 * @return string
+                                 *
+                                 * @ignore Hook already documented
+                                 */
+                                $value = apply_filters('wpms_update_image_meta', $value, $post->ID, '_wp_attachment_image_alt', array('source'=>'bulk_copy_alt'));
+                                update_post_meta($post->ID, '_wp_attachment_image_alt', $value);
                             }
                         } else {
                             wp_send_json(false);
@@ -3450,7 +3579,21 @@ class MetaSeoAdmin
                         if (!empty($mposts_empty_title)) {
                             foreach ($mposts_empty_title as $post) {
                                 $i_info_url = pathinfo($post->guid);
-                                wp_update_post(array('ID' => $post->ID, 'post_title' => $i_info_url['filename']));
+                                $value = $i_info_url['filename'];
+                                /**
+                                 * Filter before update meta for image
+                                 *
+                                 * @param string  Meta value
+                                 * @param integer Image ID
+                                 * @param string  Post title field name
+                                 * @param array   Extra informations
+                                 *
+                                 * @return string
+                                 *
+                                 * @ignore Hook already documented
+                                 */
+                                $value = apply_filters('wpms_update_image_meta', $value, $post->ID, 'post_title', array('source'=>'bulk_copy_title'));
+                                wp_update_post(array('ID' => $post->ID, 'post_title' => $value));
                             }
                         } else {
                             wp_send_json(false);
@@ -3545,7 +3688,21 @@ class MetaSeoAdmin
         $mposts     = $m_newquery->get_posts();
         if (!empty($mposts)) {
             foreach ($mposts as $post) {
-                update_post_meta($post->ID, '_metaseo_metatitle', $post->post_title);
+                $value = $post->post_title;
+                /**
+                 * Filter before update meta for post/page
+                 *
+                 * @param string  Meta value
+                 * @param integer Post ID
+                 * @param string  Meta key
+                 * @param array   Extra informations
+                 *
+                 * @return string
+                 *
+                 * @ignore Hook already documented
+                 */
+                $value = apply_filters('wpms_update_content_meta', $value, $post->ID, '_metaseo_metatitle', array('source'=>'copy_title'));
+                update_post_meta($post->ID, '_metaseo_metatitle', $value);
             }
             wp_send_json(true);
         } else {

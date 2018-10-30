@@ -38,9 +38,9 @@ class Woo_MP_Order extends WC_Compatibility\WC_Order {
      */
     public function get_woo_mp_payments() {
         $payments = json_decode(
-            $this->get_meta( 'woo-mp-' . WOO_MP_PAYMENT_PROCESSOR . '-charges', true ) ?: '[]',
+            $this->get_meta( 'woo-mp-' . WOO_MP_PAYMENT_PROCESSOR . '-charges', true ),
             true
-        );
+        ) ?: [];
 
         $charge_defaults = $this->get_charge_defaults();
 

@@ -139,6 +139,8 @@ class Payment_Processor extends \Woo_MP\Payment_Processor {
             ];
         }
 
+        $request = apply_filters( 'woo_mp_eway_charge_request', $request, $this->order->get_core_order() );
+
         $response = $this->request( 'createTransaction', \Eway\Rapid\Enum\ApiMethod::TRANSPARENT_REDIRECT, $request );
 
         return [

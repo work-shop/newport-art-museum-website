@@ -4,7 +4,7 @@ Tags: backend, manual, phone, payment, woocommerce
 Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 5.5
-Stable tag: 1.13.0
+Stable tag: 1.14.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -38,33 +38,56 @@ If you need to install the plugin manually, you can follow the instructions [her
 ### Configuration
 To get started, you'll want to choose a payment processor and enter some API keys.
 #### Stripe
-1. Follow [these instructions](https://support.stripe.com/questions/where-do-i-find-my-api-keys) to find your API keys.
-2. Go to the WooCommerce settings page and choose **Manual Payment**.
-3. Choose **Stripe** from the drop-down and click **Save changes**.
-4. Now choose **Stripe** from the sub-menu (under the main tabs).
-5. Copy and paste your **Live Secret Key** (from your Stripe account settings) into the **Secret Key** field.
-6. Copy and paste your **Live Publishable Key** (from your Stripe account settings) into the **Publishable Key** field.
+1. Follow these instructions to find your API keys:
+    * If you already use a Stripe payment gateway:
+        1. Go to **WooCommerce > Settings > Payments** (Formerly **Checkout**) **> Stripe**.
+        2. Here you can find your API keys.
+    * If you do not already use a Stripe payment gateway:
+        1. Visit [this page](https://dashboard.stripe.com/account/apikeys). Sign in if you need to.
+        2. If you're using test mode, make sure the **View test data** switch is on. When on, it should say **Viewing test data**.
+        3. Here you can find your API keys. To view your **Secret key**, click **Reveal live key token**.
+2. From your WordPress dashboard, go to **WooCommerce > Settings > Manual Payment**.
+3. Choose **Stripe** from the **Payment Processor** drop-down and click **Save changes**.
+4. Go to **WooCommerce > Settings > Manual Payment > Stripe**.
+5. Copy and paste your **Secret key** (from step 1) into the **Secret Key** field.
+6. Copy and paste your **Publishable key** (from step 1) into the **Publishable Key** field.
 7. Click **Save changes**. That's it, you're all set.
 #### Authorize.Net
-1. Follow [these instructions](https://support.authorize.net/authkb/index?page=content&id=A576) to find your API keys.
-2. Go to the WooCommerce settings page and choose **Manual Payment**.
-3. Choose **Authorize.Net** from the drop-down and click **Save changes**.
-4. Now choose **Authorize.Net** from the sub-menu (under the main tabs).
-5. Copy and paste your **API Login ID** (from your Authorize.Net account settings) into the **Login ID** field.
-6. Copy and paste your **Transaction Key** (from your Authorize.Net account settings) into the **Transaction Key** field.
-7. Follow these instructions to find your **Public Client Key**:
-    1. Log in to the Authorize.Net merchant interface and navigate to **Account > Settings > Security Settings > General Security Settings > Manage Public Client Key**.
-    2. In the **Create New Public Client Key** section, enter your secret answer to the secret question and click Submit.
-8. Copy and paste your **Public Client Key** (from your Authorize.Net account settings) into the **Client Key** field.
+1. Follow these instructions to find your API keys:
+    * If you already use an Authorize.Net payment gateway:
+        1. Go to **WooCommerce > Settings > Payments** (Formerly **Checkout**) **> Authorize.Net**.
+        2. Here you can find your API keys.
+    * If you do not already use an Authorize.Net payment gateway:
+        1. [Follow these instructions](https://support.authorize.net/s/article/How-do-I-obtain-my-API-Login-ID-and-Transaction-Key).
+2. Follow these instructions to find your **Public Client Key**:
+    1. Click the links that apply to you:
+        * For live accounts:
+            1. Log in to the Authorize.Net [Merchant Interface](https://account.authorize.net/).
+            2. Visit [this page](https://account.authorize.net/UI/themes/anet/User/ClientKey.aspx).
+        * For sandbox accounts:
+            1. Log in to the Authorize.Net [Merchant Interface](https://sandbox.authorize.net/).
+            2. Visit [this page](https://sandbox.authorize.net/UI/themes/sandbox/User/ClientKey.aspx).
+    2. If you already have a **Public Client Key** on the page, you can skip this step. In the **Create New Public Client Key** section, enter the **Secret Answer** to your **Secret Question** and click **Submit**.
+3. From your WordPress dashboard, go to **WooCommerce > Settings > Manual Payment**.
+4. Choose **Authorize.Net** from the **Payment Processor** drop-down and click **Save changes**.
+5. Go to **WooCommerce > Settings > Manual Payment > Authorize.Net**.
+6. Copy and paste your **API Login ID** (from step 1) into the **Login ID** field.
+7. Copy and paste your **Transaction Key** (from step 1) into the **Transaction Key** field.
+8. Copy and paste your **Public Client Key** (from step 2) into the **Client Key** field.
 9. Click **Save changes**. That's it, you're all set.
 #### eWAY
-1. Follow [these instructions](https://go.eway.io/s/article/How-do-I-setup-my-Live-eWAY-API-Key-and-Password) to find your API keys.
-2. Go to the WooCommerce settings page and choose **Manual Payment**.
-3. Choose **eWAY** from the drop-down and click **Save changes**.
-4. Now choose **eWAY** from the sub-menu (under the main tabs).
-5. Copy and paste your **API Key** (from your eWAY account settings) into the **API Key** field.
-6. Copy and paste your **API Password** (from your eWAY account settings) into the **API Password** field.
-9. Click **Save changes**. That's it, you're all set.
+1. Follow these instructions to find your API keys:
+    * If you already use an eWAY payment gateway:
+        1. Go to **WooCommerce > Settings > Payments** (Formerly **Checkout**) **> eWAY**.
+        2. Here you can find your API keys.
+    * If you do not already use an eWAY payment gateway:
+        1. [Follow these instructions](https://go.eway.io/s/article/How-do-I-setup-my-Live-eWAY-API-Key-and-Password).
+2. From your WordPress dashboard, go to **WooCommerce > Settings > Manual Payment**.
+3. Choose **eWAY** from the **Payment Processor** drop-down and click **Save changes**.
+4. Go to **WooCommerce > Settings > Manual Payment > eWAY**.
+5. Copy and paste your **API Key** (from step 1) into the **API Key** field.
+6. Copy and paste your **API Password** (from step 1) into the **API Password** field.
+7. Click **Save changes**. That's it, you're all set.
 
 == Frequently Asked Questions ==
 = Which payment processors are supported? =
@@ -86,6 +109,12 @@ Yes.
 5. The Authorize.Net settings page.
 
 == Changelog ==
+= 1.15.0 =
+* Add a welcome notice to help new users get started.
+* Improve configuration instructions.
+* Minor setting tweaks.
+* Add `woo_mp_{$payment_gateway_id}_charge_request` filters. This provides the ability to customize the data sent to the payment processor when processing a payment.
+* Specify which Stripe API version the plugin uses to avoid incompatibilities with accounts that are using older versions of the API.
 = 1.14.0 =
 * Declare support for WooCommerce 3.5.
 * Add support for multisite.
