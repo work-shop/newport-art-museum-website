@@ -60,11 +60,11 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 			<div class="product-name col-4 col-md-6" data-title="<?php esc_attr_e( 'Product', 'woocommerce' ); ?>">
 				<?php
-				if ( ! $product_permalink ) {
+				//if ( ! $product_permalink ) {
 					echo apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;';
-				} else {
-					echo apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key );
-				}
+				//} else {
+					//echo apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key );
+				//}
 
 								// Meta data.
 				echo wc_get_formatted_cart_item_data( $cart_item );
