@@ -206,7 +206,7 @@ abstract class NAM_Custom_Post_Type {
 
         $shadowing_product = get_field( 'managed_field_related_post', $post->ID );
 
-        if ( is_plugin_active('wc-product-customer-list/wc-product-customer-list.php') ) {
+        if ( is_plugin_active('wc-product-customer-list-premium/wc-product-customer-list.php') ) {
             if ( $shadowing_product ) {
 
                 $product_id = $shadowing_product[0]->ID;
@@ -219,6 +219,7 @@ abstract class NAM_Custom_Post_Type {
                  */
 
                 $shortcode = '[customer_list product="' . $product_id . '" ' .
+                                             'table_title="Test Title" ' .
                                              'order_status="wc-completed,wc-processing" ' .
                                              'show_titles="true" ' .
                                              'billing_email="true" ' .
@@ -229,6 +230,14 @@ abstract class NAM_Custom_Post_Type {
                                              'order_date="true" ' .
                                              'order_variations="false" ' .
                                              'order_qty_total="true" ' .
+                                             'sortable="true" ' .
+                                             'copy="true" ' .
+                                             'export_pdf="true" ' .
+                                             'pdf_pagesize="true" ' .
+                                             'pdf_orientation="true" ' .
+                                             'export_csv="true" ' .
+                                             'search="true" ' .
+                                             'info="true"' .
                                              ']';
 
                 echo do_shortcode( $shortcode );
