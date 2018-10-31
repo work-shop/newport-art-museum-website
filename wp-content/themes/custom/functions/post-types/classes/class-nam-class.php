@@ -1,5 +1,8 @@
 <?php
 
+
+
+
 class NAM_Class extends NAM_Shadowed_Post_Type {
 
     /**
@@ -8,7 +11,6 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
      * These members are used to define static parameters
      * to the new post type.
      */
-
     public static $slug = 'classes';
 
     public static $singular_name = 'Class';
@@ -78,6 +80,27 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
     public function draw_card() {
 
     }
+
+    /**
+     * Register a meta_box for the product
+     */
+    public static function add_product_meta_box() {
+        if ( function_exists( 'add_meta_box' ) ) {
+
+            $called_class = get_called_class();
+
+            add_meta_box(
+                'course-registrees',
+                'Course Registrees',
+                array( $called_class, 'show_purchasers' ),
+                static::$slug,
+                'normal',
+                'low'
+            );
+
+        }
+    }
+
 
     /**
      * This routine sets all the required product taxonomy terms for reporting
