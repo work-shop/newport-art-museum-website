@@ -80,6 +80,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $updated_post = get_post( $post_id );
         $shadow_post = get_field( static::$field_keys['managed_field_related_post'], $post_id );
 
+
         if ( !$shadow_post ) {
 
             static::create_shadowing_product( $post_id, $updated_post );
@@ -124,10 +125,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function create_shadowing_product( $post_id, $updated_post, $copy=false ) {
 
-        $title_check = ( $copy ) ? ' (Copy From Duplicator)': '';
-
         $product_id = (int) wp_insert_post( array(
-            'post_title'    => $updated_post->post_title . $title_check,
+            'post_title'    => $updated_post->post_title,
             'post_content'  => '',
             'post_status'   => $updated_post->post_status,
             'post_type'     => 'product',
@@ -331,7 +330,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_product_meta( $title, $post_id, $product_id ) {
 
-
+        wc_delete_product_transients( $product_id );
 
         $price = get_field( static::$field_keys['price'], $post_id );
         $sale_price = get_field( static::$field_keys['sale_price'], $post_id );
@@ -348,15 +347,19 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         update_post_meta( $product_id, '_price', (double) $price );
         update_post_meta( $product_id, '_regular_price', (double) $price );
+        update_post_meta( $product_id, '_wc_pb_base_regular_price', (double) $price );
+        update_post_meta( $product_id, '_wc_pb_base_price', (double) $price );
 
         if ( $sale_price ) {
             update_post_meta( $product_id, '_sale_price', (double) $sale_price );
             update_post_meta( $product_id, '_sale_price_dates_from', $sale_from );
             update_post_meta( $product_id, '_sale_price_dates_to', $sale_to );
+            update_post_meta( $product_id, '_wc_pb_base_sale_price', (double) $sale_price );
         } else {
             update_post_meta( $product_id, '_sale_price', '' );
             update_post_meta( $product_id, '_sale_price_dates_from', '' );
             update_post_meta( $product_id, '_sale_price_dates_to', '' );
+            update_post_meta( $product_id, '_wc_pb_base_sale_price', '' );
         }
 
         if ( $name_your_price ) {
@@ -364,9 +367,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             update_post_meta( $product_id, '_minimum_price', (double) $nyp_minumum_price );
             update_post_meta( $product_id, '_suggested_price', (double) $nyp_suggested_price );
         } else {
-            update_post_meta( $product_id, '_nyp', '' );
-            update_post_meta( $product_id, '_minimum_price', '');
-            update_post_meta( $product_id, '_suggested_price', '');
+            update_post_meta( $product_id, '_nyp', 'no' );
+            update_post_meta( $product_id, '_minimum_price', (double) $price);
+            update_post_meta( $product_id, '_suggested_price', (double) $price);
         }
 
         update_post_meta( $product_id, '_purchase_note', '' );
@@ -393,6 +396,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             update_post_meta( $product_id, '_stock_status', 'instock' );
 
         }
+
+
 
     }
 
