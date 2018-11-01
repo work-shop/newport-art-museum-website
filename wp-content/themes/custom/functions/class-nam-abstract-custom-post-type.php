@@ -204,12 +204,12 @@ abstract class NAM_Custom_Post_Type {
         global $post;
         setup_postdata( $post );
 
-        $shadowing_product = get_field( 'managed_field_related_post', $post->ID );
+        // $shadowing_product = get_field( 'managed_field_related_post', $post->ID );
 
         if ( is_plugin_active('wc-product-customer-list-premium/wc-product-customer-list.php') ) {
-            if ( $shadowing_product ) {
+            if ( true ) {
 
-                $product_id = $shadowing_product[0]->ID;
+                // $product_id = $shadowing_product[0]->ID;
 
                 /**
                  * This shortcode echos a list of purchasers of a given product
@@ -218,7 +218,7 @@ abstract class NAM_Custom_Post_Type {
                  * Details of shortcode parameters [here](https://wordpress.org/plugins/wc-product-customer-list/#description).
                  */
 
-                $shortcode = '[customer_list product="' . $product_id . '" ' .
+                $shortcode = '[customer_list product="2693" ' .
                                              'table_title="Test Title" ' .
                                              'order_status="wc-completed,wc-processing" ' .
                                              'show_titles="true" ' .
@@ -240,7 +240,7 @@ abstract class NAM_Custom_Post_Type {
                                              'info="true"' .
                                              ']';
 
-                echo do_shortcode( $shortcode );
+                echo do_shortcode( '[customer_list product="2693" table_title="Test Title" order_status="wc-completed,wc-processing" show_titles="true" billing_email="true" billing_phone="true" customer_username_link="true" order_number="true" scrollx="true" order_date="true" order_variations="false" order_qty_total="true" sortable="true" copy="true" export_pdf="true" export_csv="true" search="true" info="true"]');
 
 
             } else {
@@ -253,8 +253,6 @@ abstract class NAM_Custom_Post_Type {
             echo '<p>Looks like the <strong>Woocommerce Product Customer List</strong> plugin isn\'t active.</p><p>Activate it in the plugins section.</p>';
 
         }
-
-        wp_reset_postdata();
 
     }
 

@@ -14,8 +14,45 @@ class NAM_Site_Admin {
 
         add_filter( 'get_user_metadata', array( $this, 'pages_per_page_wpse_23503'), 10, 4 );
 
+        add_action( 'admin_enqueue_scripts', array( $this, 'register_customer_list_scripts' ) );
+
 
     }
+
+    /**
+     * the customer_list plugin requests a specific set of external scripts
+     * and styles enqueued to work properly. This routine enqueues the scripts
+     * if a shadowed product page is present.
+     */
+    public function register_customer_list_scripts() {
+
+        $current_screen = get_current_screen();
+        $post_type = $current_screen->post_type;
+        $active_post_types = array_map( function( $cls ) { return $cls::$slug; }, NAM_Site::$product_post_types );
+
+        if ( is_plugin_active('wc-product-customer-list-premium/wc-product-customer-list.php') && in_array( $post_type, $active_post_types ) ) {
+
+    		// Register styles
+    		wp_register_style( 'wpcl-datatables-css', 'https://cdn.datatables.net/t/dt/dt-1.10.11,r-2.0.2/datatables.min.css', false, '1.10.11' );
+    		wp_register_style( 'wpcl-datatables-buttons-css', 'https://cdn.datatables.net/buttons/1.2.2/css/buttons.dataTables.min.css', false, '1.2.2' );
+    		wp_register_style( 'wpcl-datatables-select-css', 'https://cdn.datatables.net/select/1.2.2/css/select.dataTables.min.css', false, '1.0' );
+
+    		// Register scripts
+    		wp_register_script( 'wpcl-datatables-js', 'https://cdn.datatables.net/t/dt/dt-1.10.11,r-2.0.2/datatables.min.js', true, '2.0.2' );
+    		wp_register_script( 'wpcl-datatables-buttons-js', 'https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js', true, '1.2.2' );
+    		wp_register_script( 'wpcl-datatables-buttons-flash', 'https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js', true, '1.2.2' );
+    		wp_register_script( 'wpcl-datatables-print', 'https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js', true, '1.2.2' );
+    		wp_register_script( 'wpcl-datatables-jszip', 'https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js', true, '2.5.0' );
+    		wp_register_script( 'wpcl-datatables-pdfmake', 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js', true, '0.1.36' );
+    		wp_register_script( 'wpcl-datatables-vfs-fonts', 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.20/vfs_fonts.js', true, '0.1.20' );
+    		wp_register_script( 'wpcl-datatables-buttons-html', 'https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js', true, '1.2.2' );
+    		wp_register_script( 'wpcl-datatables-buttons-print', 'https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js', true, '1.2.2' );
+
+    		wp_register_script( 'wpcl-script-shortcode', home_url() . '/wp-content/plugins/wc-product-customer-list-premium/admin/assets/shortcode.js', true, '1.0' );
+
+        }
+    }
+
 
     /**
      * This function manages visibility of different parts of the Admin view.
