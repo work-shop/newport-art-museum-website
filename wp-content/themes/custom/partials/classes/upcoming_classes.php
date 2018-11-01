@@ -1,6 +1,4 @@
-<?php 
-$show_classes_page_temporary_message = get_field('show_classes_page_temporary_message','78');
-?>
+<?php  $show_classes_page_temporary_message = get_field('show_classes_page_temporary_message','78'); ?>
 <?php if( $show_classes_page_temporary_message ): ?>
 	<?php $classes_page_temporary_message = get_field('classes_page_temporary_message','78'); ?>
 	<section class="block padded" id="classes-page-temporary message">
@@ -29,6 +27,7 @@ $show_classes_page_temporary_message = get_field('show_classes_page_temporary_me
 			),
 		) ); ?>
 		<?php if( $the_query->have_posts() ): ?>
+			<?php $count = $the_query->post_count; ?>
 			<section class="block pt4 pb7" id="upcoming-classes">
 				<div class="container-fluid container-fluid-stretch">
 					<div class="row now-on-view-title">
@@ -38,23 +37,21 @@ $show_classes_page_temporary_message = get_field('show_classes_page_temporary_me
 					</div>
 				</div>
 				<div class="classes-slider">
-					<div class="slick slick-classes">
+					<div class="slick <?php if( $count >= 3): echo ' slick-classes '; else: echo ' non-slick row '; endif; ?>">
 						<?php while ( $the_query->have_posts() ) : ?>
 							<?php $the_query->the_post(); ?>
 							<div class="slick-classes-slide">
 								<?php 
-						$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
-						$card_size = 'medium'; //'wide', 'medium', 'small', 'menu'
-						$card_type = 'class';  //'event', 'class', 'product', 'news' 
-						NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
-						?>
-					</div>
-				<?php endwhile; ?>
-				<?php wp_reset_postdata(); ?>
+								$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
+								$card_size = 'medium'; //'wide', 'medium', 'small', 'menu'
+								$card_type = 'class';  //'event', 'class', 'product', 'news' 
+								NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
+								?>
+							</div>
+						<?php endwhile; ?>
+					<?php wp_reset_postdata(); ?>
+				</div>
 			</div>
-		</div>
-	</section>
-<?php endif; ?>
-
-
+		</section>
+	<?php endif; ?>
 <?php endif; ?>
