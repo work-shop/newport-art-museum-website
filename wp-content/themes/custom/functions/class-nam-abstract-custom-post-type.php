@@ -202,14 +202,13 @@ abstract class NAM_Custom_Post_Type {
      */
     function show_purchasers() {
         global $post;
-        setup_postdata( $post );
 
-        // $shadowing_product = get_field( 'managed_field_related_post', $post->ID );
+        $shadowing_product = get_field( 'managed_field_related_post', $post->ID );
 
         if ( is_plugin_active('wc-product-customer-list-premium/wc-product-customer-list.php') ) {
-            if ( true ) {
+            if ( $shadowing_product ) {
 
-                // $product_id = $shadowing_product[0]->ID;
+                $product_id = $shadowing_product[0]->ID;
 
                 /**
                  * This shortcode echos a list of purchasers of a given product
@@ -217,9 +216,7 @@ abstract class NAM_Custom_Post_Type {
                  *
                  * Details of shortcode parameters [here](https://wordpress.org/plugins/wc-product-customer-list/#description).
                  */
-
-                $shortcode = '[customer_list product="2693" ' .
-                                             'table_title="Test Title" ' .
+                $shortcode = '[customer_list product="' . $product_id . '" ' .
                                              'order_status="wc-completed,wc-processing" ' .
                                              'show_titles="true" ' .
                                              'billing_email="true" ' .
@@ -229,18 +226,15 @@ abstract class NAM_Custom_Post_Type {
                                              'scrollx="true" ' .
                                              'order_date="true" ' .
                                              'order_variations="false" ' .
-                                             'order_qty_total="true" ' .
                                              'sortable="true" ' .
                                              'copy="true" ' .
                                              'export_pdf="true" ' .
-                                             'pdf_pagesize="true" ' .
-                                             'pdf_orientation="true" ' .
                                              'export_csv="true" ' .
                                              'search="true" ' .
                                              'info="true"' .
                                              ']';
 
-                echo do_shortcode( '[customer_list product="2693" table_title="Test Title" order_status="wc-completed,wc-processing" show_titles="true" billing_email="true" billing_phone="true" customer_username_link="true" order_number="true" scrollx="true" order_date="true" order_variations="false" order_qty_total="true" sortable="true" copy="true" export_pdf="true" export_csv="true" search="true" info="true"]');
+                echo do_shortcode( $shortcode );
 
 
             } else {
