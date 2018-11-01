@@ -391,7 +391,22 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_shadowing_product_categories( $title, $post_id, $product_id ) {
 
+        $existing_categories = get_the_terms( $product_id, 'product_cat' );
+
+        if ( $existing_categories ) {
+
+            $existing_categories = array_map( function( $term ) { return $term->name; }, $existing_categories );
+
+        } else {
+
+            $existing_categories = array();
+
+        }
+
         $categories = static::get_product_categories( $post_id );
+
+        $categories = array_unique( array_merge( $categories, $existing_categories  ) );
+
         $term_ids = array();
 
         foreach( $categories as $category ) {

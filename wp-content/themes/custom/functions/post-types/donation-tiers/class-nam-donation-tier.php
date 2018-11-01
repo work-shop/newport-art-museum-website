@@ -51,6 +51,10 @@ class NAM_Donation_Tier extends NAM_Shadowed_Post_Type {
 
     }
 
+    public static function draw_product_meta_box( $post_id ) {
+
+    }
+
     /**
      * This routine sets all the required product taxonomy terms for reporting
      * purposes.

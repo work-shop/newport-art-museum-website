@@ -75,12 +75,7 @@ abstract class NAM_Custom_Post_Type {
 
         }
 
-        /** Setup the proxy-postdata for the archive page on this post type. */
-        //add_action('wpmsseo_head', array( $callad_class, 'setup_archive_postdata_proxy' ), 1 );
-
-        /** Setup the proxy-postdata for the archive page on this post type. */
-        //add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 0 );
-        //add_action('wpmsseo_head', array( $called_class, 'setup_archive_query_proxy' ), 9999);
+        add_action( 'add_meta_boxes', array( $called_class, 'add_product_meta_box' ) );
 
     }
 
@@ -189,6 +184,70 @@ abstract class NAM_Custom_Post_Type {
             return array();
 
         }
+    }
+
+    /**
+     * This function draw custom metaboxes for this particular post.
+     */
+    public static function add_product_meta_box( $post_id ) {
+        return false;
+    }
+
+
+    /**
+     * This function generates a table of the customers
+     * who purcased a given product on the backend.
+     *
+     * @see Plugin: Woocommerce Product Customer List
+     */
+    function show_purchasers() {
+        global $post;
+
+        $shadowing_product = get_field( 'managed_field_related_post', $post->ID );
+
+        if ( is_plugin_active('wc-product-customer-list-premium/wc-product-customer-list.php') ) {
+            if ( $shadowing_product ) {
+
+                $product_id = $shadowing_product[0]->ID;
+
+                /**
+                 * This shortcode echos a list of purchasers of a given product
+                 * to the page, and depends on the Woocommerce Customer List Plugin.
+                 *
+                 * Details of shortcode parameters [here](https://wordpress.org/plugins/wc-product-customer-list/#description).
+                 */
+                $shortcode = '[customer_list product="' . $product_id . '" ' .
+                                             'order_status="wc-completed,wc-processing" ' .
+                                             'show_titles="true" ' .
+                                             'billing_email="true" ' .
+                                             'billing_phone="true" ' .
+                                             'customer_username_link="true" ' .
+                                             'order_number="true" ' .
+                                             'scrollx="true" ' .
+                                             'order_date="true" ' .
+                                             'order_variations="false" ' .
+                                             'sortable="true" ' .
+                                             'copy="true" ' .
+                                             'export_pdf="true" ' .
+                                             'export_csv="true" ' .
+                                             'search="true" ' .
+                                             'info="true"' .
+                                             ']';
+
+                echo do_shortcode( $shortcode );
+
+
+            } else {
+
+                echo '<p>Looks like this item doesn\'t have a product attached to it!';
+
+            }
+        } else {
+
+            echo '<p>Looks like the <strong>Woocommerce Product Customer List</strong> plugin isn\'t active.</p><p>Activate it in the plugins section.</p>';
+
+        }
+
     }
 
 

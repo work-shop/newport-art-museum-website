@@ -1,6 +1,6 @@
 <?php
 
-class NAM_Event extends NAM_Custom_Post_Type {
+class NAM_Event extends NAM_Shadowed_Post_Type {
 
     public static $slug = 'events';
 
@@ -53,6 +53,26 @@ class NAM_Event extends NAM_Custom_Post_Type {
     }
 
     /**
+     * Register a meta_box for the product
+     */
+    public static function add_product_meta_box() {
+        if ( function_exists( 'add_meta_box' ) ) {
+
+            $called_class = get_called_class();
+
+            add_meta_box(
+                'event-registrees',
+                'Event Registrees',
+                array( $called_class, 'show_purchasers' ),
+                static::$slug,
+                'normal',
+                'low'
+            );
+
+        }
+    }
+
+    /**
      * ==== Instance Members and Methods ====
      */
     public function __construct( $id ) {
@@ -68,6 +88,24 @@ class NAM_Event extends NAM_Custom_Post_Type {
     public function create() {
 
     }
+
+    /**
+     * This routine sets all the required product taxonomy terms for reporting
+     * purposes.
+     *
+     * @param int $post_id the id of the post that owns this custom product
+     * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
+     * @return array category names
+     */
+    public static function get_product_categories( $post_id ) {
+
+        $categories = array_map( function( $term ) { return self::$plural_name . ': ' . $term->name; }, wp_get_post_terms( $post_id, 'events-categories' ) );
+        array_push( $categories, self::$plural_name );
+
+        return $categories;
+
+    }
+
 
 }
 
