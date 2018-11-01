@@ -41,7 +41,7 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
 
     );
 
-    public static function get_posts() {
+    public static function get_posts( $options=array() ) {
         $today = time();
         return get_posts(array(
             'posts_per_page'    => -1,

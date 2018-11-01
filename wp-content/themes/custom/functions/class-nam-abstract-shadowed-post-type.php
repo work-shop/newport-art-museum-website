@@ -46,6 +46,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function register_shadowed_post_actions() {
         add_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
+        add_action( 'mtphr_post_duplicator_created', array( get_called_class(), 'do_product_management_actions' ), 20 );
     }
 
     /**
@@ -58,6 +59,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function deregister_shadowed_post_actions() {
         remove_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
+        remove_action( 'mtphr_post_duplicator_created', array( get_called_class(), 'do_product_management_actions' ), 20 );
     }
 
     /**
@@ -82,19 +84,35 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
             static::create_shadowing_product( $post_id, $updated_post );
 
-        } else if ( count( $shadow_post ) == 1 ) {
-
-            static::update_shadowing_product( $post_id, $updated_post, $shadow_post[0] );
-
         } else {
 
-            throw new Exception( 'Shadowing Post Error – multiple products associated with this post.' );
+            if ( count( $shadow_post ) > 1 ) {
+
+                throw new Exception( 'Shadowing Post Error – multiple products associated with this post.' );
+
+            } else {
+
+                $parent_posts = static::get_parent_posts( $shadow_post[0]->ID );
+
+                if ( count( $parent_posts ) > 1 ) {
+
+                    delete_field( static::$field_keys['managed_field_related_post'], $post_id );
+                    static::create_shadowing_product( $post_id, $updated_post );
+
+                } else {
+
+                    static::update_shadowing_product( $post_id, $updated_post, $shadow_post[0] );
+
+                }
+
+            }
 
         }
 
         static::register_shadowed_post_actions();
 
     }
+
 
     /**
      * This function creates a new shadowed woocommerce post when
@@ -104,10 +122,12 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * @param int $post_id the idea of the post being created.
      * @param WP_Post $post the post object being updated.
      */
-    public static function create_shadowing_product( $post_id, $updated_post ) {
+    public static function create_shadowing_product( $post_id, $updated_post, $copy=false ) {
+
+        $title_check = ( $copy ) ? ' (Copy From Duplicator)': '';
 
         $product_id = (int) wp_insert_post( array(
-            'post_title'    => $updated_post->post_title,
+            'post_title'    => $updated_post->post_title . $title_check,
             'post_content'  => '',
             'post_status'   => $updated_post->post_status,
             'post_type'     => 'product',
@@ -154,9 +174,14 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * This function removes the shadowed post associated with a given
      * post, in the case that it's parent is being deleted.
      *
+     * NOTE: This function DOES NOT delete the product record associated
+     * with the post, it just unlinks the shadowing post.
+     *
      * @param int $post_id the id of the post being created.
      */
-    public static function remove_shadowing_product() {
+    public static function remove_shadowing_product( $post_id ) {
+
+        delete_field( static::$field_keys['managed_field_related_post'], (int) $post_id );
 
     }
 
@@ -315,7 +340,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $manage_stock = get_field( static::$field_keys['manage_stock'], $post_id );
         $stock_quantity = get_field( static::$field_keys['stock_quantity'], $post_id );
         $name_your_price = get_field( static::$field_keys['name_your_price_product'], $post_id );
-        $nyp_minumum_price = get_field( static::$field_keys['minumum_price'], $post_id );
+        $nyp_minumum_price = get_field( static::$field_keys['minimum_price'], $post_id );
         $nyp_suggested_price = get_field( static::$field_keys['suggested_price'], $post_id );
 
         update_post_meta( $product_id, '_downloadable', 'no' );
@@ -369,6 +394,21 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         }
 
+    }
+
+    public static function get_parent_posts( $product_id ) {
+        $parents = get_posts(array(
+							'post_type' => static::$slug,
+							'meta_query' => array(
+								array(
+									'key' => 'managed_field_related_post', // name of custom field
+									'value' => '"' . $product_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+									'compare' => 'LIKE'
+								)
+							)
+						));
+
+        return array_map( function( $p ) { return $p->ID; }, $parents );
     }
 
     /**
