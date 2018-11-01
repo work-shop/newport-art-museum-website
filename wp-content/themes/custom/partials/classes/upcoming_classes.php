@@ -17,8 +17,6 @@ $show_classes_page_temporary_message = get_field('show_classes_page_temporary_me
 		</div>
 	</section>
 	<?php else: ?>
-
-
 		<?php
 		$the_query = new WP_Query( array(
 			'post_type' => 'classes',
@@ -45,17 +43,6 @@ $show_classes_page_temporary_message = get_field('show_classes_page_temporary_me
 							<?php $the_query->the_post(); ?>
 							<div class="slick-classes-slide">
 								<?php 
-						$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
-						$card_size = 'medium'; //'wide', 'medium', 'small', 'menu'
-						$card_type = 'class';  //'event', 'class', 'product', 'news' 
-						NAM_Helpers::card( $card_layout, $card_size, $card_type, null, null, null, null );
-						?>
-					</div>
-				<?php endwhile; ?>
-				<?php while ( $the_query->have_posts() ) : ?>
-					<?php $the_query->the_post(); ?>
-					<div class="slick-classes-slide">
-						<?php 
 						$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
 						$card_size = 'medium'; //'wide', 'medium', 'small', 'menu'
 						$card_type = 'class';  //'event', 'class', 'product', 'news' 

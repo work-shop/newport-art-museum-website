@@ -124,7 +124,7 @@ function wpcl_shortcode( $atts )
     $order_qty_total_column = $atts['order_qty_total_column'];
     $limit = $atts['limit'];
     global  $sitepress, $post, $wpdb ;
-    // Check for translated products if WPML is activated
+    // Check for translated products if WPML is activated
     
     if ( isset( $sitepress ) ) {
         $trid = $sitepress->get_element_trid( $post_id, 'post_product' );
@@ -141,8 +141,16 @@ function wpcl_shortcode( $atts )
     $order_statuses_string = "'" . implode( "', '", $order_statuses ) . "'";
     $post_id_arr = array_map( 'esc_sql', (array) $post_id );
     $post_string = "'" . implode( "', '", $post_id_arr ) . "'";
+    // Get post type
+    
+    if ( isset( $sitepress ) ) {
+        $post_type = get_post_type( $post_id[0] );
+    } else {
+        $post_type = get_post_type( $post_id );
+    }
+    
     // Check if ID is for a product
-    if ( get_post_type( $post_id ) == 'product' ) {
+    if ( $post_type == 'product' ) {
         $item_sales = $wpdb->get_results( $wpdb->prepare( "SELECT o.ID as order_id, oi.order_item_id FROM\n\t\t\t{$wpdb->prefix}woocommerce_order_itemmeta oim\n\t\t\tINNER JOIN {$wpdb->prefix}woocommerce_order_items oi\n\t\t\tON oim.order_item_id = oi.order_item_id\n\t\t\tINNER JOIN {$wpdb->posts} o\n\t\t\tON oi.order_id = o.ID\n\t\t\tWHERE oim.meta_key = %s\n\t\t\tAND oim.meta_value IN ( {$post_string} )\n\t\t\tAND o.post_status IN ( {$order_statuses_string} )\n\t\t\tAND o.post_type NOT IN ('shop_order_refund')\n\t\t\tORDER BY o.ID DESC\n\t\t\tLIMIT {$limit}", '_product_id' ) );
     }
     // Get selected columns from the options page

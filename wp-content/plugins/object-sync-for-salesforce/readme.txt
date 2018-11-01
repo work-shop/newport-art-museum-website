@@ -2,9 +2,9 @@
 Contributors: minnpost, inn_nerds, jonathanstegall, benlk, rclations, harmoney
 Donate link: https://www.minnpost.com/support/?campaign=7010G0000012fXGQAY
 Tags: salesforce, sync, crm
-Requires at least: 4.5
+Requires at least: 4.6
 Tested up to: 4.9
-Stable tag: 1.4.2
+Stable tag: 1.5.0
 Requires PHP: 5.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -185,22 +185,28 @@ If you are successfully authenticated with Salesforce, but you have a fieldmap t
 
 There is extensive documentation of this plugin, including its developer hooks, [on GitHub](https://github.com/MinnPost/object-sync-for-salesforce/blob/master/docs/readme.md).
 
+### Finding other options
+
+This plugin can be relatively complicated, and sometimes other plugins can effectively integrate Salesforce and WordPress, especially if there are more limited, specific requirements. If one of these can meet those requirements, use it. We're happy to link to additional choices here, as well.
+
+- [WordPress-to-Lead for Salesforce CRM](https://appexchange.salesforce.com/listingDetail?listingId=a0N30000003GxgkEAC) can be installed through the Salesforce AppExchange. It allows you to run a contact form which users on your WordPress site can submit, and the results are added to Salesforce as a Lead object.
+- [Brilliant Web-to-Lead for Salesforce](https://wordpress.org/plugins/salesforce-wordpress-to-lead/) can be installed through the WordPress plugin directory. This is rather similar to the first option, but is a bit more customizable. By customizable, you can select the fields in WordPress and theme it in your WordPress theme.
+- [Gravity Forms Salesforce Add-on](https://wordpress.org/plugins/gravity-forms-salesforce/) can be installed through the WordPress plugin directory. It is quite powerful, as it can send form submissions from your WordPress site to Salesforce as whatever object you need. It's important to mention that this works for any form created with the [Gravity Forms](http://www.gravityforms.com/) plugin. It's also important to mention that this does not sync data back from Salesforce into Wordpress.
+- **Third party integration apps** such as [Zapier](https://zapier.com/) are subscription-based, paid ways to integrate different systems, and they offer differing amounts of customizability. They will usually sync in both directions, so in this case from WordPress to Salesforce and vice versa. The only limitations of something like this are the cost over time, and the possible vulnerability of basing an integration on a third party that could, at some point, go away.
+- [Visualforce](https://developer.salesforce.com/page/An_Introduction_to_Visualforce) If you are or have a Salesforce developer, you can build MVC based applications that integrate with Salesforce. It would be possible to build a system that uses, for example, the [WordPress REST API](https://developer.wordpress.org/rest-api/) to send and receive data to and from WordPress. This could be, in many ways, the flip side of what our plugin here does, but the complexity would be the same if the scope was the same.
+- **Build other integrations in WordPress** this plugin focuses on the Salesforce REST API, as it covers the integration needs we have. Salesforce also has many other developer options: the SOAP API (we hope to incorporate this into Object Sync for Salesforce at some point), the Bulk API, and the Metadata API. Developers could extend this plugin to integrate with one of these. We would welcome any pull requests!
+
 == Changelog ==
 
-* 1.4.2 (2018-08-29)
-	* Bug fix: ensure the queue functionality is present when activating the plugin.
-* 1.4.1 (2018-08-29)
-	* Bug fix: in some plugin update scenarios, the database version number checker was not running. It runs all the time, now.
-* 1.4.0 (2018-08-29)
-	* New: this plugin now uses the [Action Scheduler](https://github.com/Prospress/action-scheduler) library for scheduling tasks and queueing data in a more performant and scalable way. This removes the need for some of the administrative settings, but as long as you **resave from the plugin's Schedule tab**, it should not break any existing functionality.
-	* Bug fix: this release also stores composer library files in its Git repository. This *should* fix a deployment bug with some web hosts, such as Pantheon.
-	* This release also brings plugin JavaScript in line with WordPress code formatting guidelines.
-	* Thanks to GitHub user @charmoney for help reviewing this release.
+* 1.5.0 (2018-10-26)
+	* New: the Mapping Errors tab supports deleting multiple error rows via checkboxes.
+	* New: when caching API responses, the plugin caches the full array rather than the full array and the JSON data. This reduces the memory usage for object caches a little.
+	* New: this plugin should be usable on WordPress VIP environments; it now checks for `user_attributes` instead of `user_meta` in those cases.
+	* Bug fix: this plugin can now be properly deployed on hosts like Pantheon. Thanks to WordPress user @joepahl and GitHub user @BrianBenninger for reporting this.
+	* Bug fix: when using meta fields for prematch, the plugin previously could fail to find a match even if the value existed. It now uses different matching for meta fields. **This requires that users resave their fieldmaps, and also that we end support for WordPress 4.5.**. Thanks to WordPress user @nodakjones for the bug report and testing assistance.
+	* Bug fix: when using the ActionScheduler library, the plugin fails to process multiple rounds of pull requests. Now it uses the limit setting to page through all possible updated records. Thanks to WordPress user @jonsayer for the report and WordPress user @harmoney for help testing.
+	* Developers: this release adds a new developer hook, `object_sync_for_salesforce_pull_query_modify`, which can modify the Salesforce API SOQL query before it pulls data from Salesforce. Thanks to WordPress user @yanlep for the suggestion.
 
 == Upgrade Notice ==
-= 1.4.2 =
-We have added a new method for scheduled actions, the Action Scheduler library from Prospress. When you upgrade, go to the Scheduling tab to save your settings.
-= 1.4.1 =
-We have added a new method for scheduled actions, the Action Scheduler library from Prospress. When you upgrade, go to the Scheduling tab to save your settings.
-= 1.4.0 =
-We have added a new method for scheduled actions, the Action Scheduler library from Prospress. When you upgrade, go to the Scheduling tab to save your settings.
+= 1.5.0 =
+This plugin now uses a different matching techinque for meta fields. **This requires that you resave your existing fieldmaps, and also that we end support for WordPress 4.5.**.
