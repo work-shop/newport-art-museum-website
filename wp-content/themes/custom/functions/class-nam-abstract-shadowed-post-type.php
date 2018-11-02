@@ -23,6 +23,11 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         'suggested_price' =>                'field_5bd76f94ec5bb'
 
         // Discounts
+        'membership_discount_type' =>       'field_5bdc683e3d11b',
+        'membership_percentage_discount' => 'field_5bdc68863d11c',
+        'membership_fixed_discount' =>      'field_5bdc68f33d11d'
+
+
         // Fees and Surcharges
     );
 
@@ -342,6 +347,10 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $nyp_minumum_price = get_field( static::$field_keys['minimum_price'], $post_id );
         $nyp_suggested_price = get_field( static::$field_keys['suggested_price'], $post_id );
 
+        $membership_discount_type = get_field( static::$field_keys['membership_discount_type'], $post_id );
+        $membership_percentage_discount = get_field( static::$field_keys['membership_percentage_discount'], $post_id );
+        $membership_fixed_discount = get_field( static::$field_keys['membership_fixed_discount'], $post_id );
+
         update_post_meta( $product_id, '_downloadable', 'no' );
         update_post_meta( $product_id, '_virtual', 'yes' ); // NOTE: once shop products are launched, we'll need to make this non-constant
 
@@ -370,6 +379,21 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             update_post_meta( $product_id, '_nyp', 'no' );
             update_post_meta( $product_id, '_minimum_price', (double) $price);
             update_post_meta( $product_id, '_suggested_price', (double) $price);
+        }
+
+        if ( $membership_discount_type && $membership_discount_type !== 'no-discount' ) {
+            if ( $membership_discount_type === 'percentage-discount') {
+                $percentage = ((double) $membership_percentage_discount) / 100;
+                $discount = (double) $price * $percentage;
+                update_post_meta( $product_id, '_nam_membership_discount', $discount );
+            } else if ( $membership_discount_type === 'fixed-discount' ) {
+                $discount = (double) $membership_fixed_discount;
+                update_post_meta( $product_id, '_nam_membership_discount', $discount );
+            } else {
+                update_post_meta( $product_id, '_nam_membership_discount', 0 );
+            }
+        } else {
+            update_post_meta( $product_id, '_nam_membership_discount', 0 );
         }
 
         update_post_meta( $product_id, '_purchase_note', '' );
