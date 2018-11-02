@@ -402,8 +402,12 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         update_post_meta( $product_id, '_length', '' );
         update_post_meta( $product_id, '_width', '' );
         update_post_meta( $product_id, '_height', '' );
-        update_post_meta( $product_id, '_sku', sanitize_title_with_dashes( $title, '', 'save' ) . '-' . mt_rand() );
         update_post_meta( $product_id, '_product_attributes', array() );
+
+        $possible_sku = get_post_meta( $product_id, '_sku', true );
+        if ( !$possible_sku ) {
+            update_post_meta( $product_id, '_sku', sanitize_title_with_dashes( $title, '', 'save' ) . '-' . mt_rand() );
+        }
 
         if ( $manage_stock ) {
 
