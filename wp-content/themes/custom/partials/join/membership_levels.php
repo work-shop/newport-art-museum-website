@@ -43,7 +43,7 @@
 										</div>
 										<div class="accordion-link membership-link-button">
 											<a href="<?php echo $add_to_cart_url; ?>" class="">
-												Join Now
+												Add Membership To Cart
 											</a>
 										</div>
 									</div>

@@ -13,32 +13,47 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         do_action( 'woocommerce_before_add_to_cart_quantity' ); ?>
         <div class="single-sidebar-middle">
             <div class="row">
-                <div class="col-6 add-to-cart-price">
+                <div class="col-8 col-lg-6 col-xl-8 add-to-cart-price">
                     <h5 class="label bold">
                         Price
                     </h5>
                     <h5 class="price">
-                       <?php $current_price = $product->get_price(); ;?>
-                       <?php $membership_discount = NAM_Membership::get_membership_discount( $product->id ); ?>
-                       <?php $is_member_or_has_membership_in_cart = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
-                       <?php if ( $is_member_or_has_membership_in_cart && $current_price > 0 ) : ?>
+                     <?php $current_price = $product->get_price(); ;?>
+                     <?php $membership_discount = NAM_Membership::get_membership_discount( $product->id ); ?>
+                     <?php $is_member_or_has_membership_in_cart = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
+                     
+                     <?php if ( $is_member_or_has_membership_in_cart && $current_price > 0 ) : ?>
 
-                           <p class="members-price"><?php echo wc_price($current_price - $membership_discount); ?> Per Person</p>
-                           <p class="non-members-price">(<?php echo wc_price( $current_price ); ?> For Non-members)</p>
+                        <p class="members-price"><?php echo wc_price($current_price - $membership_discount); ?> Per person
+                           <br>
+                           <span class="price-label small">Member price</span> 
+                        </p>
+                        <p class="non-members-price hidden">
+                            <?php echo wc_price( $current_price ); ?> Per person
+                             <br>
+                             <span class="price-label small">Non-member price</span> 
+                         </p>
 
-                        <?php elseif ( $current_price > 0 ): ?>
+                     <?php elseif ( $current_price > 0 ): ?>
 
-                           <p class="non-members-price"><?php echo wc_price( $current_price ); ?> Per Person</p>
-                           <p class="non-members-price">(<?php echo wc_price( $current_price - $membership_discount ); ?> For Members!)</p>
+                        <p class="non-members-price">
+                            <?php echo wc_price( $current_price ); ?> Per person
+                             <br>
+                             <span class="price-label small">Non-member price</span> 
+                         </p>
+                        <p class="members-price"><?php echo wc_price($current_price - $membership_discount); ?> Per person
+                           <br>
+                           <span class="price-label small">Member price</span> 
+                        </p>
 
-                        <?php else: ?>
+                         <?php else: ?>
 
                             Free
 
                         <?php endif; ?>
                     </h5>
                 </div>
-                <div class="col-6 add-to-cart-quantity">
+                <div class="col-4 col-lg-6 col-xl-4 add-to-cart-quantity">
                     <h5 class="label bold righted">
                         Quantity
                     </h5>
