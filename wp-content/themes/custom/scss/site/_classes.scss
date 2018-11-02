@@ -4,7 +4,6 @@
 	padding-left: $container-fluid-padding;
 	padding-right: $container-fluid-padding;
 
-
 	@media screen and (max-width: $md) {
 		padding-left: $container-fluid-padding-md;
 		padding-right: $container-fluid-padding-md;
@@ -35,6 +34,20 @@
 
 	.card{
 		margin-bottom: 0;
+	}
+}
+
+.classes-slider{
+
+	@extend .container-fluid;
+	@extend .container-fluid-stretch;
+
+	.non-slick{
+		.slick-classes-slide{
+			@extend .col-md-4;
+			@extend .col-sm-6;
+			margin-bottom: 2em;
+		}
 	}
 }
 
