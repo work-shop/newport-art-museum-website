@@ -65,6 +65,8 @@ class NAM_Site {
         NAM_News::register();
         NAM_Fee::register();
 
+        NAM_Membership::register_hooks();
+
     }
 
     public function register_image_sizing() {
