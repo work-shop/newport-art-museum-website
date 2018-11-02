@@ -166,10 +166,6 @@ class WC_Webhook extends WC_Legacy_Webhook {
 			}
 		}
 
-		if ( ! wc_is_webhook_valid_topic( $this->get_topic() ) ) {
-			$should_deliver = false;
-		}
-
 		/*
 		 * Let other plugins intercept deliver for some messages queue like rabbit/zeromq.
 		 */
@@ -284,8 +280,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 	 * @return array
 	 */
 	private function get_wp_api_payload( $resource, $resource_id, $event ) {
-		$rest_api_versions = wc_get_webhook_rest_api_versions();
-		$version_suffix    = end( $rest_api_versions ) === $this->get_api_version() ? strtoupper( str_replace( 'wp_api', '', $this->get_api_version() ) ) : '';
+		$version_suffix = 'wp_api_v1' === $this->get_api_version() ? '_V1' : '';
 
 		switch ( $resource ) {
 			case 'coupon':
@@ -345,7 +340,7 @@ class WC_Webhook extends WC_Legacy_Webhook {
 				'id' => $resource_id,
 			);
 		} else {
-			if ( in_array( $this->get_api_version(), wc_get_webhook_rest_api_versions(), true ) ) {
+			if ( in_array( $this->get_api_version(), array( 'wp_api_v1', 'wp_api_v2' ), true ) ) {
 				$payload = $this->get_wp_api_payload( $resource, $resource_id, $event );
 			} else {
 				$payload = $this->get_legacy_api_payload( $resource, $resource_id, $event );
