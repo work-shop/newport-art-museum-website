@@ -8,6 +8,7 @@ if ( $product_id )  {
     $product = wc_get_product( $product_id );
     $current_price = $product->get_price();
     $is_in_stock = $product->is_in_stock();
+    $membership_discount = NAM_Membership::get_membership_discount( $product_id );
 
 }
 
@@ -19,7 +20,7 @@ if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif
             <?php if( $type === 'event'): ?>
                 <?php if( get_field('sidebar_box_override_text') ): ?>
                     <span class="sidebar-box-override-text m1 bold">
-                        <?php the_field('sidebar_box_override_text'); ?> 
+                        <?php the_field('sidebar_box_override_text'); ?>
                     </span>
                 <?php else: //don't override sidebar text?>
                     <?php $show_individual_event_temporary_message = get_field('show_individual_event_temporary_message'); ?>

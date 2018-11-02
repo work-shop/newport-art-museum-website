@@ -20,7 +20,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         'name_your_price_product' =>        'field_5bd76c14ec5b8',
         'minimum_price' =>                  'field_5bd76f19ec5b9',
-        'suggested_price' =>                'field_5bd76f94ec5bb'
+        'suggested_price' =>                'field_5bd76f94ec5bb',
 
         // Discounts
         'membership_discount_type' =>       'field_5bdc683e3d11b',

@@ -10,6 +10,10 @@
 class NAM_Membership {
 
     public static $membership_category_slug = 'membership-tiers';
+    public static $events_category_slug = 'events';
+    public static $classes_category_slug = 'classes';
+    public static $calculate_totals_hook = 'woocommerce_before_calculate_totals';
+    public static $display_cart_totals = 'woocommerce_cart_item_price';
 
 
 
@@ -19,6 +23,55 @@ class NAM_Membership {
      *
      */
     public static function register_hooks() {
+
+        $called_class = get_called_class();
+
+        add_action( static::$calculate_totals_hook, array( $called_class, 'calculate_membership_discounts'), 20, 1);
+        add_filter( static::$display_cart_totals, array( $called_class, 'show_membership_cart_total'), 10, 3);
+
+    }
+
+    /**
+     * Calculate the membership discounts for the current cart, based
+     * on whether the purchaser is a member, or has a membership product
+     * in their cart.
+     *
+     */
+    public static function calculate_membership_discounts( $cart_object ) {
+
+        if ( is_admin() && ! defined( 'DOING_AJAX' ) ) { return; }
+        if ( did_action( static::$calculate_totals_hook ) >= 2 ) { return; }
+
+        if( static::is_member() || static::has_membership_in_cart() ) {
+            foreach ( $cart_object->get_cart() as $cart_item ) {
+
+                $id = $cart_item[ 'data' ]->id;
+                $discount = static::get_membership_discount( $id );
+                $final_price = $cart_item[ 'data' ]->get_price() - $discount;
+                $cart_item[ 'data' ]->set_price( $final_price );
+
+            }
+        }
+
+    }
+
+    /**
+     * This function renders the discounted price for members
+     * in the cart, next to the old price.
+     *
+     */
+    public static function show_membership_cart_total( $old_display, $cart_item, $cart_item_key ) {
+
+        $product_id = $cart_item['data']->id;
+        $membership_discount = static::get_membership_discount( $product_id );
+
+        if ( $membership_discount > 0 && !static::is_member() && !static::has_membership_in_cart() ) {    
+
+            return wc_price( $cart_item['data']->get_price() ) . ' ('. wc_price( $cart_item['data']->get_price() - $membership_discount ) .' for members)';
+
+        }
+
+        return $old_display;
 
     }
 
@@ -69,6 +122,32 @@ class NAM_Membership {
 
         return $has_membership_in_cart;
 
+    }
+
+    /**
+     * This function gets the membership discount amount for a given product
+     *
+     * @param int $product_id the id of the product to get the discount for.
+     * @return double the discounted amount to subtract from the product total.
+     */
+    public static function get_membership_discount( $product_id ) {
+        $discount = get_post_meta( $product_id, '_nam_membership_discount', true );
+        if ( $discount ) {
+            return (double) $discount;
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * This function returns true if the product is a discountable product.
+     * Currently, discountable products include 'classes' and 'events'.
+     *
+     * @param int $product_id the product id to check
+     * @return boolean true if the product is a discountable product.
+     */
+    public static function is_discountable_product( $product_id ) {
+        return has_term( static::$events_category_slug, 'product_cat', $product_id ) || has_term( static::$classes_category_slug, 'product_cat', $product_id );
     }
 
 }
