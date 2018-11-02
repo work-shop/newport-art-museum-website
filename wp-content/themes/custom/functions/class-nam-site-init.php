@@ -3,7 +3,7 @@
 
 class NAM_Site {
 
-    public static $product_post_types = array( NAM_Event, NAM_Class, NAM_Shop_Product, NAM_Membership_Tier );
+    public static $product_post_types = array( 'NAM_Event', 'NAM_Class', 'NAM_Shop_Product', 'NAM_Membership_Tier' );
 
     public function __construct() {
 
@@ -49,7 +49,7 @@ class NAM_Site {
 
     public function register_post_types_and_taxonomies() {
 
-        NAM_Group::register();
+        //NAM_Group::register();
         //NAM_News_Category::register();//leaving out news categories for initial round of development
         NAM_Events_Category::register();
         NAM_Classes_Category::register();
@@ -64,6 +64,8 @@ class NAM_Site {
         NAM_Class::register();
         NAM_News::register();
         NAM_Fee::register();
+
+        NAM_Membership::register_hooks();
 
     }
 

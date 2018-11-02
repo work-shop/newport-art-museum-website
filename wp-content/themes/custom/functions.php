@@ -27,6 +27,7 @@ require_once( __ROOT__ . '/functions/post-types/events/class-nam-event.php');
 require_once( __ROOT__ . '/functions/post-types/news/class-nam-news.php');
 require_once( __ROOT__ . '/functions/post-types/fees/class-nam-fee.php');
 
+require_once( __ROOT__ . '/functions/class-nam-membership.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-admin.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-init.php' );
 

@@ -189,7 +189,7 @@ abstract class NAM_Custom_Post_Type {
     /**
      * This function draw custom metaboxes for this particular post.
      */
-    public static function add_product_meta_box( $post_id ) {
+    public static function add_product_meta_box( ) {
         return false;
     }
 

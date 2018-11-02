@@ -20,9 +20,14 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         'name_your_price_product' =>        'field_5bd76c14ec5b8',
         'minimum_price' =>                  'field_5bd76f19ec5b9',
-        'suggested_price' =>                'field_5bd76f94ec5bb'
+        'suggested_price' =>                'field_5bd76f94ec5bb',
 
         // Discounts
+        'membership_discount_type' =>       'field_5bdc683e3d11b',
+        'membership_percentage_discount' => 'field_5bdc68863d11c',
+        'membership_fixed_discount' =>      'field_5bdc68f33d11d'
+
+
         // Fees and Surcharges
     );
 
@@ -46,6 +51,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function register_shadowed_post_actions() {
         add_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
+        add_action( 'mtphr_post_duplicator_created', array( get_called_class(), 'do_product_management_actions' ), 20 );
     }
 
     /**
@@ -58,6 +64,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function deregister_shadowed_post_actions() {
         remove_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
+        remove_action( 'mtphr_post_duplicator_created', array( get_called_class(), 'do_product_management_actions' ), 20 );
     }
 
     /**
@@ -78,23 +85,40 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $updated_post = get_post( $post_id );
         $shadow_post = get_field( static::$field_keys['managed_field_related_post'], $post_id );
 
+
         if ( !$shadow_post ) {
 
             static::create_shadowing_product( $post_id, $updated_post );
 
-        } else if ( count( $shadow_post ) == 1 ) {
-
-            static::update_shadowing_product( $post_id, $updated_post, $shadow_post[0] );
-
         } else {
 
-            throw new Exception( 'Shadowing Post Error – multiple products associated with this post.' );
+            if ( count( $shadow_post ) > 1 ) {
+
+                throw new Exception( 'Shadowing Post Error – multiple products associated with this post.' );
+
+            } else {
+
+                $parent_posts = static::get_parent_posts( $shadow_post[0]->ID );
+
+                if ( count( $parent_posts ) > 1 ) {
+
+                    delete_field( static::$field_keys['managed_field_related_post'], $post_id );
+                    static::create_shadowing_product( $post_id, $updated_post );
+
+                } else {
+
+                    static::update_shadowing_product( $post_id, $updated_post, $shadow_post[0] );
+
+                }
+
+            }
 
         }
 
         static::register_shadowed_post_actions();
 
     }
+
 
     /**
      * This function creates a new shadowed woocommerce post when
@@ -104,7 +128,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * @param int $post_id the idea of the post being created.
      * @param WP_Post $post the post object being updated.
      */
-    public static function create_shadowing_product( $post_id, $updated_post ) {
+    public static function create_shadowing_product( $post_id, $updated_post, $copy=false ) {
 
         $product_id = (int) wp_insert_post( array(
             'post_title'    => $updated_post->post_title,
@@ -154,9 +178,14 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * This function removes the shadowed post associated with a given
      * post, in the case that it's parent is being deleted.
      *
+     * NOTE: This function DOES NOT delete the product record associated
+     * with the post, it just unlinks the shadowing post.
+     *
      * @param int $post_id the id of the post being created.
      */
-    public static function remove_shadowing_product() {
+    public static function remove_shadowing_product( $post_id ) {
+
+        delete_field( static::$field_keys['managed_field_related_post'], (int) $post_id );
 
     }
 
@@ -306,7 +335,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function set_product_meta( $title, $post_id, $product_id ) {
 
-
+        wc_delete_product_transients( $product_id );
 
         $price = get_field( static::$field_keys['price'], $post_id );
         $sale_price = get_field( static::$field_keys['sale_price'], $post_id );
@@ -315,23 +344,31 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $manage_stock = get_field( static::$field_keys['manage_stock'], $post_id );
         $stock_quantity = get_field( static::$field_keys['stock_quantity'], $post_id );
         $name_your_price = get_field( static::$field_keys['name_your_price_product'], $post_id );
-        $nyp_minumum_price = get_field( static::$field_keys['minumum_price'], $post_id );
+        $nyp_minumum_price = get_field( static::$field_keys['minimum_price'], $post_id );
         $nyp_suggested_price = get_field( static::$field_keys['suggested_price'], $post_id );
+
+        $membership_discount_type = get_field( static::$field_keys['membership_discount_type'], $post_id );
+        $membership_percentage_discount = get_field( static::$field_keys['membership_percentage_discount'], $post_id );
+        $membership_fixed_discount = get_field( static::$field_keys['membership_fixed_discount'], $post_id );
 
         update_post_meta( $product_id, '_downloadable', 'no' );
         update_post_meta( $product_id, '_virtual', 'yes' ); // NOTE: once shop products are launched, we'll need to make this non-constant
 
         update_post_meta( $product_id, '_price', (double) $price );
         update_post_meta( $product_id, '_regular_price', (double) $price );
+        update_post_meta( $product_id, '_wc_pb_base_regular_price', (double) $price );
+        update_post_meta( $product_id, '_wc_pb_base_price', (double) $price );
 
         if ( $sale_price ) {
             update_post_meta( $product_id, '_sale_price', (double) $sale_price );
             update_post_meta( $product_id, '_sale_price_dates_from', $sale_from );
             update_post_meta( $product_id, '_sale_price_dates_to', $sale_to );
+            update_post_meta( $product_id, '_wc_pb_base_sale_price', (double) $sale_price );
         } else {
             update_post_meta( $product_id, '_sale_price', '' );
             update_post_meta( $product_id, '_sale_price_dates_from', '' );
             update_post_meta( $product_id, '_sale_price_dates_to', '' );
+            update_post_meta( $product_id, '_wc_pb_base_sale_price', '' );
         }
 
         if ( $name_your_price ) {
@@ -339,9 +376,24 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             update_post_meta( $product_id, '_minimum_price', (double) $nyp_minumum_price );
             update_post_meta( $product_id, '_suggested_price', (double) $nyp_suggested_price );
         } else {
-            update_post_meta( $product_id, '_nyp', '' );
-            update_post_meta( $product_id, '_minimum_price', '');
-            update_post_meta( $product_id, '_suggested_price', '');
+            update_post_meta( $product_id, '_nyp', 'no' );
+            update_post_meta( $product_id, '_minimum_price', (double) $price);
+            update_post_meta( $product_id, '_suggested_price', (double) $price);
+        }
+
+        if ( $membership_discount_type && $membership_discount_type !== 'no-discount' ) {
+            if ( $membership_discount_type === 'percentage-discount') {
+                $percentage = ((double) $membership_percentage_discount) / 100;
+                $discount = (double) $price * $percentage;
+                update_post_meta( $product_id, '_nam_membership_discount', $discount );
+            } else if ( $membership_discount_type === 'fixed-discount' ) {
+                $discount = (double) $membership_fixed_discount;
+                update_post_meta( $product_id, '_nam_membership_discount', $discount );
+            } else {
+                update_post_meta( $product_id, '_nam_membership_discount', 0 );
+            }
+        } else {
+            update_post_meta( $product_id, '_nam_membership_discount', 0 );
         }
 
         update_post_meta( $product_id, '_purchase_note', '' );
@@ -350,8 +402,12 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         update_post_meta( $product_id, '_length', '' );
         update_post_meta( $product_id, '_width', '' );
         update_post_meta( $product_id, '_height', '' );
-        update_post_meta( $product_id, '_sku', sanitize_title_with_dashes( $title, '', 'save' ) . '-' . mt_rand() );
         update_post_meta( $product_id, '_product_attributes', array() );
+
+        $possible_sku = get_post_meta( $product_id, '_sku', true );
+        if ( !$possible_sku ) {
+            update_post_meta( $product_id, '_sku', sanitize_title_with_dashes( $title, '', 'save' ) . '-' . mt_rand() );
+        }
 
         if ( $manage_stock ) {
 
@@ -369,6 +425,23 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         }
 
+
+
+    }
+
+    public static function get_parent_posts( $product_id ) {
+        $parents = get_posts(array(
+							'post_type' => static::$slug,
+							'meta_query' => array(
+								array(
+									'key' => 'managed_field_related_post', // name of custom field
+									'value' => '"' . $product_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+									'compare' => 'LIKE'
+								)
+							)
+						));
+
+        return array_map( function( $p ) { return $p->ID; }, $parents );
     }
 
     /**
