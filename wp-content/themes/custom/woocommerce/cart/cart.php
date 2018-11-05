@@ -24,8 +24,11 @@ wc_print_notices();
 
 do_action( 'woocommerce_before_cart' ); ?>
 
+<?php // This flag lets you know whether a user is eligible for a discount at all. ?>
+<?php $user_eligible_for_duscount = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
+
 <form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
-	
+
 	<?php do_action( 'woocommerce_before_cart_table' ); ?>
 
 	<div class="row cart-headings">
@@ -56,6 +59,16 @@ do_action( 'woocommerce_before_cart' ); ?>
 		if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) :
 			$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
 		?>
+
+        <?php // these are definitions of the discount quantity, in dollars, applicable to this line item, and whether there's a discount. ?>
+        <?php $discount = NAM_Membership::get_membership_discount( $product_id ); ?>
+        <?php $product_has_discount = $discount > 0; ?>
+
+        <?php // NOTE: these are just examples that show what the variables are like... they can be deleted. ?>
+        <p class="small"><?php echo "User Eligible For Discount: " . ( $user_eligible_for_duscount ? 'true' : 'false' );  ?></p>
+        <p class="small"><?php echo "Product Has Discount: " . ( $product_has_discount ? 'true' : 'false' );  ?></p>
+        <p class="small"><?php echo "Membership Discount ($): " . wc_price( $discount );  ?></p>
+
 		<div class="row cart-row woocommerce-cart-form__cart-item <?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
 
 			<div class="product-name col-4 col-md-6" data-title="<?php esc_attr_e( 'Product', 'woocommerce' ); ?>">
@@ -130,7 +143,7 @@ do_action( 'woocommerce_before_cart' ); ?>
 			</h4>
 		</div>
 		<div class="d-flex col-md-6 justify-content-end">
-			<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php esc_attr_e( 'Discount Code', 'woocommerce' ); ?>" /> 
+			<input type="text" name="coupon_code" class="input-text" id="coupon_code" value="" placeholder="<?php esc_attr_e( 'Discount Code', 'woocommerce' ); ?>" />
 			<input type="submit" class="button button-small ml3" name="apply_coupon" value="<?php esc_attr_e( 'Apply Discount', 'woocommerce' ); ?>" />
 		</div>
 		<?php do_action( 'woocommerce_cart_coupon' ); ?>
