@@ -425,10 +425,18 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         }
 
-
+        NAM_Classes::do_class_creation_meta( $post_id, $product_id );
 
     }
 
+
+    /**
+     * For a given shadowing product, get the parent custom post
+     * for the id. Essentially a reverse lookup on the shadowing product.
+     *
+     * @param int $product_id the id of the product to look up.
+     * @param Array<int> an array of post ids.
+     */
     public static function get_parent_posts( $product_id ) {
         $parents = get_posts(array(
 							'post_type' => static::$slug,

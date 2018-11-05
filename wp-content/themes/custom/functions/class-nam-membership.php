@@ -27,7 +27,7 @@ class NAM_Membership {
         $called_class = get_called_class();
 
         add_action( static::$calculate_totals_hook, array( $called_class, 'calculate_membership_discounts'), 20, 1);
-        add_filter( static::$display_cart_totals, array( $called_class, 'show_membership_cart_total'), 10, 3);
+        //add_filter( static::$display_cart_totals, array( $called_class, 'show_membership_cart_total'), 10, 3);
 
     }
 
@@ -39,15 +39,20 @@ class NAM_Membership {
      */
     public static function calculate_membership_discounts( $cart_object ) {
 
+
+
         if ( is_admin() && ! defined( 'DOING_AJAX' ) ) { return; }
         if ( did_action( static::$calculate_totals_hook ) >= 2 ) { return; }
 
         if( static::is_member() || static::has_membership_in_cart() ) {
+
             foreach ( $cart_object->get_cart() as $cart_item ) {
 
                 $id = $cart_item[ 'data' ]->id;
                 $discount = static::get_membership_discount( $id );
+
                 $final_price = $cart_item[ 'data' ]->get_price() - $discount;
+
                 $cart_item[ 'data' ]->set_price( $final_price );
 
             }
@@ -65,7 +70,7 @@ class NAM_Membership {
         $product_id = $cart_item['data']->id;
         $membership_discount = static::get_membership_discount( $product_id );
 
-        if ( $membership_discount > 0 && !static::is_member() && !static::has_membership_in_cart() ) {    
+        if ( $membership_discount > 0 && !static::is_member() && !static::has_membership_in_cart() ) {
 
             return wc_price( $cart_item['data']->get_price() ) . ' ('. wc_price( $cart_item['data']->get_price() - $membership_discount ) .' for members)';
 
@@ -86,6 +91,7 @@ class NAM_Membership {
     public static function is_member( $user_id=null ) {
 
         if ( null == $user_id ) { $user_id = get_current_user_id(); }
+        //if ( 0 == $user_id ) { return false; }
 
         $subscriptions = get_posts( array(
             'numberposts' => -1,
