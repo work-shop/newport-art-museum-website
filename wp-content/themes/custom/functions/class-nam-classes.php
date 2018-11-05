@@ -40,7 +40,7 @@ class NAM_Classes {
             $product = $cart_item['data'];
 
             if ( has_term( static::$classes_category_slug, 'product_cat', $product->id ) ) {
-                return $product_id;
+                return $product;
             }
 
         }
