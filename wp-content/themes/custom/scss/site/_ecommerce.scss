@@ -144,6 +144,8 @@ input,textarea,select{
 	@extend .shadowed;
 	margin-bottom: 25px;
 
+	@extend .row;
+
 	&:last-of-type{
 		margin-bottom: 4em;
 	}
@@ -170,6 +172,14 @@ input,textarea,select{
 		}
 	}
 }
+
+
+//margin after notices, since notices can't do it
+
+form.woocommerce-checkout{
+	margin-top: 4em;
+}
+
 
 .page-id-66,.page-id-70{
 	.notice{
@@ -240,6 +250,30 @@ input,textarea,select{
 		}
 	}
 
+	.woocommerce-additional-fields{
+		h3:first-child{
+			display: none;
+		}
+
+		span.optional{
+			display: none;
+		}
+
+		input[type="radio"],input[type="checkbox"]{
+			display: inline-block;
+			margin-right: 10px;
+		}
+
+		input[type="radio"] + label,input[type="checkbox"] + label{
+			display: inline-block;
+			width: auto;
+			position: relative;
+			top: 2px;
+		}
+
+
+	}
+
 }
 
 
@@ -304,7 +338,7 @@ input,textarea,select{
 }
 
 .woocommerce-checkout #payment .payment_method_stripe label[for=payment_method_stripe] {
-    padding-left: 0;
+	padding-left: 0;
 }
 
 
@@ -519,7 +553,6 @@ strong span{
 .woocommerce-account{
 	.notice{
 		margin-bottom: 3em;
-
 	}
 }
 

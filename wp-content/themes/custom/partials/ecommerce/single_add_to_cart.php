@@ -54,7 +54,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 
                              <p class="members-price"><?php echo wc_price($current_price - $membership_discount); ?> Per person
                               <br>
-                              <span class="price-label small">Member price</span>
+                              <span class="price-label small">Member price <span class="icon" data-icon="%"></span></span>
                           </p>
                           <p class="non-members-price hidden">
                              <?php echo wc_price( $current_price ); ?> Per person
