@@ -115,3 +115,23 @@ $padding-sidebar-box: 30px;
 	}
 }
 
+
+#member-price-info{
+	text-decoration-line: underline;
+	text-decoration-style: dotted;
+	
+
+	@media screen and (max-width: $sm) {
+		//font-size: 12px;
+	}
+
+	&:hover{
+		cursor: pointer;
+	}
+
+	.icon:before{
+		font-size: inherit;
+		top: 0;
+		margin-left: 2px;
+	}
+}
