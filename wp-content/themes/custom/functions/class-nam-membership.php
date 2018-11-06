@@ -92,7 +92,9 @@ class NAM_Membership {
 
         if ( $cart_item['data'] instanceof WC_Product_Bundle ) {
 
-            return wc_price( $cart_item['data']->get_price() );
+            $discount = NAM_Membership::get_membership_discount( $cart_item['data']->id );
+
+            return wc_price( $cart_item['data']->get_price() + $discount );
 
         } else {
 
