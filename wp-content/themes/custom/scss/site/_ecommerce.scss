@@ -44,7 +44,66 @@
 			font-size: 13px;	
 		}
 	}
+
+	.product-name{
+		@extend .bold;
+	}
+
+	&.bundled_table_item{
+		padding-top: 0px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid darken($light,5%) !important;
+		.product-subtotal{
+			visibility: hidden;
+		}
+		.product-name{
+			font-family: $font-main;
+			font-weight: normal;
+		}
+	}
+
+	&.cart-row-discount{
+		border: none;
+		padding-top: 6px;
+		padding-bottom: 0px;
+		.product-subtotal{
+			visibility: hidden;
+		}
+		.product-name{
+			font-family: $font-main;
+			font-weight: normal;
+		}
+	}
+
+
 }
+
+.discount-label{
+	font-size: .875em;
+	margin-bottom: 0;
+
+	&.discount-label-arrowed{
+		&:before{
+			font-family: 'FontAwesomePB';
+			font-size: 1rem;
+			display: inline-block;
+			-webkit-font-smoothing: antialiased;
+			-moz-osx-font-smoothing: grayscale;
+			-ms-filter: "progid:DXImageTransform.Microsoft.BasicImage(rotation=1)";
+			-webkit-transform: rotate(90deg);
+			-ms-transform: rotate(90deg);
+			transform: rotate(90deg);
+			content: "\f148";
+			margin: 0 12px 0 3px;
+			opacity: .25;
+		}	
+	}
+
+}
+
+
+
+
 
 
 .product-remove,.product-remove-heading{
@@ -147,7 +206,7 @@ input,textarea,select{
 	@extend .row;
 
 	&:last-of-type{
-		margin-bottom: 4em;
+		//margin-bottom: 4em;
 	}
 
 	h4,p{
@@ -176,7 +235,7 @@ input,textarea,select{
 
 //margin after notices, since notices can't do it
 
-form.woocommerce-checkout{
+form.woocommerce-checkout,form.woocommerce-cart-form{
 	margin-top: 4em;
 }
 
@@ -259,12 +318,14 @@ form.woocommerce-checkout{
 			display: none;
 		}
 
-		input[type="radio"],input[type="checkbox"]{
-			display: inline-block;
+		input[type="checkbox"]{
+			display: inline;
+			width: auto;
 			margin-right: 10px;
+			text-align: left;
 		}
 
-		input[type="radio"] + label,input[type="checkbox"] + label{
+		label[for="order_purchasing_for_self"]{
 			display: inline-block;
 			width: auto;
 			position: relative;
@@ -755,4 +816,18 @@ strong span{
 			padding: 5px 6px 2px 6px;
 		}
 	}
+}
+
+
+//add to cart
+
+
+.add-to-cart-fees{
+	border-top: 1px solid darken($light,10%);
+	border-bottom: 1px solid darken($light,10%);
+	padding-top: 15px;
+}
+
+.add-to-cart-limit{
+	padding-top: 15px;
 }

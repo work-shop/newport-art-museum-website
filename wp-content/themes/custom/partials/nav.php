@@ -10,7 +10,6 @@
 		<div id="nav-menu-upper">
 			<ul>
 				<li id="nav-link-shop" class="hidden"><a href="/shop">Shop</a></li>
-
 				<li id="nav-link-login">
 					<a href="/my-account">
 						<?php
@@ -225,37 +224,37 @@
 							Log In
 						</a>
 						<?php else: ?>
-						<a href="/my-account" class="dropdown-link <?php if( $GLOBALS['tree_slug'] === 'my_account' ): echo ' nav-current '; endif; ?>" data-dropdown-target="support">
-							My Account
-						</a>
-						<ul class="sub-menu">
-							<?php $links = get_field('my_account_menu_links','option'); ?>
-							<?php $links_additional = get_field('my_account_menu_additional_links','option'); ?>
-							<?php foreach( $links as $post): // variable must be called $post (IMPORTANT) ?>
-								<?php setup_postdata($post); ?>
-								<li>
-									<a href="<?php the_permalink(); ?>" class="<?php if ( $GLOBALS['page_nav'] ): echo 'page-nav-link'; endif; ?>"><?php the_title(); ?></a>
-								</li>
-							<?php endforeach; ?>
-							<?php if( $links_additional ): ?>
-								<?php foreach( $links_additional as $link): ?>
+							<a href="/my-account" class="dropdown-link <?php if( $GLOBALS['tree_slug'] === 'my_account' ): echo ' nav-current '; endif; ?>" data-dropdown-target="support">
+								My Account
+							</a>
+							<ul class="sub-menu">
+								<?php $links = get_field('my_account_menu_links','option'); ?>
+								<?php $links_additional = get_field('my_account_menu_additional_links','option'); ?>
+								<?php foreach( $links as $post): // variable must be called $post (IMPORTANT) ?>
+									<?php setup_postdata($post); ?>
 									<li>
-										<a href="<?php echo $link['link']['url']; ?>/" target="<?php echo $link['link']['target']; ?>" class="page-nav-link">
-											<?php echo $link['link']['title']; ?>
-										</a>
+										<a href="<?php the_permalink(); ?>" class="<?php if ( $GLOBALS['page_nav'] ): echo 'page-nav-link'; endif; ?>"><?php the_title(); ?></a>
 									</li>
 								<?php endforeach; ?>
-							<?php endif; ?>
-							<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
+								<?php if( $links_additional ): ?>
+									<?php foreach( $links_additional as $link): ?>
+										<li>
+											<a href="<?php echo $link['link']['url']; ?>/" target="<?php echo $link['link']['target']; ?>" class="page-nav-link">
+												<?php echo $link['link']['title']; ?>
+											</a>
+										</li>
+									<?php endforeach; ?>
+								<?php endif; ?>
+								<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
+							</ul>
 						<?php endif; ?>
-					</ul>
-				</li>
-			</ul>
+					</li>
+				</ul>
+			</div>
 		</div>
+	</nav>
+	<div class="hamburger menu-toggle">
+		<span class="hamburger-line hl-1"></span>
+		<span class="hamburger-line hl-2"></span>
 	</div>
-</nav>
-<div class="hamburger menu-toggle">
-	<span class="hamburger-line hl-1"></span>
-	<span class="hamburger-line hl-2"></span>
-</div>
 

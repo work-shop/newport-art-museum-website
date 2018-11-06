@@ -79,7 +79,7 @@ body{
 	padding-left: $container-fluid-padding;
 	padding-right: $container-fluid-padding;
 
-	@media screen and (max-width: $md) {
+	@media screen and (max-width: $lg) {
 		padding-left: $container-fluid-padding-md;
 		padding-right: $container-fluid-padding-md;
 	}

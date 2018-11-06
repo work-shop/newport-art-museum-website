@@ -6,9 +6,10 @@ $single-body-left-padding-md: 20px;
 $single-body-left-padding-sm: 10px;
 
 .single-body{
+	padding-bottom: 100px;
 
 	@media screen and (max-width: $sm) {
-			padding-bottom: 180px;
+		padding-bottom: 180px;
 	}
 }
 
@@ -165,11 +166,11 @@ $single-body-left-padding-sm: 10px;
 
 .single-body-right-content{
 	// padding-left: $single-body-left-padding / 2;
-	padding-right: $single-body-left-padding;
+	//padding-right: $single-body-left-padding;
 
 	@media screen and (max-width: $lg) {
 		// padding-left: $single-body-left-padding-lg / 2;
-		padding-right: $single-body-left-padding-lg;
+		//padding-right: $single-body-left-padding-lg;
 		padding-right: 0; //not sure why this is needed, but it is.
 	}
 
