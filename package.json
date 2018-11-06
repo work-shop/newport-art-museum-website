@@ -20,7 +20,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "gulp",
     "build": "gulp build",
-    "deploy": "./.deploy.sh",
+    "deploy-staging": "./.deploy-staging.sh",
     "deploy-production": "./.deploy-production.sh",
     "pull-database": "./.pull-database.sh"
   },
