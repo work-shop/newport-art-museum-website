@@ -213,7 +213,7 @@ input,textarea,select{
 .notice{
 	background: transparentize($message,.9);
 	border-bottom: 3px solid $brand;
-	padding: 1em 0px 0.5em 0px;
+	padding: 1em 20px 0.5em 20px;
 	@extend .shadowed;
 	margin-bottom: 25px;
 
@@ -879,4 +879,8 @@ strong span{
 
 .add-to-cart-limit{
 	padding-top: 15px;
+}
+
+.inspire_checkout_fields_additional_information{
+	margin-bottom: 4em;
 }
