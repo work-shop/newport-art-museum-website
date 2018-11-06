@@ -38,67 +38,97 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div>
 		<?php
 		do_action( 'woocommerce_review_order_before_cart_contents' );
+		?>
 
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-			$_product     = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+		<?php 
+		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ): 
+			$user_eligible_for_discount = true; 
+	else: 
+		$user_eligible_for_discount = false; 
+	endif; 
+	?>
 
-			if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
-				?>
-				<div class="<?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?> row review-order-row ">
+	<?php
+	foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+		$_product = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+		$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
+
+
+		if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ){ ?>
+
+			<?php $discount = NAM_Membership::get_membership_discount( $product_id ); ?>
+			<?php $product_has_discount = $discount > 0; ?>
+
+			<div class="<?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?> row review-order-row <?php if( $product_has_discount ): echo ' has-discount '; if( $user_eligible_for_discount ): echo ' discounted '; else: echo ' not-discounted '; endif; endif; ?>">
+				<div class="col product-name">
+					<?php echo apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;'; ?>
+					<?php echo apply_filters( 'woocommerce_checkout_cart_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times; %s', $cart_item['quantity'] ) . '</strong>', $cart_item, $cart_item_key ); ?>
+					<?php echo wc_get_formatted_cart_item_data( $cart_item ); ?>
+				</div>
+				<div class="product-total col-5 righted">
+					<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); ?>
+				</div>
+			</div>
+			<?php if( $user_eligible_for_discount && $product_has_discount ): ?>
+				<div class="cart_item row review-order-row review-order-row-discount">
 					<div class="col product-name">
-						<?php echo apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;'; ?>
-						<?php echo apply_filters( 'woocommerce_checkout_cart_item_quantity', ' <strong class="product-quantity">' . sprintf( '&times; %s', $cart_item['quantity'] ) . '</strong>', $cart_item, $cart_item_key ); ?>
-						<?php echo wc_get_formatted_cart_item_data( $cart_item ); ?>
+						<p class="discount-label">
+							Membership Discount
+							<strong class="product-quantity">x 1</strong>
+						</p>
 					</div>
-					<div class="product-total col-5 righted">
-						<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); ?>
+					<div class="col-5 righted product-total">
+						<p class="discount-label discount-label-arrowed discount-label-total">
+							-<?php echo wc_price($discount); ?>
+						</p>
 					</div>
 				</div>
-				<?php
-			}
+			<?php endif; ?>
+			<?php
 		}
+	}
 
-		do_action( 'woocommerce_review_order_after_cart_contents' );
-		?>
+	do_action( 'woocommerce_review_order_after_cart_contents' );
+	?>
+</div>
+
+<div>
+
+	<div class="row review-order-row  cart-subtotal">
+		<div class="col">
+			<h4 class="bold">
+				<?php _e( 'Subtotal', 'woocommerce' ); ?>
+			</h4>
+		</div>
+		<div class="col righted">
+			<h4 class="bold">
+				<?php wc_cart_totals_subtotal_html(); ?>
+			</h4>
+		</div>
 	</div>
 
-	<div>
-
-		<div class="row review-order-row  cart-subtotal">
-			<div class="col">
-				<h4 class="bold">
-					<?php _e( 'Subtotal', 'woocommerce' ); ?>
-				</h4>
-			</div>
-			<div class="col righted">
-				<h4 class="bold">
-					<?php wc_cart_totals_subtotal_html(); ?>
-				</h4>
-			</div>
+	<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
+	<div class="row review-order-row  rowcart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
+		<div class="col">
+			<h4 class="bold">
+				<?php wc_cart_totals_coupon_label( $coupon ); ?>
+			</h4>
 		</div>
-
-		<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
-		<div class="row review-order-row  rowcart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
-			<div class="col">
-				<h4 class="bold">
-					<?php wc_cart_totals_coupon_label( $coupon ); ?>
-				</h4>
-			</div>
-			<div class="col righted">
-				<h4 class="bold">
-					<?php wc_cart_totals_coupon_html( $coupon ); ?>
-				</h4>
-			</div>
+		<div class="col righted">
+			<h4 class="bold">
+				<?php wc_cart_totals_coupon_html( $coupon ); ?>
+			</h4>
 		</div>
-	<?php endforeach; ?>
+	</div>
+<?php endforeach; ?>
 
-	<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
+<?php if ( WC()->cart->needs_shipping() && WC()->cart->show_shipping() ) : ?>
 
-	<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
+<?php do_action( 'woocommerce_review_order_before_shipping' ); ?>
 
-	<?php wc_cart_totals_shipping_html(); ?>
+<?php wc_cart_totals_shipping_html(); ?>
 
-	<?php do_action( 'woocommerce_review_order_after_shipping' ); ?>
+<?php do_action( 'woocommerce_review_order_after_shipping' ); ?>
 
 <?php endif; ?>
 

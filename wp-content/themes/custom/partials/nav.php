@@ -245,6 +245,11 @@
 										</li>
 									<?php endforeach; ?>
 								<?php endif; ?>
+								<li>
+									<a href="<?php echo wp_logout_url('/my-account') ?>" class="page-nav-link">
+										Log Out
+									</a>
+								</li>	
 								<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
 							</ul>
 						<?php endif; ?>

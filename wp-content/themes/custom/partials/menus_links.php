@@ -29,9 +29,16 @@
 							</li>
 						<?php endforeach; ?>
 					<?php endif; ?>
+					<?php if($GLOBALS['tree_slug'] === 'my_account'): ?>
+						<li>
+							<a href="<?php echo wp_logout_url('/my-account') ?>" class="page-nav-link">
+								Log Out
+							</a>
+						</li>	
+					<?php endif; ?>
 				</ul>
 			</div>
 		</div>
 	</div>
 	<?php wp_reset_postdata(); // IMPORTANT - reset the $post object so the rest of the page works correctly ?>
-<?php endif; ?>
+	<?php endif; ?>

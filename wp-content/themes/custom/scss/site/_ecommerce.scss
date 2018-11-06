@@ -51,10 +51,11 @@
 
 	&.bundled_table_item{
 		padding-top: 0px;
-		padding-bottom: 10px;
+		padding-bottom: 20px;
 		border-bottom: 1px solid darken($light,5%) !important;
 		.product-subtotal{
 			visibility: hidden;
+			font-size: 0;
 		}
 		.product-name{
 			font-family: $font-main;
@@ -64,10 +65,11 @@
 
 	&.cart-row-discount{
 		border: none;
-		padding-top: 6px;
-		padding-bottom: 0px;
+		padding-top: 0px;
+		padding-bottom: 6px;
 		.product-subtotal{
 			visibility: hidden;
+			font-size: 0;
 		}
 		.product-name{
 			font-family: $font-main;
@@ -96,9 +98,21 @@
 			content: "\f148";
 			margin: 0 12px 0 3px;
 			opacity: .25;
+
+			@media screen and (max-width: $sm) {
+				display: none;
+			}
 		}	
 	}
 
+}
+
+.bundled_table_item_price{
+	&:before{
+		@media screen and (max-width: $sm) {
+			display: none !important;
+		}
+	}
 }
 
 
@@ -199,7 +213,7 @@ input,textarea,select{
 .notice{
 	background: transparentize($message,.9);
 	border-bottom: 3px solid $brand;
-	padding: 1em 15px 0.5em 15px;
+	padding: 1em 0px 0.5em 0px;
 	@extend .shadowed;
 	margin-bottom: 25px;
 
@@ -274,6 +288,11 @@ form.woocommerce-checkout,form.woocommerce-cart-form{
 		width: 100%;
 		margin-bottom: .25rem;
 		max-width: 500px;
+	}
+
+	.notice.row{
+		margin-left: 0;
+		margin-right: 0;
 	}
 
 	input, .woocommerce-input-wrapper,select{
@@ -477,6 +496,36 @@ input[name="createaccount"]{
 	h4{
 		margin-bottom: 0;
 		margin-top: 0;
+	}
+
+	.bundled_table_item_subtotal{
+		font-size: 0 !important;
+
+		&:before{
+			@media screen and (max-width: $sm) {
+				display: none !important;
+			}
+		}
+
+		.woocommerce-Price-amount{
+			font-size: 15px;
+			@media screen and (max-width: $sm) {
+				font-size: 12px;
+			}
+			*{
+				font-size: 15px;
+				@media screen and (max-width: $sm) {
+					font-size: 12px;
+				}
+			}
+		}
+	}
+
+	.discount-label-total{
+		font-size: 15px;
+		@media screen and (max-width: $sm) {
+			font-size: 12px;
+		}
 	}
 }
 
