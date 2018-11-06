@@ -28,6 +28,7 @@ class NAM_Membership {
 
         add_action( static::$calculate_totals_hook, array( $called_class, 'calculate_membership_discounts'), 20, 1);
         //add_filter( static::$display_cart_totals, array( $called_class, 'show_membership_cart_total'), 10, 3);
+        add_filter( static::$display_cart_totals, array( $called_class, 'show_bundle_base_price'), 10, 3);
 
     }
 
@@ -77,6 +78,29 @@ class NAM_Membership {
         }
 
         return $old_display;
+
+    }
+
+    /**
+     * Given the old display strong, cart item, and cart item key,
+     * renderes the "base price" for a product bundle to the
+     * cart table, rather than the total price of the bundle.
+     *
+     * @hooked woocommerce_cart_item_price
+     */
+    public static function show_bundle_base_price( $old_display, $cart_item, $cart_item_key ) {
+
+        if ( $cart_item['data'] instanceof WC_Product_Bundle ) {
+
+            $discount = NAM_Membership::get_membership_discount( $cart_item['data']->id );
+
+            return wc_price( $cart_item['data']->get_price() + $discount );
+
+        } else {
+
+            return $old_display;
+
+        }
 
     }
 

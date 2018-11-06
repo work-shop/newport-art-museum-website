@@ -210,6 +210,10 @@ abstract class NAM_Custom_Post_Type {
 
                 $product_id = $shadowing_product[0]->ID;
 
+
+                $customfields = '_order_purchasing_for_self' . ', ' .
+                                '_order_student_first_name' . ', ' .
+                                '_order_student_last_name';
                 /**
                  * This shortcode echos a list of purchasers of a given product
                  * to the page, and depends on the Woocommerce Customer List Plugin.
@@ -231,7 +235,8 @@ abstract class NAM_Custom_Post_Type {
                                              'export_pdf="true" ' .
                                              'export_csv="true" ' .
                                              'search="true" ' .
-                                             'info="true"' .
+                                             'info="true" ' .
+                                             'custom_fields="' . $customfields . '" ' .
                                              ']';
 
                 echo do_shortcode( $shortcode );
