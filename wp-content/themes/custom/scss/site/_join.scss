@@ -38,3 +38,11 @@
 		}
 	}
 }
+
+//override woocommerce styles that show up on join page because it is technically the 'shop' page
+
+.page-introduction-text{
+	h3{
+		font-weight: normal !important;
+	}
+}

@@ -498,7 +498,7 @@ input[name="createaccount"]{
 //THANK YOU/ CONFIRMATION
 
 
-.woocommerce{
+.woocommerce:not(.page-id-70){
 	//@extend .col-12;
 	//@extend .col-md-4;
 	h2{
