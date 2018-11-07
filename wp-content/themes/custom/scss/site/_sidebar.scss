@@ -55,13 +55,22 @@ $padding-sidebar-box: 30px;
 
 
 .single-sidebar{
-
+	.button-full{
+		//border-radius: 0 0 5px 5px;
+	}
 }
 
 .single-sidebar-top{
 	background: $khaki;
 	padding: 20px 20px 15px 20px;
 	border-bottom: 1px solid darken($light,5%);
+	background: darken($medium, 5%);
+
+	//border-radius: 5px 5px 0 0;
+
+	*{
+		color: white;
+	}
 
 	@media screen and (max-width: $md) {
 		padding: 15px 12px 10px 12px;
@@ -77,7 +86,7 @@ $padding-sidebar-box: 30px;
 	padding: 20px 20px 25px 20px;
 
 	@media screen and (max-width: $md) {
-		padding: 15px 12px 10px 12px;
+		padding: 15px 10px 10px 10px;
 	}
 
 	.price{
@@ -116,9 +125,12 @@ $padding-sidebar-box: 30px;
 }
 
 
+
+
 #member-price-info{
-	text-decoration-line: underline;
-	text-decoration-style: dotted;
+	//text-decoration-line: underline;
+	//text-decoration-style: dotted;
+	height: 20px;
 	
 
 	@media screen and (max-width: $sm) {
@@ -129,9 +141,43 @@ $padding-sidebar-box: 30px;
 		cursor: pointer;
 	}
 
+	.icon{
+		height: inherit;
+	}
+
 	.icon:before{
-		font-size: inherit;
-		top: 0;
-		margin-left: 2px;
+		height: inherit;
+		font-size: 21px;
+		//top: -1px;
+		margin-left: 3px;
+		color: $brand;
 	}
 }
+
+
+.class-price-col-first{
+	width: 40px;
+	//padding-left: 10px;
+	@extend .flex-center;
+
+	.icon:before{
+		display: block;
+		//padding: 10px;
+		text-align: center;
+		padding-top: 4px;
+		width: 20px;
+		height: 20px;
+		color: white;
+		font-size: 16px;
+		background: $brand;
+		border-radius: 100px;
+	}
+
+	// border: 1px solid black;
+}
+
+.class-price-col-second{
+	// border: 1px solid red;
+	padding-left: 3px;
+}
+

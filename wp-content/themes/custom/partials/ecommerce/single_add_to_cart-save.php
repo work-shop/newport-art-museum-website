@@ -40,71 +40,39 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         <div class="row">
           <div class="col-<?php if ( $is_classes ) : ?>12<?php else: ?>6<?php endif; ?> add-to-cart-price">
             <h5 class="label bold">
-              Tuition
+              Price
             </h5>
             <h5 class="price">
               <?php $current_price = $product->get_price(); ;?>
               <?php $membership_discount = NAM_Membership::get_membership_discount( $product->id ); ?>
               <?php $is_member_or_has_membership_in_cart = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
 
-              <?php //getting membership discount ?>
               <?php if ( $is_member_or_has_membership_in_cart && $current_price > 0 ) : ?>
 
+               <p class="members-price"><?php echo wc_price($current_price - $membership_discount); ?> Per person
+                <br>
+                <span class="price-label small">Member price <span class="icon" data-icon="%"></span></span>
+              </p>
+              <p class="non-members-price hidden">
+               <?php echo wc_price( $current_price ); ?> Per person
+               <br>
+               <span class="price-label small">Non-member price</span>
+             </p>
 
-                <div class="row class-price-row mb1">
-                  <div class="class-price-col-first">
-                    <span class="icon" data-icon="%"></span>
-                  </div>
-                  <div class="class-price-col-second">
-                   <h5 class="bold mb0">
-                     Member price
-                   </h5> 
-                   <p class="members-price m0">
-                    <?php echo wc_price($current_price - $membership_discount); ?> Per person
-                  </p>
-                </div>
-              </div>
-              <div class="row class-price-row mb2">
-                <div class="class-price-col-first">
-                </div>
-                <div class="class-price-col-second">
-                  <h5 class="bold m0 faded">
-                    Non-member price
-                  </h5>
-                  <p class="non-members-price m0 faded">
-                    <?php echo wc_price( $current_price ); ?> Per person
-                  </p>
-                </div>
-              </div>
+             <?php elseif ( $current_price > 0 ): ?>
 
-              <?php //not getting membership discount ?>
-              <?php elseif ( $current_price > 0 ): ?>
-
-                <div class="row class-price-row mb1">
-                  <div class="class-price-col-first">
-                  </div>
-                  <div class="class-price-col-second">
-                   <a class="h5 bold modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
-                     <span class="faded bold">Member price </span><span class="icon" data-icon="?"></span>
-                   </a> 
-                   <p class="members-price faded m0">
-                    <?php echo wc_price($current_price - $membership_discount); ?> Per person
-                  </p>
-                </div>
-              </div>
-              <div class="row class-price-row mb2">
-                <div class="class-price-col-first">
-                  <span class="icon" data-icon="%"></span>
-                </div>
-                <div class="class-price-col-second">
-                  <h5 class="bold m0">
-                    Non-member price
-                  </h5>
-                  <p class="non-members-price m0">
-                    <?php echo wc_price( $current_price ); ?> Per person
-                  </p>
-                </div>
-              </div>
+               <p class="non-members-price">
+                <span class="icon" data-icon="%"></span>
+                 <?php echo wc_price( $current_price ); ?> Per person
+                 <br>
+                 <span class="price-label small">Non-member price</span>
+               </p>
+               <p class="members-price"><?php echo wc_price($current_price - $membership_discount); ?> Per person
+                 <br>
+                 <a class="price-label small modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
+                  Member price <span class="icon" data-icon="?"></span>
+                </a> 
+              </p>
 
               <?php else: ?>
 
@@ -139,10 +107,11 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                   Fees
                 </h5>
                 <?php foreach( $bundled_items as $fee ) : ?>
+
                   <?php $fee_product = wc_get_product( $fee->get_product_id() ); ?>
-                  <p class="">
-                    <?php echo wc_price( $fee_product->get_price() ); ?> <?php echo $fee_product->name; ?> Per person
-                  </p>
+
+                  <p class=""><?php echo wc_price( $fee_product->get_price() ); ?> <?php echo $fee_product->name; ?> Per person</p>
+
                 <?php endforeach; ?>
               </div>
 

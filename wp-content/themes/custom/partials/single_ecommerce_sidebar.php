@@ -66,7 +66,7 @@ if( get_post_type() == 'events' ): $type = 'event'; else: $type = 'class'; endif
                                     </div>
                                     <?php else: ?>
                                         <?php if ( $is_in_stock ) : ?>
-                                            Registration
+                                            Class Registration
                                             <?php else: ?>
                                                 <span class="error bold m1 display-block">This Class is Full.</span>
                                             <?php endif; ?>

@@ -360,3 +360,35 @@ button{
 		color: $medium;
 	}
 }
+
+
+.br-lg{
+	display: none;
+	@media screen and (max-width: $lg) {
+		display: block;
+	}
+}
+
+.br-md{
+	display: none;
+	@media screen and (max-width: $md) {
+		display: block;
+	}
+}
+
+.br-sm{
+	display: none;
+	@media screen and (max-width: $sm) {
+		display: block;
+	}
+}
+
+.faded{
+	opacity: .65;
+}
+
+.flex-center{
+	@extend .d-flex;
+	@extend .justify-content-center;
+	@extend .align-items-center;
+}
