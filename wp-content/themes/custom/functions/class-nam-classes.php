@@ -85,6 +85,26 @@ class NAM_Classes {
 
     }
 
+    /**
+     * This routine checks to see if there's
+     * a class in the given order, and 
+     * return true if there is.
+     */
+    public static function has_class_in_order( $order ) {
+
+        foreach ($order->get_items() as $item_id => $item_data) {
+
+            $product = $item_data->get_product();
+
+            if ( has_term( static::$classes_category_slug, 'product_cat', $product->id ) ) {
+                return true;
+            }
+
+        }
+
+        return false;
+    }
+
 }
 
 ?>
