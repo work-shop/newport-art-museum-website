@@ -16,6 +16,7 @@ class NAM_Site_Admin {
 
         add_action( 'admin_enqueue_scripts', array( $this, 'register_customer_list_scripts' ) );
 
+        add_filter( 'the_content', array( 'NAM_Classes', 'rewrite_customer_list_headings' ), 99 );
 
     }
 

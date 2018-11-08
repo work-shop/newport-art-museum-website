@@ -42,6 +42,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         static::register_shadowed_post_actions();
 
+        static::register_stock_actions();
+
     }
 
     /**
@@ -50,8 +52,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * that implement e-commerce functionality programmatically.
      */
     public static function register_shadowed_post_actions() {
-        add_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
-        add_action( 'mtphr_post_duplicator_created', array( get_called_class(), 'do_product_management_actions' ), 20 );
+        $called_class = get_called_class();
+        add_action( 'acf/save_post', array( $called_class, 'do_product_management_actions' ), 20);
+        add_action( 'mtphr_post_duplicator_created', array( $called_class, 'do_duplicate_post_product_management_actions' ), 10, 2 );
     }
 
     /**
@@ -63,9 +66,25 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      *       objects are created.
      */
     public static function deregister_shadowed_post_actions() {
-        remove_action( 'acf/save_post', array( get_called_class(), 'do_product_management_actions' ), 20);
-        remove_action( 'mtphr_post_duplicator_created', array( get_called_class(), 'do_product_management_actions' ), 20 );
+        $called_class = get_called_class();
+        remove_action( 'acf/save_post', array( $called_class, 'do_product_management_actions' ), 20);
+        remove_action( 'mtphr_post_duplicator_created', array( $called_class, 'do_duplicate_post_product_management_actions' ), 10, 2 );
     }
+
+
+
+
+    /**
+     * This routine is called when a post is duplicated,
+     * and handles creating a new shadowing product
+     * for the duplicate.
+     */
+    public static function do_duplicate_post_product_management_actions( $post_id, $duplicate_id ) {
+
+        static::do_product_management_actions( $duplicate_id, true );
+
+    }
+
 
     /**
      * This function dispatches calls to create_shadow_post and
@@ -74,7 +93,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      *
      * @param int $post_id  the id of the post being saved.
      */
-    public static function do_product_management_actions( $post_id ) {
+    public static function do_product_management_actions( $post_id, $duplicate=false ) {
 
         $post_id = (int) $post_id;
 
@@ -98,14 +117,22 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
             } else {
 
-                $parent_posts = static::get_parent_posts( $shadow_post[0]->ID );
+                //$parent_posts = static::get_parent_posts( $shadow_post[0]->ID );
 
-                if ( count( $parent_posts ) > 1 ) {
+                //$duplicate = get_post_meta( $post_id, '_nam_duplicate', true ) == 'yes';
+
+                if ( $duplicate ) {
+
+                    //die( 'duplicate is true' );
 
                     delete_field( static::$field_keys['managed_field_related_post'], $post_id );
                     static::create_shadowing_product( $post_id, $updated_post );
 
+                    //update_post_meta( $post_id, '_nam_duplicate', false );
+
                 } else {
+
+                    //throw new
 
                     static::update_shadowing_product( $post_id, $updated_post, $shadow_post[0] );
 
@@ -114,6 +141,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             }
 
         }
+
+
 
         static::register_shadowed_post_actions();
 
@@ -156,6 +185,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      * @param WP_Post $post the shadowed product object being attached.
      */
     public static function update_shadowing_product( $post_id, $updated_post, $shadowing_post ) {
+
+
 
         wp_update_post( array(
             'ID' => $shadowing_post->ID,
@@ -526,6 +557,50 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static abstract function get_product_categories( $post_id );
 
+
+
+    // STOCK ACTIONS ---
+
+
+    public static function register_stock_actions() {
+        $called_class = get_called_class();
+        add_action( 'woocommerce_reduce_order_stock', array( $called_class, 'reduce_parent_post_stock' ) );
+    }
+
+    /**
+     *
+     *
+     */
+    public static function reduce_parent_post_stock( $order ) {
+
+        $items = $order->get_items();
+
+        foreach ( $items as $item ) {
+
+            $product_id = $item['product_id'];
+            $quantity = $item->get_quantity();
+
+            $parent_post = static::get_parent_posts( $product_id );
+
+            if ( $parent_post ) {
+
+                $parent_post_id = $parent_post[0];
+
+                $manage_stock = get_field( static::$field_keys['manage_stock'], $parent_post_id );
+
+                if ( $manage_stock ) {
+
+                    $current_quantity = get_field( static::$field_keys['stock_quantity'], $parent_post_id );
+                    $new_quantity = $current_quantity - $quantity;
+                    update_field( static::$field_keys['stock_quantity'], $new_quantity, $parent_post_id );
+
+                }
+
+            }
+
+        }
+
+    }
 
 
 }
