@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<?php else : ?>
 
-				<?php $course_in_order = true; ?>
+				<?php $class_in_order = false; ?>
 
 				<!--<div class="woocommerce-success notice">
 					<p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thanks, your order has been received.', 'woocommerce' ), $order ); ?></p>
@@ -57,7 +57,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<h4 class="bold mt1  ">Your order has been placed.</h4>
 
 					</div>
-					<?php if( $course_in_order == false ): ?>
+					<?php if( $class_in_order == false ): ?>
 						<div class="col-12 mt3">
 							<div class="thankyou-separator"></div>
 						</div>
@@ -65,7 +65,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				</div>
 
 				
-				<?php if( $course_in_order ): ?>
+				<?php if( $class_in_order ): ?>
 					<div class="woocommerce-success notice mt2">
 						<p class="bold">
 							Would you like to purchase another class registration? <a href="/education/classes/" class="button ml1">View Classes</a>
