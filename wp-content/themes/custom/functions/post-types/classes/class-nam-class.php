@@ -96,14 +96,14 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
 
                 $called_class = get_called_class();
 
-                add_meta_box(
-                    'course-registrees',
-                    'Course Registrees',
-                    array( $called_class, 'show_purchasers' ),
-                    static::$slug,
-                    'normal',
-                    'low'
-                );
+            add_meta_box(
+                'class-registrees',
+                'Class Registrees',
+                array( $called_class, 'show_purchasers' ),
+                static::$slug,
+                'normal',
+                'low'
+            );
 
             }
         }

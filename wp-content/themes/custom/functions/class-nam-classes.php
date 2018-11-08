@@ -9,6 +9,18 @@ class NAM_Classes {
 
     public static $classes_category_slug = 'classes';
 
+    public static $classes_custom_fields = array(
+        '_order_student_first_name' => 'Student First Name',
+        '_order_student_last_name' => 'Student Last Name',
+        '_order_birthdate' => 'Birthdate',
+        '_order_primary_phone_number' => 'Primary Phone',
+        '_order_primary_phone_type' => 'Primary Phone Type',
+        '_order_secondary_phone_number' => 'Secondary Phone',
+        '_order_secondary_phone_type' => 'Secondary Phone Type',
+        '_order_email_contact' => 'Contact Email',
+        '_order_preferred_pronoun' => 'Preferred Pronoun'
+    );
+
     /**
      * Adds custom meta keys or settings for WooCommerce products
      * that shadow "classes" custom post types.
@@ -46,6 +58,30 @@ class NAM_Classes {
         }
 
         return false;
+
+    }
+
+
+    public static function register_classes_heading_rewrite() {
+
+        add_action('admin_init', function() {
+            $called_class = get_called_class();
+            add_filter( 'the_content', array( $called_class, 'rewrite_customer_list_headings' ), 99);
+        } );
+
+    }
+
+    public static function rewrite_customer_list_headings( $content ) {
+
+        return str_replace('_order_student_first_name', 'Student First Name', $content );
+
+        // foreach ( static::$classes_custom_fields as $field => $name ) {
+        //
+        //     $content = str_replace( $field, $name, $content );
+        //
+        // }
+        //
+        // return $content;
 
     }
 
