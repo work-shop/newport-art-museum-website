@@ -83,7 +83,7 @@ $padding-sidebar-box: 30px;
 
 .single-sidebar-middle{
 	background: $khaki;
-	padding: 20px 20px 25px 20px;
+	padding: 20px 20px 20px 20px;
 
 	@media screen and (max-width: $md) {
 		padding: 15px 10px 10px 10px;
@@ -156,7 +156,7 @@ $padding-sidebar-box: 30px;
 
 
 .class-price-col-first{
-	width: 50px;
+	width: 55px;
 	padding-left: 15px;
 	@extend .flex-center;
 

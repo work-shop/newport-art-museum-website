@@ -24,7 +24,8 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         </div>
         <div class="col-12 add-to-cart-limit">
           <p class="small mb0">
-            Registration purchase for a class is limited to one student per transaction. If you would like to register multiple students, please purchase one registration for each student, separately. 
+            <span class="icon icon-alert" data-icon="="></span>
+            <?php the_field('class_registration_limit_explanation','option'); ?>
           </p>
         </div>
       </div>
@@ -152,18 +153,19 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
           <?php if ( $is_classes ) : ?>
             <div class="col-12 add-to-cart-limit">
               <p class="small mb0">
-                Registration for a class is limited to one student per transaction. If you would like to register multiple students, please purchase one registration for each student, separately. 
-              </p>
-            </div>
-          <?php endif; ?>
+            <span class="icon icon-alert" data-icon="="></span>
+               <?php the_field('class_registration_limit_explanation','option'); ?>
+             </p>
+           </div>
+         <?php endif; ?>
 
-        </div>
-      </div>
-      <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button-full button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
-      <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-    </form>
+       </div>
+     </div>
+     <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button-full button alt"><?php echo esc_html( $product->single_add_to_cart_text() ); ?></button>
+     <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+   </form>
 
-  <?php endif; ?>
+ <?php endif; ?>
 </div>
 
 <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>

@@ -238,6 +238,15 @@ input,textarea,select{
 			color: $brand;
 			background: none;
 			padding: 8px 8px 5px 8px;
+
+			@media screen and (max-width: $md) {
+				font-size: 11px;
+				padding: 5px 5px 3px 5px;
+			}
+
+			@media screen and (max-width: $sm) {
+				font-size: 10px;
+			}
 		}
 	}
 
@@ -425,6 +434,8 @@ form.woocommerce-checkout,form.woocommerce-cart-form{
 .woocommerce-checkout #payment .payment_method_stripe label[for=payment_method_stripe] {
 	padding-left: 0;
 }
+
+
 
 
 .required,abbr.required{
@@ -884,6 +895,15 @@ strong span{
 
 .add-to-cart-limit{
 	padding-top: 15px;
+
+	.icon{
+		margin-right: 7px;
+		&:before{
+			@media screen and (max-width: $sm) {
+				font-size: 17px;
+			}
+		}
+	}
 }
 
 .inspire_checkout_fields_additional_information{
@@ -898,5 +918,15 @@ body.woocommerce-cart,body.woocommerce-checkout{
 		@media screen and (max-width: $sm) {
 			padding-bottom: 4em;
 		}
+	}
+}
+
+
+//icons
+
+
+.icon.icon-alert{
+	&:before{
+		color: $yellow;
 	}
 }

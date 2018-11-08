@@ -95,12 +95,17 @@ class NAM_Site_Admin {
      */
     public function add_options_pages() {
         if ( function_exists('acf_add_options_page') ) {
-            acf_add_options_page(array(
-                "page_title" => "Site Options & Menus",
-                "capability" => "edit_posts",
-                "position" => 10,
-                "icon_url" => "dashicons-admin-home"
+            $option_page = acf_add_options_page(array(
+                'page_title'    => 'Site Options & Menus',
+                'menu_title'    => 'Site Options & Menus',
+                'position'      => '50.1',              
             ));
+            $option_page = acf_add_options_page(array(
+                'page_title'    => 'Ecommerce Content',
+                'menu_title'    => 'Ecommerce Content', 
+                'icon_url'      => 'dashicons-cart',
+                'position'      => '50.3',              
+            ));     
         }
     }
 

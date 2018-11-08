@@ -38,13 +38,40 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="button pay"><?php _e( 'My account', 'woocommerce' ); ?></a>
 					<?php endif; ?>
 				</p>
+
 			</div>
 
 			<?php else : ?>
 
-				<div class="woocommerce-success notice">
+				<?php $course_in_order = true; ?>
+
+				<!--<div class="woocommerce-success notice">
 					<p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thanks, your order has been received.', 'woocommerce' ), $order ); ?></p>
+				</div> -->
+
+				<div class="row">
+					<div class="col-12">
+						<h1 class="serif brand mb0 "> 
+							Thank You!
+						</h1>
+						<h4 class="bold mt1  ">Your order has been placed.</h4>
+
+					</div>
+					<?php if( $course_in_order == false ): ?>
+						<div class="col-12 mt3">
+							<div class="thankyou-separator"></div>
+						</div>
+					<?php endif; ?>
 				</div>
+
+				
+				<?php if( $course_in_order ): ?>
+					<div class="woocommerce-success notice mt2">
+						<p class="bold">
+							Would you like to purchase another class registration? <a href="/education/classes/" class="button ml1">View Classes</a>
+						</p>
+					</div>
+				<?php endif; ?>
 
 				<div class="row mt3 mb4">
 					<div class="col-12 col-md-6 mb2">
@@ -81,19 +108,22 @@ if ( ! defined( 'ABSPATH' ) ) {
 						<?php endif; ?>
 
 					</ul>
+
+
 				</div>
 				<div class="col-12 col-md-6">
-					<h3 class="bold">
+					<h4 class="bold">
 						Questions about<br>
 						your order? 
-					</h3>
+					</h4>
 					<div class="button">
 						<a href="/contact" class="white">
 							Contact Us
 						</a>
 					</div>
 				</div>
-				<div class="col-12 mt3">
+
+				<div class="col-12 mt1">
 					<div class="thankyou-separator"></div>
 				</div>
 			</div>

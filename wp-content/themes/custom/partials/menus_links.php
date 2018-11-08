@@ -29,10 +29,10 @@
 							</li>
 						<?php endforeach; ?>
 					<?php endif; ?>
-					<?php if($GLOBALS['tree_slug'] === 'my_account'): ?>
+					<?php if( $GLOBALS['tree_slug'] === 'my_account' && is_user_logged_in() && $GLOBALS['page_nav']  ): ?>
 						<li>
 							<a href="<?php echo wp_logout_url('/my-account') ?>" class="page-nav-link">
-								Log Out
+								Logout
 							</a>
 						</li>	
 					<?php endif; ?>

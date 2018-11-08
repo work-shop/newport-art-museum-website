@@ -48,7 +48,14 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
             'post_type'         => 'classes',
             'meta_key'          => 'class_start_date',
             'orderby'           => 'meta_value',
-            'order'             => 'ASC'
+            'order'             => 'ASC',
+            'tax_query' => array(
+                array (
+                    'taxonomy' => 'classes-categories',
+                    'field' => 'term_id',
+                    'terms' => 27,
+                )
+            )
             // 'meta_query' => array(
             //     array(
             //         'key' => 'class_end_date',
@@ -61,48 +68,48 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
     }
 
 
-    /**
+        /**
      * ==== Instance Members and Methods ====
      */
 
-    public function __construct( $post ) {
-        parent::__construct( $post );
-    }
+        public function __construct( $post ) {
+            parent::__construct( $post );
+        }
 
-    public function validate() {
-
-    }
-
-    public function create() {
-
-    }
-
-    public function draw_card() {
-
-    }
-
-    /**
-     * Register a meta_box for the product
-     */
-    public static function add_product_meta_box() {
-        if ( function_exists( 'add_meta_box' ) ) {
-
-            $called_class = get_called_class();
-
-            add_meta_box(
-                'course-registrees',
-                'Course Registrees',
-                array( $called_class, 'show_purchasers' ),
-                static::$slug,
-                'normal',
-                'low'
-            );
+        public function validate() {
 
         }
-    }
+
+        public function create() {
+
+        }
+
+        public function draw_card() {
+
+        }
+
+        /**
+     * Register a meta_box for the product
+     */
+        public static function add_product_meta_box() {
+            if ( function_exists( 'add_meta_box' ) ) {
+
+                $called_class = get_called_class();
+
+                add_meta_box(
+                    'course-registrees',
+                    'Course Registrees',
+                    array( $called_class, 'show_purchasers' ),
+                    static::$slug,
+                    'normal',
+                    'low'
+                );
+
+            }
+        }
 
 
-    /**
+        /**
      * This routine sets all the required product taxonomy terms for reporting
      * purposes.
      *
@@ -110,16 +117,16 @@ class NAM_Class extends NAM_Shadowed_Post_Type {
      * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
      * @return array category names
      */
-    public static function get_product_categories( $post_id ) {
+        public static function get_product_categories( $post_id ) {
 
-        $categories = array_map( function( $term ) { return self::$plural_name . ': ' . $term->name; }, wp_get_post_terms( $post_id, 'classes-categories' ) );
-        array_push( $categories, self::$plural_name );
+            $categories = array_map( function( $term ) { return self::$plural_name . ': ' . $term->name; }, wp_get_post_terms( $post_id, 'classes-categories' ) );
+            array_push( $categories, self::$plural_name );
 
-        return $categories;
+            return $categories;
+
+        }
+
 
     }
 
-
-}
-
-?>
+    ?>

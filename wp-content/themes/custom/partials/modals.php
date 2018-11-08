@@ -1,14 +1,12 @@
 <div id="blanket" class="modal-close">
 </div>
 
-
-<div class="modal modal-small bg-khaki off scroll" id="modal-member-price-info">
+<div class="modal modal-small-broken modal-medium bg-khaki off scroll" id="modal-member-price-info">
 	<div class="modal-inner">
 		<div class="row">
 			<div class="col-10">
 				<h3 class="bold mb2">
-					Membership Discounts<br>
-					on Classes
+					<?php the_field('membership_discount_popup_heading','option'); ?>
 				</h3>
 
 			</div>
@@ -17,18 +15,30 @@
 			</div>
 		</div>
 		<p class="mb2">
-			To receive a discounted price, you have three options: <br>
-			<br>
-			<b>If you're not a member -</b> Purchase a membership along with a class, and the discount will be applied in your cart. <br>
-			<a href="/join" class="button button-bordered button-small mt1" target="_blank">View Membership Options</a>
+			<?php the_field('membership_discount_popup_intro','option'); ?>
 		</p>
-		<p class="mb2">
-			<b>If you are a member, and you did not purchase your membership through this website:</b> purchase a registration for a class, and then call or email the museum, and we will be happy to apply the discount to your purchase.<br>
-			<a href="/contact" class="button button-bordered button-small mt1">Contact Us</a>   
-		</p>
-		<p>
-			<b>If you are a member, and you purchased your membership through this website:</b> log into your account and the discount will be applied in your cart. You can log in before your purchase, or during the checkout process.<br>
-			<a href="/my-account" class="button button-bordered button-small mt1">Log In</a>   
-		</p> 
-	</div>
+		<?php if( have_rows('membership_discount_popup_explanation_content','option') ): ?>
+			<?php  while ( have_rows('membership_discount_popup_explanation_content','option') ) : the_row(); ?>
+				<div class="membership-discount-explaination-row mb2">
+					<?php if( get_sub_field('heading') || get_sub_field('instructions') ): ?>
+					<p class="mb0">
+						<?php if( get_sub_field('heading') ): ?>
+							<b><?php the_sub_field('heading'); ?></b>
+						<?php endif; ?>
+						<?php if( get_sub_field('instructions') ): ?>
+							<br>
+							<?php the_sub_field('instructions'); ?>
+						<?php endif; ?>
+					</p>
+				<?php endif; ?>
+				<?php $link = get_sub_field('link'); ?>
+				<?php if( $link['url'] && $link['title']): ?>
+					<a href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>" class="button button-bordered button-small mt1">
+						<?php echo $link['title']; ?>
+					</a>
+				<?php endif; ?>
+			</div>
+		<?php endwhile; ?>
+	<?php endif; ?>
+</div>
 </div>
