@@ -8,12 +8,12 @@
 				<h3 class="bold mb2">
 					<?php the_field('membership_discount_popup_heading','option'); ?>
 				</h3>
-
 			</div>
 			<div class="col-2 d-flex justify-content-end">
 				<a href="#" class="modal-close righted"><span class="icon" data-icon="x"></span></a>
 			</div>
 		</div>
+		<?php // login_with_ajax(); ?>
 		<p class="mb2">
 			<?php the_field('membership_discount_popup_intro','option'); ?>
 		</p>
