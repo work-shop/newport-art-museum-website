@@ -432,10 +432,8 @@ form.woocommerce-checkout,form.woocommerce-cart-form{
 }
 
 .woocommerce-checkout #payment .payment_method_stripe label[for=payment_method_stripe] {
-	padding-left: 0;
+	padding-left: 0 !important;
 }
-
-
 
 
 .required,abbr.required{
@@ -558,6 +556,33 @@ input[name="createaccount"]{
 }
 
 
+.processing .blockOverlay{
+	background: transparentize($light, .1) !important;
+	position: fixed !important;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 9998;
+
+	&:before{
+		content: '';
+		display: block;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin-left: -40px;
+		margin-top: -40px;
+		width: 80px;
+		height: 80px;
+		z-index: 9998;
+		background-image: url('../images/loading.gif');
+		background-size: 80px 80px;
+		background-position: center center;
+	}
+}
+
+
 
 
 //THANK YOU/ CONFIRMATION
@@ -589,18 +614,18 @@ input[name="createaccount"]{
 	//display: none;
 	margin-bottom: 4em;
 		//border: 1px solid orange;
-}
-
-
-strong span{
-	@extend .bold;
-}
-
-.woocommerce-order-overview{
-	li{
-		margin-bottom: .25em;
 	}
-}
+
+
+	strong span{
+		@extend .bold;
+	}
+
+	.woocommerce-order-overview{
+		li{
+			margin-bottom: .25em;
+		}
+	}
 
 
 

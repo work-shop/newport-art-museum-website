@@ -193,10 +193,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</h4>
 	</div>
 </div>
-<div class="review-order-row row">
-	<div class="col">
-		<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>
+<?php $has_recurring_products = true; ?>
+<?php if ( $has_recurring_products ): ?>
+	<div class="review-order-row row">
+		<div class="col">
+			<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>
+		</div>
 	</div>
-</div>
+<?php endif; ?>
 </div>
 </div>

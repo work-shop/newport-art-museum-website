@@ -101,11 +101,15 @@ if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
 		<?php wc_cart_totals_order_total_html(); ?>
 	</div>
 </div>
+
+<?php $has_recurring_products = true; ?>
+<?php if ( $has_recurring_products ): ?>
 <div class="row order-recurring-totals">
 	<div class="col">
 		<?php do_action( 'woocommerce_cart_totals_after_order_total' ); ?>
 	</div>
 </div>
+<?php endif; ?>
 
 <?php do_action( 'woocommerce_after_cart_totals' ); ?>
 
