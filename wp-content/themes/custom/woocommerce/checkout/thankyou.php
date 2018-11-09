@@ -55,7 +55,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 							Thank You!
 						</h1>
 						<h4 class="bold mt1  ">Your order has been placed.</h4>
-
 					</div>
 					<?php if( $class_in_order == false ): ?>
 						<div class="col-12 mt3">
@@ -122,8 +121,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 						</a>
 					</div>
 				</div>
-
-				<div class="col-12 mt1">
+				<div class="col-12 mt2">
 					<div class="thankyou-separator"></div>
 				</div>
 			</div>

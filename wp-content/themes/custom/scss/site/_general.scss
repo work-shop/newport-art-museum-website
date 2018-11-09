@@ -155,9 +155,9 @@ $text-button: (
 .button{
 	background: $brand;
 	padding: 12px 10px 9px 10px;
-	font-family: $font-main;
+	font-family: $font-bold;
 	color: white;
-	@extend .bold;
+	//@extend .bold;
 	@extend .uppercase;	
 	@extend .tracked-less;
 	border-radius: 2px;

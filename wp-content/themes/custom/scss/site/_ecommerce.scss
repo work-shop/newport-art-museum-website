@@ -562,6 +562,18 @@ input[name="createaccount"]{
 
 //THANK YOU/ CONFIRMATION
 
+.woocommerce-order-received{
+
+	.woocommerce-order-details{
+		margin-bottom: 4em;
+		//border: 1px solid red;
+	}
+
+	.woocommerce-table__line-item.order_item.bundled_table_item{
+		height: 40px;
+	}
+}
+
 
 .woocommerce:not(.page-id-70){
 	//@extend .col-12;
@@ -574,7 +586,9 @@ input[name="createaccount"]{
 }
 
 .woocommerce-customer-details{
-	display: none;
+	//display: none;
+	margin-bottom: 4em;
+		//border: 1px solid orange;
 }
 
 
@@ -793,6 +807,7 @@ strong span{
 
 			@media screen and (max-width: $sm) {
 				font-size: 12px;
+				height: 60px;
 			}
 		}
 	}
