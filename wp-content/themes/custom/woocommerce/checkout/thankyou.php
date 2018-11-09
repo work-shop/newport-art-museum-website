@@ -43,7 +43,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 			<?php else : ?>
 
-				<?php $class_in_order = false; ?>
+				<?php $class_in_order = NAM_Classes::has_class_in_order( $order ); ?>
 
 				<!--<div class="woocommerce-success notice">
 					<p class="woocommerce-notice woocommerce-notice--success woocommerce-thankyou-order-received"><?php echo apply_filters( 'woocommerce_thankyou_order_received_text', __( 'Thanks, your order has been received.', 'woocommerce' ), $order ); ?></p>
@@ -51,7 +51,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 				<div class="row">
 					<div class="col-12">
-						<h1 class="serif brand mb0 "> 
+						<h1 class="serif brand mb0 ">
 							Thank You!
 						</h1>
 						<h4 class="bold mt1  ">Your order has been placed.</h4>
@@ -64,7 +64,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php endif; ?>
 				</div>
 
-				
+
 				<?php if( $class_in_order ): ?>
 					<div class="woocommerce-success notice mt2">
 						<p class="bold">
@@ -114,7 +114,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				<div class="col-12 col-md-6">
 					<h4 class="bold">
 						Questions about<br>
-						your order? 
+						your order?
 					</h4>
 					<div class="button">
 						<a href="/contact" class="white">
