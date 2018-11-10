@@ -96,17 +96,23 @@ class NAM_Site_Admin {
      */
     public function add_options_pages() {
         if ( function_exists('acf_add_options_page') ) {
-            $option_page = acf_add_options_page(array(
+            acf_add_options_page(array(
                 'page_title'    => 'Site Options & Menus',
                 'menu_title'    => 'Site Options & Menus',
-                'position'      => '50.1',              
+                'position'      => '50.1',
             ));
-            $option_page = acf_add_options_page(array(
+            acf_add_options_page(array(
                 'page_title'    => 'Ecommerce Content',
-                'menu_title'    => 'Ecommerce Content', 
+                'menu_title'    => 'Ecommerce Content',
                 'icon_url'      => 'dashicons-cart',
-                'position'      => '50.3',              
-            ));     
+                'position'      => '50.3',
+            ));
+            acf_add_options_page(array(
+                'page_title'    => 'Membership Creator',
+                'menu_title'    => 'Membership Creator',
+                'icon_url'      => 'dashicons-id',
+                'position'      => '50.5',
+            ));
         }
     }
 
