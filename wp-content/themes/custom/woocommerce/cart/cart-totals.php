@@ -102,13 +102,20 @@ if ( 'itemized' === get_option( 'woocommerce_tax_total_display' ) ) : ?>
 	</div>
 </div>
 
-<?php $has_recurring_products = true; ?>
+
+<?php 
+if( NAM_Membership::has_membership_in_cart() ): 
+	$has_recurring_products = true; 
+else: 
+	$has_recurring_products = false; 
+endif; 
+?>
 <?php if ( $has_recurring_products ): ?>
-<div class="row order-recurring-totals">
-	<div class="col">
-		<?php do_action( 'woocommerce_cart_totals_after_order_total' ); ?>
+	<div class="row order-recurring-totals">
+		<div class="col">
+			<?php do_action( 'woocommerce_cart_totals_after_order_total' ); ?>
+		</div>
 	</div>
-</div>
 <?php endif; ?>
 
 <?php do_action( 'woocommerce_after_cart_totals' ); ?>

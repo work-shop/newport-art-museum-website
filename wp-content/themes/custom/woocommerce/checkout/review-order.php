@@ -193,7 +193,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</h4>
 	</div>
 </div>
-<?php $has_recurring_products = true; ?>
+<?php 
+if( NAM_Membership::has_membership_in_cart() ): 
+	$has_recurring_products = true; 
+else: 
+	$has_recurring_products = false; 
+endif; 
+?>
 <?php if ( $has_recurring_products ): ?>
 	<div class="review-order-row row">
 		<div class="col">
