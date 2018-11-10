@@ -31,6 +31,7 @@ require_once( __ROOT__ . '/functions/class-nam-membership.php' );
 require_once( __ROOT__ . '/functions/class-nam-classes.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-admin.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-init.php' );
+require_once( __ROOT__ . '/functions/class-nam-membership-creator.php' );
 
 require_once( __ROOT__ . '/functions/library/class-nam-helpers.php' );
 require_once( __ROOT__ . '/functions/library/class-ws-flexible-content.php' );
