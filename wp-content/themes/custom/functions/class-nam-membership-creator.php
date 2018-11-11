@@ -5,6 +5,7 @@ class NAM_Membership_Creator {
 
     public static $imported_member_meta = '_nam_imported_member_user';
     public static $imported_membership_meta = '_nam_imported_membership_subscription';
+    public static $imported_membership_order_meta = '_nam_imported_membership_order';
 
     public static $field_keys = array(
 
@@ -197,37 +198,43 @@ class NAM_Membership_Creator {
         $exp_date = $user_data['membership_expiration_date'];
         $quantity = 1;
 
-        $order_args = array(
-            'attribute_billing-period' => 'Yearly',
-            'attribute_subscription-type' => 'Both'
-        );
-
-        $order = wc_create_order( array( 'customer_id' => $user_id ) );
-        $order->add_product( $product, $quantity, $order_args );
-        $order->calculate_totals();
-        $order->update_status('completed', 'Order imported via Membership Creator.', TRUE );
+        // $order_args = array(
+        //     'attribute_billing-period' => 'Yearly',
+        //     'attribute_subscription-type' => 'Both'
+        // );
+        //
+        // $order = wc_create_order( array( 'customer_id' => $user_id ) );
+        // $order->add_product( $product, $quantity, $order_args );
+        // $order->calculate_totals();
+        // $order->update_status('completed', 'Order imported via Membership Creator.', TRUE );
 
         $period = WC_Subscriptions_Product::get_period( $product );
         $interval = WC_Subscriptions_Product::get_interval( $product );
+        $length = WC_Subscriptions_Product::get_interval( $product );
 
         $subscription = wcs_create_subscription( array(
-            'order_id' => $order->id,
+            'customer_id' => $user_id,
+            //'order_id' => $order->get_id(),
             'billing_period' => $period,
             'billing_interval' => $interval,
-            'start_date' => $start_date,
-            'end' => $exp_date
+            'start_date' => $start_date
         ) );
 
-
-        var_dump( $period );
-        var_dump( $interval );
-        var_dump( $subscription );
-
+        $subscription->set_customer_id( $user_id );
         $subscription->add_product( $product, $quantity, $order_args );
-
+        $subscription->update_dates( array( 'end' => $exp_date ) );
         $subscription->calculate_totals();
 
-        WC_Subscriptions_Manager::activate_subscriptions_for_order( $order );
+        $subscription->save();
+
+        update_post_meta( $subscription->id, '_customer_user', $user_id );
+        update_post_meta( $subscription->id, static::$imported_membership_meta, 'yes' );
+        //update_post_meta( $order->id, static::$imported_membership_order_meta, 'yes' );
+
+        $subscription->update_status('active', 'Activated via Membership Creator.', true);
+        $subscription->save();
+
+        //WC_Subscriptions_Manager::activate_subscriptions_for_order( $order );
 
     }
 
