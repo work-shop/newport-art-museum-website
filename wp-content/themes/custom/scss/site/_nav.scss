@@ -199,7 +199,7 @@ body.dropdown-on{
 		}
 
 		@media screen and (max-width: $md) {
-			margin-left: 4px;
+			margin-left: 3px;
 		}
 
 		@media screen and (max-width: $sm) {
@@ -252,6 +252,7 @@ body.dropdown-on{
 				height: 45px;
 				padding: 0 6px;
 				letter-spacing: .02em;
+				font-size: 13px;
 			}
 
 			@media screen and (max-width: $sm) {

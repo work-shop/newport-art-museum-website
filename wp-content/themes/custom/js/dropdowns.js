@@ -9,14 +9,14 @@ function dropdowns( config ) {
 
 		$( config.linkSelector ).hover(
 			function() {
-				if( $(window).width() > 767){
+				if( window.innerWidth > 767){
 					var currentLink = $(this);
 					timer = setTimeout(function() {
 						openDropdown( currentLink );
 					}, dropdownDelay);
 				}
 			}, function() {
-				if( $(window).width() > 767){
+				if( window.innerWidth > 767){
 					clearTimeout(timer);
 				}
 			}
@@ -28,11 +28,11 @@ function dropdowns( config ) {
 
 		$( config.blanketSelector ).hover(
 			function() {
-				if( $(window).width() > 767){
+				if( window.innerWidth > 767){
 					closeDropdown();
 				}
 			}, function() {
-				if( $(window).width() > 767){
+				if( window.innerWidth > 767){
 					
 				}
 			}

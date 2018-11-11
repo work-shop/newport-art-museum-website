@@ -928,31 +928,79 @@ input[name="createaccount"]{
 }
 
 
-//add to cart
+//single add to cart
+
+.add-to-cart-fees,.add-to-cart-limit{
+	padding-top: 20px;
+	padding-bottom: 20px;
+	@media screen and (max-width: $sm) {
+		padding-top: 15px;
+		padding-bottom: 15px;	
+	}
+}
+
+.add-to-cart-header{
+	padding-top: 20px;
+	@media screen and (max-width: $sm) {
+		padding-top: 15px;	
+	}
+}
+
+.add-to-cart-price{
+	padding-bottom: 20px;
+	@media screen and (max-width: $sm) {
+		padding-bottom: 15px;	
+	}
+}
+
+.add-to-cart-quantity{
+	padding-left: 0;
+	flex: 0 0 70px;
+	//border: 1px solid black;
+
+	input{
+		padding: 5px;
+		//font-size: 15px;
+	}
+}
 
 
 .add-to-cart-fees{
-	border-top: 1px solid darken($light,10%);
 	border-bottom: 1px solid darken($light,10%);
-	padding-top: 15px;
+}
+
+.add-to-cart-price{
+	border-bottom: 1px solid darken($light,10%);
 }
 
 .add-to-cart-limit{
-	padding-top: 15px;
+
+	border-bottom: 1px solid darken($light,10%);
+
 
 	.icon{
 		margin-right: 7px;
 		&:before{
-			@media screen and (max-width: $sm) {
+			line-height: 13px;
+		}
+		@media screen and (max-width: $sm) {
+			margin-right: 3px;
+			&:before{
 				font-size: 17px;
 			}
 		}
 	}
 }
 
-.inspire_checkout_fields_additional_information{
-	margin-bottom: 4em;
+
+.price{
+	// & > .row{
+	// 	margin-left: 0;
+	// 	margin-right: 0;
+	// }
 }
+
+
 
 
 //page padding for various ecommerce pages
@@ -963,6 +1011,12 @@ body.woocommerce-cart,body.woocommerce-checkout{
 			padding-bottom: 4em;
 		}
 	}
+}
+
+
+
+.inspire_checkout_fields_additional_information{
+	margin-bottom: 4em;
 }
 
 

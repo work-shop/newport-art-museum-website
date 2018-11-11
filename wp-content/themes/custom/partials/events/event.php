@@ -28,7 +28,7 @@ $event_short_description = get_field('short_description');
 <section class="block single-body" id="event-single-body">
     <div class="container-fluid-single container-fluid">
         <div class="row">
-            <div class="col-md-8 single-body-left">
+            <div class="col-md-7 col-lg-7 single-body-left">
                 <div class="single-body-left-link">
                     <a href="/events">Back To Events</a>
                 </div>
@@ -60,7 +60,7 @@ $event_short_description = get_field('short_description');
                 </div>
             </div>
         </div>
-        <div class="col-md-4 single-body-right single-body-right-desktop">
+        <div class="col-md-5 col-lg-5 col-xl-4 offset-xl-1 single-body-right single-body-right-desktop">
             <div class="single-body-right-content">
                <?php NAM_Helpers::print_notices(true); ?>
                <?php get_template_part('partials/single_ecommerce_sidebar'); ?>

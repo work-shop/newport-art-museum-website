@@ -1,6 +1,17 @@
 
 $padding-sidebar-box: 30px;
 
+.sidebar-inner{
+	border-radius: 5px;
+	@extend .shadowed;
+
+	.button-full,.mailchimp-form-button{
+		overflow: hidden;
+		border-radius: 0 0 5px 5px;
+	}
+
+}
+
 .sidebar-box{
 	padding: $padding-sidebar-box;
 
@@ -15,6 +26,12 @@ $padding-sidebar-box: 30px;
 	@media screen and (max-width: $sm) {
 		padding: $padding-sidebar-box * .25;
 	}
+	
+}
+
+.sidebar-content{
+	background: $khaki;
+	//border-radius: 5px 5px 0 0;
 }
 
 .sidebar-heading{
@@ -56,17 +73,15 @@ $padding-sidebar-box: 30px;
 
 .single-sidebar{
 	.button-full{
-		//border-radius: 0 0 5px 5px;
+		border-radius: 0 0 5px 5px;
 	}
 }
 
 .single-sidebar-top{
 	background: $khaki;
 	padding: 20px 20px 15px 20px;
-	border-bottom: 1px solid darken($light,5%);
-	background: darken($medium, 5%);
-
-	//border-radius: 5px 5px 0 0;
+	background: darken($medium, 1%);
+	border-radius: 5px 5px 0 0;
 
 	*{
 		color: white;
@@ -81,17 +96,16 @@ $padding-sidebar-box: 30px;
 	}
 }
 
+
+
 .single-sidebar-middle{
 	background: $khaki;
-	padding: 20px 20px 20px 20px;
+	padding: 0px 20px 0px 20px;
 
-	@media screen and (max-width: $md) {
-		padding: 15px 10px 10px 10px;
+	@media screen and (max-width: $sm) {
+		padding: 0px 10px 0px 10px;
 	}
 
-	.price{
-		padding-top: .25em;
-	}
 	input{
 		width: 100%;
 		max-width: 66px;
@@ -101,6 +115,7 @@ $padding-sidebar-box: 30px;
 		border-radius: 3px;
 		border: 1px solid darken($light,5%);
 	}
+
 }
 
 .single-ecommerce-sidebar-sm{
@@ -108,7 +123,7 @@ $padding-sidebar-box: 30px;
 	@media screen and (max-width: $sm) {
 		display: block;
 		margin-top: 2em;
-		margin-bottom: 2em;
+		margin-bottom: 4em;
 	}
 }
 
@@ -132,7 +147,6 @@ $padding-sidebar-box: 30px;
 	//text-decoration-style: dotted;
 	height: 20px;
 	
-
 	@media screen and (max-width: $sm) {
 		//font-size: 12px;
 	}
@@ -151,26 +165,43 @@ $padding-sidebar-box: 30px;
 		//top: -1px;
 		margin-left: 3px;
 		color: $brand;
+
+		@media screen and (max-width: $sm) {
+			font-size: 18px;
+			top: -1px;
+		}
 	}
 }
 
 
 .class-price-col-first{
-	width: 55px;
-	padding-left: 15px;
+	width: 40px;
+	padding-left: 10px;
 	@extend .flex-center;
 
 	.icon:before{
 		display: block;
 		//padding: 10px;
 		text-align: center;
-		padding-top: 4px;
-		width: 20px;
-		height: 20px;
+		padding-top: 3px;
+		width: 18px;
+		height: 18px;
 		color: white;
-		font-size: 16px;
+		font-size: 14px;
 		background: $brand;
 		border-radius: 100px;
+	}
+
+	@media screen and (max-width: $md) {
+		width: 30px;
+		padding-left: 5px;
+
+		.icon:before{
+			width: 14px;
+			height: 14px;
+			font-size: 11px;
+			padding-top: 3px;
+		}
 	}
 
 	// border: 1px solid black;
