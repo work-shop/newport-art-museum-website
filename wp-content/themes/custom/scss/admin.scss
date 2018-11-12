@@ -1,3 +1,4 @@
+@import "definitions/variables";
 
 //hide background flexible content option from singles
 .post-type-events, .post-type-news, .post-type-exhibitions, .post-type-classes{
@@ -45,4 +46,20 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 	.acf-field-5bd76c14ec5b8{
 		display: block;
 	}
+}
+
+
+#nam_subscription_flag .inside {
+
+    .subscription-flag {
+        padding:1em;
+    }
+
+    .nam-user-created-subscription {
+        background-color: $success; // change this to change the color of the subscription flag.
+    }
+
+    .nam-imported-subscription {
+        background-color: $error; // change this to change the color of the subscription flag.
+    }
 }
