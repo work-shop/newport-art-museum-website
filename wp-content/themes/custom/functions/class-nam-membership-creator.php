@@ -19,7 +19,14 @@ class NAM_Membership_Creator {
         'membership_start_date' => 'field_5be748b7f9de4',
         'membership_expiration_date' => 'field_5be748def9de5',
 
+        'create_membership_subscription' => 'field_5be9ad2a0f99f'
+
     );
+
+
+    public function add_meta_box_actions() {
+        add_action( 'add_meta_boxes', array( $this, 'add_subscription_meta_box' ) );
+    }
 
 
     public function add_acf_actions() {
@@ -38,10 +45,20 @@ class NAM_Membership_Creator {
 
 
 
-    public function __construct() { $this->add_acf_actions(); }
+    public function __construct() {
+        $this->add_acf_actions();
+        $this->add_meta_box_actions();
+    }
 
 
-
+    /**
+     * This routine is called when the Membership Creator
+     * form fields are submitted. It's responsible for
+     * validating that an email is available depending
+     * on the configuration specified by the user.
+     *
+     * @hooked acf/validate_value/key=field_5be7480ff9ddf
+     */
     public function validate_email( $valid, $value, $field, $input ) {
 
         if ( !$valid ) { return $valid; }
@@ -72,7 +89,15 @@ class NAM_Membership_Creator {
 
     }
 
-
+    /**
+     * This routine is called when the Membership Creator
+     * form fields are submitted. It's responsible for
+     * validating that A username is available depending
+     * on the configuration specified by the user.
+     *
+     * @hooked acf/validate_value/key=field_5be74823f9de0
+     * @hooked acf/validate_value/key=field_5be74845f9de1
+     */
     public function validate_username( $valid, $value, $field, $input ) {
 
         $use_existing = (int) $_POST['acf'][ static::$field_keys['use_existing_account'] ];
@@ -115,12 +140,13 @@ class NAM_Membership_Creator {
 
         $user_id = $this->create_member( $user_data );
 
-        $subscription_id = $this->create_subscription( $user_id, $user_data );
+        if ( $user_data['create_subscription'] ) {
+
+            $subscription_id = $this->create_subscription( $user_id, $user_data );
+
+        }
 
         $this->add_acf_actions();
-
-
-
 
     }
 
@@ -130,6 +156,7 @@ class NAM_Membership_Creator {
      * To get the key information for programatically
      * inserting a user and creating a subscription.
      *
+     * @return Array array of member data parsed from ACF fields.
      */
     public function build_member_data_from_acf() {
 
@@ -147,7 +174,8 @@ class NAM_Membership_Creator {
             'member_level' => $membership_product,
             'membership_start_date' => get_field('membership_start_date', 'option'),
             'membership_expiration_date' => get_field('membership_expiration_date', 'option'),
-            'use_existing_account' => (int) get_field( 'use_existing_account', 'option' )
+            'use_existing_account' => (int) get_field( 'use_existing_account', 'option' ),
+            'create_subscription' => (int) get_field('create_membership_subscription', 'option')
         );
 
         return $member_data;
@@ -156,7 +184,8 @@ class NAM_Membership_Creator {
 
     /**
      * Given parsed user data, create a new user
-     * based on the passed parameters
+     * based on the passed parameters.
+     *
      *
      */
     public function create_member( $user_data ) {
@@ -222,6 +251,10 @@ class NAM_Membership_Creator {
 
         $subscription->set_customer_id( $user_id );
         $subscription->add_product( $product, $quantity, $order_args );
+
+        // NOTE: Add Next Payment here, if needed. 'end' must be later than 'next_payment'.
+        // In fact, to match salesforce, end date should be one month after next payment.
+        // We'd need to flag this for the user, though.
         $subscription->update_dates( array( 'end' => $exp_date ) );
         $subscription->calculate_totals();
 
@@ -239,9 +272,42 @@ class NAM_Membership_Creator {
     }
 
 
-
-
     public function build_member_data_from_csv_row( $row ) {
+
+    }
+
+
+    // VIEW FUNCTIONS and META BOXES
+
+    public function add_subscription_meta_box() {
+        add_meta_box(
+            'nam_subscription_flag',
+            'Subscription Record Type',
+            array( $this, 'render_subscription_meta_box' ),
+            'shop_subscription',
+            'normal',
+            'high'
+        );
+    }
+
+    public function render_subscription_meta_box() {
+        global $post;
+
+        $order_status = get_post_meta( $post->ID, static::$imported_membership_meta, true );
+
+        if ( 'yes' == $order_status ) {
+
+            echo '<p class="nam-imported-subscription subscription-flag">';
+            echo 'This membership subscription was imported via the Membership Creator.';
+            echo '</p>';
+
+        } else {
+
+            echo '<p class="nam-user-created-subscription subscription-flag">';
+            echo 'This membership subscription was created through the site\'s front-end.';
+            echo '</p>';
+
+        }
 
     }
 
