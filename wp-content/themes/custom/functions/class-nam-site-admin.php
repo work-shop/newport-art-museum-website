@@ -107,12 +107,28 @@ class NAM_Site_Admin {
                 'icon_url'      => 'dashicons-cart',
                 'position'      => '50.3',
             ));
-            acf_add_options_page(array(
-                'page_title'    => 'Membership Creator',
-                'menu_title'    => 'Membership Creator',
-                'icon_url'      => 'dashicons-id',
-                'position'      => '50.5',
-            ));
+
+            $user = wp_get_current_user();
+            $roles = (array) $user->roles;
+
+            if ( $roles[0] == 'administrator' ) {
+
+                acf_add_options_page(array(
+                    'page_title'    => 'Membership Creator',
+                    'menu_title'    => 'Membership Creator',
+                    'icon_url'      => 'dashicons-id',
+                    'position'      => '50.5',
+                ));
+
+                acf_add_options_page(array(
+                    'page_title'    => 'Membership Importer',
+                    'menu_title'    => 'Membership Importer',
+                    'icon_url'      => 'dashicons-id',
+                    'position'      => '50.6',
+                ));
+
+            }
+
         }
     }
 

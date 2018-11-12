@@ -6,6 +6,30 @@ class NAM_Membership_Creator {
     public static $imported_member_meta = '_nam_imported_member_user';
     public static $imported_membership_meta = '_nam_imported_membership_subscription';
     public static $imported_membership_order_meta = '_nam_imported_membership_order';
+    public static $imported_membership_salesforce_id = '_nam_imported_membership_salesforce_id';
+
+    public static $required_headers = array(
+        'Salesforce ID' => 'salesforce_id',
+        'First Name' => 'first_name',
+        'Last Name' => 'last_name',
+        'Email' => 'email',
+        'Member Level' => 'member_level',
+        'Start Date' => 'membership_start_date',
+        'End Date' => 'membership_expiration_date'
+    );
+
+    public static $membership_levels = array(
+        'Individual' => 1562,
+        'Senior' => 1560,
+        'Student' => 1558,
+        'Military Individual' => 1556,
+        'Household' => 1554,
+        'Military Household' => 1552,
+        'Senior Household' => 1549,
+        'Patron' => 1545,
+        'Council' => 1543,
+        'Benefactor' => 1527
+    );
 
     public static $field_keys = array(
 
@@ -19,7 +43,10 @@ class NAM_Membership_Creator {
         'membership_start_date' => 'field_5be748b7f9de4',
         'membership_expiration_date' => 'field_5be748def9de5',
 
-        'create_membership_subscription' => 'field_5be9ad2a0f99f'
+        'create_membership_subscription' => 'field_5be9ad2a0f99f',
+
+        'import_csv' => 'field_5be9dda4dfa06',
+        'membership_csv' => 'field_5be9cb4d6234a'
 
     );
 
@@ -31,16 +58,20 @@ class NAM_Membership_Creator {
 
     public function add_acf_actions() {
         add_action( 'acf/save_post', array( $this, 'do_acf_membership_creation_actions' ) );
+        add_action( 'acf/save_post', array( $this, 'do_csv_membership_import_actions' ) );
         add_filter( 'acf/validate_value/key=' . static::$field_keys['member_email'], array( $this, 'validate_email'), 10, 4);
         add_filter( 'acf/validate_value/key=' . static::$field_keys['member_first_name'], array( $this, 'validate_username'), 10, 4);
         add_filter( 'acf/validate_value/key=' . static::$field_keys['member_last_name'], array( $this, 'validate_username'), 10, 4);
+        add_filter( 'acf/validate_value/key=' . static::$field_keys['membership_csv'], array( $this, 'validate_csv'), 10, 4);
     }
 
     public function remove_acf_actions() {
         remove_action( 'acf/save_post', array( $this, 'do_acf_membership_creation_actions' ) );
+        remove_action( 'acf/save_post', array( $this, 'do_csv_membership_import_actions' ) );
         remove_filter( 'acf/validate_value/key=' . static::$field_keys['member_email'], array( $this, 'validate_email'), 10, 4);
         remove_filter( 'acf/validate_value/key=' . static::$field_keys['member_first_name'], array( $this, 'validate_username'), 10, 4);
         remove_filter( 'acf/validate_value/key=' . static::$field_keys['member_last_name'], array( $this, 'validate_username'), 10, 4);
+        remove_filter( 'acf/validate_value/key=' . static::$field_keys['membership_csv'], array( $this, 'validate_csv'), 10, 4);
     }
 
 
@@ -48,6 +79,61 @@ class NAM_Membership_Creator {
     public function __construct() {
         $this->add_acf_actions();
         $this->add_meta_box_actions();
+    }
+
+
+    /**
+     * This routine validates the uploaded file
+     * is readable, and ensures it has the headers
+     * that are needed for processing. It does not validate
+     * the values in those headers match the required values
+     * for the import.
+     *
+     */
+    public function validate_csv( $valid, $value, $field, $input ) {
+
+        $path = get_attached_file( $value );
+
+        if ( !is_readable( $path ) ) { chmod( $path, 0774 ); }
+
+        if ( !is_readable( $path ) ) { return 'Selected CSV file is not readable.'; }
+
+        if ( $file = fopen( $path, 'r' ) ) {
+
+            $headers = fgetcsv( $file );
+            $missing_headers = array();
+            $headers_valid = TRUE;
+
+            foreach ( array_keys( static::$required_headers ) as $column_header ) {
+
+                if ( !in_array( $column_header, $headers ) ) {
+
+                    $missing_headers[] = $column_header;
+                    $headers_valid = FALSE;
+
+                }
+
+            }
+
+            fclose( $file );
+
+            if ( $headers_valid ) {
+
+                return $valid;
+
+            } else {
+
+                return 'This CSV is missing ' . join( ', ', $missing_headers ) . ' as headers.';
+
+            }
+
+
+        } else {
+
+            return 'Couldn\'t open the file for reading.';
+
+        }
+
     }
 
 
@@ -123,6 +209,25 @@ class NAM_Membership_Creator {
     }
 
 
+    public function do_csv_membership_import_actions() {
+
+        $screen = get_current_screen();
+
+        if ( $screen->id != 'toplevel_page_acf-options-membership-importer' ) { return; }
+
+        $this->remove_acf_actions();
+
+        $data = $this->parse_csv_as_array();
+
+        $this->insert_csv_data( $data );
+
+        $this->clean_up_csv_fields();
+
+        $this->add_acf_actions();
+
+    }
+
+
     /**
      * This function strings together the key actions required
      * for creating a new user and membership based on options
@@ -146,8 +251,34 @@ class NAM_Membership_Creator {
 
         }
 
+        $this->clean_up_acf_fields();
+
         $this->add_acf_actions();
 
+    }
+
+    /**
+     * This function deletes values
+     * from the ACF fields in membership creator.
+     */
+    public function clean_up_acf_fields() {
+
+        delete_field('member_email', 'option');
+        delete_field('member_first_name', 'option');
+        delete_field('member_last_name', 'option');
+
+        delete_field('member_level', 'option');
+        delete_field('membership_start_date', 'option');
+        delete_field('membership_expiration_date', 'option');
+
+    }
+
+    /**
+     * This function deletes values
+     * from the ACF fields in membership importer.
+     */
+    public function clean_up_csv_fields() {
+        delete_field('membership_csv', 'option');
     }
 
 
@@ -175,7 +306,8 @@ class NAM_Membership_Creator {
             'membership_start_date' => get_field('membership_start_date', 'option'),
             'membership_expiration_date' => get_field('membership_expiration_date', 'option'),
             'use_existing_account' => (int) get_field( 'use_existing_account', 'option' ),
-            'create_subscription' => (int) get_field('create_membership_subscription', 'option')
+            'create_subscription' => (int) get_field('create_membership_subscription', 'option'),
+            'salesforce_id' => ''
         );
 
         return $member_data;
@@ -188,7 +320,7 @@ class NAM_Membership_Creator {
      *
      *
      */
-    public function create_member( $user_data ) {
+    public function create_member( $user_data, $description='Imported via Membership Creator.' ) {
 
         if ( $user_data['use_existing_account'] ) {
 
@@ -205,7 +337,7 @@ class NAM_Membership_Creator {
                 'first_name' => $user_data['first_name'],
                 'last_name' => $user_data['last_name'],
                 'user_nicename' => $user_data['first_name'] . ' ' . $user_data['last_name'],
-                'description' => 'Imported via Membership Creator.',
+                'description' => $description,
                 'role' => 'customer'
             ) );
 
@@ -220,7 +352,7 @@ class NAM_Membership_Creator {
     }
 
 
-    public function create_subscription( $user_id, $user_data ) {
+    public function create_subscription( $user_id, $user_data, $description='Activated via Membership Creator.' ) {
 
         $product = $user_data['member_level'];
         $start_date = $user_data['membership_start_date'];
@@ -262,9 +394,10 @@ class NAM_Membership_Creator {
 
         update_post_meta( $subscription->id, '_customer_user', $user_id );
         update_post_meta( $subscription->id, static::$imported_membership_meta, 'yes' );
+        update_post_meta( $subscription->id, static::$imported_membership_salesforce_id, $user_data['salesforce_id'] );
         //update_post_meta( $order->id, static::$imported_membership_order_meta, 'yes' );
 
-        $subscription->update_status('active', 'Activated via Membership Creator.', true);
+        $subscription->update_status('active', $description, true);
         $subscription->save();
 
         //WC_Subscriptions_Manager::activate_subscriptions_for_order( $order );
@@ -272,12 +405,88 @@ class NAM_Membership_Creator {
     }
 
 
-    public function build_member_data_from_csv_row( $row ) {
+
+    public function parse_csv_as_array() {
+
+        $handle = get_field( 'membership_csv', 'option');
+        $handle_id = $handle['ID'];
+
+        $path = get_attached_file( $handle_id );
+
+        if ( !is_readable( $path ) ) { chmod( $path, 0774 ); }
+
+        if ( !is_readable( $path ) ) { return 'Selected CSV file is not readable.'; }
+
+        if ( $file = fopen( $path, 'r' ) ) {
+
+            $headers = fgetcsv( $file );
+            $data = array();
+
+            while( $row = fgetcsv( $file ) ) {
+
+                $record = array();
+
+                foreach( $headers as $index => $header ) {
+                    $record[ static::$required_headers[ $header ] ] = $row[ $index ];
+                }
+
+                $record = $this->map_membership_products( $record );
+
+                $data[] = $record;
+
+            }
+
+            fclose( $file );
+
+            return $data;
+
+        } else {
+
+            throw new Exception('Couldn\'t open the CSV for reading.');
+
+        }
+
+    }
+
+    public function map_membership_products( $row ) {
+
+        $id = static::$membership_levels[ $row[ static::$required_headers['Member Level'] ] ];
+
+        $product = wc_get_product( $id );
+
+        $row[ static::$required_headers['Member Level'] ] = $product;
+
+        return $row;
 
     }
 
 
-    // VIEW FUNCTIONS and META BOXES
+    public function insert_csv_data( $csv_data ) {
+
+        foreach ( $csv_data as $row ) {
+
+            $email = $row[ static::$required_headers['Email'] ];
+
+            $row['use_existing_account'] = 0;
+
+            if ( email_exists( $email ) ) { $row['use_existing_account'] = 1; }
+
+            $user_id = $this->create_member( $row, 'Imported via Membership CSV Import.' );
+
+            var_dump( $row );
+            var_dump( $user_id );
+
+            $this->create_subscription( $user_id, $row, 'Activated via Membership CSV Import.' );
+
+        }
+
+
+    }
+
+
+
+
+    // VIEW FUNCTIONS and META BOXES ===========================================
 
     public function add_subscription_meta_box() {
         add_meta_box(
