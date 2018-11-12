@@ -51,9 +51,9 @@ function modalToggle(_target, swap){
 	else{
 		console.log(_target);
 		if( $('body').hasClass( modalProperties.modalOffBodyClass ) ){
-			console.log($(modalTarget));
+			//console.log($(modalTarget));
 			$(modalTarget).removeClass('off').addClass('on');
-			console.log($(modalTarget));
+			//console.log($(modalTarget));
 			$('body').removeClass( modalProperties.modalOffBodyClass ).addClass( modalProperties.modalOnBodyClass );
 		}	
 	}

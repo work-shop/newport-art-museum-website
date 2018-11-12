@@ -43,9 +43,9 @@ do_action( 'woocommerce_before_add_to_cart_form' );
         ?>
         <div class="sidebar-middle single-sidebar-middle">
 
-            <?php for ($i=0; $i < 2; $i++) {  ?>
+            <?php //for ($i=0; $i < 1; $i++) {  ?>
 
-                <?php if( $is_classes && $i == 1 ): break; endif; ?>
+                <?php //if( $is_classes && $i == 1 ): break; endif; ?>
 
                 <div class="row add-to-cart-header">
                     <div class="col">
@@ -53,7 +53,8 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             <?php if( $is_classes ): ?>
                                 Tuition
                                 <?php else: ?>
-                                    <?php if($i < 1): ?> Adult Tickets<?php else: ?>Child Tickets<?php endif; ?>
+                                   <!--  <?php if($i < 1): ?> Adult Tickets<?php else: ?>Child Tickets<?php endif; ?> -->
+                                   Tickets
                                 <?php endif; ?>
                             </h5>
                         </div>
@@ -87,34 +88,8 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                         </div>
                                     </div>
 
-                                    <div class="row class-price-row hidden">
-                                        <div class="class-price-col-first">
-                                        </div>
-                                        <div class="class-price-col-second">
-                                            <h5 class="bold m0 faded price-discount-label">
-                                                Non-member price
-                                            </h5>
-                                            <p class="non-members-price m0 faded">
-                                                <?php echo wc_price( $current_price ); ?> Per person
-                                            </p>
-                                        </div>
-                                    </div>
-
                                     <?php //NON MEMBER PRICE ?>
                                     <?php elseif ( $current_price > 0 ): ?>
-
-                                        <div class="row class-price-row mb1 hidden">
-                                            <div class="class-price-col-first">
-                                            </div>
-                                            <div class="class-price-col-second">
-                                                <a class="h5 bold price-discount-label modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
-                                                    <span class="faded bold">Member price </span><span class="icon" data-icon="?"></span>
-                                                </a> 
-                                                <p class="members-price faded m0">
-                                                    <?php echo wc_price($current_price - $membership_discount); ?> Per person
-                                                </p>
-                                            </div>
-                                        </div>
 
                                         <div class="row class-price-row mb1">
                                             <div class="class-price-col-first">
@@ -129,15 +104,11 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                                 </p>
                                             </div>
                                         </div>
-
                                         <div class="row class-price-row">
                                             <div class="col">
                                                 <a class="h5 bold price-discount-label modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
                                                     <span class="faded bold">Member price <?php echo wc_price($current_price - $membership_discount); ?> Per person</span><span class="icon" data-icon="?"></span>
                                                 </a> 
-                                                <!-- <p class="members-price faded m0">
-                                                    
-                                                </p> -->
                                             </div>
                                         </div>
 
@@ -198,7 +169,7 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                 <?php endif; ?>
                             <?php endif; ?>
 
-                        <?php } ?>
+                        <?php //} ?>
 
                     </div><!-- .single-sidebar-middle -->
 
@@ -206,9 +177,8 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                         <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
                     </button>
                     <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+
                 </form>
 
             <?php endif; ?>
-
             <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
-

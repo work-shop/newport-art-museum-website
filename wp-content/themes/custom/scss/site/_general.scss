@@ -168,11 +168,12 @@ $text-button: (
 	@include text-size($text-button);	
 
 	&.button-small{
-		padding: 8px 8px 5px 8px;
+		padding: 8px 8px 8px 8px;
 		font-size: 13px;
 
 		@media screen and (max-width: $sm) {
 			font-size: 10px;
+			padding: 8px 8px 6px 8px;
 		}
 	}
 

@@ -192,7 +192,7 @@ $padding-sidebar-box: 30px;
 	}
 
 	.woocommerce-Price-amount{
-		//@extend .bold;
+		@extend .bold;
 	}
 }
 
