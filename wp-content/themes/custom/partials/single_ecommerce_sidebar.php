@@ -18,6 +18,7 @@ else:
     $type = 'class'; 
     $registration_required = true;
     $show_individual_class_temporary_message = get_field('show_individual_class_temporary_message','78');
+    $individual_class_temporary_message = get_field('individual_class_temporary_message','78');
 endif; 
 
 $sidebar_box_override_text = get_field('sidebar_box_override_text');
@@ -59,7 +60,7 @@ $sidebar_box_override_link = get_field('sidebar_box_override_link');
 
                             <?php elseif( $type === 'class'): ?>
                                 <?php if( $show_individual_class_temporary_message ): ?>
-                                    <span class="error temporary-message bold">
+                                    <span class="temporary-message bold">
                                         <?php echo $individual_class_temporary_message; ?>
                                     </span>
                                 <?php else: //dont show individual class temporary message ?>
