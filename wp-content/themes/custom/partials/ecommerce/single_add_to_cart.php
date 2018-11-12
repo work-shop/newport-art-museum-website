@@ -43,9 +43,9 @@ do_action( 'woocommerce_before_add_to_cart_form' );
         ?>
         <div class="sidebar-middle single-sidebar-middle">
 
-            <?php //for ($i=0; $i < 1; $i++) {  ?>
+            <?php for ($i=0; $i < 1; $i++) {  ?>
 
-                <?php //if( $is_classes && $i == 1 ): break; endif; ?>
+                <?php if( $is_classes && $i == 1 ): break; endif; ?>
 
                 <div class="row add-to-cart-header">
                     <div class="col">
@@ -169,7 +169,7 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                 <?php endif; ?>
                             <?php endif; ?>
 
-                        <?php //} ?>
+                        <?php } ?>
 
                     </div><!-- .single-sidebar-middle -->
 
