@@ -51,7 +51,8 @@ $nav-background: lighten($brand,0%);
 
 	#nav{
 		height: 100vh;
-		overflow: scroll;
+		overflow-y: scroll;
+		-webkit-overflow-scrolling: touch;
 		background: transparentize($brand, .1);
 	}
 
