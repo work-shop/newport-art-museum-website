@@ -204,6 +204,17 @@ $membership = NAM_Membership::get_membership_for_subscription( $subscription );
 
 <?php wc_get_template( 'order/order-details-customer.php', array( 'order' => $subscription ) ); ?>
 
+<?php if( $subscription_was_imported ): ?>
+	<div class="row">
+		<div class="col">
+			<p class="error bold">
+				This membership, and your user account on this website<br>
+				 were automatically created from our membership database. 
+			</p>
+		</div>
+	</div>
+<?php endif; ?>
+
 </div>
 
 <div class="clear"></div>

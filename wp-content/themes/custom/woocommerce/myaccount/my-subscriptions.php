@@ -12,18 +12,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<?php
 
-// TRUE if the subscription was imported via the backend tools.
-$subscription_was_imported = !empty( $subscription ) && NAM_Membership::membership_was_imported( $subscription->get_id() );
-
-// TRUE if the user was imported via the backend tools.
-$user_was_imported = NAM_Membership::user_was_imported();
-
-// the Membership Tier post represented by the product in this subscription
-$membership = NAM_Membership::get_membership_for_subscription( $subscription );
-
-?>
 
 <div class="woocommerce_account_subscriptions">
 
@@ -47,12 +36,16 @@ $membership = NAM_Membership::get_membership_for_subscription( $subscription );
 			<tbody>
 				<?php /** @var WC_Subscription $subscription */ ?>
 				<?php foreach ( $subscriptions as $subscription_id => $subscription ) : ?>
+					<?php
+					// the Membership Tier post represented by the product in this subscription
+					$membership = NAM_Membership::get_membership_for_subscription( $subscription );
+					?>
 					<tr class="order">
 						<td class="subscription-id order-number" data-title="<?php esc_attr_e( 'ID', 'woocommerce-subscriptions' ); ?>">
 							<?php //get subscription type here ?>
 							<a href="<?php echo esc_url( $subscription->get_view_order_url() ); ?>">
 								<?php if( $membership ): ?>
-									<?php echo $membership; ?>
+									<?php echo $membership->post_title; ?>
 									<?php else: ?>
 										<?php echo esc_html( sprintf( _x( '#%s', 'hash before order number', 'woocommerce-subscriptions' ), $subscription->get_order_number() ) ); ?>
 									<?php endif; ?>
@@ -63,7 +56,7 @@ $membership = NAM_Membership::get_membership_for_subscription( $subscription );
 								<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
 							</td>
 							<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
-								<?php echo esc_attr( $subscription->get_date_to_display( 'next_payment' ) ); ?>
+								<?php echo esc_attr( $subscription->get_date_to_display( 'end' ) ); ?>
 								<?php if ( ! $subscription->is_manual() && $subscription->has_status( 'active' ) && $subscription->get_time( 'next_payment' ) > 0 ) : ?>
 								<?php
 					// translators: placeholder is the display name of a payment gateway a subscription was paid by
