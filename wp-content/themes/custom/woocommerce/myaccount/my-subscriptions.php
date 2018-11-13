@@ -23,13 +23,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php if ( ! empty( $subscriptions ) ) : ?>
 		<table class="shop_table shop_table_responsive my_account_subscriptions my_account_orders">
 
-			<thead>
+			<thead class="memberships-table-header">
 				<tr>
 					<th class="subscription-id order-number"><span class="nobr"><?php esc_html_e( 'Membership', 'woocommerce-subscriptions' ); ?></span></th>
 					<th class="subscription-status order-status"><span class="nobr"><?php esc_html_e( 'Status', 'woocommerce-subscriptions' ); ?></span></th>
 					<th class="subscription-next-payment order-date"><span class="nobr"><?php echo esc_html_x( 'Expiration Date', 'table heading', 'woocommerce-subscriptions' ); ?></span></th>
 					<th class="subscription-total order-total"><span class="nobr"><?php echo esc_html_x( 'Total', 'table heading', 'woocommerce-subscriptions' ); ?></span></th>
-					<th class="subscription-actions order-actions">&nbsp;</th>
+					<th class="subscription-actions order-actions hidden-xs">&nbsp;</th>
 				</tr>
 			</thead>
 

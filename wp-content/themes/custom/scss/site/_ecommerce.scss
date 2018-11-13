@@ -894,6 +894,17 @@ body.woocommerce-account.woocommerce-orders{
 
 }
 
+.memberships-table-header{
+	span{
+		@media screen and (max-width: $sm) {
+			font-size: 11px;
+			line-height: 1.2;
+			display: block;
+			text-align: center;
+		}
+	}
+}
+
 
 
 //ORDERS
