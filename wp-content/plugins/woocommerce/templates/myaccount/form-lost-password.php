@@ -19,8 +19,6 @@ defined( 'ABSPATH' ) || exit;
 
 ?>
 
-<?php wc_print_notices(); ?>
-
 <form method="post" class="woocommerce-ResetPassword lost_reset_password">
 
 	<p><?php echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Lost your password? Please enter your username or email address. You will receive a link to create a new password via email.', 'woocommerce' ) ); ?></p><?php // @codingStandardsIgnoreLine ?>

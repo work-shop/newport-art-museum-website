@@ -78,6 +78,7 @@ class NAM_Site {
             add_image_size('home_hero', 1920, 1200, false);
             add_image_size('card_wide', 1162, 538, true);
             add_image_size('card_medium', 500, 300, true);
+            add_image_size('fb', 1200, 630, true);
 
         }
     }

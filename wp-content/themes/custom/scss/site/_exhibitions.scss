@@ -19,7 +19,7 @@
 		}
 
 		@media screen and (max-width: $sm) {
-			transform: translate3d(-40px, 0, 0);
+			transform: translate3d(-0px, 0, 0);
 		}
 	}
 
@@ -106,9 +106,9 @@
 			margin-left: $container-fluid-padding-md;
 		}
 
-
 		@media screen and (max-width: $sm) {
-			margin-left: $container-fluid-padding-mobile;
+			margin: 0 auto;
+			text-align: center;
 		}
 	}
 

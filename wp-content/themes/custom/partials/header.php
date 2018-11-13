@@ -14,6 +14,41 @@
 		?>
 	</title>
 
+	<?php 
+	if( get_field('social_media_title') ):
+		$social_title = get_field('social_media_title'); 
+	else:
+		$social_title = get_bloginfo( 'name' );
+	endif;
+	if( get_field('social_media_description') ):
+		$social_description = get_field('social_media_description');
+	else:
+		$social_description = '';
+	endif;
+	if( get_field('social_media_url') ):
+		$social_url = get_field('social_media_url'); 
+	else: 
+		$social_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+	endif;
+	if( get_field('social_media_image') ):
+		$social_image_array = get_field('social_media_image');
+		$social_image = $social_image_array['sizes']['fb'];
+	else:
+		$social_image = '';
+	endif;
+
+	?>
+
+	<!-- Facebook Open Graph data -->
+	<meta property="og:title" content="<?php echo $social_title; ?>" />
+	<meta property="og:description" content="<?php echo $social_description; ?>" />
+	<meta property="og:image" content="<?php echo $social_image; ?>" />
+	<meta property="og:url" content="<?php echo $social_url; ?>" />
+	<meta property="og:type" content="website" />
+
+	<!-- Twitter Card data -->
+	<meta name="twitter:card" value="<?php echo $social_description; ?>">
+
 	<!-- typekit for freightdisp pro -->
 	<link rel="stylesheet" href="https://use.typekit.net/reg3qbo.css">
 

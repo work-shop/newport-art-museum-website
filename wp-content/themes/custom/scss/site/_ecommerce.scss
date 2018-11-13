@@ -657,10 +657,10 @@ input[name="createaccount"]{
 	}
 
 	.form-bottom{
-		padding: 30px 30px 10px 30px;
+		padding: 30px 30px 20px 30px;
 
 		@media screen and (max-width: $md) {
-			padding: 15px 15px 5px 15px;
+			padding: 20px 15px 5px 15px;
 		}
 	}
 
@@ -677,25 +677,47 @@ input[name="createaccount"]{
 
 	input{
 		width: 100%;
+		max-width: 100%;
 		color: $dark;
 	}
 
 	.woocommerce-form__label-for-checkbox{
 		text-align: center;
+		//border: 1px solid red;
+
+		span{
+			//border: 1px solid black;
+		}
 	}
 
 	input[name="rememberme"]{
 		display: inline-block;
 		text-align: right;
-		margin-right: 20px;
+		margin-right: 7px;
 		width: auto;
 		position: relative;
-		top: -2px;
+		top: -1px;
+		border: 1px solid red;
+
+		@media screen and (max-width: $sm) {
+			top: 3px;
+		}
 	}
 
 	.woocommerce-LostPassword{
 		text-align: center;
-		margin-top: .75em;
+		//margin-top: .5em;
+		margin-bottom: 0;
+
+		@media screen and (max-width: $sm) {
+			margin-top: .25em;
+		}
+
+		a{
+			display: block;
+			padding-top: 15px;
+			padding-bottom: 15px;
+		}
 	}
 }
 
@@ -721,8 +743,9 @@ input[name="createaccount"]{
 	}
 }
 
-.lost_password{
-	text-align: center;
+.woocommerce-password-strength{
+	margin-top: 10px;
+
 }
 
 
@@ -817,6 +840,46 @@ input[name="createaccount"]{
 #nam-my-account{
 	#add_payment_method{
 		max-width: 480px;
+	}
+}
+
+.woocommerce-MyAccount-paymentMethods{
+	margin-bottom: 3em;
+}
+
+body.woocommerce-add-payment-method{
+
+	#payment{
+		padding-top: 0;
+
+		.form-row{
+			margin-bottom: 2em;
+		}
+	}
+
+	.payment_box{
+		margin-top: 0;
+	}
+	
+	label[for="payment_method_stripe"],#payment_method_stripe{
+		display: none !important;
+	}
+	
+	#add_payment_method .woocommerce-PaymentMethod label{
+		margin-left: 0;
+		margin-bottom: 0;
+	}
+
+	input#wc-stripe-update-subs-payment-method-card{
+		position: relative;
+		top: -2px;
+		@media screen and (max-width: $sm) {
+			top: 2px;
+		}
+	}
+
+	label[for="wc-stripe-update-subs-payment-method-card"]{
+		padding-left: 6px;
 	}
 }
 

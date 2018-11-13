@@ -93,7 +93,7 @@
 		padding: 6vh 2vw;
 
 		@media screen and (max-width: $sm) {
-			padding: 4vh 2vw;
+			padding: 2vh 2vw;
 		}
 	}
 
@@ -170,10 +170,21 @@
 	&.card-size-wide{
 		.card-text{
 			background: transparentize($slate, .1);
-		}
-	}
 
-	&.card-size-menu{
+			@media screen and (max-width: $sm) {
+				position: static;
+				width: 100%;
+			}
+			
+		}
+
+		&.card-layout-text_right{
+			.card-text{
+				@media screen and (max-width: $sm) {
+					//width: 75%;
+				}
+			}
+		}
 
 	}
 

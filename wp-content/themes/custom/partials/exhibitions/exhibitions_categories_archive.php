@@ -13,7 +13,7 @@
 				<div class="row">
 					<?php while ( have_posts() ) : ?>
 						<?php the_post(); ?>
-						<div class="col-md-4 col-sm-6 col-xs-9">
+						<div class="col-md-4 col-sm-6 col-9">
 							<?php 
 							$card_layout = 'text_bottom'; //'text_right', 'text_bottom', 'text_top'
 							$card_size = 'medium'; //'wide', 'medium', 'small', 'menu'
@@ -23,7 +23,7 @@
 					<?php endwhile; ?>
 				</div>
 				<div class="row">
-					<div class="col-xs-12">
+					<div class="col-12">
 						<?php the_posts_pagination( array(
 							'mid_size'  => 2,
 							'prev_text' => __( '‘', 'textdomain' ),

@@ -67,7 +67,9 @@ wc_print_notices();
 	<?php do_action( 'woocommerce_subscription_before_actions', $subscription ); ?>
 	<?php $actions = wcs_get_all_user_actions_for_subscription( $subscription, get_current_user_id() ); ?>
 	<?php if ( ! empty( $actions ) ) : ?>
-		<tr>
+
+		<?php // temporarily hiding all actions, so cancel is hidden ?>
+		<tr class="hidden">
 			<td class="bold"><?php esc_html_e( 'Actions', 'woocommerce-subscriptions' ); ?></td>
 			<td>
 				<?php foreach ( $actions as $key => $action ) : ?>
@@ -75,6 +77,7 @@ wc_print_notices();
 				<?php endforeach; ?>
 			</td>
 		</tr>
+
 	<?php endif; ?>
 	<?php do_action( 'woocommerce_subscription_after_actions', $subscription ); ?>
 </table>
