@@ -11,7 +11,6 @@ function collection() {
 		
 	});
 
-	//open and close the menu
 	function collectionToggle(link){
 
 		var target = link.data('target');

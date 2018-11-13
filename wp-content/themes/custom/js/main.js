@@ -20,6 +20,7 @@ import { accordian } from './accordian.js';
 import { menuOverflow } from './menu-overflow.js';
 import { filter } from './filter.js';
 import { collection } from './collection.js';
+import { museumStatus } from './museum-status.js';
 import { ecommerceHelpers } from './ecommerce-helpers.js';
 import { livereload } from './livereload-client.js';
 
@@ -40,6 +41,7 @@ collection();
 jqueryAccordian();
 accordian();
 ecommerceHelpers();
+museumStatus();
 menuOverflow();
 if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') || $('body').hasClass('page-id-74') ){
 	filter();

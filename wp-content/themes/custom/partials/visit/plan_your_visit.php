@@ -8,7 +8,7 @@
 		<div class="row">
 			<div class="col-md-7">
 				<h3 class="plan-your-visit-currently museum-status">
-					<?php get_template_part('partials/visit/museum_status'); ?>
+					<?php //get_template_part('partials/visit/museum_status'); ?>
 				</h3>	
 			</div>
 			<div class="col-md-5 plan-your-visit-menu-link">
