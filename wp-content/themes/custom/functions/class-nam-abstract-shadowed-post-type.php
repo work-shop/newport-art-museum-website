@@ -309,9 +309,11 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 
     /**
-     * Given a
+     * Given a post_id and shadowing product id representing
+     * a membership, set the appropriate subscription meta data
      *
-     *
+     * @param int $post_id the ID of the parent post
+     * @param int $product_id the ID of the shadowing subscription product.
      */
     public static function set_subscription_meta( $post_id, $product_id ) {
 
@@ -321,7 +323,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         update_post_meta( $product_id, '_subscription_sign_up_fee', 0 );
         update_post_meta( $product_id, '_subscription_period', 'year' );
         update_post_meta( $product_id, '_subscription_period_interval', 1 );
-        update_post_meta( $product_id, '_subscription_length', 0 );
+        update_post_meta( $product_id, '_subscription_length', 1 );
         update_post_meta( $product_id, '_subscription_trial_period', '' );
         update_post_meta( $product_id, '_subscription_limit', 'no' );
         update_post_meta( $product_id, '_subscription_one_time_shipping', 'no' );

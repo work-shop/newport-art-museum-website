@@ -330,7 +330,7 @@ class NAM_Membership_Creator {
 
         } else {
 
-            $user_id = wp_insert_user( array(
+            $user_params = array(
                 'user_login' => $user_data['username'],
                 'user_email' => $user_data['email'],
                 'user_pass' => wp_generate_password(),
@@ -339,9 +339,9 @@ class NAM_Membership_Creator {
                 'user_nicename' => $user_data['first_name'] . ' ' . $user_data['last_name'],
                 'description' => $description,
                 'role' => 'customer'
-            ) );
+            );
 
-
+            $user_id = wp_insert_user( $user_params );
 
         }
 
@@ -430,6 +430,8 @@ class NAM_Membership_Creator {
                     $record[ static::$required_headers[ $header ] ] = $row[ $index ];
                 }
 
+                $record = $this->build_username( $record );
+
                 $record = $this->map_membership_products( $record );
 
                 $data[] = $record;
@@ -447,6 +449,17 @@ class NAM_Membership_Creator {
         }
 
     }
+
+
+    public function build_username( $row ) {
+
+        $row[ 'username' ] = sanitize_title_with_dashes( $row['first_name'] . '-' . $row['last_name'], '', 'save' );
+
+        return $row;
+
+    }
+
+
 
     public function map_membership_products( $row ) {
 
@@ -472,9 +485,6 @@ class NAM_Membership_Creator {
             if ( email_exists( $email ) ) { $row['use_existing_account'] = 1; }
 
             $user_id = $this->create_member( $row, 'Imported via Membership CSV Import.' );
-
-            var_dump( $row );
-            var_dump( $user_id );
 
             $this->create_subscription( $user_id, $row, 'Activated via Membership CSV Import.' );
 
