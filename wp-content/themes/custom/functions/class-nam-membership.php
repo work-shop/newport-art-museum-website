@@ -189,4 +189,72 @@ class NAM_Membership {
         return has_term( static::$events_category_slug, 'product_cat', $product_id ) || has_term( static::$classes_category_slug, 'product_cat', $product_id );
     }
 
+
+    /**
+     * Given a subscription ID, check and determine whether
+     * this subscription was imported via the membership importer
+     * or membership creator, or was created through the site's frontend.
+     *
+     * @param int $subscription_id the subscription ID to test.
+     * @return boolean true if the membership was imported.
+     */
+    public static function membership_was_imported( $subscription_id ) {
+
+        $subscription_meta = get_post_meta( $subscription_id, NAM_Membership_Creator::$imported_membership_meta, true );
+
+        return 'yes' === $subscription_meta;
+
+    }
+
+
+    /**
+     * Given a subscription ID, check and determine whether
+     * this subscription was imported via the membership importer
+     * or membership creator, or was created through the site's frontend.
+     *
+     * @param int $user_id the subscription ID to test.
+     * @return boolean true if the user was created through the import.
+     */
+    public static function user_was_imported( $user_id=NULL ) {
+
+        if ( $user_id == NULL ) { $user_id = get_current_user_id(); }
+
+        $user_meta = get_user_meta( $user_id, NAM_Membership_Creator::$imported_member_meta, true );
+
+        return 'yes' === $user_meta;
+
+    }
+
+
+    /**
+     * This routine attempts to retrieve the parent post
+     * represented by the order product item in this subscription.
+     *
+     * @param WC_Subscription $subscription a subscription post
+     * @return WP_Post the parent post of the WC_Product in $subscription.
+     */
+    public function get_membership_for_subscription( $subscription ) {
+
+        foreach( $subscription->get_items() as $item ) {
+            $product = $item->get_product();
+
+            if ( has_term( static::$membership_category_slug, 'product_cat', $product->id ) ) {
+
+                $parents = NAM_Membership_Tier::get_parent_posts( $product->id );
+
+                if ( !empty( $parents ) ) {
+
+                    return get_post( $parents[0] );
+
+                }
+
+            }
+
+        }
+
+        return FALSE;
+
+    }
+
+
 }

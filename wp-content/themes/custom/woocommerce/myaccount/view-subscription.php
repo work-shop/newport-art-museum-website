@@ -27,9 +27,22 @@ if ( empty( $subscription ) ) {
 wc_print_notices();
 ?>
 
+<?php
+
+// TRUE if the subscription was imported via the backend tools.
+$subscription_was_imported = !empty( $subscription ) && NAM_Membership::membership_was_imported( $subscription->get_id() );
+
+// TRUE if the user was imported via the backend tools.
+$user_was_imported = NAM_Membership::user_was_imported();
+
+// the Membership Tier post represented by the product in this subscription
+$membership = NAM_Membership::get_membership_for_subscription( $subscription );
+
+?>
+
 <div class="view-subscription">
 	<h3 class="bold">
-		<?php 
+		<?php
 		if ( sizeof( $subscription_items = $subscription->get_items() ) > 0 ) {
 
 			foreach ( $subscription_items as $item_id => $item ) {
@@ -53,7 +66,7 @@ wc_print_notices();
 		<?php foreach ( array(
 			'last_order_date_created' => _x( 'Last Order Date', 'admin subscription table header', 'woocommerce-subscriptions' ),
 			'next_payment'            => _x( 'Next Payment Date', 'admin subscription table header', 'woocommerce-subscriptions' ),
-			'end'                     => _x( 'End Date', 'table heading', 'woocommerce-subscriptions' ),
+			'end'                     => _x( 'Expiration Date', 'table heading', 'woocommerce-subscriptions' ),
 			'trial_end'               => _x( 'Trial End Date', 'admin subscription table header', 'woocommerce-subscriptions' ),
 		) as $date_type => $date_title ) : ?>
 		<?php $date = $subscription->get_date( $date_type ); ?>

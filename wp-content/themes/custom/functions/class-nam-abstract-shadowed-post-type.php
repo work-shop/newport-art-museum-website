@@ -309,9 +309,11 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 
     /**
-     * Given a
+     * Given a post_id and shadowing product id representing
+     * a membership, set the appropriate subscription meta data
      *
-     *
+     * @param int $post_id the ID of the parent post
+     * @param int $product_id the ID of the shadowing subscription product.
      */
     public static function set_subscription_meta( $post_id, $product_id ) {
 
