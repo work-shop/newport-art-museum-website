@@ -9,7 +9,12 @@
 		if($GLOBALS['tree_slug'] === 'my_account'): 
 			$user = wp_get_current_user();
 			$name = $user->user_firstname;
-			$GLOBALS['page_title'] = 'Welcome Back, ' . $name;
+			if( $name ):
+				$page_title = 'Welcome Back, ' . $name;
+			else:
+				$page_title = 'Welcome Back';
+			endif;
+			$GLOBALS['page_title'] = $page_title;
 		else:
 			$GLOBALS['page_title'] = ucfirst( $GLOBALS['tree_slug'] );
 		endif; 

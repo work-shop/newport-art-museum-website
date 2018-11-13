@@ -126,6 +126,7 @@ $menu-graphic-padding: 20px;
 	.menu-dropdown-graphic{
 		//height: $dropdown-graphics-height;
 		height: calc(100vh - 400px);
+		max-height: 680px;
 		overflow-y: scroll;
 		overflow-x: hidden;
 	}

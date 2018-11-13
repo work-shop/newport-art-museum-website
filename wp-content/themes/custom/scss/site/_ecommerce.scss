@@ -883,6 +883,17 @@ body.woocommerce-add-payment-method{
 	}
 }
 
+body.woocommerce-account.woocommerce-orders{
+
+	.woocommerce-message.woocommerce-message--info.woocommerce-Message.woocommerce-Message--info.woocommerce-info{
+		padding: 15px;
+		.button{
+			display: none;
+		}
+	}
+
+}
+
 
 
 //ORDERS
