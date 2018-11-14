@@ -54,6 +54,11 @@ wc_print_notices();
 				</a>
 			</div>
 			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
+				<a href="/my-account/payment-methods" class="bold display-block centered white bg-brand p1 pt3 pb3">
+					Payment Methods
+				</a>
+			</div>
+			<div class="col-md-4 mb2 col-xs-6 my-account-link-boxes">
 				<a href="/my-account/edit-account" class="bold display-block centered white bg-brand p1 pt3 pb3">
 					Change Password
 				</a>
