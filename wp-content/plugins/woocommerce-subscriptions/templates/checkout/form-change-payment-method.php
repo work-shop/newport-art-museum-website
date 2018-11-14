@@ -3,9 +3,9 @@
  * Pay for order form displayed after a customer has clicked the "Change Payment method" button
  * next to a subscription on their My Account page.
  *
- * @author 		Prospress
- * @package 	WooCommerce/Templates
- * @version     1.6.4
+ * @author  Prospress
+ * @package WooCommerce/Templates
+ * @version 1.6.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -63,7 +63,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 			}
 
 			foreach ( $available_gateways as $gateway ) { ?>
-				<li>
+				<li class="wc_payment_method payment_method_<?php echo esc_attr( $gateway->id ); ?>">
 					<input id="payment_method_<?php echo esc_attr( $gateway->id ); ?>" type="radio" class="input-radio" name="payment_method" value="<?php echo esc_attr( $gateway->id ); ?>" <?php checked( $gateway->chosen, true ); ?> data-order_button_text="<?php echo esc_attr( apply_filters( 'wcs_gateway_change_payment_button_text', $pay_order_button_text, $gateway ) ); ?>" />
 					<label for="payment_method_<?php echo esc_attr( $gateway->id ); ?>"><?php echo esc_html( $gateway->get_title() ); ?> <?php echo wp_kses_post( $gateway->get_icon() ); ?></label>
 					<?php
@@ -79,7 +79,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</ul>
 				<?php } else { ?>
 		<div class="woocommerce-error">
-			<p> <?php esc_html_e( 'Sorry, it seems no payment gateways support changing the recurring payment method. Please contact us if you require assistance or to make alternate arrangements.', 'woocommerce-subscriptions' ); ?></p>
+			<p> <?php echo esc_html( apply_filters( 'woocommerce_no_available_payment_methods_message', __( 'Sorry, it seems no payment gateways support changing the recurring payment method. Please contact us if you require assistance or to make alternate arrangements.', 'woocommerce-subscriptions' ) ) ); ?></p>
 		</div>
 				<?php } ?>
 

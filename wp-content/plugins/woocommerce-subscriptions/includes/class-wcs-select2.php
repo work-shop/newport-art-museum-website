@@ -87,7 +87,7 @@ class WCS_Select2 {
 		$allowed_attributes = array_map( array( $this, 'get_property_name' ), array_keys( $this->attributes ) );
 		$allowed_attributes = array_fill_keys( $allowed_attributes, array() );
 
-		echo wp_kses( $this->get_html(), array( 'input' => $allowed_attributes, 'select' => $allowed_attributes, 'option' => $allowed_attributes ) );
+		echo wp_kses_allow_underscores( $this->get_html(), array( 'input' => $allowed_attributes, 'select' => $allowed_attributes, 'option' => $allowed_attributes ) );
 	}
 
 	/**
@@ -100,9 +100,17 @@ class WCS_Select2 {
 		$html = "\n<!--select2 -->\n";
 
 		if ( WC_Subscriptions::is_woocommerce_pre( '3.0' ) ) {
-			$html .= '<input ';
-			$html .= $this->attributes_to_html( $this->attributes );
-			$html .= '/>';
+			if ( isset( $this->attributes['class'] ) && $this->attributes['class'] === 'wc-enhanced-select'  ) {
+				$html .= '<select ';
+				$html .= $this->attributes_to_html( $this->attributes );
+				$html .= '>';
+				$html .= '<option value=""></option>';
+				$html .= '</select>';
+			} else {
+				$html .= '<input ';
+				$html .= $this->attributes_to_html( $this->attributes );
+				$html .= '/>';
+			}
 		} else {
 			$attributes             = $this->attributes;
 			$selected_value         = isset( $attributes['selected'] ) ? $attributes['selected'] : '';

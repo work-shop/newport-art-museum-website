@@ -4,7 +4,7 @@
  *
  * @author  Prospress
  * @package WooCommerce-Subscriptions/Templates
- * @version 2.0.9
+ * @version 2.2.20
  */
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -31,11 +31,14 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 				<p class="limited-subscription-notice notice"><?php esc_html_e( 'You have an active subscription to this product already.', 'woocommerce-subscriptions' ); ?></p>
 			<?php endif; ?>
 		<?php else : ?>
+			<?php if ( wp_list_filter( $available_variations, array( 'is_purchasable' => false ) ) ) : ?>
+				<p class="limited-subscription-notice notice"><?php esc_html_e( 'You have added a variation of this product to the cart already.', 'woocommerce-subscriptions' ); ?></p>
+			<?php endif; ?>
 			<table class="variations" cellspacing="0">
 				<tbody>
 				<?php foreach ( $attributes as $attribute_name => $options ) : ?>
 					<tr>
-						<td class="label"><label for="<?php echo esc_attr( sanitize_title( $attribute_name ) ); ?>"><?php echo esc_html( wc_attribute_label( $attribute_name ) ); ?></label></td>
+						<td class="label"><label for="<?php echo esc_attr( sanitize_title( $attribute_name ) ); ?>"><?php echo wc_attribute_label( $attribute_name ); /* phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped */ ?></label></td>
 						<td class="value">
 							<?php
 							$selected = isset( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) ? wc_clean( $_REQUEST[ 'attribute_' . sanitize_title( $attribute_name ) ] ) : $product->get_variation_default_attribute( $attribute_name );
@@ -44,11 +47,18 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 							?>
 						</td>
 					</tr>
-				<?php endforeach;?>
+				<?php endforeach; ?>
 				</tbody>
 			</table>
 
-			<?php do_action( 'woocommerce_before_add_to_cart_button' ); ?>
+			<?php
+			/**
+			 * Post WC 3.4 the woocommerce_before_add_to_cart_button hook is triggered by the callback @see woocommerce_single_variation_add_to_cart_button() hooked onto woocommerce_single_variation.
+			 */
+			if ( WC_Subscriptions::is_woocommerce_pre( '3.4' ) ) {
+				do_action( 'woocommerce_before_add_to_cart_button' );
+			}
+			?>
 
 			<div class="single_variation_wrap">
 				<?php
@@ -72,7 +82,14 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 				?>
 			</div>
 
-			<?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+			<?php
+			/**
+			 * Post WC 3.4 the woocommerce_after_add_to_cart_button hook is triggered by the callback @see woocommerce_single_variation_add_to_cart_button() hooked onto woocommerce_single_variation.
+			 */
+			if ( WC_Subscriptions::is_woocommerce_pre( '3.4' ) ) {
+				do_action( 'woocommerce_after_add_to_cart_button' );
+			}
+			?>
 		<?php endif; ?>
 	<?php endif; ?>
 

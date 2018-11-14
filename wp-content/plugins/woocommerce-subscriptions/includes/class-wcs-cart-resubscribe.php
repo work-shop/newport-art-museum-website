@@ -149,9 +149,9 @@ class WCS_Cart_Resubscribe extends WCS_Cart_Renewal {
 		$cart_item = $this->cart_contains( $recurring_cart );
 
 		if ( false !== $cart_item ) {
-			wcs_set_objects_property( $order, 'subscription_resubscribe', $cart_item[ $this->cart_item_key ]['subscription_id'] );
-			$new_subscription->update_meta_data( '_subscription_resubscribe', $cart_item[ $this->cart_item_key ]['subscription_id'] );
-			$new_subscription->save();
+			$old_subscription = wcs_get_subscription( $cart_item[ $this->cart_item_key ]['subscription_id'] );
+			WCS_Related_Order_Store::instance()->add_relation( $order, $old_subscription, 'resubscribe' );
+			WCS_Related_Order_Store::instance()->add_relation( $new_subscription, $old_subscription, 'resubscribe' );
 		}
 	}
 
@@ -236,7 +236,7 @@ class WCS_Cart_Resubscribe extends WCS_Cart_Renewal {
 	public function get_recurring_cart_key( $cart_key, $cart_item ) {
 		$subscription = $this->get_order( $cart_item );
 		if ( false !== $subscription && $subscription->has_status( 'pending-cancel' ) ) {
-			remove_filter( 'woocommerce_subscriptions_recurring_cart_key', array( &$this, 'get_recurring_cart_key' ), 10, 2 );
+			remove_filter( 'woocommerce_subscriptions_recurring_cart_key', array( &$this, 'get_recurring_cart_key' ), 10 );
 			$cart_key = WC_Subscriptions_Cart::get_recurring_cart_key( $cart_item, $subscription->get_time( 'end' ) );
 			add_filter( 'woocommerce_subscriptions_recurring_cart_key', array( &$this, 'get_recurring_cart_key' ), 10, 2 );
 		}
@@ -265,14 +265,17 @@ class WCS_Cart_Resubscribe extends WCS_Cart_Renewal {
 	 * Make sure resubscribe cart item price doesn't include any recurring amount by setting a free trial.
 	 *
 	 * @since 2.1
+	 * @param mixed $total This parameter is unused. Its sole purpose is for returning an unchanged variable while setting the mock trial when hooked onto filters. Optional.
+	 * @return mixed $total The unchanged $total parameter.
 	 */
 	public function maybe_set_free_trial( $total = '' ) {
+		$subscription = $this->get_order();
 
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-			$subscription = $this->get_order( $cart_item );
-			if ( false !== $subscription && $subscription->has_status( 'pending-cancel' ) ) {
-				wcs_set_objects_property( WC()->cart->cart_contents[ $cart_item_key ]['data'], 'subscription_trial_length', 1, 'set_prop_only' );
-				break;
+		if ( false !== $subscription && $subscription->has_status( 'pending-cancel' ) ) {
+			foreach ( WC()->cart->cart_contents as &$cart_item ) {
+				if ( isset( $cart_item[ $this->cart_item_key ] ) ) {
+					wcs_set_objects_property( $cart_item['data'], 'subscription_trial_length', 1, 'set_prop_only' );
+				}
 			}
 		}
 
@@ -283,14 +286,17 @@ class WCS_Cart_Resubscribe extends WCS_Cart_Renewal {
 	 * Remove mock free trials from resubscribe cart items.
 	 *
 	 * @since 2.1
+	 * @param mixed $total This parameter is unused. Its sole purpose is for returning an unchanged variable while unsetting the mock trial when hooked onto filters. Optional.
+	 * @return mixed $total The unchanged $total parameter.
 	 */
 	public function maybe_unset_free_trial( $total = '' ) {
+		$subscription = $this->get_order();
 
-		foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
-			$subscription = $this->get_order( $cart_item );
-			if ( false !== $subscription && $subscription->has_status( 'pending-cancel' ) ) {
-				wcs_set_objects_property( WC()->cart->cart_contents[ $cart_item_key ]['data'], 'subscription_trial_length', 0, 'set_prop_only' );
-				break;
+		if ( false !== $subscription && $subscription->has_status( 'pending-cancel' ) ) {
+			foreach ( WC()->cart->cart_contents as &$cart_item ) {
+				if ( isset( $cart_item[ $this->cart_item_key ] ) ) {
+					wcs_set_objects_property( $cart_item['data'], 'subscription_trial_length', 0, 'set_prop_only' );
+				}
 			}
 		}
 
@@ -305,7 +311,7 @@ class WCS_Cart_Resubscribe extends WCS_Cart_Renewal {
 	public function maybe_cancel_existing_subscription( $order_id, $old_order_status, $new_order_status ) {
 		if ( wcs_order_contains_subscription( $order_id ) && wcs_order_contains_resubscribe( $order_id ) ) {
 			$order                = wc_get_order( $order_id );
-			$order_completed      = in_array( $new_order_status, array( apply_filters( 'woocommerce_payment_complete_order_status', 'processing', $order_id ), 'processing', 'completed' ) );
+			$order_completed      = in_array( $new_order_status, array( apply_filters( 'woocommerce_payment_complete_order_status', 'processing', $order_id, $order ), 'processing', 'completed' ) );
 			$order_needed_payment = in_array( $old_order_status, apply_filters( 'woocommerce_valid_order_statuses_for_payment', array( 'pending', 'on-hold', 'failed' ), $order ) );
 
 			foreach ( wcs_get_subscriptions_for_resubscribe_order( $order_id ) as $subscription ) {
@@ -317,4 +323,3 @@ class WCS_Cart_Resubscribe extends WCS_Cart_Renewal {
 		}
 	}
 }
-new WCS_Cart_Resubscribe();

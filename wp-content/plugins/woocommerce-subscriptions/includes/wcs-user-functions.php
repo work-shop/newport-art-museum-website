@@ -123,10 +123,12 @@ function wcs_get_new_user_role_names( $role_new ) {
 /**
  * Check if a user has a subscription, optionally to a specific product and/or with a certain status.
  *
- * @param int (optional) The ID of a user in the store. If left empty, the current user's ID will be used.
- * @param int (optional) The ID of a product in the store. If left empty, the function will see if the user has any subscription.
- * @param mixed (optional) A valid subscription status string or array. If left empty, the function will see if the user has a subscription of any status.
+ * @param int $user_id (optional) The ID of a user in the store. If left empty, the current user's ID will be used.
+ * @param int $product_id (optional) The ID of a product in the store. If left empty, the function will see if the user has any subscription.
+ * @param mixed $status (optional) A valid subscription status string or array. If left empty, the function will see if the user has a subscription of any status.
  * @since 2.0
+ *
+ * @return bool
  */
 function wcs_user_has_subscription( $user_id = 0, $product_id = '', $status = 'any' ) {
 
@@ -164,39 +166,73 @@ function wcs_user_has_subscription( $user_id = 0, $product_id = '', $status = 'a
  *
  * @param int $user_id (optional) The id of the user whose subscriptions you want. Defaults to the currently logged in user.
  * @since 2.0
+ *
+ * @return WC_Subscription[]
  */
 function wcs_get_users_subscriptions( $user_id = 0 ) {
-
 	if ( 0 === $user_id || empty( $user_id ) ) {
 		$user_id = get_current_user_id();
 	}
 
-	$subscriptions = apply_filters( 'wcs_pre_get_users_subscriptions', array(), $user_id );
+	$subscriptions = array();
+
+	if ( has_filter( 'wcs_pre_get_users_subscriptions' ) ) {
+		wcs_deprecated_function( 'The "wcs_pre_get_users_subscriptions" hook should no longer be used. A persistent caching layer is now in place. Because of this, "wcs_pre_get_users_subscriptions"', '2.3.0' );
+		$filtered_subscriptions = apply_filters( 'wcs_pre_get_users_subscriptions', $subscriptions, $user_id );
+
+		if ( is_array( $filtered_subscriptions ) ) {
+			$subscriptions = $filtered_subscriptions;
+		}
+	}
 
 	if ( empty( $subscriptions ) && 0 !== $user_id && ! empty( $user_id ) ) {
+		$subscription_ids = WCS_Customer_Store::instance()->get_users_subscription_ids( $user_id );
 
-		$post_ids = get_posts( array(
-			'posts_per_page' => -1,
-			'post_status'    => 'any',
-			'post_type'      => 'shop_subscription',
-			'orderby'        => 'date',
-			'order'          => 'desc',
-			'meta_key'       => '_customer_user',
-			'meta_value'     => $user_id,
-			'meta_compare'   => '=',
-			'fields'         => 'ids',
-		) );
-
-		foreach ( $post_ids as $post_id ) {
-			$subscription = wcs_get_subscription( $post_id );
+		foreach ( $subscription_ids as $subscription_id ) {
+			$subscription = wcs_get_subscription( $subscription_id );
 
 			if ( $subscription ) {
-				$subscriptions[ $post_id ] = $subscription;
+				$subscriptions[ $subscription_id ] = $subscription;
 			}
 		}
 	}
 
 	return apply_filters( 'wcs_get_users_subscriptions', $subscriptions, $user_id );
+}
+
+/**
+ * Get subscription IDs for the given user.
+ *
+ * @author Jeremy Pry
+ *
+ * @param int $user_id The ID of the user whose subscriptions you want.
+ *
+ * @return array Array of Subscription IDs.
+ */
+function wcs_get_users_subscription_ids( $user_id ) {
+	wcs_deprecated_function( __FUNCTION__, '2.3.0', 'WCS_Customer_Store::instance()->get_users_subscription_ids()' );
+	return WCS_Customer_Store::instance()->get_users_subscription_ids( $user_id );
+}
+
+/**
+ * Get subscription IDs for a user using caching.
+ *
+ * @author Jeremy Pry
+ *
+ * @param int $user_id The ID of the user whose subscriptions you want.
+ *
+ * @return array Array of subscription IDs.
+ */
+function wcs_get_cached_user_subscription_ids( $user_id = 0 ) {
+	wcs_deprecated_function( __FUNCTION__, '2.3.0', 'WCS_Customer_Store::instance()->get_users_subscription_ids()' );
+
+	$user_id = absint( $user_id );
+
+	if ( 0 === $user_id ) {
+		$user_id = get_current_user_id();
+	}
+
+	return WCS_Customer_Store::instance()->get_users_subscription_ids( $user_id );
 }
 
 /**
@@ -271,6 +307,11 @@ function wcs_can_user_put_subscription_on_hold( $subscription, $user = '' ) {
  * Retrieve available actions that a user can perform on the subscription
  *
  * @since 2.0
+ *
+ * @param WC_Subscription $subscription The subscription.
+ * @param int             $user_id      The user.
+ *
+ * @return array
  */
 function wcs_get_all_user_actions_for_subscription( $subscription, $user_id ) {
 
@@ -278,7 +319,7 @@ function wcs_get_all_user_actions_for_subscription( $subscription, $user_id ) {
 
 	if ( user_can( $user_id, 'edit_shop_subscription_status', $subscription->get_id() ) ) {
 
-		$admin_with_suspension_disallowed = ( current_user_can( 'manage_woocommerce' ) && '0' === get_option( WC_Subscriptions_Admin::$option_prefix . '_max_customer_suspensions', '0' ) ) ? true : false;
+		$admin_with_suspension_disallowed = current_user_can( 'manage_woocommerce' ) && '0' === get_option( WC_Subscriptions_Admin::$option_prefix . '_max_customer_suspensions', '0' );
 		$current_status = $subscription->get_status();
 
 		if ( $subscription->can_be_updated_to( 'on-hold' ) && wcs_can_user_put_subscription_on_hold( $subscription, $user_id ) && ! $admin_with_suspension_disallowed ) {
@@ -320,7 +361,7 @@ function wcs_get_all_user_actions_for_subscription( $subscription, $user_id ) {
  * @param array $allcaps
  * @param array $caps
  * @param array $args
- * @return bool
+ * @return array
  */
 function wcs_user_has_capability( $allcaps, $caps, $args ) {
 	if ( isset( $caps[0] ) ) {
