@@ -121,8 +121,8 @@ class NAM_Site_Admin {
                 ));
 
                 acf_add_options_page(array(
-                    'page_title'    => 'Membership Importer',
-                    'menu_title'    => 'Membership Importer',
+                    'page_title'    => 'Account Importer',
+                    'menu_title'    => 'Account Importer',
                     'icon_url'      => 'dashicons-id',
                     'position'      => '50.6',
                 ));

@@ -213,7 +213,7 @@ class NAM_Membership_Creator {
 
         $screen = get_current_screen();
 
-        if ( $screen->id != 'toplevel_page_acf-options-membership-importer' ) { return; }
+        if ( $screen->id != 'toplevel_page_acf-options-account-importer' ) { return; }
 
         $this->remove_acf_actions();
 
@@ -237,7 +237,7 @@ class NAM_Membership_Creator {
 
         $screen = get_current_screen();
 
-        if ( $screen->id != 'toplevel_page_acf-options-membership-creator' ) { return; }
+        if ( $screen->id != 'toplevel_page_acf-options-account-creator' ) { return; }
 
         $this->remove_acf_actions();
 
