@@ -366,6 +366,7 @@ class NAM_Membership_Creator {
             'attribute_billing-period' => 'Yearly',
             'attribute_subscription-type' => 'Both'
         );
+
         //
         // $order = wc_create_order( array( 'customer_id' => $user_id ) );
         // $order->add_product( $product, $quantity, $order_args );
@@ -397,13 +398,13 @@ class NAM_Membership_Creator {
         // In fact, to match salesforce, end date should be one month after next payment.
         // We'd need to flag this for the user, though.
 
-
         if ( $exp_date > date('Y-m-d H:i:s') ) {
-            $subscription->update_dates( array( 'next_payment' => $next_payment_date, 'end' => $exp_date ) );
+            $subscription->update_dates( array( 'next_payment' => $next_payment_date ) );
             $subscription->update_status('active', $description, true);
         } else {
-            $subscription->update_dates( array( 'next_payment' => $next_payment_date, 'end' => $exp_date ) );
-            $subscription->update_status('expired', $description);
+            $subscription->update_dates( array( 'next_payment' => $next_payment_date ) );
+            $subscription->update_status('on-hold', $description);
+            wcs_create_renewal_order( $subscription );
         }
 
         $subscription->save();
