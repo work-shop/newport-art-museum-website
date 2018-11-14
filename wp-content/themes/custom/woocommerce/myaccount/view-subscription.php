@@ -79,10 +79,11 @@ $membership = NAM_Membership::get_membership_for_subscription( $subscription );
 	<?php endforeach; ?>
 	<?php do_action( 'woocommerce_subscription_before_actions', $subscription ); ?>
 	<?php $actions = wcs_get_all_user_actions_for_subscription( $subscription, get_current_user_id() ); ?>
+	
 	<?php if ( ! empty( $actions ) ) : ?>
 
 		<?php // temporarily hiding all actions, so cancel is hidden ?>
-		<tr class="hidden">
+		<tr class="">
 			<td class="bold"><?php esc_html_e( 'Actions', 'woocommerce-subscriptions' ); ?></td>
 			<td>
 				<?php foreach ( $actions as $key => $action ) : ?>
