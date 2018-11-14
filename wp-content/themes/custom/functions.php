@@ -164,6 +164,13 @@ add_action( 'rest_api_init', function () {
 	) );
 } );
 
+// function iconic_reset_password_redirect( $user ) {
+//     wc_add_notice( __( 'Your password has been reset successfully.', 'woocommerce' ) );
+//     wp_safe_redirect( wc_get_page_permalink( 'myaccount' ) );
+//     exit;
+// }
+// add_action( 'woocommerce_customer_reset_password', 'iconic_reset_password_redirect', 10 );
+
 
 
 ?>
