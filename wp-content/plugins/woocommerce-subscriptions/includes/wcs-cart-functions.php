@@ -34,7 +34,7 @@ function wcs_cart_totals_shipping_html() {
 
 	$initial_packages = WC()->shipping->get_packages();
 
-	$show_package_details = count( WC()->cart->recurring_carts ) > 1 ? true : false;
+	$show_package_details = count( WC()->cart->recurring_carts ) > 1;
 	$show_package_name    = true;
 
 	// Create new subscriptions for each subscription product in the cart (that is not a renewal)
@@ -70,7 +70,7 @@ function wcs_cart_totals_shipping_html() {
 				} elseif ( in_array( $chosen_initial_method, $package['rates'] ) ) {
 					$chosen_recurring_method = $chosen_initial_method;
 				} else {
-					$chosen_recurring_method = current( $package['rates'] )->id;
+					$chosen_recurring_method = empty( $package['rates'] ) ? '' : current( $package['rates'] )->id;
 				}
 
 				$shipping_selection_displayed = false;
@@ -207,11 +207,26 @@ function wcs_cart_totals_taxes_total_html( $cart ) {
 }
 
 /**
- * Display a recurring coupon's value
+ * Display the remove link for a coupon.
+ *
+ *  @access public
+ *
+ * @param WC_Coupon $coupon
+ */
+function wcs_cart_coupon_remove_link_html( $coupon ) {
+	$html = '<a href="' . esc_url( add_query_arg( 'remove_coupon', urlencode( wcs_get_coupon_property( $coupon, 'code' ) ), defined( 'WOOCOMMERCE_CHECKOUT' ) ? wc_get_checkout_url() : wc_get_cart_url() ) ) . '" class="woocommerce-remove-coupon" data-coupon="' . esc_attr( wcs_get_coupon_property( $coupon, 'code' ) ) . '">' . __( '[Remove]', 'woocommerce-subscriptions' ) . '</a>';
+	echo wp_kses( $html, array_replace_recursive( wp_kses_allowed_html( 'post' ), array( 'a' => array( 'data-coupon' => true ) ) ) );
+}
+
+/**
+ * Display a recurring coupon's value.
+ *
+ * @see wc_cart_totals_coupon_html()
  *
  * @access public
- * @param string $coupon
- * @return void
+ *
+ * @param string|WC_Coupon $coupon
+ * @param WC_Cart          $cart
  */
 function wcs_cart_totals_coupon_html( $coupon, $cart ) {
 	if ( is_string( $coupon ) ) {
@@ -235,10 +250,11 @@ function wcs_cart_totals_coupon_html( $coupon, $cart ) {
 	// get rid of empty array elements
 	$value = implode( ', ', array_filter( $value ) );
 
-	// Apply WooCommerce core filter
-	$value = apply_filters( 'woocommerce_cart_totals_coupon_html', $value, $coupon );
+	// Apply filters.
+	$html = apply_filters( 'wcs_cart_totals_coupon_html', $value, $coupon, $cart );
+	$html = apply_filters( 'woocommerce_cart_totals_coupon_html', $html, $coupon, $discount_html );
 
-	echo wp_kses_post( apply_filters( 'wcs_cart_totals_coupon_html', wcs_cart_price_string( $value, $cart ), $coupon, $cart ) );
+	echo wp_kses( $html, array_replace_recursive( wp_kses_allowed_html( 'post' ), array( 'a' => array( 'data-coupon' => true ) ) ) );
 }
 
 /**
@@ -278,7 +294,7 @@ function wcs_cart_totals_order_total_html( $cart ) {
  * Return a formatted price string for a given cart object
  *
  * @access public
- * @return void
+ * @return string
  */
 function wcs_cart_price_string( $recurring_amount, $cart ) {
 
@@ -365,4 +381,22 @@ function wcs_get_cart_item_name( $cart_item, $include = array() ) {
 	}
 
 	return $cart_item_name;
+}
+
+/**
+ * Allows protected products to be renewed.
+ *
+ * @since 2.4.0
+ */
+function wcs_allow_protected_products_to_renew() {
+	remove_filter( 'woocommerce_add_to_cart_validation', 'wc_protected_product_add_to_cart' );
+}
+
+/**
+ * Restores protected products from being added to the cart.
+ * @see   wcs_allow_protected_products_to_renew
+ * @since 2.4.0
+ */
+function wcs_disallow_protected_product_add_to_cart_validation() {
+	add_filter( 'woocommerce_add_to_cart_validation', 'wc_protected_product_add_to_cart', 10, 2 );
 }

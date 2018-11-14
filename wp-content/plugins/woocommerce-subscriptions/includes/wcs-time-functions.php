@@ -34,7 +34,8 @@ function wcs_get_subscription_period_strings( $number = 1, $period = '' ) {
 			'month' => sprintf( _nx( 'month', '%s months', $number, 'Subscription billing period.', 'woocommerce-subscriptions' ), $number ),
 			// translators: placeholder is number of years. (e.g. "Bill this every year / 4 years")
 			'year'  => sprintf( _nx( 'year',  '%s years',  $number, 'Subscription billing period.', 'woocommerce-subscriptions' ), $number ),
-		)
+		),
+		$number
 	);
 
 	return ( ! empty( $period ) ) ? $translated_periods[ $period ] : $translated_periods;
@@ -55,7 +56,8 @@ function wcs_get_subscription_trial_period_strings( $number = 1, $period = '' ) 
 			'week'  => sprintf( _n( '%s week', 'a %s-week', $number, 'woocommerce-subscriptions' ), $number ),
 			'month' => sprintf( _n( '%s month', 'a %s-month', $number, 'woocommerce-subscriptions' ), $number ),
 			'year'  => sprintf( _n( '%s year', 'a %s-year', $number, 'woocommerce-subscriptions' ), $number ),
-		)
+		),
+		$number
 	);
 
 	return ( ! empty( $period ) ) ? $translated_periods[ $period ] : $translated_periods;
@@ -264,8 +266,8 @@ function wcs_add_months( $from_timestamp, $months_to_add ) {
  *
  * @param int $start_timestamp A Unix timestamp
  * @param int $end_timestamp A Unix timestamp at some time in the future
- * @param string $end_timestamp A unit of time, either day, week month or year.
- * @param string $unit_of_time A rounding method, either ceil (default) or floor for anything else
+ * @param string $unit_of_time A unit of time, either day, week month or year.
+ * @param string $rounding_method A rounding method, either ceil (default) or floor for anything else
  * @since 2.0
  */
 function wcs_estimate_periods_between( $start_timestamp, $end_timestamp, $unit_of_time = 'month', $rounding_method = 'ceil' ) {
@@ -606,7 +608,7 @@ function wcs_is_datetime_mysql_format( $time ) {
 	}
 
 	if ( function_exists( 'strptime' ) ) {
-		$valid_time = $match = ( false !== strptime( $time, '%Y-%m-%d %H:%M:%S' ) ) ? true : false;
+		$valid_time = $match = ( false !== strptime( $time, '%Y-%m-%d %H:%M:%S' ) );
 	} else {
 		// parses for the pattern of YYYY-MM-DD HH:MM:SS, but won't check whether it's a valid timedate
 		$match = preg_match( '/\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}/', $time );
@@ -616,7 +618,7 @@ function wcs_is_datetime_mysql_format( $time ) {
 	}
 
 	// magic number -2209078800 is strtotime( '1900-01-00 00:00:00' ). Needed to achieve parity with strptime
-	return ( $match && false !== $valid_time && -2209078800 <= $valid_time ) ? true : false;
+	return $match && false !== $valid_time && -2209078800 <= $valid_time;
 }
 
 /**
@@ -642,9 +644,9 @@ function wcs_date_to_time( $date_string ) {
 		return 0;
 	}
 
-	$date_obj = new DateTime( $date_string, new DateTimeZone( 'UTC' ) );
+	$date_time = new WC_DateTime( $date_string, new DateTimeZone( 'UTC' ) );
 
-	return intval( $date_obj->format( 'U' ) );
+	return intval( $date_time->getTimestamp() );
 }
 
 /**
@@ -703,62 +705,75 @@ function wcs_get_days_in_cycle( $period, $interval ) {
 }
 
 /**
- * Get an instance of the site's timezone.
+ * Set a DateTime's timezone to the WordPress site's timezone, or a UTC offset
+ * if no timezone string is available.
  *
- * @return DateTimeZone Timezone object for the timezone the site is using.
+ * @since 2.4.2
+ * @param WC_DateTime $date
+ * @return WC_DateTime
  */
-function wcs_get_sites_timezone() {
+function wcs_set_local_timezone( WC_DateTime $date ) {
 
-	if ( class_exists( 'ActionScheduler_TimezoneHelper' ) ) {
-
-		// Use Action Scheduler's version when possible as it caches the data
-		$local_timezone = ActionScheduler_TimezoneHelper::get_local_timezone();
-
+	if ( get_option( 'timezone_string' ) ) {
+		$date->setTimezone( new DateTimeZone( wc_timezone_string() ) );
 	} else {
-
-		$tzstring = get_option( 'timezone_string' );
-
-		if ( empty( $tzstring ) ) {
-
-			$gmt_offset = get_option( 'gmt_offset' );
-
-			if ( 0 == $gmt_offset ) {
-
-				$tzstring = 'UTC';
-
-			} else {
-
-				$gmt_offset *= HOUR_IN_SECONDS;
-				$tzstring    = timezone_name_from_abbr( '', $gmt_offset );
-
-				if ( false === $tzstring ) {
-
-					$is_dst = date( 'I' );
-
-					foreach ( timezone_abbreviations_list() as $abbr ) {
-
-						foreach ( $abbr as $city ) {
-							if ( $city['dst'] == $is_dst && $city['offset'] == $gmt_offset ) {
-								$tzstring = $city['timezone_id'];
-								break 2;
-							}
-						}
-					}
-				}
-
-				if ( false === $tzstring ) {
-					$tzstring = 'UTC';
-				}
-			}
-		}
-
-		$local_timezone = new DateTimeZone( $tzstring );
+		$date->set_utc_offset( wc_timezone_offset() );
 	}
 
-	return $local_timezone;
+	return $date;
 }
 
 /* Deprecated Functions */
+
+/**
+ * Get an instance of the site's timezone.
+ *
+ * @return DateTimeZone Timezone object for the timezone the site is using.
+ * @deprecated 2.4.2
+ */
+function wcs_get_sites_timezone() {
+	_deprecated_function( __FUNCTION__, '2.4.2' );
+
+	$tzstring = get_option( 'timezone_string' );
+
+	if ( empty( $tzstring ) ) {
+
+		$gmt_offset = get_option( 'gmt_offset' );
+
+		if ( 0 == $gmt_offset ) {
+
+			$tzstring = 'UTC';
+
+		} else {
+
+			$gmt_offset *= HOUR_IN_SECONDS;
+			$tzstring    = timezone_name_from_abbr( '', $gmt_offset );
+
+			if ( false === $tzstring ) {
+
+				$is_dst = date( 'I' );
+
+				foreach ( timezone_abbreviations_list() as $abbr ) {
+
+					foreach ( $abbr as $city ) {
+						if ( $city['dst'] == $is_dst && $city['offset'] == $gmt_offset ) {
+							$tzstring = $city['timezone_id'];
+							break 2;
+						}
+					}
+				}
+			}
+
+			if ( false === $tzstring ) {
+				$tzstring = 'UTC';
+			}
+		}
+	}
+
+	$local_timezone = new DateTimeZone( $tzstring );
+
+	return $local_timezone;
+}
 
 /**
  * Returns an array of subscription lengths.

@@ -35,7 +35,7 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 
 				$action_args    = $this->get_action_args( $date_type, $subscription );
 				$timestamp      = wcs_date_to_time( $datetime );
-				$next_scheduled = wc_next_scheduled_action( $action_hook, $action_args );
+				$next_scheduled = as_next_scheduled_action( $action_hook, $action_args );
 
 				if ( $next_scheduled !== $timestamp ) {
 
@@ -44,7 +44,7 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 
 					// Only reschedule if it's in the future
 					if ( $timestamp > current_time( 'timestamp', true ) && ( 'payment_retry' == $date_type || 'active' == $subscription->get_status() ) ) {
-						wc_schedule_single_action( $timestamp, $action_hook, $action_args );
+						as_schedule_single_action( $timestamp, $action_hook, $action_args );
 					}
 				}
 			}
@@ -75,9 +75,15 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 
 				foreach ( $this->action_hooks as $action_hook => $date_type ) {
 
+					$event_time = $subscription->get_time( $date_type );
+
+					// If there's no payment retry date, avoid calling get_action_args() because it calls the resource intensive WC_Subscription::get_last_order() / get_related_orders()
+					if ( 'payment_retry' === $date_type && 0 === $event_time ) {
+						continue;
+					}
+
 					$action_args    = $this->get_action_args( $date_type, $subscription );
-					$next_scheduled = wc_next_scheduled_action( $action_hook, $action_args );
-					$event_time     = $subscription->get_time( $date_type );
+					$next_scheduled = as_next_scheduled_action( $action_hook, $action_args );
 
 					// Maybe clear the existing schedule for this hook
 					if ( false !== $next_scheduled && $next_scheduled != $event_time ) {
@@ -85,7 +91,7 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 					}
 
 					if ( 0 != $event_time && $event_time > current_time( 'timestamp', true ) && $next_scheduled != $event_time ) {
-						wc_schedule_single_action( $event_time, $action_hook, $action_args );
+						as_schedule_single_action( $event_time, $action_hook, $action_args );
 					}
 				}
 				break;
@@ -98,7 +104,7 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 
 				$end_time       = $subscription->get_time( 'end' ); // This will have been set to the correct date already
 				$action_args    = $this->get_action_args( 'end', $subscription );
-				$next_scheduled = wc_next_scheduled_action( 'woocommerce_scheduled_subscription_end_of_prepaid_term', $action_args );
+				$next_scheduled = as_next_scheduled_action( 'woocommerce_scheduled_subscription_end_of_prepaid_term', $action_args );
 
 				if ( false !== $next_scheduled && $next_scheduled != $end_time ) {
 					$this->unschedule_actions( 'woocommerce_scheduled_subscription_end_of_prepaid_term', $action_args );
@@ -106,7 +112,7 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 
 				// The end date was set in WC_Subscriptions::update_dates() to the appropriate value, so we can schedule our action for that time
 				if ( $end_time > current_time( 'timestamp', true ) && $next_scheduled != $end_time ) {
-					wc_schedule_single_action( $end_time, 'woocommerce_scheduled_subscription_end_of_prepaid_term', $action_args );
+					as_schedule_single_action( $end_time, 'woocommerce_scheduled_subscription_end_of_prepaid_term', $action_args );
 				}
 				break;
 			case 'on-hold' :
@@ -183,9 +189,6 @@ class WCS_Action_Scheduler extends WCS_Scheduler {
 	 * @param array $action_args Array of name => value pairs stored against the scheduled action.
 	 */
 	protected function unschedule_actions( $action_hook, $action_args ) {
-		do {
-			wc_unschedule_action( $action_hook, $action_args );
-			$next_scheduled = wc_next_scheduled_action( $action_hook, $action_args );
-		} while ( false !== $next_scheduled );
+		as_unschedule_all_actions( $action_hook, $action_args );
 	}
 }

@@ -357,38 +357,54 @@ class NAM_Membership_Creator {
         $product = $user_data['member_level'];
         $start_date = $user_data['membership_start_date'];
         $exp_date = $user_data['membership_expiration_date'];
+        $next_payment_date = DateTime::createFromFormat( 'Y-m-d H:i:s', $exp_date );
+        $next_payment_date = $next_payment_date->modify('-1 day');
+        $next_payment_date = $next_payment_date->format('Y-m-d H:i:s');
         $quantity = 1;
 
-        // $order_args = array(
-        //     'attribute_billing-period' => 'Yearly',
-        //     'attribute_subscription-type' => 'Both'
-        // );
+        $order_args = array(
+            'attribute_billing-period' => 'Yearly',
+            'attribute_subscription-type' => 'Both'
+        );
         //
         // $order = wc_create_order( array( 'customer_id' => $user_id ) );
         // $order->add_product( $product, $quantity, $order_args );
         // $order->calculate_totals();
+        // $order->payment_complete();
         // $order->update_status('completed', 'Order imported via Membership Creator.', TRUE );
 
         $period = WC_Subscriptions_Product::get_period( $product );
         $interval = WC_Subscriptions_Product::get_interval( $product );
-        $length = WC_Subscriptions_Product::get_interval( $product );
+        $length = WC_Subscriptions_Product::get_length( $product );
 
         $subscription = wcs_create_subscription( array(
             'customer_id' => $user_id,
             //'order_id' => $order->get_id(),
             'billing_period' => $period,
             'billing_interval' => $interval,
+        //    'billing_length' => $length,
             'start_date' => $start_date
         ) );
 
         $subscription->set_customer_id( $user_id );
         $subscription->add_product( $product, $quantity, $order_args );
+        $subscription->calculate_totals();
+        $subscription->payment_complete();
+
+
 
         // NOTE: Add Next Payment here, if needed. 'end' must be later than 'next_payment'.
         // In fact, to match salesforce, end date should be one month after next payment.
         // We'd need to flag this for the user, though.
-        $subscription->update_dates( array( 'end' => $exp_date ) );
-        $subscription->calculate_totals();
+
+
+        if ( $exp_date > date('Y-m-d H:i:s') ) {
+            $subscription->update_dates( array( 'next_payment' => $next_payment_date, 'end' => $exp_date ) );
+            $subscription->update_status('active', $description, true);
+        } else {
+            $subscription->update_dates( array( 'next_payment' => $next_payment_date, 'end' => $exp_date ) );
+            $subscription->update_status('expired', $description);
+        }
 
         $subscription->save();
 
@@ -396,11 +412,6 @@ class NAM_Membership_Creator {
         update_post_meta( $subscription->id, static::$imported_membership_meta, 'yes' );
         update_post_meta( $subscription->id, static::$imported_membership_salesforce_id, $user_data['salesforce_id'] );
         //update_post_meta( $order->id, static::$imported_membership_order_meta, 'yes' );
-
-        $subscription->update_status('active', $description, true);
-        $subscription->save();
-
-        //WC_Subscriptions_Manager::activate_subscriptions_for_order( $order );
 
     }
 

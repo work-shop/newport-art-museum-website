@@ -58,21 +58,8 @@ jQuery(document).ready(function($){
 				seconds: one_hour_from_now.format( 'ss' )
 			});
 
-
-		// Make sure start date is before now
-		if ( 'start' == date_type ) {
-
-			if ( false === chosen_date.isBefore( time_now ) ) {
-				alert( wcs_admin_meta_boxes.i18n_start_date_notice );
-				$date_input.val( time_now.year() + '-' + ( zeroise( time_now.months() + 1 ) ) + '-' + ( time_now.format( 'DD' ) ) );
-				$hour_input.val( time_now.format( 'HH' ) );
-				$minute_input.val( time_now.format( 'mm' ) );
-			}
-
-		}
-
 		// Make sure trial end and next payment are after start date
-		else if ( ( 'trial_end' == date_type || 'next_payment' == date_type ) && '' != $( '#start_timestamp_utc' ).val() ) {
+		if ( ( 'trial_end' == date_type || 'next_payment' == date_type ) && '' != $( '#start_timestamp_utc' ).val() ) {
 			var change_date = false,
 				start       = moment.unix( $('#start_timestamp_utc').val() );
 
@@ -168,6 +155,60 @@ jQuery(document).ready(function($){
 	function zeroise( val ) {
 		return (val > 9 ) ? val : '0' + val;
 	}
+	
+	if( $( '#parent-order-id' ).is( 'select' ) ) {
+		wcs_update_parent_order_options();
+
+		$( '#customer_user' ).on( 'change', wcs_update_parent_order_options );
+	}
+
+	function wcs_update_parent_order_options() {
+
+		// Get user ID to load orders for
+		var user_id = $( '#customer_user' ).val();
+
+		if ( ! user_id ) {
+			return false;
+		}
+
+		var data = {
+			user_id:  user_id,
+			action:   'wcs_get_customer_orders',
+			security: wcs_admin_meta_boxes.get_customer_orders_nonce
+		};
+
+		$( '#parent-order-id' ).siblings( '.select2-container' ).block({
+			message: null,
+			overlayCSS: {
+				background: '#fff',
+				opacity: 0.6
+			}
+		});
+
+		$.ajax({
+			url: WCSubscriptions.ajaxUrl,
+			data: data,
+			type: 'POST',
+			success: function( response ) {
+				if ( response ) {
+					var $orderlist = $( '#parent-order-id' );
+
+					$( '#parent-order-id' ).select2( 'val', '' );
+
+					$orderlist.empty(); // remove old options
+
+					$orderlist.append( $( '<option></option>' ).attr( 'value', '' ).text( 'Select an order' ) );
+
+					$.each( response, function( order_id, order_number ) {
+						$orderlist.append( $( '<option></option>' ).attr( 'value', order_id ).text( order_number ) );
+					});
+
+					$( '#parent-order-id' ).siblings( '.select2-container' ).unblock();
+				}
+			}
+		});
+		return false;
+	};
 
 	$('body.post-type-shop_subscription #post').submit(function(){
 		if('wcs_process_renewal' == $( "body.post-type-shop_subscription select[name='wc_order_action']" ).val()) {

@@ -12,24 +12,23 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-require_once( 'includes/class-wcs-select2.php' );
-require_once( 'includes/wcs-deprecated-functions.php' );
-require_once( 'includes/wcs-compatibility-functions.php' );
-require_once( 'includes/wcs-conditional-functions.php' );
-require_once( 'includes/wcs-formatting-functions.php' );
-require_once( 'includes/wcs-product-functions.php' );
-require_once( 'includes/wcs-cart-functions.php' );
-require_once( 'includes/wcs-order-functions.php' );
-require_once( 'includes/wcs-time-functions.php' );
-require_once( 'includes/wcs-user-functions.php' );
-require_once( 'includes/wcs-helper-functions.php' );
-require_once( 'includes/wcs-renewal-functions.php' );
-require_once( 'includes/wcs-resubscribe-functions.php' );
-require_once( 'includes/wcs-switch-functions.php' );
-require_once( 'includes/wcs-limit-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-deprecated-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-compatibility-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-conditional-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-formatting-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-product-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-cart-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-order-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-time-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-user-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-helper-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-renewal-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-resubscribe-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-switch-functions.php' );
+require_once( dirname( __FILE__ ) . '/includes/wcs-limit-functions.php' );
 
 if ( is_admin() ) {
-	require_once( 'includes/admin/wcs-admin-functions.php' );
+	require_once( dirname( __FILE__ ) . '/includes/admin/wcs-admin-functions.php' );
 }
 
 /**
@@ -66,7 +65,7 @@ function wcs_do_subscriptions_exist() {
 	// query is the fastest, every other built in method uses this. Plus, the return value is the number of rows found
 	$num_rows_found = $wpdb->query( $sql );
 
-	return ( 0 !== $num_rows_found ) ? true: false;
+	return 0 !== $num_rows_found;
 }
 
 /**
@@ -101,12 +100,13 @@ function wcs_get_subscription( $the_subscription ) {
  */
 function wcs_create_subscription( $args = array() ) {
 
+	$now   = gmdate( 'Y-m-d H:i:s' );
 	$order = ( isset( $args['order_id'] ) ) ? wc_get_order( $args['order_id'] ) : null;
 
 	if ( ! empty( $order ) ) {
-		$default_start_date  = wcs_get_datetime_utc_string( wcs_get_objects_property( $order, 'date_created' ) );
+		$default_start_date = wcs_get_datetime_utc_string( wcs_get_objects_property( $order, 'date_created' ) );
 	} else {
-		$default_start_date = gmdate( 'Y-m-d H:i:s' );
+		$default_start_date = ( isset( $args['date_created'] ) ) ? $args['date_created'] : $now;
 	}
 
 	$default_args = array(
@@ -115,6 +115,7 @@ function wcs_create_subscription( $args = array() ) {
 		'customer_note'      => null,
 		'customer_id'        => ( ! empty( $order ) ) ? $order->get_user_id() : null,
 		'start_date'         => $default_start_date,
+		'date_created'       => $now,
 		'created_via'        => ( ! empty( $order ) ) ? wcs_get_objects_property( $order, 'created_via' ) : '',
 		'order_version'      => ( ! empty( $order ) ) ? wcs_get_objects_property( $order, 'version' ) : WC_VERSION,
 		'currency'           => ( ! empty( $order ) ) ? wcs_get_objects_property( $order, 'currency' ) : get_woocommerce_currency(),
@@ -124,11 +125,16 @@ function wcs_create_subscription( $args = array() ) {
 	$args              = wp_parse_args( $args, $default_args );
 	$subscription_data = array();
 
-	// validate the start_date field
+	// Validate the date_created arg.
+	if ( ! is_string( $args['date_created'] ) || false === wcs_is_datetime_mysql_format( $args['date_created'] ) ) {
+		return new WP_Error( 'woocommerce_subscription_invalid_date_created_format', _x( 'Invalid created date. The date must be a string and of the format: "Y-m-d H:i:s".', 'Error message while creating a subscription', 'woocommerce-subscriptions' ) );
+	} elseif ( wcs_date_to_time( $args['date_created'] ) > current_time( 'timestamp', true ) ) {
+		return new WP_Error( 'woocommerce_subscription_invalid_date_created', _x( 'Subscription created date must be before current day.', 'Error message while creating a subscription', 'woocommerce-subscriptions' ) );
+	}
+
+	// Validate the start_date arg.
 	if ( ! is_string( $args['start_date'] ) || false === wcs_is_datetime_mysql_format( $args['start_date'] ) ) {
 		return new WP_Error( 'woocommerce_subscription_invalid_start_date_format', _x( 'Invalid date. The date must be a string and of the format: "Y-m-d H:i:s".', 'Error message while creating a subscription', 'woocommerce-subscriptions' ) );
-	} else if ( wcs_date_to_time( $args['start_date'] ) > current_time( 'timestamp', true ) ) {
-		return new WP_Error( 'woocommerce_subscription_invalid_start_date', _x( 'Subscription start date must be before current day.', 'Error message while creating a subscription', 'woocommerce-subscriptions' ) );
 	}
 
 	// check customer id is set
@@ -149,14 +155,14 @@ function wcs_create_subscription( $args = array() ) {
 	$subscription_data['post_type']     = 'shop_subscription';
 	$subscription_data['post_status']   = 'wc-' . apply_filters( 'woocommerce_default_subscription_status', 'pending' );
 	$subscription_data['ping_status']   = 'closed';
-	$subscription_data['post_author']   = 1;
+	$subscription_data['post_author']   = WC_Subscriptions::is_woocommerce_pre( '3.5' ) ? 1 : $args['customer_id'];
 	$subscription_data['post_password'] = uniqid( 'order_' );
 	// translators: Order date parsed by strftime
 	$post_title_date = strftime( _x( '%b %d, %Y @ %I:%M %p', 'Used in subscription post title. "Subscription renewal order - <this>"', 'woocommerce-subscriptions' ) );
 	// translators: placeholder is order date parsed by strftime
 	$subscription_data['post_title']    = sprintf( _x( 'Subscription &ndash; %s', 'The post title for the new subscription', 'woocommerce-subscriptions' ), $post_title_date );
-	$subscription_data['post_date_gmt'] = $args['start_date'];
-	$subscription_data['post_date']     = get_date_from_gmt( $args['start_date'] );
+	$subscription_data['post_date_gmt'] = $args['date_created'];
+	$subscription_data['post_date']     = get_date_from_gmt( $args['date_created'] );
 
 	if ( $args['order_id'] > 0 ) {
 		$subscription_data['post_parent'] = absint( $args['order_id'] );
@@ -193,7 +199,25 @@ function wcs_create_subscription( $args = array() ) {
 	update_post_meta( $subscription_id, '_customer_user', $args['customer_id'] );
 	update_post_meta( $subscription_id, '_order_version', $args['order_version'] );
 
-	return wcs_get_subscription( $subscription_id );
+	update_post_meta( $subscription_id, '_schedule_start', $args['start_date'] );
+
+	/**
+	 * Filter the newly created subscription object.
+	 *
+	 * @since 2.2.22
+	 * @param WC_Subscription $subscription
+	 */
+	$subscription = apply_filters( 'wcs_created_subscription', wcs_get_subscription( $subscription_id ) );
+
+	/**
+	 * Triggered after a new subscription is created.
+	 *
+	 * @since 2.2.22
+	 * @param WC_Subscription $subscription
+	 */
+	do_action( 'wcs_create_subscription', $subscription );
+
+	return $subscription;
 }
 
 /**
@@ -347,10 +371,7 @@ function wcs_normalise_date_type_key( $date_type_key, $display_deprecated_notice
 
 	$deprecated_notice = '';
 
-	if ( 'start' === $date_type_key ) {
-		$deprecated_notice = 'The "start" date type parameter has been deprecated to align date types with improvements to date APIs in WooCommerce 3.0, specifically the introduction of a new "date_created" API. Use "date_created"';
-		$date_type_key     = 'date_created';
-	} elseif ( 'last_payment' === $date_type_key ) {
+	if ( 'last_payment' === $date_type_key ) {
 		$deprecated_notice = 'The "last_payment" date type parameter has been deprecated due to ambiguity (it actually returns the date created for the last order) and to align date types with improvements to date APIs in WooCommerce 3.0, specifically the introduction of a new "date_paid" API. Use "last_order_date_created" or "last_order_date_paid"';
 		// For backward compatibility we have to use the date created here not the 'date_paid', see: https://github.com/Prospress/woocommerce-subscriptions/issues/1943
 		$date_type_key = 'last_order_date_created';
@@ -447,7 +468,7 @@ function wcs_get_subscriptions( $args ) {
 		'offset'         => $args['offset'],
 		'order'          => $args['order'],
 		'fields'         => 'ids',
-		'meta_query'     => array(), // just in case we need to filter or order by meta values later
+		'meta_query'     => isset( $args['meta_query'] ) ? $args['meta_query'] : array(), // just in case we need to filter or order by meta values later
 	);
 
 	// Maybe only get subscriptions created by a certain order
@@ -466,14 +487,15 @@ function wcs_get_subscriptions( $args ) {
 		case 'trial_end_date' :
 		case 'end_date' :
 			// We need to orderby post meta value: http://www.paulund.co.uk/order-meta-query
+			$date_type  = str_replace( '_date', '', $args['orderby'] );
 			$query_args = array_merge( $query_args, array(
 				'orderby'   => 'meta_value',
-				'meta_key'  => wcs_get_date_meta_key( $args['orderby'] ),
+				'meta_key'  => wcs_get_date_meta_key( $date_type ),
 				'meta_type' => 'DATETIME',
 			) );
 			$query_args['meta_query'][] = array(
-				'key'     => wcs_get_date_meta_key( $args['orderby'] ),
-				'value'   => 'EXISTS',
+				'key'     => wcs_get_date_meta_key( $date_type ),
+				'compare' => 'EXISTS',
 				'type'    => 'DATETIME',
 			);
 			break;
@@ -484,17 +506,14 @@ function wcs_get_subscriptions( $args ) {
 
 	// Maybe filter to a specific user
 	if ( 0 != $args['customer_id'] && is_numeric( $args['customer_id'] ) ) {
-		$query_args['meta_query'][] = array(
-			'key'     => '_customer_user',
-			'value'   => $args['customer_id'],
-			'type'    => 'numeric',
-			'compare' => ( is_array( $args['customer_id'] ) ) ? 'IN' : '=',
-		);
+		$users_subscription_ids = WCS_Customer_Store::instance()->get_users_subscription_ids( $args['customer_id'] );
+		$query_args             = WCS_Admin_Post_Types::set_post__in_query_var( $query_args, $users_subscription_ids );
 	};
 
 	// We need to restrict subscriptions to those which contain a certain product/variation
 	if ( ( 0 != $args['product_id'] && is_numeric( $args['product_id'] ) ) || ( 0 != $args['variation_id'] && is_numeric( $args['variation_id'] ) ) ) {
-		$query_args['post__in'] = wcs_get_subscriptions_for_product( array( $args['product_id'], $args['variation_id'] ) );
+		$subscriptions_for_product = wcs_get_subscriptions_for_product( array( $args['product_id'], $args['variation_id'] ) );
+		$query_args                = WCS_Admin_Post_Types::set_post__in_query_var( $query_args, $subscriptions_for_product );
 	}
 
 	if ( ! empty( $query_args['meta_query'] ) ) {
@@ -660,5 +679,104 @@ function wcs_get_subscription_ended_statuses() {
 function wcs_is_view_subscription_page() {
 	global $wp;
 
-	return ( is_page( wc_get_page_id( 'myaccount' ) ) && isset( $wp->query_vars['view-subscription'] ) ) ? true : false;
+	return is_page( wc_get_page_id( 'myaccount' ) ) && isset( $wp->query_vars['view-subscription'] );
+}
+
+/**
+ * Get a WooCommerce Subscription's image asset url.
+ *
+ * @param string $file_name The image file name.
+ * @return string The image asset url.
+ * @since 2.2.20
+ */
+function wcs_get_image_asset_url( $file_name ) {
+	return plugins_url( "/assets/images/{$file_name}", WC_Subscriptions::$plugin_file );
+}
+
+/**
+ * Search subscriptions
+ *
+ * @param string $term Term to search
+ * @return array of subscription ids
+ * @since 2.3.0
+ */
+function wcs_subscription_search( $term ) {
+	global $wpdb;
+
+	$subscription_ids = array();
+
+	if ( ! WC_Subscriptions::is_woocommerce_pre( '3.0' ) ) {
+
+		$data_store = WC_Data_Store::load( 'subscription' );
+		$subscription_ids = $data_store->search_subscriptions( str_replace( 'Order #', '', wc_clean( $term ) ) );
+
+	} else {
+
+		$search_order_id = str_replace( 'Order #', '', $term );
+		if ( ! is_numeric( $search_order_id ) ) {
+			$search_order_id = 0;
+		}
+
+		$search_fields = array_map( 'wc_clean', apply_filters( 'woocommerce_shop_subscription_search_fields', array(
+			'_order_key',
+			'_billing_company',
+			'_billing_address_1',
+			'_billing_address_2',
+			'_billing_city',
+			'_billing_postcode',
+			'_billing_country',
+			'_billing_state',
+			'_billing_email',
+			'_billing_phone',
+			'_shipping_address_1',
+			'_shipping_address_2',
+			'_shipping_city',
+			'_shipping_postcode',
+			'_shipping_country',
+			'_shipping_state',
+		) ) );
+
+		$subscription_ids = array_unique( array_merge(
+			$wpdb->get_col(
+				$wpdb->prepare( "
+					SELECT p1.post_id
+					FROM {$wpdb->postmeta} p1
+					INNER JOIN {$wpdb->postmeta} p2 ON p1.post_id = p2.post_id
+					WHERE
+						( p1.meta_key = '_billing_first_name' AND p2.meta_key = '_billing_last_name' AND CONCAT(p1.meta_value, ' ', p2.meta_value) LIKE '%%%s%%' )
+					OR
+						( p1.meta_key = '_shipping_first_name' AND p2.meta_key = '_shipping_last_name' AND CONCAT(p1.meta_value, ' ', p2.meta_value) LIKE '%%%s%%' )
+					OR
+						( p1.meta_key IN ('" . implode( "','", esc_sql( $search_fields ) ) . "') AND p1.meta_value LIKE '%%%s%%' )
+					",
+					esc_attr( $term ), esc_attr( $term ), esc_attr( $term )
+				)
+			),
+			$wpdb->get_col(
+				$wpdb->prepare( "
+					SELECT order_id
+					FROM {$wpdb->prefix}woocommerce_order_items as order_items
+					WHERE order_item_name LIKE '%%%s%%'
+					",
+					esc_attr( $term )
+				)
+			),
+			$wpdb->get_col(
+				$wpdb->prepare( "
+					SELECT p1.ID
+					FROM {$wpdb->posts} p1
+					INNER JOIN {$wpdb->postmeta} p2 ON p1.ID = p2.post_id
+					INNER JOIN {$wpdb->users} u ON p2.meta_value = u.ID
+					WHERE u.user_email LIKE '%%%s%%'
+					AND p2.meta_key = '_customer_user'
+					AND p1.post_type = 'shop_subscription'
+					",
+					esc_attr( $term )
+				)
+			),
+			array( $search_order_id )
+		) );
+	}
+
+	return $subscription_ids;
 }

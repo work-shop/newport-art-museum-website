@@ -50,6 +50,9 @@ class WC_Subscriptions_Manager {
 		// Order is trashed, trash subscription
 		add_action( 'wp_trash_post', __CLASS__ . '::maybe_trash_subscription', 10 );
 
+		// Order is restored (untrashed), restore subscription
+		add_action( 'untrashed_post', __CLASS__ . '::maybe_untrash_subscription', 10 );
+
 		// When order is deleted, delete the subscription.
 		add_action( 'before_delete_post', array( __CLASS__, 'maybe_delete_subscription' ) );
 
@@ -130,7 +133,7 @@ class WC_Subscriptions_Manager {
 			} else {
 
 				if ( $subscription->is_manual() ) {
-					do_action( 'woocommerce_generated_manual_renewal_order', wcs_get_objects_property( $renewal_order, 'id' ) );
+					do_action( 'woocommerce_generated_manual_renewal_order', wcs_get_objects_property( $renewal_order, 'id' ), $subscription );
 				} else {
 					$renewal_order->set_payment_method( wc_get_payment_gateway_by_order( $subscription ) ); // We need to pass the payment gateway instance to be compatible with WC < 3.0, only WC 3.0+ supports passing the string name
 
@@ -788,6 +791,19 @@ class WC_Subscriptions_Manager {
 			// delete subscription
 			foreach ( wcs_get_subscriptions_for_order( $post_id, array( 'order_type' => 'parent' ) ) as $subscription ) {
 				wp_trash_post( $subscription->get_id() );
+			}
+		}
+	}
+
+	/**
+	 * Untrash all subscriptions attached to an order when it's restored.
+	 * @param int $post_id The post ID of the WC Order being restored
+	 * @since 2.2.17
+	 */
+	public static function maybe_untrash_subscription( $post_id ) {
+		if ( 'shop_order' == get_post_type( $post_id ) ) {
+			foreach ( wcs_get_subscriptions_for_order( $post_id, array( 'order_type' => 'parent', 'subscription_status' => array( 'trash' ) ) ) as $subscription ) {
+				wp_untrash_post( $subscription->get_id() );
 			}
 		}
 	}
@@ -1905,7 +1921,7 @@ class WC_Subscriptions_Manager {
 
 			// We've already processed the renewal
 			remove_action( 'woocommerce_scheduled_subscription_payment', __CLASS__ . '::prepare_renewal' );
-			remove_action( 'woocommerce_scheduled_subscription_payment', 'WC_Subscriptions_Payment_Gateways::gateway_scheduled_subscription_payment', 10, 1 );
+			remove_action( 'woocommerce_scheduled_subscription_payment', 'WC_Subscriptions_Payment_Gateways::gateway_scheduled_subscription_payment', 10 );
 		}
 	}
 
@@ -2344,5 +2360,3 @@ class WC_Subscriptions_Manager {
 		_deprecated_function( __METHOD__, '2.0' );
 	}
 }
-
-WC_Subscriptions_Manager::init();

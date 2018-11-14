@@ -59,7 +59,9 @@ abstract class ActionScheduler {
 
 	public static function autoload( $class ) {
 		$d = DIRECTORY_SEPARATOR;
-		if ( strpos( $class, 'ActionScheduler' ) === 0 ) {
+		if ( 'Deprecated' === substr( $class, -10 ) ) {
+			$dir = self::plugin_path('deprecated'.$d);
+		} elseif ( strpos( $class, 'ActionScheduler' ) === 0 ) {
 			$dir = self::plugin_path('classes'.$d);
 		} elseif ( strpos( $class, 'CronExpression' ) === 0 ) {
 			$dir = self::plugin_path('lib'.$d.'cron-expression'.$d);
@@ -67,8 +69,8 @@ abstract class ActionScheduler {
 			return;
 		}
 
-		if ( file_exists( $dir.$class.'.php' ) ) {
-			include( $dir.$class.'.php' );
+		if ( file_exists( "{$dir}{$class}.php" ) ) {
+			include( "{$dir}{$class}.php" );
 			return;
 		}
 	}
@@ -78,7 +80,6 @@ abstract class ActionScheduler {
 	 *
 	 * @static
 	 * @param string $plugin_file
-	 * @return void
 	 */
 	public static function init( $plugin_file ) {
 		self::$plugin_file = $plugin_file;
@@ -97,6 +98,14 @@ abstract class ActionScheduler {
 		add_action( 'init', array( $admin_view, 'init' ), 0, 0 ); // run before $store::init()
 
 		require_once( self::plugin_path('functions.php') );
+
+		if ( apply_filters( 'action_scheduler_load_deprecated_functions', true ) ) {
+			require_once( self::plugin_path('deprecated/functions.php') );
+		}
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			WP_CLI::add_command( 'action-scheduler', 'ActionScheduler_WPCLI_Scheduler_command' );
+		}
 	}
 
 
@@ -117,4 +126,3 @@ abstract class ActionScheduler {
 		return as_get_datetime_object( $when, $timezone );
 	}
 }
- 
