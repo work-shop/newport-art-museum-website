@@ -114,8 +114,8 @@ class NAM_Site_Admin {
             if ( $roles[0] == 'administrator' ) {
 
                 acf_add_options_page(array(
-                    'page_title'    => 'Membership Creator',
-                    'menu_title'    => 'Membership Creator',
+                    'page_title'    => 'Account Creator',
+                    'menu_title'    => 'Account Creator',
                     'icon_url'      => 'dashicons-id',
                     'position'      => '50.5',
                 ));

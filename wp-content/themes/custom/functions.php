@@ -122,25 +122,6 @@ endif;
 endif;
 endif; 
 
-// if ( $closed_for_holiday ):
-
-
-// if( $museum_status === 'open' ):
-// 	$status1 = 'The museum is currently <span class="ms-status ms-status-open">open.</span>';
-// else: 
-// 	if ( $closed_for_holiday ):
-// 	$status1 = 'The museum is currently <span class="ms-status ms-status-closed">closed for a holiday.</span>';
-// else:
-// 	$status = 'The museum is currently <span class="ms-status ms-status-closed">closed.</span>';
-// endif;
-
-
-
-// $status = 'The museum is currently <span class="ms-status ms-status-' . $museum_status if ( $closed_for_holiday ) ;
-
-
-
-
 ob_start(); ?>
 
 The museum is currently <span class="ms-status ms-status-<?php echo $museum_status; ?>"><?php echo $museum_status; ?><?php if ( $closed_for_holiday ): ?> for a holiday<?php endif; ?>.</span>
@@ -164,13 +145,9 @@ add_action( 'rest_api_init', function () {
 	) );
 } );
 
-// function iconic_reset_password_redirect( $user ) {
-//     wc_add_notice( __( 'Your password has been reset successfully.', 'woocommerce' ) );
-//     wp_safe_redirect( wc_get_page_permalink( 'myaccount' ) );
-//     exit;
-// }
-// add_action( 'woocommerce_customer_reset_password', 'iconic_reset_password_redirect', 10 );
-
+$val = get_option( 'wp_user_roles' );
+$val['subscriber']['name'] = 'Member';
+update_option( 'wp_user_roles', $val );
 
 
 ?>
