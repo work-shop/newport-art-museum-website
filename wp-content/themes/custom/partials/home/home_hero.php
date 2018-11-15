@@ -10,9 +10,9 @@
 	$home_hero_link_color = get_field('home_hero_link_color');
 	?>
 	<div class="block-background mask mask-dark" style="background-image: url('<?php echo $home_hero_image; ?>');"></div>
-	<?php if( get_field('home_hero_image_credit') || true ): ?>
+	<?php if( get_field('home_hero_image_credit') ): ?>
 		<div class="home-hero-image-credit">
-			<span>Rania Matar, Samira, 15, Bourj El Barajneh Refugee Camp, Beirut, Lebanon, 2015. From “Invisible Children” series. Courtesy of the artist, Robert Klein Gallery, Boston, and C. Grimaldis Gallery, Baltimore.</span>
+			<span><?php the_field('home_hero_image_credit'); ?></span>
 		</div>
 	<?php endif; ?>
 	<div class="vertical-center">
