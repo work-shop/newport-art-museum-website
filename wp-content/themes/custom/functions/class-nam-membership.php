@@ -240,13 +240,7 @@ class NAM_Membership {
 
             if ( has_term( static::$membership_category_slug, 'product_cat', $product->id ) ) {
 
-                $parents = NAM_Membership_Tier::get_parent_posts( $product->id );
-
-                if ( !empty( $parents ) ) {
-
-                    return get_post( $parents[0] );
-
-                }
+                return $product;
 
             }
 
