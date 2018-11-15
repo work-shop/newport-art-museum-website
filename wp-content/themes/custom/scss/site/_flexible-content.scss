@@ -192,6 +192,14 @@ $fc-padding: 7vh 0 6vh 0;
 		position: absolute;
 		display: table;
 		width: 100%;
+
+		h2{
+			margin-bottom: 0;
+		}
+
+		h2 + h3{
+			margin-top: .5em;
+		}
 	}
 
 }

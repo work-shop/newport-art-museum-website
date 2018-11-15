@@ -5,12 +5,16 @@ class WS_Flexible_Content_Helper{
 	public static function fc_background_text( $background_type, $heading, $heading_font, $text_alignment, $text_color, $subheading, $subheading_font, $link_url, $link_text ){ ?>
 		<?php if( $heading ): ?>
 			<div class="fc-background-heading <?php if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>">
-				<h2 class="<?php if($heading_font): echo $heading_font; else: echo 'serif'; endif; ?> <?php echo $text_color . ' '; if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>"><?php echo $heading; ?></h2>
+				<h2 class="<?php if($heading_font): echo $heading_font; else: echo 'serif'; endif; ?> <?php echo $text_color . ' '; if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>">
+					<?php echo $heading; ?>
+				</h2>
 			</div>
 		<?php endif; ?>
 		<?php if( $subheading ): ?>
 			<div class="fc-background-subheading <?php if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>">
-				<h3 class="<?php if($heading_font): echo $heading_font; else: echo 'serif'; endif; ?> <?php echo $text_color . ' '; if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>"><?php echo $subheading; ?></h3>
+				<h3 class="<?php if($heading_font): echo $heading_font; else: echo 'serif'; endif; ?> <?php echo $text_color . ' '; if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>">
+					<?php echo $subheading; ?>
+				</h3>
 			</div>
 		<?php endif; ?>
 		<?php if( $link_url ): ?>
