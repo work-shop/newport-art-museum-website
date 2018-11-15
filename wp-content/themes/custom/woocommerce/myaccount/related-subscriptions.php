@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
 				</td>
 				<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
-					<?php echo esc_attr( $subscription->get_date_to_display( 'end_date' ) ); ?>
+					<?php echo esc_attr( $subscription->get_date_to_display( 'next_payment' ) ); ?>
 				</td>
 				<td class="subscription-total order-total" data-title="<?php echo esc_attr_x( 'Total', 'Used in data attribute. Escaped', 'woocommerce-subscriptions' ); ?>">
 					<?php echo wp_kses_post( $subscription->get_formatted_order_total() ); ?>

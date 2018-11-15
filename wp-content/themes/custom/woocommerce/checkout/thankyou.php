@@ -21,6 +21,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
+<?php if( NAM_Helpers::is_tree(6) ):?>
+<?php echo  $GLOBALS['tree_slug']; ?>
+is 6 
+<?php endif; ?> 
+
 <div class="woocommerce-order">
 
 	<?php if ( $order ) : ?>
@@ -121,8 +126,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="row">
 			<div class="col">
+				<div class="thankyou-order-details">
+					<div class="thank-you-order-details-sibling">
+					</div>
 				<?php do_action( 'woocommerce_thankyou_' . $order->get_payment_method(), $order->get_id() ); ?>
 				<?php do_action( 'woocommerce_thankyou', $order->get_id() ); ?>
+			</div>
 			</div>
 		</div>
 

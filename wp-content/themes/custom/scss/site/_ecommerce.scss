@@ -613,19 +613,25 @@ input[name="createaccount"]{
 .woocommerce-customer-details{
 	//display: none;
 	margin-bottom: 4em;
-		//border: 1px solid orange;
-	}
+	//border: 1px solid orange;
+}
 
 
-	strong span{
-		@extend .bold;
-	}
+strong span{
+	@extend .bold;
+}
 
-	.woocommerce-order-overview{
-		li{
-			margin-bottom: .25em;
-		}
+.woocommerce-order-overview{
+	li{
+		margin-bottom: .25em;
 	}
+}
+
+.thank-you-order-details-sibling ~ p{
+	display: none;
+}
+
+
 
 
 
