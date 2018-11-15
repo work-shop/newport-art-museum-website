@@ -50,6 +50,36 @@
 
 #home-hero{
 
+	.home-hero-image-credit{
+		position: absolute;
+		bottom: 15px;
+		right: 15px;
+		width: calc(100% - 30px);
+		font-size: 10px;
+		max-width: 568px;
+		text-align: right;
+
+		@media screen and (max-width: $sm) {
+			text-align: left;
+			left: 15px;
+			right: auto;
+		}
+
+		span{
+			color: white;
+			font-size: 11px;
+			text-align: right;
+
+			@media screen and (max-width: $md) {
+				font-size: 10px;
+			}
+
+			@media screen and (max-width: $sm) {
+				font-size: 7px;
+			}
+		}
+	}
+
 	.home-hero-heading{
 		@media screen and (max-height: 700px) {
 			font-size: 35px;
