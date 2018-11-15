@@ -7,5 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'WPDesk\\PluginBuilder\\' => array($vendorDir . '/wpdesk/wp-builder/src'),
+    'WPDesk\\Notice\\' => array($vendorDir . '/wpdesk/wp-notice/src/WPDesk/Notice'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
 );

@@ -50,23 +50,23 @@
     },
     {
         "name": "wpdesk/wp-autoloader",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "1.1",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://gitlab.com/wpdesk/wp-autoloader.git",
-            "reference": "6612615e0578bf41ce2f094560e9979b3c850081"
+            "reference": "2c471071e240b0f093610d45e20601369e3e3d92"
         },
         "dist": {
             "type": "zip",
-            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-autoloader/repository/archive.zip?sha=6612615e0578bf41ce2f094560e9979b3c850081",
-            "reference": "6612615e0578bf41ce2f094560e9979b3c850081",
+            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-autoloader/repository/archive.zip?sha=2c471071e240b0f093610d45e20601369e3e3d92",
+            "reference": "2c471071e240b0f093610d45e20601369e3e3d92",
             "shasum": ""
         },
         "require": {
             "php": ">=5.5",
             "psr/log": "^1.0",
-            "wpdesk/wp-basic-requirements": "dev-master"
+            "wpdesk/wp-basic-requirements": "^2.0"
         },
         "require-dev": {
             "10up/wp_mock": "*",
@@ -76,9 +76,9 @@
             "wimg/php-compatibility": "^8",
             "wp-coding-standards/wpcs": "^0.14.1"
         },
-        "time": "2018-07-26T10:03:45+00:00",
+        "time": "2018-10-18T13:10:55+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "notification-url": "https://packagist.org/downloads/",
         "authors": [
             {
@@ -89,8 +89,8 @@
     },
     {
         "name": "wpdesk/wp-basic-requirements",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "2.0",
+        "version_normalized": "2.0.0.0",
         "source": {
             "type": "git",
             "url": "https://gitlab.com/wpdesk/wp-basic-requirements.git",
@@ -116,7 +116,7 @@
         },
         "time": "2018-08-05T15:46:18+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "notification-url": "https://packagist.org/downloads/",
         "authors": [
             {
@@ -127,22 +127,22 @@
     },
     {
         "name": "wpdesk/wp-builder",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
+        "version": "1.1",
+        "version_normalized": "1.1.0.0",
         "source": {
             "type": "git",
             "url": "https://gitlab.com/wpdesk/wp-builder.git",
-            "reference": "c89382f7c060c2bf2048b1195a1276eb2882ac55"
+            "reference": "7e54daed6f86260705fa65d2668ae65f9e66114f"
         },
         "dist": {
             "type": "zip",
-            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-builder/repository/archive.zip?sha=c89382f7c060c2bf2048b1195a1276eb2882ac55",
-            "reference": "c89382f7c060c2bf2048b1195a1276eb2882ac55",
+            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-builder/repository/archive.zip?sha=7e54daed6f86260705fa65d2668ae65f9e66114f",
+            "reference": "7e54daed6f86260705fa65d2668ae65f9e66114f",
             "shasum": ""
         },
         "require": {
             "php": ">=5.5",
-            "wpdesk/wp-basic-requirements": "dev-master"
+            "wpdesk/wp-basic-requirements": "^2.0"
         },
         "require-dev": {
             "10up/wp_mock": "*",
@@ -152,9 +152,9 @@
             "wimg/php-compatibility": "^8",
             "wp-coding-standards/wpcs": "^0.14.1"
         },
-        "time": "2018-08-13T12:43:38+00:00",
+        "time": "2018-10-18T13:11:44+00:00",
         "type": "library",
-        "installation-source": "source",
+        "installation-source": "dist",
         "autoload": {
             "psr-4": {
                 "WPDesk\\PluginBuilder\\": "src/"
@@ -166,6 +166,63 @@
                 "name": "Krzysiek",
                 "email": "krzysiek@wpdesk.pl"
             }
+        ]
+    },
+    {
+        "name": "wpdesk/wp-notice",
+        "version": "2.1",
+        "version_normalized": "2.1.0.0",
+        "source": {
+            "type": "git",
+            "url": "https://gitlab.com/wpdesk/wp-notice.git",
+            "reference": "000089704b45e109af6f6ad64b0020a403d9dbd9"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-notice/repository/archive.zip?sha=000089704b45e109af6f6ad64b0020a403d9dbd9",
+            "reference": "000089704b45e109af6f6ad64b0020a403d9dbd9",
+            "shasum": ""
+        },
+        "require": {
+            "php": ">=5.5",
+            "wpdesk/wp-basic-requirements": "^2.0",
+            "wpdesk/wp-builder": "^1.0"
+        },
+        "require-dev": {
+            "10up/wp_mock": "*",
+            "mockery/mockery": "*",
+            "phpunit/phpunit": "<7",
+            "squizlabs/php_codesniffer": "^3.0.2",
+            "wimg/php-compatibility": "^8",
+            "wp-coding-standards/wpcs": "^0.14.1"
+        },
+        "time": "2018-10-18T13:29:06+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-4": {
+                "WPDesk\\Notice\\": "src/WPDesk/Notice/"
+            },
+            "files": [
+                "src/WPDesk/functions.php"
+            ]
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "grola",
+                "email": "grola@wpdesk.net"
+            }
+        ],
+        "description": "Library for displaying Wordpress notices.",
+        "homepage": "https://gitlab.com/wpdesk/wp-notice",
+        "keywords": [
+            "admin",
+            "notice",
+            "wordpress"
         ]
     }
 ]

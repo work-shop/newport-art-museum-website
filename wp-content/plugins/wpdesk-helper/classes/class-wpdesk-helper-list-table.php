@@ -27,8 +27,6 @@ class WPDesk_Helper_List_Table extends WP_List_Table {
 
 		$this->data = [];
 
-//		require_once( ABSPATH . '/wp-admin/includes/plugin-install.php' );
-
 		parent::__construct( $args );
 	}
 
@@ -86,15 +84,14 @@ class WPDesk_Helper_List_Table extends WP_List_Table {
 			$api_key          = $item['api_manager']->options[ $item['api_manager']->api_key ];
 			$activation_email = $item['api_manager']->options[ $item['api_manager']->activation_email ];
 		}
-		$args = [
-			'api_key'           => $api_key,
-			'activation_email'  => $activation_email,
-			'plugin'            => $item['plugin'],
-			'activation_status' => $item['activation_status'],
-			'disabled'          => $disabled,
-		];
+		$plugin = $item['plugin'];
+		$activation_status = $item['activation_status'];
 
-		return WPDesk_Helper()->loadTemplate( 'license-actions', '', $args );
+		ob_start();
+		include 'views/license-actions.php';
+		$output = ob_get_contents();
+		ob_end_clean();
+		return $output;
 	}
 
 	public function get_bulk_actions() {

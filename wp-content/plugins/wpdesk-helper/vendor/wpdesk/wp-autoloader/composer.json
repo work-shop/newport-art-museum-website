@@ -8,7 +8,7 @@
     ],
     "require": {
         "php": ">=5.5",
-        "wpdesk/wp-basic-requirements": "dev-master",
+        "wpdesk/wp-basic-requirements": "^2.0",
         "psr/log": "^1.0"
 
     },

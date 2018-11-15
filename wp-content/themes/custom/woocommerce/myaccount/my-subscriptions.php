@@ -12,7 +12,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-
+<?php 
+// TRUE if the user was imported via the backend tools.
+$user_was_imported = NAM_Membership::user_was_imported();
+?>
 
 <div class="woocommerce_account_subscriptions">
 
@@ -28,7 +31,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<th class="subscription-id order-number"><span class="nobr"><?php esc_html_e( 'Membership', 'woocommerce-subscriptions' ); ?></span></th>
 					<th class="subscription-status order-status"><span class="nobr"><?php esc_html_e( 'Status', 'woocommerce-subscriptions' ); ?></span></th>
 					<th class="subscription-next-payment order-date"><span class="nobr"><?php echo esc_html_x( 'Expiration Date', 'table heading', 'woocommerce-subscriptions' ); ?></span></th>
-					<th class="subscription-total order-total"><span class="nobr"><?php echo esc_html_x( 'Total', 'table heading', 'woocommerce-subscriptions' ); ?></span></th>
+					<?php if( $user_was_imported === false ): ?>
+						<th class="subscription-total order-total"><span class="nobr"><?php echo esc_html_x( 'Total', 'table heading', 'woocommerce-subscriptions' ); ?></span></th>
+					<?php endif; ?>
 					<th class="subscription-actions order-actions hidden-xs">&nbsp;</th>
 				</tr>
 			</thead>
@@ -56,7 +61,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
 							</td>
 							<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
-								<?php echo esc_attr( $subscription->get_date_to_display( 'end' ) ); ?>
+								<?php echo esc_attr( $subscription->get_date_to_display( 'next_payment' ) ); ?>
 								<?php if ( ! $subscription->is_manual() && $subscription->has_status( 'active' ) && $subscription->get_time( 'next_payment' ) > 0 ) : ?>
 								<?php
 								// translators: placeholder is the display name of a payment gateway a subscription was paid by
@@ -66,9 +71,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 								<br/><small><?php echo esc_attr( $payment_method_to_display ); ?></small>
 							<?php endif; ?>
 						</td>
-						<td class="subscription-total order-total" data-title="<?php echo esc_attr_x( 'Total', 'Used in data attribute. Escaped', 'woocommerce-subscriptions' ); ?>">
-							<?php echo wp_kses_post( $subscription->get_formatted_order_total() ); ?>
-						</td>
+						<?php if( $user_was_imported === false ): ?>
+							<td class="subscription-total order-total" data-title="<?php echo esc_attr_x( 'Total', 'Used in data attribute. Escaped', 'woocommerce-subscriptions' ); ?>">
+								<?php echo wp_kses_post( $subscription->get_formatted_order_total() ); ?>
+							</td>
+						<?php endif; ?>
 						<td class="subscription-actions order-actions">
 							<a href="<?php echo esc_url( $subscription->get_view_order_url() ) ?>" class="button view"><?php echo esc_html_x( 'View', 'view a subscription', 'woocommerce-subscriptions' ); ?></a>
 							<?php do_action( 'woocommerce_my_subscriptions_actions', $subscription ); ?>

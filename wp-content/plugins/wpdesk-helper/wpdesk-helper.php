@@ -3,15 +3,15 @@
 	Plugin Name: WP Desk Helper
 	Plugin URI: https://www.wpdesk.net/
 	Description: Enables WP Desk plugin activation and updates.
-	Version: 1.4.5
+	Version: 1.5.0
 	Author: WP Desk
 	Text Domain: wpdesk-helper
-	Domain Path: /languages/
+	Domain Path: /lang/
 	Author URI: https://www.wpdesk.net/
 	Requires at least: 4.5
-    Tested up to: 4.9.8
+    Tested up to: 5.0.0
     WC requires at least: 3.1.0
-    WC tested up to: 3.5.0
+    WC tested up to: 3.5.1
 */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -24,7 +24,7 @@ if ( ! class_exists( 'WPDesk_Basic_Requirement_Checker' ) ) {
 }
 
 /* THESE TWO VARIABLES CAN BE CHANGED AUTOMATICALLY */
-$plugin_version           = '1.4.5';
+$plugin_version           = '1.5.0';
 $plugin_release_timestamp = '2018-06-11';
 
 $plugin_name        = 'WP Desk Helper';

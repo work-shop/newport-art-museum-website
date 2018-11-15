@@ -4,12 +4,17 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9d8f21f40b2ab09911d7969600351519
+class ComposerStaticInit9d03a1060711b4284ca720f3630330f0
 {
+    public static $files = array (
+        'cb883ac9840733a88fe8e977664ea0ea' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/functions.php',
+    );
+
     public static $prefixLengthsPsr4 = array (
         'W' => 
         array (
             'WPDesk\\PluginBuilder\\' => 21,
+            'WPDesk\\Notice\\' => 14,
         ),
         'P' => 
         array (
@@ -21,6 +26,10 @@ class ComposerStaticInit9d8f21f40b2ab09911d7969600351519
         'WPDesk\\PluginBuilder\\' => 
         array (
             0 => __DIR__ . '/..' . '/wpdesk/wp-builder/src',
+        ),
+        'WPDesk\\Notice\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice',
         ),
         'Psr\\Log\\' => 
         array (
@@ -39,6 +48,10 @@ class ComposerStaticInit9d8f21f40b2ab09911d7969600351519
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
         'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'WPDesk\\Notice\\AjaxHandler' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/AjaxHandler.php',
+        'WPDesk\\Notice\\Factory' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/Factory.php',
+        'WPDesk\\Notice\\Notice' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/Notice.php',
+        'WPDesk\\Notice\\PermanentDismissibleNotice' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/PermanentDismissibleNotice.php',
         'WPDesk\\PluginBuilder\\BuildDirector\\LegacyBuildDirector' => __DIR__ . '/..' . '/wpdesk/wp-builder/src/BuildDirector/LegacyBuildDirector.php',
         'WPDesk\\PluginBuilder\\Builder\\AbstractBuilder' => __DIR__ . '/..' . '/wpdesk/wp-builder/src/Builder/AbstractBuilder.php',
         'WPDesk\\PluginBuilder\\Builder\\InfoBuilder' => __DIR__ . '/..' . '/wpdesk/wp-builder/src/Builder/InfoBuilder.php',
@@ -60,6 +73,7 @@ class ComposerStaticInit9d8f21f40b2ab09911d7969600351519
         'WPDesk_API_Manager' => __DIR__ . '/../..' . '/classes/class-wc-api-manager.php',
         'WPDesk_API_Password_Management' => __DIR__ . '/../..' . '/classes/class-wc-api-manager-passwords.php',
         'WPDesk_Helper' => __DIR__ . '/../..' . '/classes/class-helper.php',
+        'WPDesk_Helper_Debug_Log' => __DIR__ . '/../..' . '/classes/class-wpdesk-helper-debug-log.php',
         'WPDesk_Helper_List_Table' => __DIR__ . '/../..' . '/classes/class-wpdesk-helper-list-table.php',
         'WPDesk_Logger' => __DIR__ . '/../..' . '/inc/wpdesk-logger.php',
         'WPDesk_Logger_Factory' => __DIR__ . '/../..' . '/inc/wpdesk-logger-factory.php',
@@ -92,15 +106,14 @@ class ComposerStaticInit9d8f21f40b2ab09911d7969600351519
         'WPDesk_Tracker_Sender_Logged' => __DIR__ . '/../..' . '/inc/wpdesk-tracker/sender/class-wpdesk-tracker-sender-logged.php',
         'WPDesk_Tracker_Sender_Wordpress_To_WPDesk' => __DIR__ . '/../..' . '/inc/wpdesk-tracker/sender/class-wpdesk-tracker-sender-wordpress-to-wpdesk.php',
         'WPDesk_Update_API_Check' => __DIR__ . '/../..' . '/classes/class-wc-plugin-update.php',
-        'inspire_Plugin4' => __DIR__ . '/../..' . '/classes/inspire/plugin4.php',
     );
 
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9d8f21f40b2ab09911d7969600351519::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9d8f21f40b2ab09911d7969600351519::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9d8f21f40b2ab09911d7969600351519::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit9d03a1060711b4284ca720f3630330f0::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit9d03a1060711b4284ca720f3630330f0::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit9d03a1060711b4284ca720f3630330f0::$classMap;
 
         }, null, ClassLoader::class);
     }
