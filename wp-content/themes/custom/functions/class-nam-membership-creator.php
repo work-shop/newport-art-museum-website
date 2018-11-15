@@ -351,11 +351,20 @@ class NAM_Membership_Creator {
     }
 
 
+
+    public function set_time_zone( $date_string ) {
+
+        $date = DateTime::createFromFormat( 'Y-m-d H:i:s', $date_string );
+        $date->modify( '+5 hours' );
+        return $date->format( 'Y-m-d H:i:s' );
+
+    }
+
     public function create_subscription( $user_id, $user_data, $description='Activated via Membership Creator.' ) {
 
         $product = $user_data['member_level'];
-        $start_date = $user_data['membership_start_date'];
-        $exp_date = $user_data['membership_expiration_date'];
+        $start_date = $this->set_time_zone( $user_data['membership_start_date'] );
+        $exp_date = $this->set_time_zone( $user_data['membership_expiration_date'] );
         $quantity = 1;
 
         $order_args = array(
