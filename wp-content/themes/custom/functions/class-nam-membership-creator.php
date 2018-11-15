@@ -345,8 +345,6 @@ class NAM_Membership_Creator {
 
         }
 
-        var_dump( $user_id );
-
         update_user_meta( $user_id, static::$imported_member_meta, 'yes' );
 
         return $user_id;
@@ -386,8 +384,6 @@ class NAM_Membership_Creator {
         $interval = WC_Subscriptions_Product::get_interval( $product );
         $length = WC_Subscriptions_Product::get_length( $product );
 
-        var_dump( $period );
-
         $subscription = wcs_create_subscription( array(
             'customer_id' => $user_id,
             //'order_id' => $order->get_id(),
@@ -396,8 +392,6 @@ class NAM_Membership_Creator {
             'billing_length' => $length,
             'start_date' => $start_date
         ) );
-
-        var_dump( $subscription );
 
         $subscription->set_customer_id( $user_id );
         $subscription->add_product( $product, $quantity, $order_args );
