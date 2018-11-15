@@ -92,9 +92,9 @@
 .mask-dark{
 	&:after{	
 		/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#292e35+0,292e35+100&0.7+0,0.65+25,0+100 */
-		background: -moz-linear-gradient(-45deg, rgba(41,46,53,0.7) 0%, rgba(41,46,53,0.65) 25%, rgba(41,46,53,0) 100%); /* FF3.6-15 */
-		background: -webkit-linear-gradient(-45deg, rgba(41,46,53,0.7) 0%,rgba(41,46,53,0.65) 25%,rgba(41,46,53,0) 100%); /* Chrome10-25,Safari5.1-6 */
-		background: linear-gradient(135deg, rgba(41,46,53,0.7) 0%,rgba(41,46,53,0.65) 25%,rgba(41,46,53,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		background: -moz-linear-gradient(-45deg, rgba(41,46,53,0.5) 0%, rgba(41,46,53,0.3) 25%, rgba(41,46,53,0) 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(-45deg, rgba(41,46,53,0.5) 0%,rgba(41,46,53,0.3) 25%,rgba(41,46,53,0) 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(135deg, rgba(41,46,53,0.5) 0%,rgba(41,46,53,0.3) 25%,rgba(41,46,53,0) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3292e35', endColorstr='#00292e35',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 	}
 }
