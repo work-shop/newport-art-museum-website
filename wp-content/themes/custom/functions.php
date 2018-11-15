@@ -149,5 +149,35 @@ $val = get_option( 'wp_user_roles' );
 $val['subscriber']['name'] = 'Member';
 update_option( 'wp_user_roles', $val );
 
+add_filter( 'wc_order_statuses', 'rename_order_statuses', 20, 1 );
+function rename_order_statuses( $order_statuses ) {
+    $order_statuses['wc-completed']  = _x( 'Order Received', 'Order status', 'woocommerce' );
+    $order_statuses['wc-processing'] = _x( 'Complete', 'Order status', 'woocommerce' );
+
+    return $order_statuses;
+}
+
+add_filter( 'bulk_actions-edit-shop_order', 'custom_dropdown_bulk_actions_shop_order', 20, 1 );
+function custom_dropdown_bulk_actions_shop_order( $actions ) {
+    $actions['mark_processing'] = __( 'Mark Complete', 'woocommerce' );
+    $actions['mark_completed']  = __( 'Mark order received', 'woocommerce' );
+
+    return $actions;
+}
+
+foreach( array( 'post', 'shop_order' ) as $hook )
+    add_filter( "views_edit-$hook", 'shop_order_modified_views' );
+
+function shop_order_modified_views( $views ){
+    if( isset( $views['wc-completed'] ) )
+        $views['wc-completed'] = str_replace( 'Completed', __( 'Order Received', 'woocommerce'), $views['wc-completed'] );
+
+    if( isset( $views['wc-processing'] ) )
+        $views['wc-processing'] = str_replace( 'Processing', __( 'Complete', 'woocommerce'), $views['wc-processing'] );
+
+    return $views;
+}
+
+
 
 ?>
