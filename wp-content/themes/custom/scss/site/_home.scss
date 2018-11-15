@@ -69,13 +69,14 @@
 			color: white;
 			font-size: 11px;
 			text-align: right;
+			line-height: 1.1;
 
 			@media screen and (max-width: $md) {
 				font-size: 10px;
 			}
 
 			@media screen and (max-width: $sm) {
-				font-size: 7px;
+				font-size: 8px;
 			}
 		}
 	}
