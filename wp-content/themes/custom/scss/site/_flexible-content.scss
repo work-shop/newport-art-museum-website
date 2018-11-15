@@ -192,17 +192,11 @@ $fc-padding: 7vh 0 6vh 0;
 		position: absolute;
 		display: table;
 		width: 100%;
-
-		h2{
-			margin-bottom: 0;
-		}
-
-		h2 + h3{
-			margin-top: .5em;
-		}
 	}
 
 }
+
+
 
 .fc-background-heading,.fc-background-subheading,.fc-background-link{
 	width: 69%;
@@ -222,11 +216,15 @@ $fc-padding: 7vh 0 6vh 0;
 }
 
 .fc-background-heading{
-	margin-bottom: 1.5em;
+	//margin-bottom: 1.5em;
 }
 
 .fc-background-subheading{
-	margin-bottom: 2.5em;
+	//margin-bottom: 2.5em;
+}
+
+.fc-background-heading ~ .fc-background-subheading{
+	margin-top: 2em;
 }
 
 .fc-background-link{
