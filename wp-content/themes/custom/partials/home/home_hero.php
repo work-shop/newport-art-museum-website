@@ -10,7 +10,7 @@
 	$home_hero_link_color = get_field('home_hero_link_color');
 	?>
 	<div class="block-background mask mask-dark" style="background-image: url('<?php echo $home_hero_image; ?>');"></div>
-	<?php if( get_field('home_hero_image_credit') ): ?>
+	<?php if( get_field('home_hero_image_credit')): ?>
 		<div class="home-hero-image-credit">
 			<span><?php the_field('home_hero_image_credit'); ?></span>
 		</div>

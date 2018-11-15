@@ -69,7 +69,8 @@
 			color: white;
 			font-size: 11px;
 			text-align: right;
-			line-height: 1.1;
+			line-height: 1;
+			text-shadow: 0px 0px 2px $dark;
 
 			@media screen and (max-width: $md) {
 				font-size: 10px;
