@@ -28,7 +28,9 @@ class NAM_Membership_Creator {
         'Patron' => 1545,
         'Council' => 1543,
         'Benefactor' => 1527,
-        'Supporting' => 2964
+        'Supporting' => 2964,
+        'Staff' => 5788,
+        'Life' => 5789
     );
 
     public static $field_keys = array(
