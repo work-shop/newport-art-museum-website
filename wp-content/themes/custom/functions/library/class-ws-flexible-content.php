@@ -8,7 +8,7 @@ class WS_Flexible_Content_Helper{
 				<h2 class="<?php if($heading_font): echo $heading_font; else: echo 'serif'; endif; ?> <?php echo $text_color . ' '; if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>"><?php echo $heading; ?></h2>
 			</div>
 		<?php endif; ?>
-		<?php if( $heading ): ?>
+		<?php if( $subheading ): ?>
 			<div class="fc-background-subheading <?php if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>">
 				<h3 class="<?php if($heading_font): echo $heading_font; else: echo 'serif'; endif; ?> <?php echo $text_color . ' '; if( $background_type !== 'multi-column' ): echo $text_alignment; endif; ?>"><?php echo $subheading; ?></h3>
 			</div>
