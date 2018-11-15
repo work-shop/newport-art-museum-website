@@ -9,7 +9,6 @@ class NAM_Membership_Creator {
     public static $imported_membership_salesforce_id = '_nam_imported_membership_salesforce_id';
 
     public static $required_headers = array(
-        'Salesforce ID' => 'salesforce_id',
         'First Name' => 'first_name',
         'Last Name' => 'last_name',
         'Email' => 'email',
