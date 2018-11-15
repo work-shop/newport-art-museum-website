@@ -357,9 +357,6 @@ class NAM_Membership_Creator {
         $product = $user_data['member_level'];
         $start_date = $user_data['membership_start_date'];
         $exp_date = $user_data['membership_expiration_date'];
-        $next_payment_date = DateTime::createFromFormat( 'Y-m-d H:i:s', $exp_date );
-        $next_payment_date = $next_payment_date->modify('-1 day');
-        $next_payment_date = $next_payment_date->format('Y-m-d H:i:s');
         $quantity = 1;
 
         $order_args = array(
@@ -383,7 +380,7 @@ class NAM_Membership_Creator {
             //'order_id' => $order->get_id(),
             'billing_period' => $period,
             'billing_interval' => $interval,
-        //    'billing_length' => $length,
+            'billing_length' => $length,
             'start_date' => $start_date
         ) );
 
@@ -399,10 +396,10 @@ class NAM_Membership_Creator {
         // We'd need to flag this for the user, though.
 
         if ( $exp_date > date('Y-m-d H:i:s') ) {
-            $subscription->update_dates( array( 'next_payment' => $next_payment_date ) );
+            $subscription->update_dates( array( 'next_payment' => $exp_date ) );
             $subscription->update_status('active', $description, true);
         } else {
-            $subscription->update_dates( array( 'next_payment' => $next_payment_date ) );
+            $subscription->update_dates( array( 'next_payment' => $exp_date ) );
             $subscription->update_status('on-hold', $description);
             wcs_create_renewal_order( $subscription );
         }
