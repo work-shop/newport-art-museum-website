@@ -54,7 +54,8 @@ do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, 
 do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_text, $email );
 
 ?>
-<p><?php esc_html_e( 'Thanks for reading.', 'woocommerce' ); ?></p>
+<p>If you have any questions, please <a href="https://newportartmuseum.org/contact" target="_blank">contact us.</a></p>
+<p>Thank you.</p>
 <?php
 
 /*

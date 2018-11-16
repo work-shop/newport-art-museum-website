@@ -31,31 +31,31 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
 <?php if ( $order->has_status( 'pending' ) ) { ?>
 	<p>
-	<?php
-	printf(
-		wp_kses(
-			/* translators: %1$s Site title, %2$s Order pay link */
-			__( 'An order has been created for you on %1$s. Your invoice is below, with a link to make payment when you’re ready: %2$s', 'woocommerce' ),
-			array(
-				'a' => array(
-					'href' => array(),
-				),
-			)
-		),
-		esc_html( get_bloginfo( 'name', 'display' ) ),
-		'<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Pay for this order', 'woocommerce' ) . '</a>'
-	);
-	?>
+		<?php
+		printf(
+			wp_kses(
+				/* translators: %1$s Site title, %2$s Order pay link */
+				__( 'An order has been created for you on %1$s. Your invoice is below, with a link to make payment when you’re ready: %2$s', 'woocommerce' ),
+				array(
+					'a' => array(
+						'href' => array(),
+					),
+				)
+			),
+			esc_html( get_bloginfo( 'name', 'display' ) ),
+			'<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Pay for this order', 'woocommerce' ) . '</a>'
+		);
+		?>
 	</p>
 
 <?php } else { ?>
 	<p>
-	<?php
+		<?php
 		/* translators: %s Order date */
 		printf( esc_html__( 'Here are the details of your order placed on %s:', 'woocommerce' ), esc_html( wc_format_datetime( $order->get_date_created() ) ) );
-	?>
+		?>
 	</p>
-<?php
+	<?php
 }
 
 /**
@@ -84,9 +84,8 @@ do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, 
 do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_text, $email );
 
 ?>
-<p>
-<?php esc_html_e( 'Thanks for reading.', 'woocommerce' ); ?>
-</p>
+<p>If you have any questions, please <a href="https://newportartmuseum.org/contact" target="_blank">contact us.</a></p>
+<p>Thank you.</p>
 <?php
 
 /**
