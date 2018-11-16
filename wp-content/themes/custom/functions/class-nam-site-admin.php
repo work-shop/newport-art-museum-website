@@ -111,7 +111,7 @@ class NAM_Site_Admin {
             $user = wp_get_current_user();
             $roles = (array) $user->roles;
 
-            if ( $roles[0] == 'administrator' ) {
+            //if ( $roles[0] == 'administrator' ) {
 
                 acf_add_options_page(array(
                     'page_title'    => 'Account Creator',
@@ -127,7 +127,7 @@ class NAM_Site_Admin {
                     'position'      => '50.6',
                 ));
 
-            }
+            //}
 
         }
     }

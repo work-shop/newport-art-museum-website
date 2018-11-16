@@ -73,12 +73,14 @@ $text_lighter_20 = wc_hex_lighter( $text, 20 );
 
 #template_footer td {
 	padding: 0;
-	-webkit-border-radius: 6px;
+	-webkit-border-radius: 0px 0px 6px 6px;
+	padding-top: 20px;
+	background: <?php echo esc_attr( $base ); ?>;
 }
 
 #template_footer #credit {
 	border:0;
-	color: <?php echo esc_attr( $base ); ?>;
+	color: white;
 	font-family: Arial;
 	font-size:14px;
 	line-height:125%;
@@ -86,8 +88,13 @@ $text_lighter_20 = wc_hex_lighter( $text, 20 );
 	padding: 0 48px 48px 48px;
 }
 
+#template_footer #credit .link{
+	color: white !important;
+}
+
 #body_content {
 	background-color: <?php echo esc_attr( $body ); ?>;
+	padding-bottom: 40px;
 }
 
 #body_content table td {
