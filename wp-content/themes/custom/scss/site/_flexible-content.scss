@@ -362,6 +362,13 @@ $fc-padding: 6.5vh 0 7.5vh 0;
 //COLLAPSIBLE LIST
 
 .fc-collapsible-list{
+
+	&.bg-khaki{
+		.accordion [data-control]{
+			background: darken($light,5%);
+		}
+	}
+
 }
 
 .fc-collapsible-list-link{

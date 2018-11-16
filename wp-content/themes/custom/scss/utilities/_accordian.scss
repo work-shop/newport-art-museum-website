@@ -1,13 +1,13 @@
 
 .accordion{
 
-	margin-bottom: 20px;		
+	margin-bottom: 25px;		
 
 	[data-control]{
 		background: $light;
 		border: 1px solid darken($light, 7%);
 		border-radius: 2px;
-		padding: 20px 6px 5px 20px;	
+		padding: 15px 6px 5px 20px;	
 		position: relative;
 
 		h4{

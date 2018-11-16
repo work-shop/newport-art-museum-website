@@ -3,7 +3,7 @@
 
 	h1,h2,h3,h4,h5,h6{
 		@extend .bold;
-		margin-top: 3.5em;
+		margin-top: 2.5em;
 
 		&:first-child{
 			margin-top: 0;
@@ -50,8 +50,8 @@
 	}	
 
 	p ~ ul{
-		margin-top: 2em;
-		margin-bottom: 3em;
+		margin-top: 1.5em;
+		margin-bottom: 2em;
 	}
 
 	.p1{
