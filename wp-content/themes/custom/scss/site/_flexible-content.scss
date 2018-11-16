@@ -217,10 +217,16 @@ $fc-padding: 7vh 0 6vh 0;
 
 .fc-background-heading{
 	//margin-bottom: 1.5em;
+	h2{
+		margin-bottom: 0;
+	}
 }
 
 .fc-background-subheading{
 	//margin-bottom: 2.5em;
+	h3{
+		margin-bottom: 0;
+	}
 }
 
 .fc-background-heading ~ .fc-background-subheading{
