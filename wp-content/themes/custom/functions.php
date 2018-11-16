@@ -174,6 +174,8 @@ function shop_order_modified_views( $views ){
     return $views;
 }
 
+add_filter( 'woocommerce_helper_suppress_admin_notices', '__return_true' );
+
 
 
 ?>
