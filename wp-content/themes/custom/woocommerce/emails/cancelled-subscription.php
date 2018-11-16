@@ -16,14 +16,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 	<?php
 	// translators: $1: customer's billing first name and last name
-	printf( esc_html__( 'A subscription belonging to %1$s has been cancelled. Their subscription\'s details are as follows:', 'woocommerce-subscriptions' ), esc_html( $subscription->get_formatted_billing_full_name() ) );
+	printf( esc_html__( 'A membership belonging to %1$s has been cancelled.', 'woocommerce-subscriptions' ), esc_html( $subscription->get_formatted_billing_full_name() ) );
 	?>
 </p>
 
 <table class="td" cellspacing="0" cellpadding="6" style="width: 100%; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;" border="1">
 	<thead>
 		<tr>
-			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Subscription', 'woocommerce-subscriptions' ); ?></th>
+			<th class="td" scope="col" style="text-align:left;"><?php esc_html_e( 'Membership', 'woocommerce-subscriptions' ); ?></th>
 			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'Price', 'table headings in notification email', 'woocommerce-subscriptions' ); ?></th>
 			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'Last Order Date', 'table heading', 'woocommerce-subscriptions' ); ?></th>
 			<th class="td" scope="col" style="text-align:left;"><?php echo esc_html_x( 'End of Prepaid Term', 'table headings in notification email', 'woocommerce-subscriptions' ); ?></th>

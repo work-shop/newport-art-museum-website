@@ -21,11 +21,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 ?>
 
-<?php if( NAM_Helpers::is_tree(6) ):?>
-<?php echo  $GLOBALS['tree_slug']; ?>
-is 6 
-<?php endif; ?> 
-
 <div class="woocommerce-order">
 
 	<?php if ( $order ) : ?>

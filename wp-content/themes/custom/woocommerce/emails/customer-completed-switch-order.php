@@ -17,11 +17,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 <p>
 	<?php
 	// translators: placeholder is the name of the site
-	printf( esc_html__( 'Hi there. You have successfully changed your subscription items on %s. Your new order and subscription details are shown below for your reference:', 'woocommerce-subscriptions' ), esc_html( get_option( 'blogname' ) ) );
+	printf( esc_html__( 'You have successfully changed your membership level.', 'woocommerce-subscriptions' ), esc_html( get_option( 'blogname' ) ) );
 	?>
 </p>
 
-<?php do_action( 'woocommerce_subscriptions_email_order_details', $order, $sent_to_admin, $plain_text, $email ); ?>
+<?php do_action( 'woocommerce_email_order_details', $order, $sent_to_admin, $plain_text, $email ); ?>
 
 <?php do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, $email ); ?>
 

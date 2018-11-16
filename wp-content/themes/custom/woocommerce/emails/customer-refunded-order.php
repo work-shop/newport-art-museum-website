@@ -28,9 +28,9 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 <p><?php printf( __( 'Hi %s,', 'woocommerce' ), $order->get_billing_first_name() ); ?></p><?php // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped ?>
 
 <p>
-<?php
-if ( $partial_refund ) {
-	/* translators: %s: Site title */
+	<?php
+	if ( $partial_refund ) {
+		/* translators: %s: Site title */
 	printf( __( 'Your order on %s has been partially refunded. There are more details below for your reference:', 'woocommerce' ), wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) ); // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped
 } else {
 	/* translators: %s: Site title */
@@ -61,7 +61,10 @@ do_action( 'woocommerce_email_customer_details', $order, $sent_to_admin, $plain_
 
 ?>
 <p>
-<?php _e( 'We hope to see you again soon.', 'woocommerce' ); // phpcs:ignore WordPress.XSS.EscapeOutput ?>
+	If you have any questions, please <a href="https://newportartmuseum.org/contact" target="_blank">contact us.</a>
+</p>
+<p>
+	<?php esc_html_e( 'Thank you.', 'woocommerce' ); ?>
 </p>
 <?php
 

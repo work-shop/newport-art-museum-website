@@ -30,15 +30,14 @@ $first_name = $user->user_firstname;
 $email_address = $user->user_email; 
 ?>
 <p>
-	Hello<?php if( $first_name ): ?> 
-	<?php printf( $first_name ); ?>
-	<?php endif; ?>,
+	Hello<?php if( $first_name ): ?><?php printf(' '); printf( $first_name ); ?><?php endif; ?>,
+</p>
 	<p>Thanks for creating an account on our website.</p>
 	<?php if($email_address): ?>
-		<p>Your account email address is <?php printf($email_address); ?>
+		<p>Your account email address is <?php printf($email_address); ?></p>
 	<?php endif; ?>
 	<?php if($user_login): ?>
-		<p>Your username is <?php printf($user_login); ?>
+		<p>Your username is <?php printf($user_login); ?></p>
 	<?php endif; ?>
 	<p><?php printf( __( 'You can access your account area to view orders, change your password, and more at: %3$s', 'woocommerce' ), esc_html( $blogname ), '<strong>' . esc_html( $user_login ) . '</strong>', make_clickable( esc_url( wc_get_page_permalink( 'myaccount' ) ) ) ); ?></p><?php // phpcs:ignore WordPress.XSS.EscapeOutput.OutputNotEscaped ?>
 	<?php if ( 'yes' === get_option( 'woocommerce_registration_generate_password' ) && $password_generated ) : ?>
@@ -46,5 +45,6 @@ $email_address = $user->user_email;
 		<p><?php printf( esc_html__( 'Your password has been automatically generated: %s', 'woocommerce' ), '<strong>' . esc_html( $user_pass ) . '</strong>' ); ?></p>
 	<?php endif; ?>
 	<p>If you have any questions, please <a href="https://newportartmuseum.org/contact" target="_blank">contact us.</a></p>
+	<p>Thank you.</p>
 	<?php
 	do_action( 'woocommerce_email_footer', $email );

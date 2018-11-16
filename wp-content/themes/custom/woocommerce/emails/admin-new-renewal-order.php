@@ -22,7 +22,7 @@ do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
  * @hooked WC_Subscriptions_Email::order_details() Shows the order details table.
  * @since 2.1.0
  */
-do_action( 'woocommerce_subscriptions_email_order_details', $order, $sent_to_admin, $plain_text, $email );
+do_action( 'woocommerce_email_order_details', $order, $sent_to_admin, $plain_text, $email );
 
 do_action( 'woocommerce_email_order_meta', $order, $sent_to_admin, $plain_text, $email );
 
