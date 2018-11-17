@@ -25,7 +25,6 @@ $user_was_imported = NAM_Membership::user_was_imported();
 
 	<?php if ( ! empty( $subscriptions ) ) : ?>
 		<table class="shop_table shop_table_responsive my_account_subscriptions my_account_orders">
-
 			<thead class="memberships-table-header">
 				<tr>
 					<th class="subscription-id order-number"><span class="nobr"><?php esc_html_e( 'Membership', 'woocommerce-subscriptions' ); ?></span></th>
@@ -49,20 +48,27 @@ $user_was_imported = NAM_Membership::user_was_imported();
 						<td class="subscription-id order-number" data-title="<?php esc_attr_e( 'ID', 'woocommerce-subscriptions' ); ?>">
 							<?php //get subscription type here ?>
 							<a href="<?php echo esc_url( $subscription->get_view_order_url() ); ?>">
-								<?php if( $membership ): ?>
-									<?php echo $membership->post_title; ?>
-									<?php else: ?>
-										<?php echo esc_html( sprintf( _x( '#%s', 'hash before order number', 'woocommerce-subscriptions' ), $subscription->get_order_number() ) ); ?>
-									<?php endif; ?>
-								</a>
-								<?php do_action( 'woocommerce_my_subscriptions_after_subscription_id', $subscription ); ?>
-							</td>
-							<td class="subscription-status order-status" data-title="<?php esc_attr_e( 'Status', 'woocommerce-subscriptions' ); ?>">
-								<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
-							</td>
-							<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
-								<?php if ( $subscription->get_status() === 'on-hold' ): ?>
-									<?php echo $subscription->get_date_to_display( 'last_order_date_created' ); ?>
+								<?php 
+								if ( sizeof( $subscription_items = $subscription->get_items() ) > 0 ) {
+									foreach ( $subscription_items as $item_id => $item ) {
+										$_product  = apply_filters( 'woocommerce_subscriptions_order_item_product', $subscription->get_product_from_item( $item ), $item );
+										if ( apply_filters( 'woocommerce_order_item_visible', true, $item ) ) {
+											echo $item['name'];
+											$membership_name = $item['name'];
+										}
+									}
+								}
+								?>
+								
+							</a>
+							<?php do_action( 'woocommerce_my_subscriptions_after_subscription_id', $subscription ); ?>
+						</td>
+						<td class="subscription-status order-status" data-title="<?php esc_attr_e( 'Status', 'woocommerce-subscriptions' ); ?>">
+							<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
+						</td>
+						<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
+							<?php if ( $subscription->get_status() === 'on-hold' ): ?>
+								<?php echo $subscription->get_date_to_display( 'last_order_date_created' ); ?>
 								<?php else: ?>
 									<?php echo esc_attr( $subscription->get_date_to_display( 'next_payment' ) ); ?>
 									<?php if ( ! $subscription->is_manual() && $subscription->has_status( 'active' ) && $subscription->get_time( 'next_payment' ) > 0 ) : ?>
