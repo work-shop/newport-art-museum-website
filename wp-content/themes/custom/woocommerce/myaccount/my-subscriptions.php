@@ -59,7 +59,6 @@ $user_was_imported = NAM_Membership::user_was_imported();
 									}
 								}
 								?>
-								
 							</a>
 							<?php do_action( 'woocommerce_my_subscriptions_after_subscription_id', $subscription ); ?>
 						</td>
@@ -67,46 +66,50 @@ $user_was_imported = NAM_Membership::user_was_imported();
 							<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
 						</td>
 						<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
-							<?php if ( $subscription->get_status() === 'on-hold' ): ?>
-								<?php echo $subscription->get_date_to_display( 'last_order_date_created' ); ?>
+							<?php if( $membership_name == 'Lifetime Membership' ): ?>
+								Never
 								<?php else: ?>
-									<?php echo esc_attr( $subscription->get_date_to_display( 'next_payment' ) ); ?>
-									<?php if ( ! $subscription->is_manual() && $subscription->has_status( 'active' ) && $subscription->get_time( 'next_payment' ) > 0 ) : ?>
-									<?php
-								// translators: placeholder is the display name of a payment gateway a subscription was paid by
-									$payment_method_to_display = sprintf( __( 'Via %s', 'woocommerce-subscriptions' ), $subscription->get_payment_method_to_display() );
-									$payment_method_to_display = apply_filters( 'woocommerce_my_subscriptions_payment_method', $payment_method_to_display, $subscription );
-									?>
+									<?php if ( $subscription->get_status() === 'on-hold' ): ?>
+										<?php echo $subscription->get_date_to_display( 'last_order_date_created' ); ?>
+										<?php else: ?>
+											<?php echo esc_attr( $subscription->get_date_to_display( 'next_payment' ) ); ?>
+											<?php if ( ! $subscription->is_manual() && $subscription->has_status( 'active' ) && $subscription->get_time( 'next_payment' ) > 0 ) : ?>
+											<?php
+											// translators: placeholder is the display name of a payment gateway a subscription was paid by
+											$payment_method_to_display = sprintf( __( 'Via %s', 'woocommerce-subscriptions' ), $subscription->get_payment_method_to_display() );
+											$payment_method_to_display = apply_filters( 'woocommerce_my_subscriptions_payment_method', $payment_method_to_display, $subscription );
+											?>
+										<?php endif; ?>
+										<br/><small><?php echo esc_attr( $payment_method_to_display ); ?></small>
+									<?php endif; ?>
 								<?php endif; ?>
-								<br/><small><?php echo esc_attr( $payment_method_to_display ); ?></small>
-							<?php endif; ?>
-						</td>
-						<?php if( $user_was_imported === false ): ?>
-							<td class="subscription-total order-total" data-title="<?php echo esc_attr_x( 'Total', 'Used in data attribute. Escaped', 'woocommerce-subscriptions' ); ?>">
-								<?php echo wp_kses_post( $subscription->get_formatted_order_total() ); ?>
 							</td>
-						<?php endif; ?>
-						<td class="subscription-actions order-actions">
-							<a href="<?php echo esc_url( $subscription->get_view_order_url() ) ?>" class="button view"><?php echo esc_html_x( 'View', 'view a subscription', 'woocommerce-subscriptions' ); ?></a>
-							<?php do_action( 'woocommerce_my_subscriptions_actions', $subscription ); ?>
-						</td>
-					</tr>
-				<?php endforeach; ?>
-			</tbody>
+							<?php if( $user_was_imported === false ): ?>
+								<td class="subscription-total order-total" data-title="<?php echo esc_attr_x( 'Total', 'Used in data attribute. Escaped', 'woocommerce-subscriptions' ); ?>">
+									<?php echo wp_kses_post( $subscription->get_formatted_order_total() ); ?>
+								</td>
+							<?php endif; ?>
+							<td class="subscription-actions order-actions">
+								<a href="<?php echo esc_url( $subscription->get_view_order_url() ) ?>" class="button view"><?php echo esc_html_x( 'View', 'view a subscription', 'woocommerce-subscriptions' ); ?></a>
+								<?php do_action( 'woocommerce_my_subscriptions_actions', $subscription ); ?>
+							</td>
+						</tr>
+					<?php endforeach; ?>
+				</tbody>
 
-		</table>
-		<?php else : ?>
+			</table>
+			<?php else : ?>
 
-			<p class="no_subscriptions">
-				You have no active memberships. <a href="/join" class="button button-small">Purchase a membership</a>
-				<?php
+				<p class="no_subscriptions">
+					You have no active memberships. <a href="/join" class="button button-small">Purchase a membership</a>
+					<?php
 			// translators: placeholders are opening and closing link tags to take to the shop page
 			//printf( esc_html__( 'You have no active subscriptions. Find your first subscription in the %sstore%s.', 'woocommerce-subscriptions' ), '<a href="' . esc_url( apply_filters( 'woocommerce_subscriptions_message_store_url', get_permalink( wc_get_page_id( 'shop' ) ) ) ) . '">', '</a>' );
-				?>
-			</p>
+					?>
+				</p>
 
-		<?php endif; ?>
+			<?php endif; ?>
 
-	</div>
+		</div>
 
-	<?php
+		<?php
