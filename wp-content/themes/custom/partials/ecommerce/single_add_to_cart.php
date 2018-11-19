@@ -52,88 +52,90 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             <?php if( $is_classes ): ?>
                                 Tuition
                                 <?php else: ?>
-                                   <!--  <?php if($i < 1): ?> Adult Tickets<?php else: ?>Child Tickets<?php endif; ?> -->
-                                   Tickets
-                                <?php endif; ?>
-                            </h5>
-                        </div>
-                        <div class="col hidden">
-                            <h5 class="add-to-cart-label righted">
-                                Quantity
-                            </h5>
-                        </div>
+                                 <!--  <?php if($i < 1): ?> Adult Tickets<?php else: ?>Child Tickets<?php endif; ?> -->
+                                 Tickets
+                             <?php endif; ?>
+                         </h5>
+                     </div>
+                     <div class="col hidden">
+                        <h5 class="add-to-cart-label righted">
+                            Quantity
+                        </h5>
                     </div>
-                    <div class="row add-to-cart-price">
-                        <div class="col">
-                            <div class="price">
-                                <?php $current_price = $product->get_price(); ;?>
-                                <?php $membership_discount = NAM_Membership::get_membership_discount( $product->id ); ?>
-                                <?php $is_member_or_has_membership_in_cart = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
-                                
-                                <?php //MEMBER PRICE ?>
-                                <?php if ( $is_member_or_has_membership_in_cart && $current_price > 0 ) : ?>
+                </div>
+                <div class="row add-to-cart-price">
+                    <div class="col">
+                        <div class="price">
+                            <?php $current_price = $product->get_price(); ;?>
+                            <?php $membership_discount = NAM_Membership::get_membership_discount( $product->id ); ?>
+                            <?php $is_member_or_has_membership_in_cart = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
 
-                                    <div class="row class-price-row">
+                            <?php //MEMBER PRICE ?>
+                            <?php if ( $is_member_or_has_membership_in_cart && $current_price > 0 ) : ?>
+
+                                <div class="row class-price-row">
+                                    <div class="class-price-col-first">
+                                        <span class="icon" data-icon="%"></span>
+                                    </div>
+                                    <div class="class-price-col-second">
+                                        <h5 class="bold mb0 price-discount-label">
+                                            <span class="icon member-check" data-icon="%"></span>Member price
+                                        </h5> 
+                                        <p class="members-price m0">
+                                            <?php echo wc_price($current_price - $membership_discount); ?> Per person
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <?php //NON MEMBER PRICE ?>
+                                <?php elseif ( $current_price > 0 ): ?>
+
+                                    <div class="row class-price-row mb1">
                                         <div class="class-price-col-first">
                                             <span class="icon" data-icon="%"></span>
                                         </div>
                                         <div class="class-price-col-second">
-                                            <h5 class="bold mb0 price-discount-label">
-                                                <span class="icon member-check" data-icon="%"></span>Member price
-                                            </h5> 
-                                            <p class="members-price m0">
-                                                <?php echo wc_price($current_price - $membership_discount); ?> Per person
+                                            <h5 class="bold m0 price-discount-label">
+                                                Non-member price
+                                            </h5>
+                                            <p class="non-members-price m0">
+                                                <?php echo wc_price( $current_price ); ?> Per person
                                             </p>
                                         </div>
                                     </div>
-
-                                    <?php //NON MEMBER PRICE ?>
-                                    <?php elseif ( $current_price > 0 ): ?>
-
-                                        <div class="row class-price-row mb1">
-                                            <div class="class-price-col-first">
-                                                <span class="icon" data-icon="%"></span>
-                                            </div>
-                                            <div class="class-price-col-second">
-                                                <h5 class="bold m0 price-discount-label">
-                                                    Non-member price
-                                                </h5>
-                                                <p class="non-members-price m0">
-                                                    <?php echo wc_price( $current_price ); ?> Per person
-                                                </p>
-                                            </div>
+                                    <div class="row class-price-row">
+                                        <div class="col">
+                                            <a class="h5 bold price-discount-label modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
+                                                <span class="faded bold">Member price <?php echo wc_price($current_price - $membership_discount); ?> Per person</span><span class="icon" data-icon="?"></span>
+                                            </a> 
                                         </div>
-                                        <div class="row class-price-row">
-                                            <div class="col">
-                                                <a class="h5 bold price-discount-label modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
-                                                    <span class="faded bold">Member price <?php echo wc_price($current_price - $membership_discount); ?> Per person</span><span class="icon" data-icon="?"></span>
-                                                </a> 
-                                            </div>
-                                        </div>
+                                    </div>
 
-                                        <?php else: ?>
-                                            <p>
-                                                Free
-                                            </p>
-                                        <?php endif; ?>
-                                    </div><!-- .price-->
-                                </div>
+                                    <?php else: ?>
+                                        <p>
+                                            Free
+                                        </p>
+                                    <?php endif; ?>
+                                </div><!-- .price-->
+                            </div>
 
-                                <?php //if ( !$is_classes ) : // if it's not classes, add the quantity button. ?>
-                                <div class="col-12 add-to-cart-quantity">
-                                    <?php
-                                    woocommerce_quantity_input( array(
-                                        'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
-                                        'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
-                                        'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( $_POST['quantity'] ) : $product->get_min_purchase_quantity(),
-                                    ) );
-                                    ?>
-                                </div>
-                                <?php do_action( 'woocommerce_after_add_to_cart_quantity' ); ?>
-                                <?php // endif; ?>
+                            <?php //if ( !$is_classes ) : // if it's not classes, add the quantity button. ?>
+                            <div class="col-12 add-to-cart-quantity">
+                                <?php
+                                woocommerce_quantity_input( array(
+                                    'min_value'   => apply_filters( 'woocommerce_quantity_input_min', $product->get_min_purchase_quantity(), $product ),
+                                    'max_value'   => apply_filters( 'woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product ),
+                                    'input_value' => isset( $_POST['quantity'] ) ? wc_stock_amount( $_POST['quantity'] ) : $product->get_min_purchase_quantity(),
+                                ) );
+                                ?>
+                            </div>
+                            <?php do_action( 'woocommerce_after_add_to_cart_quantity' ); ?>
+                            <?php // endif; ?>
 
-                            </div><!-- .row.add-to-cart-price -->
+                        </div><!-- .row.add-to-cart-price -->
 
+                        <?php //if it's a class, show any fees and registration limit ?>
+                        <?php if ( $is_classes ) : ?>
                             <?php if( $i < 1 ) :?>
                                 <?php if ( $product instanceof WC_Product_Bundle ) : // if it's a bundle with fees, render the fees in their own section. ?>
                                     <?php $bundled_items = $product->get_bundled_data_items(); ?>
@@ -153,19 +155,20 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                         </div>
                                     <?php endif; ?>
                                 <?php endif; ?>
-                                <?php if ( $is_classes ) : ?>
-                                    <div class="row add-to-cart-limit">
-                                        <div class="col-12">
-                                            <h5 class="add-to-cart-label">
-                                                Registration Limit
-                                            </h5>
-                                            <p class="small mb0">
-                                                <span class="icon icon-alert" data-icon="="></span>
-                                                <?php the_field('class_registration_limit_explanation','option'); ?>
-                                            </p>
-                                        </div>
+
+
+                                <div class="row add-to-cart-limit">
+                                    <div class="col-12">
+                                        <h5 class="add-to-cart-label">
+                                            Registration Limit
+                                        </h5>
+                                        <p class="small mb0">
+                                            <span class="icon icon-alert" data-icon="="></span>
+                                            <?php the_field('class_registration_limit_explanation','option'); ?>
+                                        </p>
                                     </div>
-                                <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
 
                         <?php } ?>
 

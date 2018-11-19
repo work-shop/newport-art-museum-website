@@ -177,5 +177,29 @@ function shop_order_modified_views( $views ){
 add_filter( 'woocommerce_helper_suppress_admin_notices', '__return_true' );
 
 
+/**
+ * Function adds a BCC header to emails that match our array
+ * 
+ * @param string $headers The default headers being used
+ * @param string $object  The email type/object that is being processed
+ */
+function add_bcc_to_certain_emails( $headers, $object ) {
+	// email types/objects to add bcc to
+	$add_bcc_to = array(
+		'customer_renewal_invoice'		// Renewal invoice from WooCommerce Subscriptions
+		);
+	// if our email object is in our array
+	if ( in_array( $object, $add_bcc_to ) ) {
+		// change our headers
+		$headers = array( 
+			$headers,
+			'Bcc: Work-Shop <info+nam-orders@workshop.co>' ."\r\n",
+			);
+	}
+	return $headers;
+}
+add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
+
+
 
 ?>
