@@ -200,7 +200,8 @@ else:
 	$has_recurring_products = false; 
 endif; 
 ?>
-<?php if ( $has_recurring_products ): ?>
+<?php //temporarily hiding recurring total notes ?>
+<?php if ( $has_recurring_products && false ): ?>
 	<div class="review-order-row row">
 		<div class="col">
 			<?php do_action( 'woocommerce_review_order_after_order_total' ); ?>

@@ -51,17 +51,17 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 
 .inside{
 
-.subscription-flag {
-	padding:1em;
-}
+	.subscription-flag {
+		padding: 1em;
+	}
 
-.nam-user-created-subscription {
-        background-color: lighten($brand,25%); // change this to change the color of the subscription flag.
+	.nam-user-created-subscription {
+        background-color: lighten($brand,25%); 
         font-weight: bold;
     }
 
     .nam-imported-subscription {
-        background-color: lighten($success,5%); // change this to change the color of the subscription flag.
+        background-color: lighten($success,5%); 
         font-weight: bold;
     }
 
