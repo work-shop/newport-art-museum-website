@@ -151,27 +151,27 @@ update_option( 'wp_user_roles', $val );
 
 add_filter( 'wc_order_statuses', 'rename_order_statuses', 20, 1 );
 function rename_order_statuses( $order_statuses ) {
-    $order_statuses['wc-processing'] = _x( 'Paid', 'Order status', 'woocommerce' );
+	$order_statuses['wc-processing'] = _x( 'Paid', 'Order status', 'woocommerce' );
 
-    return $order_statuses;
+	return $order_statuses;
 }
 
 add_filter( 'bulk_actions-edit-shop_order', 'custom_dropdown_bulk_actions_shop_order', 20, 1 );
 function custom_dropdown_bulk_actions_shop_order( $actions ) {
-    $actions['mark_processing'] = __( 'Mark Paid', 'woocommerce' );
+	$actions['mark_processing'] = __( 'Mark Paid', 'woocommerce' );
 
-    return $actions;
+	return $actions;
 }
 
 foreach( array( 'post', 'shop_order' ) as $hook )
-    add_filter( "views_edit-$hook", 'shop_order_modified_views' );
+	add_filter( "views_edit-$hook", 'shop_order_modified_views' );
 
 function shop_order_modified_views( $views ){
 
-    if( isset( $views['wc-processing'] ) )
-        $views['wc-processing'] = str_replace( 'Processing', __( 'Paid', 'woocommerce'), $views['wc-processing'] );
+	if( isset( $views['wc-processing'] ) )
+		$views['wc-processing'] = str_replace( 'Processing', __( 'Paid', 'woocommerce'), $views['wc-processing'] );
 
-    return $views;
+	return $views;
 }
 
 add_filter( 'woocommerce_helper_suppress_admin_notices', '__return_true' );
@@ -187,18 +187,26 @@ function add_bcc_to_certain_emails( $headers, $object ) {
 	// email types/objects to add bcc to
 	$add_bcc_to = array(
 		'customer_renewal_invoice'		// Renewal invoice from WooCommerce Subscriptions
-		);
+	);
 	// if our email object is in our array
 	if ( in_array( $object, $add_bcc_to ) ) {
 		// change our headers
 		$headers = array( 
 			$headers,
-			'Bcc: Work-Shop <info+nam-orders@workshop.co>' ."\r\n",
-			);
+			'Bcc: info+nam-orders@workshop.co' ."\r\n",
+		);
 	}
 	return $headers;
 }
 add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
+
+
+
+// add_filter( 'manage_shop_subscription_posts_columns', function ($columns) {
+//     $columns['next_payment'] = __('My Field');
+
+//     return $columns;
+// }, 1);
 
 
 
