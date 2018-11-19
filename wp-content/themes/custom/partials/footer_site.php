@@ -1,7 +1,7 @@
 <footer id="footer" class="block">
 	<div class="footer-message bg-medium">
 		<div class="container-fluid">
-			<h4 class="white"><?php get_template_part('partials/visit/museum_status'); ?></h4>
+			<h4 class="white museum-status"></h4>
 		</div>
 	</div>
 	<div class="footer-body bg-khaki pt4 pb6">
