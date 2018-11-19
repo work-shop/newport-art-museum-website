@@ -43,9 +43,8 @@ do_action( 'woocommerce_before_add_to_cart_form' );
         ?>
         <div class="sidebar-middle single-sidebar-middle">
 
+            <?php //loop through multiple ticket levels here, or a single class product ?>
             <?php for ($i=0; $i < 1; $i++) {  ?>
-
-                <?php if( $is_classes && $i == 1 ): break; endif; ?>
 
                 <div class="row add-to-cart-header">
                     <div class="col">
@@ -167,7 +166,6 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                         </div>
                                     </div>
                                 <?php endif; ?>
-                            <?php endif; ?>
 
                         <?php } ?>
 

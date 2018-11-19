@@ -537,13 +537,13 @@ class NAM_Membership_Creator {
         if ( 'yes' == $order_status ) {
 
             echo '<p class="nam-imported-subscription subscription-flag">';
-            echo 'This membership subscription was imported via the Membership Creator.';
+            echo 'This membership subscription was imported via the Account Creator tool.';
             echo '</p>';
 
         } else {
 
             echo '<p class="nam-user-created-subscription subscription-flag">';
-            echo 'This membership subscription was created through the site\'s front-end.';
+            echo 'This membership subscription was created through the site\'s front-end by the member.';
             echo '</p>';
 
         }
