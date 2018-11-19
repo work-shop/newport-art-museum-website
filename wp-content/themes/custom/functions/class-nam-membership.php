@@ -45,15 +45,19 @@ class NAM_Membership {
         if ( is_admin() && ! defined( 'DOING_AJAX' ) ) { return; }
         if ( did_action( static::$calculate_totals_hook ) >= 2 ) { return; }
 
+        //var_dump( $cart_object->get_cart() );
+
         if( static::is_member() || static::has_membership_in_cart() ) {
 
             foreach ( $cart_object->get_cart() as $cart_item ) {
 
-                $id = $cart_item[ 'data' ]->id;
+                $is_event_variation = $cart_item['data'] instanceof WC_Product_Variation;
+                $product_id_type = ( $is_event_variation ) ? 'variation_id' : 'product_id';
+
+                $id = $cart_item[ $product_id_type ];
                 $discount = static::get_membership_discount( $id );
 
                 $final_price = $cart_item[ 'data' ]->get_price() - $discount;
-
                 $cart_item[ 'data' ]->set_price( $final_price );
 
             }

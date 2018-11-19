@@ -9,17 +9,17 @@ if ( $product_id )  {
     $membership_discount = NAM_Membership::get_membership_discount( $product_id );
 }
 
-if( get_post_type() == 'events' ): 
-    $type = 'event'; 
+if( get_post_type() == 'events' ):
+    $type = 'event';
     $registration_required = get_field('registration_required');
     $show_individual_event_temporary_message = get_field('show_individual_event_temporary_message');
     $individual_event_temporary_message = get_field('individual_event_page_temporary_message','74');
-else: 
-    $type = 'class'; 
+else:
+    $type = 'class';
     $registration_required = true;
     $show_individual_class_temporary_message = get_field('show_individual_class_temporary_message','78');
     $individual_class_temporary_message = get_field('individual_class_temporary_message','78');
-endif; 
+endif;
 
 $sidebar_box_override_text = get_field('sidebar_box_override_text');
 $sidebar_box_override_link = get_field('sidebar_box_override_link');

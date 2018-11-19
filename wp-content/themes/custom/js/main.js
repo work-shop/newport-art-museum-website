@@ -23,6 +23,7 @@ import { collection } from './collection.js';
 import { museumStatus } from './museum-status.js';
 import { ecommerceHelpers } from './ecommerce-helpers.js';
 import { livereload } from './livereload-client.js';
+import { submitEventForm } from './event-add-to-cart.js';
 
 
 livereload();
@@ -43,6 +44,8 @@ accordian();
 ecommerceHelpers();
 museumStatus();
 menuOverflow();
+submitEventForm();
+
 if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') || $('body').hasClass('page-id-74') ){
 	filter();
 }

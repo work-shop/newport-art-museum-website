@@ -25,7 +25,11 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         // Discounts
         'membership_discount_type' =>       'field_5bdc683e3d11b',
         'membership_percentage_discount' => 'field_5bdc68863d11c',
-        'membership_fixed_discount' =>      'field_5bdc68f33d11d'
+        'membership_fixed_discount' =>      'field_5bdc68f33d11d',
+
+        // Events
+        'number_of_ticket_levels' =>        'field_5bef14b2974bf',
+        'ticket_levels' =>                  'field_5bef20c467cb5',
 
 
         // Fees and Surcharges
@@ -186,8 +190,6 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
      */
     public static function update_shadowing_product( $post_id, $updated_post, $shadowing_post ) {
 
-
-
         wp_update_post( array(
             'ID' => $shadowing_post->ID,
             'post_title' => $updated_post->post_title,
@@ -263,6 +265,10 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             wp_set_object_terms( $product_id, 'subscription', 'product_type' );
 
             static::set_subscription_meta( $post_id, $product_id );
+
+        } else if ( static::$slug == 'events' ) {
+
+            static::create_event_meta( $title, $post_id, $product_id );
 
         } else {
 
@@ -357,6 +363,153 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         return ( $fees && count( $fees ) > 0 ) ? $fees : false;
 
+    }
+
+    /**
+     * Create a valid set of importable variations
+     * from a given set of ticket levels. These will
+     * be used to update existing variations
+     *
+     */
+    public static function create_ticket_level_variations( $ticket_levels = array() ) {
+
+        return array_map( function( $ticket_level ) {
+
+            return array(
+                'attributes' => array(
+                    'ticket_levels' => $ticket_level['ticket_level_name']
+                ),
+                'price' => $ticket_level['ticket_level_price']
+            );
+
+        }, $ticket_levels );
+
+    }
+
+    /**
+     * Create the relevant metadata required to create
+     * a variable product that can represent the
+     * different ticket levels in an event.
+     *
+     */
+    public static function create_event_meta( $title, $post_id, $product_id ) {
+
+        $multiple_ticket_levels = get_field( static::$field_keys['number_of_ticket_levels'], $post_id );
+        $ticket_levels = get_field( static::$field_keys['ticket_levels'], $post_id );
+        $available_attributes = array('ticket_levels');
+        $variations = static::create_ticket_level_variations( $ticket_levels );
+
+        // var_dump( $variations );
+        // throw new Exception('');
+
+        static::delete_existing_variations( $product_id );
+        static::insert_product_attributes( $product_id, $ticket_levels );
+        static::insert_product_variations( $title, $post_id, $product_id, $variations );
+
+
+    }
+
+
+    public static function delete_existing_variations( $product_id ) {
+        $children = get_posts( array(
+            'post_parent' => $product_id,
+            'post_type' => 'product_variation'
+        ) );
+
+        if ( is_array( $children ) && count( $children ) > 0 ) {
+
+            foreach ($children as $child ) {
+
+                wp_delete_post( $child->ID );
+
+            }
+
+        }
+
+    }
+
+
+    public static function insert_product_attributes( $product_id, $ticket_levels ) {
+
+        wp_set_object_terms( $product_id, 'variable', 'product_type' );
+
+        $values = array_map( function( $ticket_level ) { return $ticket_level['ticket_level_name']; }, $ticket_levels );
+
+        wp_set_object_terms( $product_id, $values, 'pa_ticket_levels' );
+
+        $product_attributes_data = array(
+            'pa_ticket_levels' => array(
+                'name'          => 'pa_ticket_levels',
+                'value'         => join( '|', $values ),
+                'is_visible'    => '1',
+                'is_variation'  => '1',
+                'is_taxonomy'   => '0'
+            )
+        );
+
+        update_post_meta( $product_id, '_product_attributes', $product_attributes_data );
+
+    }
+
+
+    public static function get_product_membership_discount( $post_id, $price ) {
+
+        $membership_discount_type = get_field( static::$field_keys['membership_discount_type'], $post_id );
+        $membership_percentage_discount = get_field( static::$field_keys['membership_percentage_discount'], $post_id );
+        $membership_fixed_discount = get_field( static::$field_keys['membership_fixed_discount'], $post_id );
+
+        if ( $membership_discount_type && $membership_discount_type !== 'no-discount' ) {
+            if ( $membership_discount_type === 'percentage-discount') {
+
+                $percentage = ((double) $membership_percentage_discount) / 100;
+                return (double) $price * $percentage;
+
+            } else if ( $membership_discount_type === 'fixed-discount' ) {
+
+                return (double) $membership_fixed_discount;
+
+            }
+        }
+
+        return 0.0;
+
+    }
+
+
+    public static function insert_product_variations( $title, $post_id, $product_id, $variations ) {
+
+        foreach( $variations as $index => $variation ) {
+
+            $variation_name = 'ticket-level-' . $index . '-for-event-product-' . $product_id . '-for-event-' . $post_id;
+            $variation_price = $variation['price'];
+            $discount = static::get_product_membership_discount( $post_id, $variation_price );
+
+            // var_dump( $discount );
+            // throw new Exception('');
+
+            $variation_post = array(
+                'post_title' => $variation['attributes']['ticket_levels'] . ' Ticket for ' . $title,
+                'post_name' => $variation_name,
+                'post_status' => 'publish',
+                'post_parent' => $product_id,
+                'post_type' => 'product_variation'
+            );
+
+            $variation_id = wp_insert_post( $variation_post );
+
+            $attribute_term = get_term_by('name', $variation['attributes']['ticket_levels'], 'pa_ticket_levels' );
+
+            update_post_meta( $variation_id, 'attribute_pa_ticket_levels', $attribute_term->slug );
+
+            update_post_meta( $variation_id, '_virtual', 'yes' );
+            update_post_meta( $variation_id, '_sku', $variation_name );
+
+            update_post_meta( $variation_id, '_price', $variation_price );
+            update_post_meta( $variation_id, '_regular_price', $variation_price );
+            update_post_meta( $variation_id, '_nam_membership_discount', $discount );
+            update_post_meta( $variation_id, '_wc_min_qty_product', 0 );
+
+        }
     }
 
     /**
