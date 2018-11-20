@@ -1059,3 +1059,41 @@ body.woocommerce-cart,body.woocommerce-checkout{
 		color: $yellow;
 	}
 }
+
+
+
+
+//events submission
+
+#submitting{
+	display: none;
+	background: transparentize($light, .5) !important;
+	position: fixed !important;
+	top: 0;
+	left: 0;
+	width: 100vw;
+	height: 100vh;
+	z-index: 9998;
+
+	&:before{
+		content: '';
+		display: block;
+		position: fixed;
+		top: 50%;
+		left: 50%;
+		margin-left: -40px;
+		margin-top: -40px;
+		width: 80px;
+		height: 80px;
+		z-index: 9998;
+		background-image: url('../images/loading.gif');
+		background-size: 80px 80px;
+		background-position: center center;
+	}
+}
+
+body.events-submitting{
+	#submitting{
+		display: block;
+	}
+}

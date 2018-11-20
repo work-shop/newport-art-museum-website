@@ -74,9 +74,9 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             <?php if( $is_classes ): ?>
                                 Tuition
                             <?php elseif ( $is_events ): ?>
-                              <?php echo $purchase_option['term']->name; ?> Tickets (<?php echo $purchase_option['id']; ?>)
+                              <?php echo $purchase_option['term']->name; ?> Tickets
                             <?php else: ?>
-                                Thing
+                                
                             <?php endif; ?>
                         </h5>
                     </div>

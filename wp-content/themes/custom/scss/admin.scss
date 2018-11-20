@@ -23,6 +23,20 @@
 
 }
 
+.post-type-events{
+	.acf-field-5b6473b1dca79{
+		display: none;
+	}
+}
+
+.post-type-classes,.post-type-membership-tier,.post-type-donation-tiers{
+.acf-field-5bef141d974bd{
+	display: none;
+}	
+}
+
+
+
 //darken acf accordian labels to make structure more clear
 .acf-label.acf-accordion-title{
 	background: lighten(#98A2B1, 25%);
