@@ -20,7 +20,7 @@ $user_id = $user->ID;
 $user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true );
 ?>
 
-<?php if ( 'pending' == $order->get_status() ) : ?>
+<?php if ( 'pending' == $order->get_status()) : ?>
 	<p>
 		Your Newport Art Museum Membership has expired.
 		<?php
@@ -28,7 +28,7 @@ $user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true 
 		//echo wp_kses( sprintf( _x( 'Your Newport Art Museum membership has expired. To renew, please use the following link: %2$s', 'In customer renewal invoice email', 'woocommerce-subscriptions' ), esc_html( get_bloginfo( 'name' ) ), '<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Renew Now &raquo;', 'woocommerce-subscriptions' ) . '</a>' ), array( 'a' => array( 'href' => true ) ) );
 		?>
 	</p>
-	<?php if( $user_was_imported ): ?>
+	<?php if( $user_was_imported): ?>
 		<p>
 			<strong>
 				Please note: your account was automatically created from our membership database. To renew your membership, you will need to activate your account, if you have not already. To activate your account, follow these instructions:
@@ -50,15 +50,31 @@ $user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true 
 			<li>Log in </li>
 			<li>Once you are logged in, click on 'Memberships', click on your membership, then click on the button that says 'Renew Now'. 
 			</ol>
+			<p>
+				<?php
+				// translators: %1$s: name of the blog, %2$s: link to checkout payment url, note: no full stop due to url at the end
+				echo wp_kses( sprintf( _x( ' If you have already activated your account, %2$s', 'In customer renewal invoice email', 'woocommerce-subscriptions' ), esc_html( get_bloginfo( 'name' ) ), '<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Click Here to Renew Now.', 'woocommerce-subscriptions' ) . '</a>' ), array( 'a' => array( 'href' => true ) ) );
+				?>
+			</p>
 			<br>
-		<?php endif; ?>
-		<p>
-			<?php
+			<?php else: ?>
+			<p>
+				<?php if($email_address): ?>
+					Your account email address is <?php printf($email_address); ?><br>
+				<?php endif; ?>
+				<?php if($user_login): ?>
+					Your username is <?php printf($user_login); ?>
+				<?php endif; ?>
+			</p>
+			<p>
+				<?php
 			// translators: %1$s: name of the blog, %2$s: link to checkout payment url, note: no full stop due to url at the end
-			echo wp_kses( sprintf( _x( ' If you have already activated your account, %2$s', 'In customer renewal invoice email', 'woocommerce-subscriptions' ), esc_html( get_bloginfo( 'name' ) ), '<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Click Here to Renew Now.', 'woocommerce-subscriptions' ) . '</a>' ), array( 'a' => array( 'href' => true ) ) );
-			?>
-		</p>
-		<br>
+				echo wp_kses( sprintf( _x( '%2$s', 'In customer renewal invoice email', 'woocommerce-subscriptions' ), esc_html( get_bloginfo( 'name' ) ), '<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Click Here to Renew Now.', 'woocommerce-subscriptions' ) . '</a>' ), array( 'a' => array( 'href' => true ) ) );
+				?>
+			</p>
+			<br>
+		<?php endif; //end user was imported else ?>
+
 		<?php elseif ( 'failed' == $order->get_status() ) : ?>
 			<p>
 				<?php
