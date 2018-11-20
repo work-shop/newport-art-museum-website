@@ -11,8 +11,8 @@ function museumStatus() {
 			url: endpoint
 		})
 		.done(function( data ) {
-			console.log('success');
-			console.log(data);
+			//console.log('success');
+			//console.log(data);
 			renderStatus( data );
 		})
 		.fail(function(error ) {
@@ -20,7 +20,7 @@ function museumStatus() {
 			console.log('error on museum status');
 		})
 		.always(function() {
-			console.log('complete');
+			//console.log('complete');
 		});
 
 		

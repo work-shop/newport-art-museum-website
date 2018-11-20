@@ -79,6 +79,8 @@ wc_print_notices();
 
 	<?php // these are definitions of the discount quantity, in dollars, applicable to this line item, and whether there's a discount. ?>
 	<?php $discount = NAM_Membership::get_membership_discount( $product_id ); ?>
+
+	<?php //get product varation discount here, if it's a variation product ?>
 	<?php $product_has_discount = $discount > 0; ?>
 
 	<?php //echo $discount; ?>
