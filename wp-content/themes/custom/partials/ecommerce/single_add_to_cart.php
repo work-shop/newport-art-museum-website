@@ -74,9 +74,9 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             <?php if( $is_classes ): ?>
                                 Tuition
                             <?php elseif ( $is_events ): ?>
-                              <?php echo $purchase_option['term']->name; ?> Tickets
+                                <?php echo $purchase_option['term']->name; ?> Tickets
                             <?php else: ?>
-                                
+
                             <?php endif; ?>
                         </h5>
                     </div>
@@ -107,26 +107,10 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             ?>
 
                             <?php //MEMBER PRICE ?>
+                            <?php // NOTE: Issue is Here. $current_price > 0 ?>
                             <?php if ( $is_member_or_has_membership_in_cart && $current_price > 0 ) : ?>
 
                                 <div class="row class-price-row">
-                                    <div class="class-price-col-first">
-                                        <span class="icon" data-icon="%"></span>
-                                    </div>
-                                    <div class="class-price-col-second">
-                                        <h5 class="bold mb0 price-discount-label">
-                                            <span class="icon member-check" data-icon="%"></span>Member price
-                                        </h5>
-                                        <p class="members-price m0">
-                                            <?php echo wc_price($current_price - $membership_discount); ?> Per person
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <?php //NON MEMBER PRICE ?>
-                            <?php elseif ( $current_price > 0 ): ?>
-
-                                <div class="row class-price-row mb1">
                                     <div class="class-price-col-first">
                                         <span class="icon" data-icon="%"></span>
                                     </div>
@@ -163,7 +147,6 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                         </a>
                                     </div>
                                 </div>
-                            </div>
 
                         <?php else: ?>
                             <p>

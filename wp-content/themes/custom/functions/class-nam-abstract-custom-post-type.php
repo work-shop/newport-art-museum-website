@@ -210,37 +210,62 @@ abstract class NAM_Custom_Post_Type {
 
                 $product_id = $shadowing_product[0]->ID;
 
+                if ( static::$slug === 'events' ) {
 
-                $customfields = '_order_student_first_name,_order_student_last_name,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,'
-                              . '_order_secondary_phone_number,_order_secondary_phone_type,_order_email_contact,_order_preferred_pronoun';
-                /**
-                 * This shortcode echos a list of purchasers of a given product
-                 * to the page, and depends on the Woocommerce Customer List Plugin.
-                 *
-                 * Details of shortcode parameters [here](https://wordpress.org/plugins/wc-product-customer-list/#description).
-                 */
-                $shortcode = '[customer_list product="' . $product_id . '" ' .
-                                             'order_status="wc-completed,wc-processing" ' .
-                                             'show_titles="true" ' .
-                                             'billing_email="false" ' .
-                                             'billing_phone="false" ' .
-                                             'billing_first_name="false" ' .
-                                             'billing_last_name="false" ' .
-                                             'customer_username_link="true" ' .
-                                             'order_number="true" ' .
-                                             'scrollx="true" ' .
-                                             'order_date="false" ' .
-                                             'order_variations="false" ' .
-                                             'sortable="true" ' .
-                                             'copy="true" ' .
-                                             'export_pdf="true" ' .
-                                             'export_csv="true" ' .
-                                             'search="true" ' .
-                                             'info="true" ' .
-                                             'custom_fields="' . $customfields . '" ' .
-                                             ']';
+                    $shortcode = '[customer_list product="' . $product_id . '" ' .
+                                                 'order_status="wc-completed,wc-processing" ' .
+                                                 'order_number="true" ' .
+                                                 'show_titles="true" ' .
+                                                 'billing_email="true" ' .
+                                                 'billing_phone="true" ' .
+                                                 'scrollx="true" ' .
+                                                 'order_date="false" ' .
+                                                 'order_variations="true" ' .
+                                                 'sortable="true" ' .
+                                                 'copy="true" ' .
+                                                 'export_pdf="true" ' .
+                                                 'export_csv="true" ' .
+                                                 'search="true" ' .
+                                                 'info="true" ' .
+                                                 ']';
 
-                echo do_shortcode( $shortcode );
+                    echo do_shortcode( $shortcode );
+
+                } else {
+
+                    $customfields = '_order_student_first_name,_order_student_last_name,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,'
+                                  . '_order_secondary_phone_number,_order_secondary_phone_type,_order_email_contact,_order_preferred_pronoun';
+                    /**
+                     * This shortcode echos a list of purchasers of a given product
+                     * to the page, and depends on the Woocommerce Customer List Plugin.
+                     *
+                     * Details of shortcode parameters [here](https://wordpress.org/plugins/wc-product-customer-list/#description).
+                     */
+                    $shortcode = '[customer_list product="' . $product_id . '" ' .
+                                                 'order_status="wc-completed,wc-processing" ' .
+                                                 'show_titles="true" ' .
+                                                 'billing_email="false" ' .
+                                                 'billing_phone="false" ' .
+                                                 'billing_first_name="false" ' .
+                                                 'billing_last_name="false" ' .
+                                                 'customer_username_link="true" ' .
+                                                 'order_number="true" ' .
+                                                 'scrollx="true" ' .
+                                                 'order_date="false" ' .
+                                                 'order_variations="false" ' .
+                                                 'sortable="true" ' .
+                                                 'copy="true" ' .
+                                                 'export_pdf="true" ' .
+                                                 'export_csv="true" ' .
+                                                 'search="true" ' .
+                                                 'info="true" ' .
+                                                 'custom_fields="' . $customfields . '" ' .
+                                                 ']';
+
+                    echo do_shortcode( $shortcode );
+                }
+
+
 
             } else {
 

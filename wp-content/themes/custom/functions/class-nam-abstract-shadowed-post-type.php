@@ -509,6 +509,11 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
             update_post_meta( $variation_id, '_nam_membership_discount', $discount );
             update_post_meta( $variation_id, '_wc_min_qty_product', 0 );
 
+            update_post_meta( $variation_id, '_manage_stock', 'no' );
+            update_post_meta( $variation_id, '_backorders', 'no' );
+            update_post_meta( $variation_id, '_stock', '' );
+            update_post_meta( $variation_id, '_stock_status', 'instock' );
+
         }
     }
 
