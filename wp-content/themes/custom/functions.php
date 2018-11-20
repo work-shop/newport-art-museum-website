@@ -208,6 +208,23 @@ add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
 //     return $columns;
 // }, 1);
 
+// function remove_msg_filter($msg, $msg_code, $this){
+// if(is_checkout()){
+//     return "";
+// }
+// return $msg;
+// }
+
+// add_filter('woocommerce_checkout_coupon_message','remove_msg_filter',10,3);
+// define the woocommerce_checkout_coupon_message callback 
+// function filter_woocommerce_checkout_coupon_message( $var ) { 
+//     $var = ''; 
+//     return $var; 
+// }; 
+         
+// add the filter 
+// remove_filter( 'woocommerce_checkout_coupon_message', 'filter_woocommerce_checkout_coupon_message', 10, 1 ); 
+
 
 
 ?>
