@@ -67,6 +67,11 @@
 		border: none;
 		padding-top: 0px;
 		padding-bottom: 6px;
+
+		//TEMP
+		border-bottom: 1px solid darken($light,5%) !important;
+		padding-bottom: 20px;
+
 		.product-subtotal{
 			visibility: hidden;
 			font-size: 0;
@@ -77,8 +82,15 @@
 		}
 	}
 
+	&.has-discount{
+		//TEMP
+		border: none;
+	}
+
 
 }
+
+
 
 .discount-label{
 	font-size: .875em;

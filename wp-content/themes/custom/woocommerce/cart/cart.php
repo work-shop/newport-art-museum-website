@@ -156,7 +156,7 @@ wc_print_notices();
 		</div>
 		<div class="product-quantity col" >
 			<p class="discount-label">
-				1
+				<?php if(false):?>1<?php endif; ?>
 			</p>
 		</div>
 		<div class="product-subtotal col righted">
