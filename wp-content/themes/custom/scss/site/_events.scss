@@ -133,6 +133,8 @@ $filter-secondary-2: 320px;
 	}
 }
 
+.filter-dates{
+
 input[type="text"]{
 	border: 1px solid $medium;
 	border-radius: 4px;
@@ -149,6 +151,8 @@ input[type="text"]{
 	@media screen and (max-width: $md) {
 		font-size: 13px;
 	}
+}
+
 }
 
 #filter-messages{

@@ -26,31 +26,50 @@ if ( ! defined( 'ABSPATH' ) ) {
 $user = get_user_by('login',$user_login); 
 $first_name = $user->user_firstname; 
 $email_address = $user->user_email; 
+$user_id = $user->ID;
+$user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true );
 ?>
 <p>
 	Hello<?php if( $first_name ): ?><?php printf(' '); printf( $first_name ); ?><?php endif; ?>,
 </p>
+<?php if( $user_was_imported === 'yes' ): ?>
+	<p>
+		<strong>
+			Please note: your account was automatically created from our membership database. To renew your membership, you will need to activate your account, if you have not already. To activate your account, follow these instructions:
+		</strong>
+	</p>
+	<p>
+		<?php if($email_address): ?>
+			Your account email address is <?php printf($email_address); ?><br>
+		<?php endif; ?>
+		<?php if($user_login): ?>
+			Your username is <?php printf($user_login); ?>
+		<?php endif; ?>
+	</p>
+	<?php else: ?>
+		--
+	<?php endif; ?>
 
-<?php /* translators: %s: Customer first name */ ?>
-<?php /* translators: %s: Store name */ ?>
-<p><?php printf( esc_html__( 'Someone has requested a new password for your account on %s:', 'woocommerce' ), esc_html( wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) ) ); ?></p>
-<?php /* translators: %s Customer username */ ?>
-<p>
-	<?php if($email_address): ?>
-		Your account email address is <?php printf($email_address); ?><br>
-	<?php endif; ?>
-	<?php if($user_login): ?>
-		Your username is <?php printf($user_login); ?>
-	<?php endif; ?>
-</p>
-<p><?php esc_html_e( 'If you didn\'t make this request, ignore this email. If you\'d like to proceed:', 'woocommerce' ); ?></p>
-<p>
-	<a class="link" href="<?php echo esc_url( add_query_arg( array( 'key' => $reset_key, 'id' => $user_id ), wc_get_endpoint_url( 'lost-password', '', wc_get_page_permalink( 'myaccount' ) ) ) ); ?>"><?php // phpcs:ignore ?>
+	<?php /* translators: %s: Customer first name */ ?>
+	<?php /* translators: %s: Store name */ ?>
+	<p><?php printf( esc_html__( 'Someone has requested a new password for your account on %s:', 'woocommerce' ), esc_html( wp_specialchars_decode( get_option( 'blogname' ), ENT_QUOTES ) ) ); ?></p>
+	<?php /* translators: %s Customer username */ ?>
+	<p>
+		<?php if($email_address): ?>
+			Your account email address is <?php printf($email_address); ?><br>
+		<?php endif; ?>
+		<?php if($user_login): ?>
+			Your username is <?php printf($user_login); ?>
+		<?php endif; ?>
+	</p>
+	<p><?php esc_html_e( 'If you didn\'t make this request, ignore this email. If you\'d like to proceed:', 'woocommerce' ); ?></p>
+	<p>
+		<a class="link" href="<?php echo esc_url( add_query_arg( array( 'key' => $reset_key, 'id' => $user_id ), wc_get_endpoint_url( 'lost-password', '', wc_get_page_permalink( 'myaccount' ) ) ) ); ?>"><?php // phpcs:ignore ?>
 		<?php esc_html_e( 'Click here to reset your password', 'woocommerce' ); ?>
 	</a>
 </p>
 <br>
-	<p>If you have any questions, please <a href="https://newportartmuseum.org/contact" target="_blank">contact us.</a></p>
-	<p>Thank you.</p>
+<p>If you have any questions, please <a href="https://newportartmuseum.org/contact" target="_blank">contact us.</a></p>
+<p>Thank you.</p>
 
 <?php do_action( 'woocommerce_email_footer', $email ); ?>

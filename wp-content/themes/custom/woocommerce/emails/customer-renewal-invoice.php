@@ -28,7 +28,7 @@ $user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true 
 		//echo wp_kses( sprintf( _x( 'Your Newport Art Museum membership has expired. To renew, please use the following link: %2$s', 'In customer renewal invoice email', 'woocommerce-subscriptions' ), esc_html( get_bloginfo( 'name' ) ), '<a href="' . esc_url( $order->get_checkout_payment_url() ) . '">' . esc_html__( 'Renew Now &raquo;', 'woocommerce-subscriptions' ) . '</a>' ), array( 'a' => array( 'href' => true ) ) );
 		?>
 	</p>
-	<?php if( $user_was_imported): ?>
+	<?php if( $user_was_imported === 'yes' ): ?>
 		<p>
 			<strong>
 				Please note: your account was automatically created from our membership database. To renew your membership, you will need to activate your account, if you have not already. To activate your account, follow these instructions:

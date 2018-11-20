@@ -42,3 +42,14 @@
 	<?php endif; ?>
 </div>
 </div>
+
+<div class="modal modal-medium bg-khaki off scroll" id="modal-login-ajax">
+	<div class="modal-inner">
+		<div class="row">
+			<a href="#" class="modal-close righted"><span class="icon" data-icon="x"></span></a>
+			<div class="col-12">
+			<?php //login_with_ajax(); ?>
+			</div>
+		</div>
+	</div>
+</div>

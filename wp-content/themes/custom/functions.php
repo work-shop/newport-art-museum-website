@@ -226,5 +226,9 @@ add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
 // remove_filter( 'woocommerce_checkout_coupon_message', 'filter_woocommerce_checkout_coupon_message', 10, 1 ); 
 
 
+//hide the 'product has been added to your cart notice'
+
+//add_filter( 'wc_add_to_cart_message_html', '__return_false' );
+
 
 ?>
