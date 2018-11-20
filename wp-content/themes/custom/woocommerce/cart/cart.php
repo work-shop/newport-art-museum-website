@@ -76,12 +76,15 @@ wc_print_notices();
 
 	if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) :
 		$product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key ); ?>
-
 	<?php // these are definitions of the discount quantity, in dollars, applicable to this line item, and whether there's a discount. ?>
-	<?php $discount = NAM_Membership::get_membership_discount( $product_id ); ?>
 
-	<?php //get product varation discount here, if it's a variation product ?>
+    <?php if ( $cart_item['variation_id'] !== 0 ) : ?>
+	    <?php $discount = NAM_Membership::get_membership_discount( $cart_item['variation_id'] ); ?>
+    <?php else: ?>
+        <?php $discount = NAM_Membership::get_membership_discount( $product_id ); ?>
+    <?php endif; ?>
 	<?php $product_has_discount = $discount > 0; ?>
+    <?php //var_dump( $cart_item ); ?>
 
 	<?php //echo $discount; ?>
 	<?php //echo $product_has_discount; ?>
