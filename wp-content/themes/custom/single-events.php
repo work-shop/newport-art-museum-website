@@ -5,4 +5,6 @@
 
 <?php get_template_part('partials/events/event' ); ?>
 
+<?php get_template_part('partials/events/submitting' ); ?>
+
 <?php get_template_part('partials/footer' ); ?>
