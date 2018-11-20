@@ -5,6 +5,8 @@ $product_id = get_field('managed_field_related_post', $id)[0];
 if ( $product_id )  {
     $product = wc_get_product( $product_id );
     $current_price = $product->get_price();
+    $variation_price = ( $product instanceof WC_Product_Variable ) ? $product->get_variation_price( 'min', false ) : 0;
+    $current_price = $current_price + $variation_price;
     $is_in_stock = $product->is_in_stock();
     $membership_discount = NAM_Membership::get_membership_discount( $product_id );
 }

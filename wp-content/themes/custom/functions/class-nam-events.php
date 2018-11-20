@@ -42,6 +42,13 @@ class NAM_Events {
     }
 
 
+    public static function save_notices() {
+
+        return $_GET['save_notices'] !== NULL || $_POST['save_notices'] !== NULL;
+
+    }
+
+
 
 
 }

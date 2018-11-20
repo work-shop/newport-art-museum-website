@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-wc_print_notices();
+if ( !NAM_Events::save_notices() ) { wc_print_notices(); }
 
 /**
  * @hooked wc_empty_cart_message - 10

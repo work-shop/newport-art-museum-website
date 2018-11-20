@@ -40,7 +40,12 @@ do_action( 'woocommerce_before_add_to_cart_form' );
 
     <?php else: // we're on a non-class page or there's no class in the cart.  ?>
 
-    <?php if ( $is_events ) {
+    <?php
+
+    // NOTE: Consider adding this.
+    // NOTE: https://diviengine.com/woocommerce-add-cart-ajax-single-variable-products-improve-ux/
+
+    if ( $is_events ) {
 
         $purchase_options = NAM_Events::get_ticket_levels( $product );
 
@@ -54,8 +59,8 @@ do_action( 'woocommerce_before_add_to_cart_form' );
 
     <?php foreach ( $purchase_options as $i => $purchase_option ) {  ?>
 
-        <form id="form-<?php echo $i; ?>" class="cart" action="<?php echo esc_url( get_permalink() ); ?>" method="post" enctype='multipart/form-data'>
-            <?php
+    <form id='form-<?php echo $i; ?>' class="cart" action="<?php echo esc_url( get_permalink() ); ?>" method="post" enctype='multipart/form-data'>
+        <?php
 
             do_action( 'woocommerce_before_add_to_cart_button' );
             do_action( 'woocommerce_before_add_to_cart_quantity' );
@@ -69,7 +74,7 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             <?php if( $is_classes ): ?>
                                 Tuition
                             <?php elseif ( $is_events ): ?>
-                                <?php echo $purchase_option['term']->name; ?> Tickets
+                              <?php echo $purchase_option['term']->name; ?> Tickets (<?php echo $purchase_option['id']; ?>)
                             <?php else: ?>
                                 Thing
                             <?php endif; ?>
@@ -243,16 +248,16 @@ do_action( 'woocommerce_before_add_to_cart_form' );
 
                 </div><!-- .single-sidebar-middle -->
 
+                    </div><!-- .single-sidebar-middle -->
 
-                <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
-            </form>
+                    <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" />
+                    <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
+                </form>
+            <?php } ?>
 
-        <?php } ?>
+                <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button-full button alt">
+                    <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
+                </button>
 
-        <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button-full button alt">
-        <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
-        </button>
-
-    <?php endif; ?>
-
-<?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
+            <?php endif; ?>
+            <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>

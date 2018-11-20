@@ -24,7 +24,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
         </div>
         <div class="col-12 add-to-cart-limit">
           <p class="small mb0">
-            Registration purchase for a class is limited to one student per transaction. If you would like to register multiple students, please purchase one registration for each student, separately. 
+            Registration purchase for a class is limited to one student per transaction. If you would like to register multiple students, please purchase one registration for each student, separately.
           </p>
         </div>
       </div>
@@ -71,7 +71,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
                  <br>
                  <a class="price-label small modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
                   Member price <span class="icon" data-icon="?"></span>
-                </a> 
+                </a>
               </p>
 
               <?php else: ?>
@@ -121,7 +121,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
           <?php if ( $is_classes ) : ?>
             <div class="col-12 add-to-cart-limit">
               <p class="small mb0">
-                Registration for a class is limited to one student per transaction. If you would like to register multiple students, please purchase one registration for each student, separately. 
+                Registration for a class is limited to one student per transaction. If you would like to register multiple students, please purchase one registration for each student, separately.
               </p>
             </div>
           <?php endif; ?>
@@ -136,4 +136,3 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 </div>
 
 <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
-

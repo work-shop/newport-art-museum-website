@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-wc_print_notices();
+//if ( !NAM_Events::save_notices() ) { wc_print_notices(); }
 
 do_action( 'woocommerce_before_cart' ); ?>
 

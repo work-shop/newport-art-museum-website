@@ -30,10 +30,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 <?php endif; ?>
 <?php endif; ?>
 
-<?php 
+<?php
 wc_print_notices();
-
-do_action( 'woocommerce_before_cart' ); ?>
+?>
 
 
 <form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
@@ -63,12 +62,12 @@ do_action( 'woocommerce_before_cart' ); ?>
 
 		<?php // This flag lets you know whether a user is eligible for a discount at all. ?>
 		<?php //$user_elible_for_discount = NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart(); ?>
-		<?php 
-		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ): 
-			$user_eligible_for_discount = true; 
-	else: 
-		$user_eligible_for_discount = false; 
-	endif; 
+		<?php
+		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ):
+			$user_eligible_for_discount = true;
+	else:
+		$user_eligible_for_discount = false;
+	endif;
 	?>
 
 	<?php foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ):
@@ -159,9 +158,9 @@ do_action( 'woocommerce_before_cart' ); ?>
 			<p class="discount-label discount-label-arrowed">
 				Subtotal: -<?php echo wc_price($discount); ?>
 			</p>
-		</div>		
+		</div>
 		<div class="col-1 product-remove">
-		</div>	
+		</div>
 	</div>
 <?php endif; ?>
 <?php endif; ?>
