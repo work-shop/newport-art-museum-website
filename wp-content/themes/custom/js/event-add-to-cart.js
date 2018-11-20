@@ -9,7 +9,7 @@ function submitEventForm() {
 
 	$(document).ready( function() {
 
-        $('.single_add_to_cart_button').on('click', function( e ) {
+        $('.events_add_to_cart_button').on('click', function( e ) {
 
             e.preventDefault();
 

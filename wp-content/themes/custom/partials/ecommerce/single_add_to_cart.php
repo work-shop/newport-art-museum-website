@@ -248,16 +248,21 @@ do_action( 'woocommerce_before_add_to_cart_form' );
 
                 </div><!-- .single-sidebar-middle -->
 
-                    </div><!-- .single-sidebar-middle -->
-
                     <input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" />
+                    <?php if ( !$is_events ) : ?>
+                        <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button-full button alt">
+                            <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
+                        </button>
+                    <?php endif; ?>
                     <?php do_action( 'woocommerce_after_add_to_cart_button' ); ?>
                 </form>
             <?php } ?>
 
-                <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="single_add_to_cart_button button-full button alt">
+            <?php if ( $is_events ) : ?>
+                <button type="submit" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" class="events_add_to_cart_button single_add_to_cart_button button-full button alt">
                     <?php echo esc_html( $product->single_add_to_cart_text() ); ?>
                 </button>
+            <?php endif; ?>
 
             <?php endif; ?>
             <?php do_action( 'woocommerce_after_add_to_cart_form' ); ?>
