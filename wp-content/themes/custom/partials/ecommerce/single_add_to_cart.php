@@ -44,7 +44,7 @@ do_action( 'woocommerce_before_add_to_cart_form' );
         <div class="sidebar-middle single-sidebar-middle">
 
             <?php //loop through multiple ticket levels here, or a single class product ?>
-            <?php for ($i=0; $i < 1; $i++) {  ?>
+            <?php //for ($i=0; $i < 1; $i++) {  ?>
 
                 <div class="row add-to-cart-header">
                     <div class="col">
@@ -52,7 +52,6 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                             <?php if( $is_classes ): ?>
                                 Tuition
                                 <?php else: ?>
-                                 <!--  <?php if($i < 1): ?> Adult Tickets<?php else: ?>Child Tickets<?php endif; ?> -->
                                  Tickets
                              <?php endif; ?>
                          </h5>
@@ -136,7 +135,6 @@ do_action( 'woocommerce_before_add_to_cart_form' );
 
                         <?php //if it's a class, show any fees and registration limit ?>
                         <?php if ( $is_classes ) : ?>
-                            <?php if( $i < 1 ) :?>
                                 <?php if ( $product instanceof WC_Product_Bundle ) : // if it's a bundle with fees, render the fees in their own section. ?>
                                     <?php $bundled_items = $product->get_bundled_data_items(); ?>
                                     <?php if ( count( $bundled_items ) > 0 ) : ?>
@@ -154,9 +152,7 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                             </div>
                                         </div>
                                     <?php endif; ?>
-                                <?php endif; ?>
-
-
+                                    <?php endif; ?>
                                 <div class="row add-to-cart-limit">
                                     <div class="col-12">
                                         <h5 class="add-to-cart-label">
@@ -168,9 +164,9 @@ do_action( 'woocommerce_before_add_to_cart_form' );
                                         </p>
                                     </div>
                                 </div>
-                            <?php endif; ?>
+                            <?php endif; //end if is_classes ?>
 
-                        <?php } ?>
+                        <?php //} ?>
 
                     </div><!-- .single-sidebar-middle -->
 
