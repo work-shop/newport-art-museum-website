@@ -94,6 +94,7 @@ class NAM_Membership {
      */
     public static function show_bundle_base_price( $old_display, $cart_item, $cart_item_key ) {
 
+        // NOTE: If it's a class - or an instance of a Product Bundle
         if ( $cart_item['data'] instanceof WC_Product_Bundle ) {
 
             if ( static::is_member() || static::has_membership_in_cart() ) {
@@ -108,7 +109,22 @@ class NAM_Membership {
 
             }
 
+        // NOTE: if it's an event – or an instance of an variation.
+        } else if ( $cart_item['variation_id'] !== 0 ) {
 
+            if ( static::is_member() || static::has_membership_in_cart() ) {
+
+                $discount = NAM_Membership::get_membership_discount( $cart_item['variation_id'] );
+
+                return wc_price( $cart_item['data']->get_price() + $discount );
+
+            } else {
+
+                return wc_price( $cart_item['data']->get_price() );
+
+            }
+
+        // NOTE: Do the normal old thing.
         } else {
 
             return $old_display;
@@ -174,6 +190,7 @@ class NAM_Membership {
      * @return double the discounted amount to subtract from the product total.
      */
     public static function get_membership_discount( $product_id ) {
+
         $discount = get_post_meta( $product_id, '_nam_membership_discount', true );
         if ( $discount ) {
             return (double) $discount;
