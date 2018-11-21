@@ -19,29 +19,36 @@ function msReplaceVariables(str, callback) {
     }
 
     if (jQuery(wpmsdivtitle).length) {
-        str = str.replace(/%%title%%/g, jQuery(wpmsdivtitle).val().replace(/(<([^>]+)>)/ig, ''));
+        str = str.replace(/%title%/g, jQuery(wpmsdivtitle).val().replace(/(<([^>]+)>)/ig, ''));
     }
 
     // These are added in the head for performance reasons.
-    str = str.replace(/%%sitedesc%%/g, wpmseoMetaboxL10n.sitedesc);
-    str = str.replace(/%%sitename%%/g, wpmseoMetaboxL10n.sitename);
-    str = str.replace(/%%sep%%/g, wpmseoMetaboxL10n.sep);
-    str = str.replace(/%%page%%/g, wpmseoMetaboxL10n.page);
+    str = str.replace(/%id%/g, wpmseoMetaboxL10n.id);
+    str = str.replace(/%date%/g, wpmseoMetaboxL10n.date);
+    str = str.replace(/%sitedesc%/g, wpmseoMetaboxL10n.sitedesc);
+    str = str.replace(/%sitename%/g, wpmseoMetaboxL10n.sitename);
+    str = str.replace(/%sep%/g, wpmseoMetaboxL10n.sep);
+    str = str.replace(/%page%/g, wpmseoMetaboxL10n.page);
+    str = str.replace(/%currenttime%/g, wpmseoMetaboxL10n.currenttime);
+    str = str.replace(/%currentdate%/g, wpmseoMetaboxL10n.currentdate);
+    str = str.replace(/%currentday%/g, wpmseoMetaboxL10n.currentday);
+    str = str.replace(/%currentmonth%/g, wpmseoMetaboxL10n.currentmonth);
+    str = str.replace(/%currentyear%/g, wpmseoMetaboxL10n.currentyear);
 
     // excerpt
     var excerpt = '';
     if (jQuery('#excerpt').length) {
         excerpt = msClean(jQuery('#excerpt').val().replace(/(<([^>]+)>)/ig, ''));
-        str = str.replace(/%%excerpt_only%%/g, excerpt);
+        str = str.replace(/%excerpt_only%/g, excerpt);
     }
     if ('' === excerpt && jQuery('#content').length) {
         excerpt = jQuery('#content').val().replace(/(<([^>]+)>)/ig, '').substring(0, wpmseoMetaboxL10n.wpmseo_meta_desc_length - 1);
     }
-    str = str.replace(/%%excerpt%%/g, excerpt);
+    str = str.replace(/%excerpt%/g, excerpt);
 
     // parent page
     if (jQuery('#parent_id').length && jQuery('#parent_id option:selected').text() !== wpmseoMetaboxL10n.no_parent_text) {
-        str = str.replace(/%%parent_title%%/g, jQuery('#parent_id option:selected').text());
+        str = str.replace(/%parent_title%/g, jQuery('#parent_id option:selected').text());
     }
 
     // remove double separators
@@ -49,8 +56,8 @@ function msReplaceVariables(str, callback) {
     var pattern = new RegExp(esc_sep + ' ' + esc_sep, 'g');
     str = str.replace(pattern, wpmseoMetaboxL10n.sep);
 
-    if (str.indexOf('%%') !== -1 && str.match(/%%[a-z0-9_-]+%%/i) !== null) {
-        var regex = /%%[a-z0-9_-]+%%/gi;
+    if (str.indexOf('%') !== -1 && str.match(/%[a-z0-9_-]+%/i) !== null) {
+        var regex = /%[a-z0-9_-]+%/gi;
         var matches = str.match(regex);
         for (var i = 0; i < matches.length; i++) {
             if (typeof (replacedVars[ matches[ i ] ]) === 'undefined') {
@@ -95,13 +102,8 @@ function msUpdateTitle(force) {
     var divHtml = jQuery('<div />');
     var snippetTitle = jQuery('#wpmseosnippet_title');
 
-    if (titleElm.val() !== '') {
-        var len = wpmseoMetaboxL10n.wpmseo_meta_title_length - titleElm.val().length;
-        metaseo_status_length(len, '#' + wpmseoMetaboxL10n.field_prefix + 'title-length');
-        jQuery('#' + wpmseoMetaboxL10n.field_prefix + 'title-length').html(len);
-    } else {
-        jQuery('#' + wpmseoMetaboxL10n.field_prefix + 'title-length').addClass('length-true').removeClass('length-wrong').html('<span class="good">' + wpmseoMetaboxL10n.wpmseo_meta_title_length + '</span>');
-    }
+    var len = wpmseoMetaboxL10n.wpmseo_meta_title_length - titleElm.val().length;
+    metaseo_status_length(len, '#' + wpmseoMetaboxL10n.field_prefix + 'title-length');
 
     if (titleElm.val()) {
         title = titleElm.val().replace(/(<([^>]+)>)/ig, '');
@@ -184,9 +186,6 @@ function msUpdateDesc() {
 
             var len = wpmseoMetaboxL10n.wpmseo_meta_desc_length - desc.length;
             metaseo_status_length(len, '#' + wpmseoMetaboxL10n.field_prefix + 'desc-length');
-
-
-
             desc = msSanitizeDesc(desc);
 
             // Clear the autogen description.
@@ -247,15 +246,31 @@ function msEscapeFocusKw(str) {
     return str.replace(/[\-\[\]\/\{}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
 }
 
-function metaseo_status_length(len, id) {
+function metaseo_status_length(len, id, number) {
+    var num = 46;
+    var check = 0;
+    var mclass = '';
+    if (id === '#metaseo_wpmseo_title-length') {
+        num = 46;
+        check = wpmseoMetaboxL10n.wpmseo_meta_title_length - len;
+        mclass = 'word-74B6FC';
+    } else if (id === '#metaseo_wpmseo_desc-length') {
+        num = 120;
+        check = wpmseoMetaboxL10n.wpmseo_meta_desc_length - len;
+        mclass = 'word-74B6FC';
+    } else if (id === '#metaseo_wpmseo_keywords-length') {
+        num = 120;
+        check = len;
+    }
+
     if (len < 0) {
-        jQuery(id).addClass('length-wrong').removeClass('length-true length-warn');
+        jQuery(id).addClass('length-wrong').removeClass('length-true length-warn ' + mclass);
         len = '<span class="wrong">' + len + '</span>';
-    }  else if (len >= 0 && len <= 46) {
-        jQuery(id).addClass('length-warn').removeClass('length-true length-wrong');
-        len = '<span class="length-warn">' + len + '</span>';
+    }  else if (check >= 0 && check <= num) {
+        jQuery(id).addClass('length-warn ' + mclass).removeClass('length-true length-wrong');
+        len = '<span class="length-warn '+mclass+'">' + len + '</span>';
     } else {
-        jQuery(id).addClass('length-true').removeClass('length-wrong length-warn');
+        jQuery(id).addClass('length-true').removeClass('length-wrong length-warn ' + mclass);
         len = '<span class="good">' + len + '</span>';
     }
 
@@ -281,7 +296,6 @@ jQuery(document).ready(function ($) {
     }
 
     jQuery('.wpmseo-heading').hide();
-
     jQuery('#' + wpmseoMetaboxL10n.field_prefix + 'title').keyup(function () {
         msUpdateTitle();
     });
@@ -340,8 +354,6 @@ jQuery(document).ready(function ($) {
         }
 
     });
-
-
 
     jQuery('.wpms_load_more_keyword').click(function () {
         var $this = $(this);

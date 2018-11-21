@@ -3,15 +3,15 @@
     Plugin Name: Flexible Checkout Fields PRO
     Plugin URI: https://www.wpdesk.net/products/flexible-checkout-fields-pro-woocommerce/
     Description: Extension to the free version. Adds new field types, custom sections and more.
-    Version: 1.6.9
+    Version: 1.6.10
     Author: WP Desk
     Author URI: https://www.wpdesk.net/
     Text Domain: flexible-checkout-fields-pro
     Domain Path: /lang/
 	Requires at least: 4.5
-    Tested up to: 4.9.8
+    Tested up to: 5.0.0
     WC requires at least: 3.1.0
-    WC tested up to: 3.5.0
+    WC tested up to: 3.5.1
 
     Copyright 2018 WP Desk Ltd.
 
@@ -31,7 +31,7 @@
 
 */
 
-$plugin_version = '1.6.9';
+$plugin_version = '1.6.10';
 define( 'FLEXIBLE_CHECKOUT_FIELDS_PRO_VERSION', $plugin_version );
 
 
@@ -79,7 +79,7 @@ if ( ! wpdesk_is_plugin_active( 'flexible-checkout-fields/flexible-checkout-fiel
 
 				$api = new stdClass();
 				$api->name = 'Flexible Checkout Fields';
-				$api->version = '1.6.9';
+				$api->version = '1.6.10';
 				$api->download_link = esc_url( $download_url );
 				return $api;
 	}

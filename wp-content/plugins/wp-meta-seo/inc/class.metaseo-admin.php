@@ -2413,6 +2413,7 @@ class MetaSeoAdmin
         // in JavaScript, object properties are accessed as ajax_object.ajax_url, ajax_object.we_value
         wp_localize_script('wpmetaseoAdmin', 'wpms_localize', array(
             'filter_by'                    => esc_html__('Select to filter', 'wp-meta-seo'),
+            'replaced'                     => esc_html__('Replaced', 'wp-meta-seo'),
             'index_link'                   => esc_html__('Loading...', 'wp-meta-seo'),
             'addon_active'                 => $addon_active,
             'ajax_url'                     => admin_url('admin-ajax.php'),
@@ -2509,20 +2510,20 @@ class MetaSeoAdmin
             array(
                 'metaseo_dashboard',
                 '',
+                esc_html__('Image editor', 'wp-meta-seo'),
+                $manage_options_cap,
+                'metaseo_image_meta',
+                array($this, 'loadPage'),
+                null
+            ),
+            array(
+                'metaseo_dashboard',
+                '',
                 esc_html__('Sitemap', 'wp-meta-seo'),
                 $manage_options_cap,
                 'metaseo_google_sitemap',
                 array($this, 'loadPage'),
                 null,
-            ),
-            array(
-                'metaseo_dashboard',
-                '',
-                esc_html__('Image information', 'wp-meta-seo'),
-                $manage_options_cap,
-                'metaseo_image_meta',
-                array($this, 'loadPage'),
-                null
             ),
             array(
                 'metaseo_dashboard',
@@ -3370,8 +3371,8 @@ class MetaSeoAdmin
                  *
                  * @ignore Hook already documented
                  */
-                $value = apply_filters('wpms_update_content_meta', $value, $post->ID, '_metaseo_metatitle', array('source'=>'copy_title'));
-                update_post_meta($post->ID, '_metaseo_metatitle', $value);
+                $value = apply_filters('wpms_update_content_meta', $value, $post->ID, $key, array('source'=>'copy_meta'));
+                update_post_meta($post->ID, $key, $value);
             }
             wp_send_json(true);
         } else {

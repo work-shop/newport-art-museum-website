@@ -671,8 +671,8 @@ class MetaSeoLinkListTable extends WP_List_Table
                             echo '<td colspan="3">';
                             echo '<input type="text" data-post_id="' . esc_attr($rec->source_id) . '" name="metaseo_link_title"
                              id="metaseo_link_title" class="metaseo_link_title" value="' . esc_attr($rec->meta_title) . '">';
-                            echo '<div data-post_id="' . esc_attr($rec->source_id) . '"
-                             class="wpms_update_link">' . esc_html__('Update', 'wp-meta-seo') . '</div>';
+                            echo '<button type="button" data-post_id="' . esc_attr($rec->source_id) . '"
+                             class="wpms_update_link ju-button orange-button wpms-small-btn">' . esc_html__('Update', 'wp-meta-seo') . '</button>';
                             echo '<strong class="wpms_mesage_link">' . esc_html__('Saved.', 'wp-meta-seo') . '</strong>';
                             echo '<strong class="wpms_error_mesage_link">' . esc_html__('Error.', 'wp-meta-seo') . '</strong>';
                             echo '</td>';

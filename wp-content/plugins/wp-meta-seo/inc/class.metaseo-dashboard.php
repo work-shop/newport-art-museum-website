@@ -503,6 +503,26 @@ class MetaSeoDashboard
     }
 
     /**
+     * Return count link 404 , count link 404 is redirected , percent
+     *
+     * @return array
+     */
+    public static function get404Link()
+    {
+        global $wpdb;
+        $count_404 = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'wpms_links WHERE (broken_internal = 1 OR broken_indexed = 1)');
+
+        $count_404_redirected = $wpdb->get_var('SELECT COUNT(*) FROM ' . $wpdb->prefix . 'wpms_links
+             WHERE link_url_redirect != "" AND (broken_internal = 1 OR broken_indexed = 1)');
+        if ((int) $count_404 !== 0) {
+            $percent = ceil($count_404_redirected / $count_404 * 100);
+        } else {
+            $percent = 100;
+        }
+        return array('count_404' => $count_404, 'count_404_redirected' => $count_404_redirected, 'percent' => $percent);
+    }
+
+    /**
      * Get image metas
      *
      * @return void

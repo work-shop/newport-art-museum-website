@@ -798,7 +798,7 @@ function optimize_imgs(element) {
 
                     var checked = jQuery('.checkin-' + post_id);
                     if (checked.length === 0) {
-                        $this.addClass('disabled');
+                        $this.addClass('disabled replaced').removeClass('ju-button waves-effect waves-light').html(wpms_localize.replaced);
                     }
 
                     $this.parent().find('span.spinner').fadeOut(300);

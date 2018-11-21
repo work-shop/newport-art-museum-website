@@ -35,9 +35,10 @@ case 'datepicker':
 break;
 
 case 'info':
-jQuery('.element_' + field_slug + ' .field_placeholder').hide();
+	jQuery('.element_' + field_slug + ' .field_placeholder').hide();
 break;
 
 case 'heading':
-jQuery('.element_' + field_slug + ' .field_placeholder').hide();
+	jQuery('.element_' + field_slug + ' .field_placeholder').hide();
+	jQuery('.element_' + field_slug + ' .field_required').closest('div').hide();
 break;

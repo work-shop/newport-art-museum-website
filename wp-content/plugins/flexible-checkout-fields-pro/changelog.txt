@@ -1,5 +1,8 @@
 *** Flexible Checkout Fields PRO for WooCommerce Changelog ***
 
+1.6.10 - 2018-11-15
+* Fixed unneeded required checkbox on heading field
+
 1.6.9 - 2018-10-16
 * Added support for WooCommerce 3.5
 * Dropped support for WooCommerce below 3.0 (the plugin may still work with older versions but we do not declare official support)

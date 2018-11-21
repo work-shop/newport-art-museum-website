@@ -1960,6 +1960,9 @@ ORDER BY p.post_date DESC', array($post_type)));
                     $title        = $post_submenu->post_title;
                     if (empty($title)) {
                         $term  = get_term($id_menu, $type_menu);
+                        if (empty($term->name)) {
+                            continue;
+                        }
                         $title = $term->name;
                     }
                 } else {
@@ -2347,8 +2350,10 @@ ORDER BY p.post_date DESC', array($post_type)));
 
         /**
          * Submit sitemaps, don't ping if blog is not public.
+         *
+         * @param string Sitemap URL
          */
-        do_action('wpms_submit_sitemap');
+        do_action('wpms_submit_sitemap', site_url($this->wpms_sitemap_name));
         if ($type === 'ajax') {
             wp_send_json(array('status' => true, 'message' => 'success'));
         }

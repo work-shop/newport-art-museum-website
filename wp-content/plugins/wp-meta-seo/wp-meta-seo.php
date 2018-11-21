@@ -4,7 +4,7 @@
  * Plugin Name: WP Meta SEO
  * Plugin URI: http://www.joomunited.com/wordpress-products/wp-meta-seo
  * Description: WP Meta SEO is a plugin for WordPress to fill meta for content, images and main SEO info in a single view.
- * Version: 4.0.0
+ * Version: 4.0.1
  * Text Domain: wp-meta-seo
  * Domain Path: /languages
  * Author: JoomUnited
@@ -90,7 +90,7 @@ if (!defined('WPMSEO_VERSION')) {
     /**
      * Plugin version
      */
-    define('WPMSEO_VERSION', '4.0.0');
+    define('WPMSEO_VERSION', '4.0.1');
 }
 
 if (!defined('WPMS_CLIENTID')) {
@@ -168,8 +168,8 @@ $GLOBALS['metaseo_sitemap'] = new MetaSeoSitemap;
 function wpmsGetDefaultSettings()
 {
     return array(
-        'home_meta_active' => 1,
-        'webpage_testid'   => 0,
+        'home_meta_active'       => 1,
+        'webpage_testid'         => 0,
         'metaseo_title_home'     => '',
         'metaseo_desc_home'      => '',
         'metaseo_showfacebook'   => '',
@@ -187,6 +187,34 @@ function wpmsGetDefaultSettings()
         'metaseo_overridemeta'   => 1
     );
 }
+
+/**
+ * Retrieve the date of the post/page/cpt for use as replacement string
+ *
+ * @param object $current_post Current post info
+ *
+ * @return string|null
+ */
+function wpmsRetrieveDate($current_post)
+{
+    $replacement = null;
+    if ($current_post->post_date !== '') {
+        $replacement = mysql2date(get_option('date_format'), $current_post->post_date, true);
+    } else {
+        if (get_query_var('day') && get_query_var('day') !== '') {
+            $replacement = get_the_date();
+        } else {
+            if (single_month_title(' ', false) && single_month_title(' ', false) !== '') {
+                $replacement = single_month_title(' ', false);
+            } elseif (get_query_var('year') !== '') {
+                $replacement = get_query_var('year');
+            }
+        }
+    }
+
+    return $replacement;
+}
+
 if (is_admin()) {
     require_once(WPMETASEO_PLUGIN_DIR . 'inc/class.metaseo-content-list-table.php');
     require_once(WPMETASEO_PLUGIN_DIR . 'inc/class.metaseo-image-list-table.php');
@@ -306,7 +334,7 @@ if (is_admin()) {
         wp_reset_query();
 
         $default_settings = wpmsGetDefaultSettings();
-        $settings       = get_option('_metaseo_settings');
+        $settings         = get_option('_metaseo_settings');
         if (is_array($settings)) {
             $settings = array_merge($default_settings, $settings);
         } else {
@@ -472,7 +500,7 @@ if (is_admin()) {
     {
         global $wp_query;
         $default_settings = wpmsGetDefaultSettings();
-        $settings       = get_option('_metaseo_settings');
+        $settings         = get_option('_metaseo_settings');
         if (is_array($settings)) {
             $settings = array_merge($default_settings, $settings);
         } else {
@@ -826,7 +854,7 @@ function wpmsTemplateRedirect()
 
                             $referrers = implode('||', $list_referrers);
                             $referrers = trim($referrers, '||');
-                            $value = array(
+                            $value     = array(
                                 'hit'      => (int) $links_broken->hit + 1,
                                 'referrer' => $referrers
                             );

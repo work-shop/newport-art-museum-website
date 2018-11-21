@@ -739,10 +739,8 @@ class MetaSeoImageListTable extends WP_List_Table
                                 break;
 
                             case 'col_image':
-                                $img = sprintf(
-                                    '<img src="' . esc_url($thumb_url) . '" width="70px" height="70px" class="metaseo-image"
-  data-name="' . esc_attr($img_name . $type) . '" data-img-post-id="' . esc_attr($rec->ID) . '" />'
-                                );
+                                $img = '<img src="' . esc_url($thumb_url) . '" width="70px" height="70px" class="metaseo-image"
+  data-name="' . esc_attr($img_name . $type) . '" data-img-post-id="' . esc_attr($rec->ID) . '" />';
                                 // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
                                 echo sprintf('<td %2$s colspan="3">%1$s</td>', $img, $attributes);
                                 break;

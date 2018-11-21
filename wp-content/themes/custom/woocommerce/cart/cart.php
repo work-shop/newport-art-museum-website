@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="notice woocommerce-error notice-membership-double-check">
 		<h4 class="bold">You're about to purchase a *new* membership. If you would like to renew an existing membership, please &nbsp; <a href="/my-account" class="modal-toggle button button-brand" data-modal-target="modal-login-ajax">Log In</a></h4>
 	</div>
-	<?php login_with_ajax(); ?>
+	<?php //login_with_ajax(); ?>
 <?php endif; ?>
 <?php endif; ?>
 

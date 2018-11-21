@@ -20,9 +20,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
 
+if( false ):
+
 if ( ! wc_coupons_enabled() ) {
 	return;
 }
+
+
 
 if ( empty( WC()->cart->applied_coupons ) ) {
 	$info_message = apply_filters( 'woocommerce_checkout_coupon_message', __( 'Have a coupon?', 'woocommerce' ) . ' <a href="#" class="showcoupon">' . __( 'Click here to enter your code', 'woocommerce' ) . '</a>' );
@@ -42,3 +46,5 @@ if ( empty( WC()->cart->applied_coupons ) ) {
 
 	<div class="clear"></div>
 </form>
+
+<?php endif; ?>

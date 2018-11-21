@@ -66,7 +66,7 @@ $next_link = $wizard->getNextLink($step);
 
                 <div class="ju-settings-option wpms-no-shadow wpms_width_100 p-d-20">
                     <label class="wpms_width_100 p-b-20 wpms_left text label_text">
-                        <?php esc_html_e('Search engine descriptions', 'wp-meta-seo'); ?>
+                        <?php esc_html_e('Search engine description', 'wp-meta-seo'); ?>
                     </label>
 
                     <label>
