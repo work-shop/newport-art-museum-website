@@ -125,6 +125,9 @@ typings/
 # Optional eslint cache
 .eslintcache
 
+# PHP Autoformat Rules
+.phpintel
+
 # Optional REPL history
 .node_repl_history
 
