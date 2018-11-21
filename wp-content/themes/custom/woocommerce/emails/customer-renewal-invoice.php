@@ -13,9 +13,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php do_action( 'woocommerce_email_header', $email_heading, $email ); ?>
 
-Email:<br>
-<?php var_dump($email->recipient); ?>
-
 <?php 
 $user = get_user_by('email', $email->recipient); 
 $first_name = $user->user_firstname; 
@@ -23,20 +20,6 @@ $email_address = $user->user_email;
 $user_id = $user->ID;
 $user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true );
 ?>
-
-Order Status:<br>
-<?php var_dump($order->get_status()); ?>
-User:<br>
-<?php //var_dump($user); ?>
-First Name:<br>
-<?php var_dump($first_name); ?>
-Email Address:<br>
-<?php var_dump($email_address); ?>
-User Id:<br>
-<?php var_dump($user_id); ?>
-User was imported:<br>
-<?php var_dump($user_was_imported); ?>
-
 
 <?php if ( 'pending' == $order->get_status() || 'on-hold' == $order->get_status()) : ?>
 	<p>
