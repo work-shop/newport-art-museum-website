@@ -18,9 +18,6 @@ function submitEventForm() {
             var form1 = $('#form-0');
             var form2 = $('#form-1');
 
-            console.log( form1.serialize() );
-            console.log( form2.serialize() );
-
             $.ajax({
                 url: form1.attr('action'),
                 data: form1.serialize(),
@@ -28,21 +25,39 @@ function submitEventForm() {
                 success: function( data ){
 
                     console.log('form1 done.');
-                    $.ajax({
-                        url: form2.attr('action'),
-                        data: form2.serialize(),
-                        type: form2.attr('method'),
-                        success: function( data ){
-                            console.log('form2 done');
+                    console.log('checking form2.');
+
+                    if ( form2.length > 0 ) {
+
+                        var qty = form2.find('.qty').val();
+
+                        console.log( qty );
+
+                        if ( qty > 0 ) {
+
+                            $.ajax({
+                                url: form2.attr('action'),
+                                data: form2.serialize(),
+                                type: form2.attr('method'),
+                                success: function( data ){
+                                    console.log('form2 done');
+                                    location.assign('/cart');
+                                },
+                                error: function( err ) {
+                                    console.error( 'error form2' );
+                                    $('body').removeClass('events-submitting');
+                                    $('body').addClass('events-submission-error');
+
+                                }
+                            });
+
+                        } else {
+
                             location.assign('/cart');
-                        },
-                        error: function( err ) {
-                            console.error( 'error form2' );
-                            $('body').removeClass('events-submitting');
-                            $('body').addClass('events-submission-error');
 
                         }
-                    });
+
+                    }
 
                 },
                 error: function( err ) {
