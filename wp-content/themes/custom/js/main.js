@@ -22,6 +22,7 @@ import { filter } from './filter.js';
 import { collection } from './collection.js';
 import { museumStatus } from './museum-status.js';
 import { ecommerceHelpers } from './ecommerce-helpers.js';
+import { members } from './members.js';
 import { livereload } from './livereload-client.js';
 import { submitEventForm } from './event-add-to-cart.js';
 
@@ -45,6 +46,7 @@ ecommerceHelpers();
 museumStatus();
 menuOverflow();
 submitEventForm();
+members();
 
 if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') || $('body').hasClass('page-id-74') ){
 	filter();

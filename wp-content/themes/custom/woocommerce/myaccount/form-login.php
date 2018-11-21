@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 		<div class="col-sm-10 offset-sm-1 col-md-4 offset-md-0 login-register-help mb2">
 			<h3 class="bold">
-				Please sign in, <br>
+				Please log in, <br>
 				or create a new account.
 			</h3>
 			<h4>
@@ -47,7 +47,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<div class="nam-login-form">
 			<form class="woocommerce-form woocommerce-form-login login" method="post">
 				<div class="form-top">
-					<h4 class="bold">Sign in</h4>
+					<h4 class="bold">Log in</h4>
 				</div>
 				<div class="form-body">
 

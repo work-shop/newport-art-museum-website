@@ -29,10 +29,11 @@
 	}
 }
 
-.post-type-classes,.post-type-membership-tier,.post-type-donation-tiers{
-.acf-field-5bef141d974bd{
-	display: none;
-}	
+.post-type-classes,.post-type-membership-tier,.post-type-donation-tiers,.post-type-fees{
+	//event ticket levels field
+	.acf-field-5bef141d974bd{
+		display: none;
+	}	
 }
 
 
@@ -70,13 +71,13 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 	}
 
 	.nam-user-created-subscription {
-        background-color: lighten($brand,47%); 
-        font-weight: bold;
-    }
+		background-color: lighten($brand,47%); 
+		font-weight: bold;
+	}
 
-    .nam-imported-subscription {
-        background-color: lighten($success,5%); 
-        font-weight: bold;
-    }
+	.nam-imported-subscription {
+		background-color: lighten($success,5%); 
+		font-weight: bold;
+	}
 
 }

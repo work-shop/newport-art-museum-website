@@ -633,6 +633,11 @@ strong span{
 	@extend .bold;
 }
 
+.bold .woocommerce-Price-currencySymbol{
+	@extend .bold;
+}
+
+
 .woocommerce-order-overview{
 	li{
 		margin-bottom: .25em;
@@ -648,6 +653,12 @@ strong span{
 
 
 //LOGIN
+
+.page-id-7{
+	#nam-my-account{
+		padding-top: 4em;
+	}
+}
 
 .woocommerce-form-login, .woocommerce-form-register, .woocommerce-ResetPassword, .lost-password-confirmation{
 	max-width: 360px;	

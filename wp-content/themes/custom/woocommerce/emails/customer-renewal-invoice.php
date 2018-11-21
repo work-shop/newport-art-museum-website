@@ -37,7 +37,7 @@ $user_was_imported = get_user_meta( $user_id, '_nam_imported_member_user', true 
 	<?php if( $user_was_imported === 'yes' ): ?>
 		<p>
 			<strong>
-				Please note: your account was automatically created from our membership database. To renew your membership, you will need to activate your account, if you have not already. To activate your account, follow these instructions:
+				Please note: your account was automatically created from our membership database. To renew your membership, you will need to activate your account, if you have not done so already. To activate your account, follow these instructions:
 			</strong>
 		</p>
 		<ol>

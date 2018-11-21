@@ -233,6 +233,10 @@ $text-button: (
 		background: lighten($brand,20%);
 		cursor: pointer;
 		color: white;
+
+		a{
+			color: white;
+		}
 	}
 
 	&:focus{

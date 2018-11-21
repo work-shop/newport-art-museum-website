@@ -17,8 +17,8 @@
 							<?php $the_query->the_post(); ?>
 							<?php
 							$id = $post->ID;
-                            $product_id = get_field('managed_field_related_post', $id)[0];
-                            $product = wc_get_product( $product_id );
+							$product_id = get_field('managed_field_related_post', $id)[0];
+							$product = wc_get_product( $product_id );
 							$current_price = $product->get_price();
 							$sale_price = $product->get_sale_price();
 							$regular_price = $product->get_regular_price();
@@ -43,8 +43,13 @@
 										</div>
 										<div class="accordion-link membership-link-button">
 											<a href="<?php echo $add_to_cart_url; ?>" class="">
-												Add Membership To Cart
+												Purchase New Membership
 											</a>
+											<?php if(false): ?>
+											<a href="/my-account/subscriptions?renew=true" class="ml1">
+												Renew Your Membership
+											</a>
+										<?php endif; ?>
 										</div>
 									</div>
 								</div>

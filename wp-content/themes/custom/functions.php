@@ -136,7 +136,6 @@ The museum is currently <span class="ms-status ms-status-<?php echo $museum_stat
 
 }
 
-
 add_filter( 'woocommerce_enqueue_styles', '__return_empty_array' );
 
 add_action( 'rest_api_init', function () {

@@ -49,7 +49,7 @@ $event_short_description = get_field('short_description');
                             <div class="col">
                                 <div class="nam-dash nam-dash-desktop"></div>
                                 <div class="single-ecommerce-sidebar-sm">
-                                    <?php NAM_Helpers::print_notices(false); ?>
+                                    <?php // NAM_Helpers::print_notices(false); ?>
                                    <?php get_template_part('partials/single_ecommerce_sidebar'); ?>
                                </div>
                            </div>
@@ -62,7 +62,7 @@ $event_short_description = get_field('short_description');
         </div>
         <div class="col-md-5 col-lg-5 col-xl-4 offset-xl-1 single-body-right single-body-right-desktop">
             <div class="single-body-right-content">
-               <?php NAM_Helpers::print_notices(true); ?>
+               <?php // NAM_Helpers::print_notices(true); ?>
                <?php get_template_part('partials/single_ecommerce_sidebar'); ?>
            </div><!-- .single-body-right-content -->
        </div><!-- .single-body-right -->
