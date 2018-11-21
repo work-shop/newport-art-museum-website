@@ -1,7 +1,5 @@
 <?php
 
-
-
 /**
  * This class contains a number of static Methods
  * for dealing with membership, applying membership
@@ -9,267 +7,329 @@
  */
 class NAM_Membership {
 
-    public static $membership_category_slug = 'membership-tiers';
-    public static $events_category_slug = 'events';
-    public static $classes_category_slug = 'classes';
-    public static $calculate_totals_hook = 'woocommerce_before_calculate_totals';
-    public static $display_cart_totals = 'woocommerce_cart_item_price';
+	public static $membership_category_slug = 'membership-tiers';
+	public static $events_category_slug = 'events';
+	public static $classes_category_slug = 'classes';
+	public static $calculate_totals_hook = 'woocommerce_before_calculate_totals';
+	public static $calculate_product_line_total_hook = 'woocommerce_cart_product_subtotal';
+	public static $display_cart_totals = 'woocommerce_cart_item_price';
 
+	public static $field_keys = array(
+		'membership_discount_eligibility' => 'field_5bf5a1e6af83d',
+	);
 
+	/**
+	 * Registers actions for the cart which apply membership-based
+	 * discounts to the products in the cart to which a discount applies.
+	 *
+	 */
+	public static function register_hooks() {
 
-    /**
-     * Registers actions for the cart which apply membership-based
-     * discounts to the products in the cart to which a discount applies.
-     *
-     */
-    public static function register_hooks() {
+		$called_class = get_called_class();
 
-        $called_class = get_called_class();
+		add_action(static::$calculate_totals_hook, array($called_class, 'calculate_membership_discounts'), 20, 1);
 
-        add_action( static::$calculate_totals_hook, array( $called_class, 'calculate_membership_discounts'), 20, 1);
-        //add_filter( static::$display_cart_totals, array( $called_class, 'show_membership_cart_total'), 10, 3);
-        add_filter( static::$display_cart_totals, array( $called_class, 'show_bundle_base_price'), 10, 3);
+		//add_action(static::$calculate_product_line_total_hook, array($called_class, 'calculate_line_discount_total'), 20, 4);
+		//add_filter(static::$display_cart_totals, array($called_class, 'show_base_price'), 10, 3);
 
-    }
+	}
 
-    /**
-     * Calculate the membership discounts for the current cart, based
-     * on whether the purchaser is a member, or has a membership product
-     * in their cart.
-     *
-     */
-    public static function calculate_membership_discounts( $cart_object ) {
+	/**
+	 * Calculate the membership discounts for the current cart, based
+	 * on whether the purchaser is a member, or has a membership product
+	 * in their cart.
+	 *
+	 */
+	public static function calculate_membership_discounts($cart_object) {
 
+		global $woocommerce;
 
+		if (is_admin() && !defined('DOING_AJAX')) {return;}
+		if (did_action(static::$calculate_totals_hook) >= 2) {return;}
 
-        if ( is_admin() && ! defined( 'DOING_AJAX' ) ) { return; }
-        if ( did_action( static::$calculate_totals_hook ) >= 2 ) { return; }
+		if (static::is_member() || static::has_membership_in_cart()) {
 
-        //var_dump( $cart_object->get_cart() );
+			$discount_membership_multiplier = static::get_membership_discount_multiplier();
 
-        if( static::is_member() || static::has_membership_in_cart() ) {
+			foreach ($cart_object->get_cart() as $key => $cart_item) {
 
-            foreach ( $cart_object->get_cart() as $cart_item ) {
+				$name = $cart_item['data']->name;
 
-                $is_event_variation = $cart_item['data'] instanceof WC_Product_Variation;
-                $product_id_type = ( $is_event_variation ) ? 'variation_id' : 'product_id';
+				$is_event_variation = $cart_item['data'] instanceof WC_Product_Variation;
+				$product_id_type = ($is_event_variation) ? 'variation_id' : 'product_id';
 
-                $id = $cart_item[ $product_id_type ];
-                $discount = static::get_membership_discount( $id );
+				$id = $cart_item[$product_id_type];
+				$base_discount = static::get_membership_discount($id);
+				$quantity = $cart_item['quantity'];
+				$total_discount = $base_discount * min($quantity, $discount_membership_multiplier);
 
-                $final_price = $cart_item[ 'data' ]->get_price() - $discount;
-                $cart_item[ 'data' ]->set_price( $final_price );
+				if ($total_discount > 0) {
 
-            }
-        }
+					$woocommerce->cart->add_fee('Membership Discount: ' . $name, -(double) $total_discount, true, '');
 
-    }
+				}
 
-    /**
-     * This function renders the discounted price for members
-     * in the cart, next to the old price.
-     *
-     */
-    public static function show_membership_cart_total( $old_display, $cart_item, $cart_item_key ) {
+			}
 
-        $product_id = $cart_item['data']->id;
-        $membership_discount = static::get_membership_discount( $product_id );
+		}
 
-        if ( $membership_discount > 0 && !static::is_member() && !static::has_membership_in_cart() ) {
+	}
 
-            return wc_price( $cart_item['data']->get_price() ) . ' ('. wc_price( $cart_item['data']->get_price() - $membership_discount ) .' for members)';
+	/**
+	 * Given the old display strong, cart item, and cart item key,
+	 * renderes the "base price" for a product bundle to the
+	 * cart table, rather than the total price of the bundle.
+	 *
+	 * @hooked woocommerce_cart_item_price
+	 */
+	public static function show_base_price($old_display, $cart_item, $cart_item_key) {
 
-        }
+		// NOTE: If it's a class - or an instance of a Product Bundle
+		if ($cart_item['data'] instanceof WC_Product_Bundle) {
 
-        return $old_display;
+			if (static::is_member() || static::has_membership_in_cart()) {
 
-    }
+				$discount = NAM_Membership::get_membership_discount($cart_item['data']->id);
 
-    /**
-     * Given the old display strong, cart item, and cart item key,
-     * renderes the "base price" for a product bundle to the
-     * cart table, rather than the total price of the bundle.
-     *
-     * @hooked woocommerce_cart_item_price
-     */
-    public static function show_bundle_base_price( $old_display, $cart_item, $cart_item_key ) {
+				return wc_price($cart_item['data']->get_price() + $discount);
 
-        // NOTE: If it's a class - or an instance of a Product Bundle
-        if ( $cart_item['data'] instanceof WC_Product_Bundle ) {
+			} else {
 
-            if ( static::is_member() || static::has_membership_in_cart() ) {
+				return wc_price($cart_item['data']->get_price());
 
-                $discount = NAM_Membership::get_membership_discount( $cart_item['data']->id );
+			}
 
-                return wc_price( $cart_item['data']->get_price() + $discount );
+			// NOTE: if it's an event – or an instance of an variation.
+		} else if ($cart_item['variation_id'] !== 0) {
 
-            } else {
+			if (static::is_member() || static::has_membership_in_cart()) {
 
-                return wc_price( $cart_item['data']->get_price() );
+				$discount = NAM_Membership::get_membership_discount($cart_item['variation_id']);
 
-            }
+				return wc_price($cart_item['data']->get_price() + $discount);
 
-        // NOTE: if it's an event – or an instance of an variation.
-        } else if ( $cart_item['variation_id'] !== 0 ) {
+			} else {
 
-            if ( static::is_member() || static::has_membership_in_cart() ) {
+				return wc_price($cart_item['data']->get_price());
 
-                $discount = NAM_Membership::get_membership_discount( $cart_item['variation_id'] );
+			}
 
-                return wc_price( $cart_item['data']->get_price() + $discount );
+			// NOTE: Do the normal old thing.
+		} else {
 
-            } else {
+			return $old_display;
 
-                return wc_price( $cart_item['data']->get_price() );
+		}
 
-            }
+	}
 
-        // NOTE: Do the normal old thing.
-        } else {
+	/**
+	 * get all the memberships that given user
+	 * has, and return a list of membership products.
+	 *
+	 * defaults to the current user, if no id is specified.
+	 */
+	public static function get_membership($user_id = null) {
+		if (null == $user_id) {$user_id = get_current_user_id();}
+		//if ( 0 == $user_id ) { return false; }
 
-            return $old_display;
+		$flat_products = array();
 
-        }
+		$subscriptions = get_posts(array(
+			'numberposts' => -1,
+			'meta_key' => '_customer_user',
+			'meta_value' => $user_id,
+			'post_type' => 'shop_subscription',
+			'post_status' => 'wc-active',
+		));
 
-    }
+		array_map(function ($sub) use ($flat_products) {
 
-    /**
-     * Given a user_id, returns a boolean indicating
-     * Whether or not a member has purchased a membership,
-     * and has an active subscription.
-     *
-     * @param int $user_id optional user id to look up a membership for.
-     * @return boolean true if $user_id is a member
-     */
-    public static function is_member( $user_id=null ) {
+			$sub = wcs_get_subscription($sub->ID);
+			$products = $sub->get_items();
 
-        if ( null == $user_id ) { $user_id = get_current_user_id(); }
-        //if ( 0 == $user_id ) { return false; }
+			array_merge($flat_products, $products);
 
-        $subscriptions = get_posts( array(
-            'numberposts' => -1,
-            'meta_key'    => '_customer_user',
-            'meta_value'  => $user_id,
-            'post_type'   => 'shop_subscription',
-            'post_status' => 'wc-active',
-        ));
+			return $products;
 
-        return !empty( $subscriptions );
+		}, $subscriptions);
 
-    }
+		return $flat_products;
 
-    /**
-     * returns whether or not the current user has
-     * a membership item in their cart or not.
-     *
-     * @return boolean true if the current session has a membership in the cart.
-     */
-    public static function has_membership_in_cart( ) {
+	}
 
-        $has_membership_in_cart = false;
+	/**
+	 * Get all the membership products in the cart,
+	 * and return them as an array.
+	 */
+	public static function get_membership_in_cart() {
 
-        foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ) {
+		$memberships_in_cart = array();
 
-            $product = $cart_item['data'];
+		foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
 
-            if ( has_term( static::$membership_category_slug, 'product_cat', $product->id ) ) {
-                $has_membership_in_cart = true;
-                break;
-            }
+			$product = $cart_item['data'];
 
-        }
+			if (has_term(static::$membership_category_slug, 'product_cat', $product->id)) {
+				$memberships_in_cart[] = $product;
+			}
 
-        return $has_membership_in_cart;
+		}
 
-    }
+		return $memberships_in_cart;
 
-    /**
-     * This function gets the membership discount amount for a given product
-     *
-     * @param int $product_id the id of the product to get the discount for.
-     * @return double the discounted amount to subtract from the product total.
-     */
-    public static function get_membership_discount( $product_id ) {
+	}
 
-        $discount = get_post_meta( $product_id, '_nam_membership_discount', true );
-        if ( $discount ) {
-            return (double) $discount;
-        } else {
-            return 0;
-        }
-    }
+	/**
+	 * Given a user_id, returns a boolean indicating
+	 * Whether or not a member has purchased a membership,
+	 * and has an active subscription.
+	 *
+	 * @param int $user_id optional user id to look up a membership for.
+	 * @return boolean true if $user_id is a member
+	 */
+	public static function is_member($user_id = null) {
 
-    /**
-     * This function returns true if the product is a discountable product.
-     * Currently, discountable products include 'classes' and 'events'.
-     *
-     * @param int $product_id the product id to check
-     * @return boolean true if the product is a discountable product.
-     */
-    public static function is_discountable_product( $product_id ) {
-        return has_term( static::$events_category_slug, 'product_cat', $product_id ) || has_term( static::$classes_category_slug, 'product_cat', $product_id );
-    }
+		return !empty(static::get_membership($user_id));
 
+	}
 
-    /**
-     * Given a subscription ID, check and determine whether
-     * this subscription was imported via the membership importer
-     * or membership creator, or was created through the site's frontend.
-     *
-     * @param int $subscription_id the subscription ID to test.
-     * @return boolean true if the membership was imported.
-     */
-    public static function membership_was_imported( $subscription_id ) {
+	/**
+	 * returns whether or not the current user has
+	 * a membership item in their cart or not.
+	 *
+	 * @return boolean true if the current session has a membership in the cart.
+	 */
+	public static function has_membership_in_cart() {
 
-        $subscription_meta = get_post_meta( $subscription_id, NAM_Membership_Creator::$imported_membership_meta, true );
+		return !empty(static::get_membership_in_cart());
 
-        return 'yes' === $subscription_meta;
+	}
 
-    }
+	/**
+	 * Get the discount multiplier applicable to a given cart.
+	 * Include existing memberships, as well as memberships that
+	 * may be in the cart. Take the max eligible discount multiplier
+	 * from this set.
+	 */
+	public static function get_membership_discount_multiplier() {
 
+		$memberships_in_cart = static::get_membership_in_cart();
+		$memberships = static::get_membership();
 
-    /**
-     * Given a subscription ID, check and determine whether
-     * this subscription was imported via the membership importer
-     * or membership creator, or was created through the site's frontend.
-     *
-     * @param int $user_id the subscription ID to test.
-     * @return boolean true if the user was created through the import.
-     */
-    public static function user_was_imported( $user_id=NULL ) {
+		$merged_memberships = array_merge($memberships_in_cart, $memberships);
 
-        if ( $user_id == NULL ) { $user_id = get_current_user_id(); }
+		$discount = array_reduce($merged_memberships, function ($max_multiplier, $membership) {
 
-        $user_meta = get_user_meta( $user_id, NAM_Membership_Creator::$imported_member_meta, true );
+			$parent = NAM_Membership_Tier::get_parent_posts($membership->id);
 
-        return 'yes' === $user_meta;
+			if (count($parent) == 0) {
 
-    }
+				return $max_multiplier;
 
+			} else {
 
-    /**
-     * This routine attempts to retrieve the parent post
-     * represented by the order product item in this subscription.
-     *
-     * @param WC_Subscription $subscription a subscription post
-     * @return WP_Post the parent post of the WC_Product in $subscription.
-     */
-    public function get_membership_for_subscription( $subscription ) {
+				$parent = $parent[0];
+				$discount_membership_multiplier = get_field(static::$field_keys['membership_discount_eligibility'], $parent);
+				if ($discount_membership_multiplier) {
 
-        foreach( $subscription->get_items() as $item ) {
-            $product = $item->get_product();
+					return max($max_multiplier, (int) $discount_membership_multiplier);
 
-            if ( has_term( static::$membership_category_slug, 'product_cat', $product->id ) ) {
+				} else {
+					return $max_multiplier;
+				}
 
-                return $product;
+			}
 
-            }
+		}, 1);
 
-        }
+		return $discount;
 
-        return FALSE;
+	}
 
-    }
+	/**
+	 * This function gets the membership discount amount for a given product
+	 *
+	 * @param int $product_id the id of the product to get the discount for.
+	 * @return double the discounted amount to subtract from the product total.
+	 */
+	public static function get_membership_discount($product_id) {
 
+		$discount = get_post_meta($product_id, '_nam_membership_discount', true);
+		if ($discount) {
+			return (double) $discount;
+		} else {
+			return 0;
+		}
+	}
+
+	/**
+	 * This function returns true if the product is a discountable product.
+	 * Currently, discountable products include 'classes' and 'events'.
+	 *
+	 * @param int $product_id the product id to check
+	 * @return boolean true if the product is a discountable product.
+	 */
+	public static function is_discountable_product($product_id) {
+		return has_term(static::$events_category_slug, 'product_cat', $product_id) || has_term(static::$classes_category_slug, 'product_cat', $product_id);
+	}
+
+	/**
+	 * Given a subscription ID, check and determine whether
+	 * this subscription was imported via the membership importer
+	 * or membership creator, or was created through the site's frontend.
+	 *
+	 * @param int $subscription_id the subscription ID to test.
+	 * @return boolean true if the membership was imported.
+	 */
+	public static function membership_was_imported($subscription_id) {
+
+		$subscription_meta = get_post_meta($subscription_id, NAM_Membership_Creator::$imported_membership_meta, true);
+
+		return 'yes' === $subscription_meta;
+
+	}
+
+	/**
+	 * Given a subscription ID, check and determine whether
+	 * this subscription was imported via the membership importer
+	 * or membership creator, or was created through the site's frontend.
+	 *
+	 * @param int $user_id the subscription ID to test.
+	 * @return boolean true if the user was created through the import.
+	 */
+	public static function user_was_imported($user_id = NULL) {
+
+		if ($user_id == NULL) {$user_id = get_current_user_id();}
+
+		$user_meta = get_user_meta($user_id, NAM_Membership_Creator::$imported_member_meta, true);
+
+		return 'yes' === $user_meta;
+
+	}
+
+	/**
+	 * This routine attempts to retrieve the parent post
+	 * represented by the order product item in this subscription.
+	 *
+	 * @param WC_Subscription $subscription a subscription post
+	 * @return WP_Post the parent post of the WC_Product in $subscription.
+	 */
+	public function get_membership_for_subscription($subscription) {
+
+		foreach ($subscription->get_items() as $item) {
+			$product = $item->get_product();
+
+			if (has_term(static::$membership_category_slug, 'product_cat', $product->id)) {
+
+				return $product;
+
+			}
+
+		}
+
+		return FALSE;
+
+	}
 
 }
