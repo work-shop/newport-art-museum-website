@@ -388,9 +388,6 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 		$available_attributes = array('ticket_levels');
 		$variations = static::create_ticket_level_variations($ticket_levels);
 
-		// var_dump( $variations );
-		// throw new Exception('');
-
 		static::delete_existing_variations($product_id);
 		static::insert_product_attributes($product_id, $ticket_levels);
 		static::insert_product_variations($title, $post_id, $product_id, $variations);
@@ -417,23 +414,22 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 	public static function insert_product_attributes($product_id, $ticket_levels) {
 
-		wp_set_object_terms($product_id, 'variable', 'product_type');
-
 		$values = array_map(function ($ticket_level) {return $ticket_level['ticket_level_name'];}, $ticket_levels);
-
-		wp_set_object_terms($product_id, $values, 'pa_ticket_levels');
 
 		$product_attributes_data = array(
 			'pa_ticket_levels' => array(
 				'name' => 'pa_ticket_levels',
-				'value' => join('|', $values),
-				'is_visible' => '1',
-				'is_variation' => '1',
-				'is_taxonomy' => '0',
+				'value' => '',
+				'position' => 0,
+				'is_visible' => 1,
+				'is_variation' => 1,
+				'is_taxonomy' => 1,
 			),
 		);
 
+		wp_set_object_terms($product_id, 'variable', 'product_type');
 		update_post_meta($product_id, '_product_attributes', $product_attributes_data);
+		wp_set_object_terms($product_id, $values, 'pa_ticket_levels');
 
 	}
 
@@ -464,15 +460,14 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 		foreach ($variations as $index => $variation) {
 
+			$variation_type_name = $variation['attributes']['ticket_levels'];
+
 			$variation_name = 'ticket-level-' . $index . '-for-event-product-' . $product_id . '-for-event-' . $post_id;
 			$variation_price = $variation['price'];
 			$discount = static::get_product_membership_discount($post_id, $variation_price);
 
-			// var_dump( $discount );
-			// throw new Exception('');
-
 			$variation_post = array(
-				'post_title' => $variation['attributes']['ticket_levels'] . ' Ticket for ' . $title,
+				'post_title' => $variation_type_name . ' Ticket for ' . $title,
 				'post_name' => $variation_name,
 				'post_status' => 'publish',
 				'post_parent' => $product_id,
@@ -481,7 +476,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 			$variation_id = wp_insert_post($variation_post);
 
-			$attribute_term = get_term_by('name', $variation['attributes']['ticket_levels'], 'pa_ticket_levels');
+			$attribute_term = get_term_by('name', $variation_type_name, 'pa_ticket_levels');
 
 			update_post_meta($variation_id, 'attribute_pa_ticket_levels', $attribute_term->slug);
 
@@ -495,8 +490,10 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 			update_post_meta($variation_id, '_manage_stock', 'no');
 			update_post_meta($variation_id, '_backorders', 'no');
-			update_post_meta($variation_id, '_stock', '');
+			update_post_meta($variation_id, '_stock', 0);
 			update_post_meta($variation_id, '_stock_status', 'instock');
+			update_post_meta($variation_id, '_default_attributes', array());
+			update_post_meta($variation_id, '_variation_description', $variation_type_name . ' Tickets');
 
 		}
 	}
