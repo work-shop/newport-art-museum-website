@@ -23,6 +23,8 @@ function checkMemberByEmail(email){
 	var base = '/wp-json/wp/v2/users/?search=';
 	var endpoint = base + email;
 
+	$('body').addClass('member-checking');
+
 	$.ajax({
 		url: endpoint
 	})
@@ -31,11 +33,12 @@ function checkMemberByEmail(email){
 		parseUser( data );
 	})
 	.fail(function( error ) {
-		renderMessages('Oops, something went wrong. Please try again.', true );
+		renderMessages('Oops, something went wrong. Please try again.');
 		//console.log('error');
 	})
 	.always(function() {
 		//console.log('complete');
+		$('body').removeClass('member-checking');
 	});
 }
 
@@ -43,43 +46,29 @@ function checkMemberByEmail(email){
 function parseUser( user ){
 	if( user.length === 1 ){
 		user = user[0];
-		var message = 'You do have an account on this website. Your User id is ' + user.id;
-		renderMessages( message );
+		clearMessages();
+		$('.member-check-message-has-account').addClass('active');		
 	} else{
-		var message = 'You do not have an account on this website.';
-		renderMessages( message );
+		clearMessages();
+		$('.member-check-message-no-account').addClass('active');		
 	}
 }
 
 
 
-function renderMessages(message, error){
+function renderMessages(message){
 	var errorContainer = $('.member-check-message-error');
-	var successContainer = $('.member-check-message-success');
-	var messagesContainer = $('member-check-messages');
-
 	clearMessages();
-
-	if( error ){
-		errorContainer.append( message );
-		errorContainer.addClass('active');
-	} else{
-		successContainer.append( message );
-		successContainer.addClass('active');
-	}
-
-	messagesContainer.addClass('active');
-
-	
+	errorContainer.append( message );
+	errorContainer.addClass('active');
 }
 
 
 function clearMessages(){
+	var errorContainer = $('.member-check-message-error');
 	var messages = $('.member-check-message');
-	var messagesContainer = $('member-check-messages');
-	messagesContainer.addClass('active');
 	messages.removeClass('active');
-	messages.html(' ');
+	errorContainer.html('');
 }
 
 

@@ -6,7 +6,7 @@
 					Renew your Membership
 				</h3>
 			</div>
-			<div class="col-12 col-md-6">
+			<div class="col-12">
 				<?php get_template_part('partials/member_checker' ); ?>
 			</div>
 		</div>

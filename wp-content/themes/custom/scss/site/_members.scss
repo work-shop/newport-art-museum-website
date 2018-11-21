@@ -1,0 +1,44 @@
+
+
+body.member-checking{
+	.member-check-form,.member-check-messages{
+		opacity: .5;
+	}
+}
+
+.member-check-form{
+	width: 100%;
+
+	input[type="email"]{
+		width: 100%;
+		max-width: 300px;
+		display: block;
+	}
+
+	input[type="submit"]{
+		@extend .button;
+		margin-top: 1em;
+	}
+
+}
+
+
+.member-check-message{
+	padding: 1em;
+	border: 1px solid;
+	border-radius: 6px;
+	display: none;
+
+	&.active{
+		display: block;
+	}
+
+	background: transparentize($success,.8);
+	border-color: $success;
+
+	&.member-check-message-error,&.member-check-message-no-account{
+		background: transparentize($error,.9);
+		border-color: $error;
+		//color: darken($error,10%);
+	}
+}
