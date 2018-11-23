@@ -95,12 +95,21 @@ do_action('woocommerce_before_add_to_cart_form');
 
               <?php
               if ($is_events) {
+
+                // NOTE: $current_price is the current price of this purchase option
                 $current_price = $purchase_option['price'];
+                // NOTE: $membership_discount is the membership discount for a single purchase of this option.
+                // NOTE: $membership_discount_multiplier is the number of discounts that the member is eligible for on this purchase.
                 $membership_discount = $purchase_option['membership_discount'];
+
               } else {
 
+                // NOTE: $current_price is the current price of this purchase option
                 $current_price = $purchase_option->get_price();
+                // NOTE: $membership_discount is the membership discount for a single purchase of this option.
+                // NOTE: $membership_discount_multiplier is the number of discounts that the member is eligible for on this purchase.
                 $membership_discount = NAM_Membership::get_membership_discount($purchase_option->id);
+
               }
               ?>
 
