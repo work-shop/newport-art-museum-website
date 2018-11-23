@@ -30,6 +30,7 @@ require_once( __ROOT__ . '/functions/post-types/fees/class-nam-fee.php');
 require_once( __ROOT__ . '/functions/class-nam-membership.php' );
 require_once( __ROOT__ . '/functions/class-nam-classes.php' );
 require_once( __ROOT__ . '/functions/class-nam-events.php' );
+require_once( __ROOT__ . '/functions/class-nam-cart.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-admin.php' );
 require_once( __ROOT__ . '/functions/class-nam-site-init.php' );
 require_once( __ROOT__ . '/functions/class-nam-membership-creator.php' );
@@ -86,7 +87,12 @@ function shop_order_modified_views( $views ){
 add_filter( 'woocommerce_helper_suppress_admin_notices', '__return_true' );
 
 
-//adds a BCC header to emails that match our array
+/**
+ * Function adds a BCC header to emails that match our array
+ *
+ * @param string $headers The default headers being used
+ * @param string $object  The email type/object that is being processed
+ */
 function add_bcc_to_certain_emails( $headers, $object ) {
 	// email types/objects to add bcc to
 	$add_bcc_to = array(
@@ -95,7 +101,7 @@ function add_bcc_to_certain_emails( $headers, $object ) {
 	// if our email object is in our array
 	if ( in_array( $object, $add_bcc_to ) ) {
 		// change our headers
-		$headers = array( 
+		$headers = array(
 			$headers,
 			'Bcc: info+nam-orders@workshop.co' ."\r\n",
 		);

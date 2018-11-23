@@ -1,9 +1,38 @@
 'use strict';
 
-// NOTE: http://localhost:8080/events/faculty-art-sale-sat/
+
+function postForm( form, successCallback, errorCallback ) {
+
+    console.log( 'form ' + form.attr('id') + ', qty: ' + form.find('.qty').val() );
+
+    if ( form.length > 0 && form.find('.qty').val() > 0 ) {
+
+        console.log('form ' + form.attr('id') + ' has >0 qty');
+
+        $.ajax({
+            url: '/visit?save_notices=true',
+            data: form.serialize(),
+            type: form.attr('method'),
+            success: successCallback,
+            error: function( err ) {
+                console.error( 'error ' + form.attr('id') );
+                $('body').removeClass('events-submitting');
+                $('body').addClass('events-submission-error');
+            }
+        });
+
+    } else {
+
+        console.log('form ' + form.attr('id') + ' has 0 qty');
+
+        successCallback();
+
+    }
+
+}
 
 function submitEventForm() {
-	//console.log('ecommerce-helpers.js loaded');
+	console.log('ecommerce-helpers.js loaded');
 
     const targetURL = '/cart';
 
@@ -13,88 +42,22 @@ function submitEventForm() {
 
             e.preventDefault();
 
-            $('body').addClass('events-submitting');
+            var form1 = $(this).parent('.sidebar-inner').find('.form-0');
+            var form2 = $(this).parent('.sidebar-inner').find('.form-1');
 
-            var form1 = $('#form-0');
-            var form2 = $('#form-1');
+            if ( form1.find('.qty').val() > 0 || form2.find('.qty').val() > 0 ) {
 
-            $.ajax({
-                url: form1.attr('action'),
-                data: form1.serialize(),
-                type: form1.attr('method'),
-                success: function( data ){
+                $('body').addClass('events-submitting');
 
-                    console.log('form1 done.');
-                    console.log('checking form2.');
+                postForm( form1,
 
-                    if ( form2.length > 0 ) {
+                   function() { postForm( form2, function() { location.assign( targetURL ); } ); }
 
-                        var qty = form2.find('.qty').val();
+                );
 
-                        console.log( qty );
-
-                        if ( qty > 0 ) {
-
-                            $.ajax({
-                                url: form2.attr('action'),
-                                data: form2.serialize(),
-                                type: form2.attr('method'),
-                                success: function( data ){
-                                    console.log('form2 done');
-                                    location.assign('/cart');
-                                },
-                                error: function( err ) {
-                                    console.error( 'error form2' );
-                                    $('body').removeClass('events-submitting');
-                                    $('body').addClass('events-submission-error');
-
-                                }
-                            });
-
-                        } else {
-
-                            location.assign('/cart');
-
-                        }
-
-                    }
-
-                },
-                error: function( err ) {
-                    console.error( 'error form1' );
-                    $('body').removeClass('events-submitting');
-                    $('body').addClass('events-submission-error');
-                }
-            });
-
-            // $( 'form.cart' ).each( function() {
-            //
-            //     var form = $( this );
-            //     var serialized = form.serialize();
-            //
-            //     console.log( serialized );
-            //     console.log( form.attr('action') );
-            //     console.log( form.attr('method') );
-            //     console.log();
-            //
-            //
-            //     $.ajax({
-            //         url: form.attr('action'),
-            //         data: serialized,
-            //         type: form.attr('method'),
-            //         success: function( data ){
-            //             console.log('done');
-            //             //location.assign( targetURL );
-            //         },
-            //         error: function( err ) {
-            //             console.error( 'error' );
-            //         }
-            //     });
-            //
-            // })
+            }
 
         });
-
 
 	});
 

@@ -31,6 +31,9 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 		'number_of_ticket_levels' => 'field_5bef14b2974bf',
 		'ticket_levels' => 'field_5bef20c467cb5',
 
+		// One per Customer
+		'one_per_order' => 'field_5bf5af2b2c46f',
+
 		// Fees and Surcharges
 	);
 
@@ -458,6 +461,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 	public static function insert_product_variations($title, $post_id, $product_id, $variations) {
 
+		$sold_individually = get_field(static::$field_keys['one_per_order'], $post_id);
+
 		foreach ($variations as $index => $variation) {
 
 			$variation_type_name = $variation['attributes']['ticket_levels'];
@@ -495,6 +500,10 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 			update_post_meta($variation_id, '_default_attributes', array());
 			update_post_meta($variation_id, '_variation_description', $variation_type_name . ' Tickets');
 
+			if ($sold_individually) {
+				update_post_meta($variation_id, '_sold_individually', 'yes');
+			}
+
 		}
 	}
 
@@ -506,6 +515,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 	 * @param int $product_id the id of the product that implements ecommerce functionality for the Custom Post.
 	 */
 	public static function set_product_meta($title, $post_id, $product_id) {
+
+		$called_class = get_called_class();
 
 		wc_delete_product_transients($product_id);
 
@@ -522,6 +533,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 		$membership_discount_type = get_field(static::$field_keys['membership_discount_type'], $post_id);
 		$membership_percentage_discount = get_field(static::$field_keys['membership_percentage_discount'], $post_id);
 		$membership_fixed_discount = get_field(static::$field_keys['membership_fixed_discount'], $post_id);
+		$sold_individually = get_field(static::$field_keys['one_per_order'], $post_id);
 
 		update_post_meta($product_id, '_downloadable', 'no');
 		update_post_meta($product_id, '_virtual', 'yes'); // NOTE: once shop products are launched, we'll need to make this non-constant
@@ -597,7 +609,14 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 		}
 
-		NAM_Classes::do_class_creation_meta($post_id, $product_id);
+		if ($sold_individually) {
+
+			update_post_meta($product_id, '_sold_individually', 'yes');
+
+		}
+
+		NAM_Classes::do_creation_meta($post_id, $product_id);
+		NAM_Membership_Tier::do_creation_meta($post_id, $product_id);
 
 	}
 

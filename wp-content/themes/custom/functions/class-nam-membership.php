@@ -332,4 +332,16 @@ class NAM_Membership {
 
 	}
 
+
+    /**
+     * A simple method for checking whether a product has a membership
+     * category, and is therefore a membership product.
+     *
+     * @param int $product_id the id of the product to check
+     * @return boolean true is the product is a membership.
+     */
+    public static function is_membership_product( $product_id ) {
+        return has_term(static::$membership_category_slug, 'product_cat', $product_id);
+    }
+
 }
