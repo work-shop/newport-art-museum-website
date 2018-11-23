@@ -62,7 +62,7 @@ do_action('woocommerce_before_add_to_cart_form');
 <?php foreach ($purchase_options as $i => $purchase_option) {
   ?>
 
-  <form id='form-<?php echo $i; ?>' class="cart" action="<?php echo esc_url(get_permalink()); ?>" method="post" enctype='multipart/form-data'>
+  <form class="cart form-<?php echo $i; ?>" action="<?php echo esc_url(get_permalink()); ?>" method="post" enctype='multipart/form-data'>
    <?php
 
    do_action('woocommerce_before_add_to_cart_button');

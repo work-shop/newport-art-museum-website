@@ -4,7 +4,7 @@ class NAM_Cart {
 
 
     public function __construct() {
-
+        $this->register_hooks();
     }
 
     /**
@@ -33,18 +33,18 @@ class NAM_Cart {
              if ( $is_membership && $seen_products[ 'membership' ] ) {
 
                  WC()->cart->remove_cart_item( $cart_item_key );
-                 wc_add_notice( 'You already have a ' .  $seen_products[ 'membership' ]->name . ' in your cart.', 'notice' );
+                 wc_add_notice( 'You already have a ' .  $seen_products[ 'membership' ]->name . ' in your cart.', 'error' );
 
              } else if ( $seen_products[ $cart_item['product_id'] ] ) {
 
                  WC()->cart->remove_cart_item( $cart_item_key );
-                 wc_add_notice( 'You already have a ticket for ' . $cart_item['data']->name . ' in your cart.', 'notice' );
+                 wc_add_notice( 'You already have a ticket for ' . $seen_products[ $cart_item['product_id'] ]->name . ' in your cart.', 'error' );
 
              } else {
 
                  if ( $sold_individually ) {
 
-                     $seen_products[ $cart_item['product_id'] ] = true;
+                     $seen_products[ $cart_item['product_id'] ] = $cart_item['data'];
 
                  } else if ( $is_membership ) {
 
