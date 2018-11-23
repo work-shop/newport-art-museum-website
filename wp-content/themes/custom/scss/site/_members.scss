@@ -1,44 +1,227 @@
 
+#renew{
+	.container-fluid{
+		//max-width: 1200px;
+	}
+}
 
 body.member-checking{
 	.member-check-form,.member-check-messages{
 		opacity: .5;
 	}
+
+	.member-check-form{
+
+		&:before{
+			content: '';
+			display: block;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-left: -20px;
+			margin-top: -20px;
+			width: 40px;
+			height: 40px;
+			z-index: 9998;
+			background-image: url('../images/loading.gif');
+			background-size: 40px 40px;
+			background-position: center center;
+		}
+	}
 }
+
+.member-check{
+	background: $khaki;
+	@extend .shadowed;
+	border-radius: 4px;
+	min-height: 600px;
+	display: flex;
+
+	@media screen and (max-width: $md) {
+		display: block;
+		min-height: 0;
+	}
+}
+
+.member-check-1{
+	@extend .col;
+	padding: 45px;
+	padding-bottom: 145px;
+
+	@media screen and (max-width: $lg) {
+		padding: 45px 30px;
+	}
+
+	@media screen and (max-width: $md) {
+		width: 100%;
+		display: block;
+		border-bottom: 1px solid lighten( $medium, 27% );
+		padding: 35px 15px;
+	}
+}
+
+.member-check-2{
+	width: 480px;
+	border-left: 1px solid lighten( $medium, 27% );
+	padding: 45px;
+	position: relative;
+
+	@media screen and (max-width: $lg) {
+		width: 340px;
+		padding: 45px 30px;
+	}
+
+	@media screen and (max-width: $md) {
+		width: 100%;
+		display: block;
+		border-left: none;
+		padding: 35px 15px;
+		padding-bottom: 75px;
+	}
+}
+
+
+.member-check-links{
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 100px;
+	width: 100%;
+	border-top: 1px solid lighten( $medium, 27% );
+	@extend .flex-center;
+
+	@media screen and (max-width: $md) {
+		height: 75px;
+	}
+}
+
+.member-check-links-desktop{
+	display: flex !important;
+	@media screen and (max-width: $md) {
+		display: none !important;
+	}
+}
+
+.member-check-links-mobile{
+	display: none !important;
+	@media screen and (max-width: $md) {
+		display: flex !important;
+	}
+}
+
 
 .member-check-form{
 	width: 100%;
 
+	label{
+		@extend .nam-form-label;
+	}
+
 	input[type="email"]{
 		width: 100%;
-		max-width: 300px;
+		//max-width: 300px;
 		display: block;
 	}
 
 	input[type="submit"]{
 		@extend .button;
-		margin-top: 1em;
+		margin-top: 2em;
+		width: 100%;
+		max-width: 100%;
+		display: block;
 	}
 
 }
 
-
-.member-check-message{
-	padding: 1em;
-	border: 1px solid;
-	border-radius: 6px;
-	display: none;
+.member-check-hidden{
+	visibility: hidden;
+	opacity: 0;
+	height: 0;
 
 	&.active{
-		display: block;
+		transition: visibility 0s linear .2s, opacity .2s linear;
+		transition-delay: 0s;
+		visibility: visible;
+		opacity: 1;
+		height: auto;
 	}
+}
 
+
+
+.member-check-message-box{
+	border-radius: 3px;
+	padding: 20px;
+	border: 1px solid;
 	background: transparentize($success,.8);
 	border-color: $success;
+}
 
-	&.member-check-message-error,&.member-check-message-no-account{
-		background: transparentize($error,.9);
-		border-color: $error;
-		//color: darken($error,10%);
+.member-check-message-box-error{
+	background: transparentize($error,.9);
+	border-color: $error;
+}
+
+.member-check-message-box-nuetral{
+	background: transparentize($yellow,.9);
+	border-color: transparentize($yellow,.3);
+}
+
+
+
+.lwa{
+
+	//background: $khaki;
+	//@extend .shadowed;
+	//border-radius: 6px;
+
+	.lwa-heading,.lwa-middle,.lwa-bottom{
+		//padding-top: 30px;
+		padding-bottom: 30px; 
+	}
+
+	.lwa-heading{
+		padding-top: 0px;
+		padding-bottom: 20px;
+	}
+
+	.lwa-bottom{
+		padding-top: 0px;
+	}
+
+
+	.lwa-heading,.lwa-middle{
+		//border-bottom: 1px solid darken($light,7%);
+
+	}
+
+	label{
+		@extend .nam-form-label;
+	}
+
+	input[type="text"],input[type="password"]{
+		display: block;
+		width: 100%;
+		max-width: 100%;
+		margin-bottom: 1.5em;
+	}
+
+	input[type="submit"]{
+		width: 100%;
+		max-width: 100%;
+	}
+
+	.lwa-rememberme{
+		margin-right: 5px;
+		position: relative;
+		top: -2px;
+	}
+
+	.lwa-rememberme-container{
+		margin-bottom: .75em;
+	}
+
+	.lwa-status{
+		//margin: 15px !important;
 	}
 }

@@ -38,7 +38,7 @@ require_once( __ROOT__ . '/functions/library/class-nam-helpers.php' );
 require_once( __ROOT__ . '/functions/library/class-ws-flexible-content.php' );
 
 require_once( __ROOT__ . '/functions/library/museum_status.php' );
-require_once( __ROOT__ . '/functions/library/email_magic_link.php' );
+require_once( __ROOT__ . '/functions/library/member_checker_api.php' );
 
 new NAM_Site();
 new NAM_Site_Admin();

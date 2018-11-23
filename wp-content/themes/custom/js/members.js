@@ -1,7 +1,6 @@
 'use strict';
 
-var consumer_key = 'ck_94391e026732e6950dc9cf4b0a03fbce33664624';
-var consumer_secret = 'cs_ffa887c94ac099dd74d2e7685818868aff49114c';
+var globalEmail = '';
 
 function members(){
 	//console.log("members.js loaded");
@@ -20,17 +19,25 @@ function members(){
 
 
 function checkMemberByEmail(email){
-	var base = '/wp-json/wp/v2/users/?search=';
+	var base = '/wp-json/members/v1/status/?email=';
 	var endpoint = base + email;
+	globalEmail = email;
+
+	$('.lwa-username input').val(email);
+	console.log($('#lwa_user_remember'));
 
 	$('body').addClass('member-checking');
+	$('.member-check-form').attr('disabled','true');
 
 	$.ajax({
 		url: endpoint
 	})
 	.done(function( data ) {
-		console.log('success');
-		parseUser( data );
+		//console.log('success');
+		var response = JSON.parse( data );
+		parseResponse( response );
+
+		//console.log( response );
 	})
 	.fail(function( error ) {
 		renderMessages('Oops, something went wrong. Please try again.');
@@ -39,25 +46,55 @@ function checkMemberByEmail(email){
 	.always(function() {
 		//console.log('complete');
 		$('body').removeClass('member-checking');
+		$('.member-check-form').attr('disabled','false');
 	});
+
 }
 
 
-function parseUser( user ){
-	if( user.length === 1 ){
-		user = user[0];
-		clearMessages();
-		$('.member-check-message-has-account').addClass('active');		
+function parseResponse( response ){
+	if( response.has_account ){
+		if( response.has_subscription ){
+			hasSubscription();
+		} else{
+			noMembership();
+		}
 	} else{
-		clearMessages();
-		$('.member-check-message-no-account').addClass('active');		
+		noAccount();
 	}
 }
 
 
+function noMembership(){
+	clearMessages();
+	$('#member-check-heading').html('');
+	$('#member-check-heading').html('Try another email address');
+	$('.member-check-message-no-membership').addClass('active');	
+	//$('.member-check-login').addClass('active');		
+	//$('.member-check-intro').hide();
+	//$('#lwa_user_remember').val(globalEmail);
+}
+
+
+function hasSubscription(){
+	clearMessages();
+	$('.member-check-message-has-account').addClass('active');	
+	$('.member-check-login').addClass('active');		
+	$('.member-check-intro').hide();
+	$('#lwa_user_remember').val(globalEmail);
+}
+
+
+function noAccount(){
+	clearMessages();
+	$('#member-check-heading').html('');
+	$('#member-check-heading').html('Try another email address');
+	$('.member-check-message-no-account').addClass('active');		
+}
+
 
 function renderMessages(message){
-	var errorContainer = $('.member-check-message-error');
+	var errorContainer = $('.member-check-message-error-container');
 	clearMessages();
 	errorContainer.append( message );
 	errorContainer.addClass('active');
@@ -65,7 +102,7 @@ function renderMessages(message){
 
 
 function clearMessages(){
-	var errorContainer = $('.member-check-message-error');
+	var errorContainer = $('.member-check-message-error-container');
 	var messages = $('.member-check-message');
 	messages.removeClass('active');
 	errorContainer.html('');

@@ -1,5 +1,16 @@
 
 
+.nam-form-label{
+	font-size: 16px;
+	@extend .bold;
+	color: lighten($dark,10%);
+	margin-bottom: 5px;
+	display: block;
+	@media screen and (max-width: $md) {
+		font-size: 14px;
+	}
+}
+
 //CART
 
 
@@ -307,13 +318,22 @@ form.woocommerce-checkout,form.woocommerce-cart-form{
 
 //CHECKOUT
 
+$nam-input-border: lighten($medium,15%);
+
 .woocommerce-checkout{
 
 	label{
 		display: block;
 		width: 100%;
-		margin-bottom: .25rem;
+		margin-bottom: 5px;
 		max-width: 500px;
+		font-size: 17px;
+		@extend .bold;
+		color: lighten($dark,7%);
+	}
+
+	input{
+		border: 1px solid $nam-input-border;
 	}
 
 	.notice.row{
@@ -459,7 +479,7 @@ form.woocommerce-checkout,form.woocommerce-cart-form{
 	}
 
 	.form-row{
-		margin-bottom: 3em;
+		margin-bottom: 2.75em;
 	}
 
 	#payment{
@@ -661,17 +681,29 @@ strong span{
 }
 
 .woocommerce-form-login, .woocommerce-form-register, .woocommerce-ResetPassword, .lost-password-confirmation{
-	max-width: 360px;	
+	max-width: 345px;	
 	margin: 0 auto 3em auto;
 	margin-bottom: 3em;
 	background: $khaki;
-	border: 1px solid darken($light, 7%);
+	//border: 1px solid darken($light, 7%);
 	@extend .shadowed;
-	//border-radius: 3px;
+	border-radius: 4px;
+
+	p{
+		margin-bottom: 0;
+	}
+
+	.username-row{
+		margin-bottom: 25px;
+	}
+
+	.password-row{
+		margin-bottom: 5px;
+	}
 
 	.form-top{
 		border-bottom: 1px solid darken($light,7%);		
-		padding: 30px 30px 10px 30px;
+		padding: 25px 25px 10px 25px;
 		@media screen and (max-width: $md) {
 			padding: 15px 15px 5px 15px;
 		}
@@ -679,14 +711,17 @@ strong span{
 
 	.form-body{
 		border-bottom: 1px solid darken($light,7%);		
-		padding: 30px;
+		padding: 30px 25px 50px 25px;
+		@media screen and (max-width: 1440px) {
+			padding: 30px 15px 50px 15px;
+		}
 		@media screen and (max-width: $md) {
-			padding: 15px;
+			padding: 30px 15px 30px 15px;
 		}
 	}
 
 	.form-bottom{
-		padding: 30px 30px 20px 30px;
+		padding: 25px 25px 20px 25px;
 
 		@media screen and (max-width: $md) {
 			padding: 20px 15px 5px 15px;
@@ -695,57 +730,58 @@ strong span{
 
 	button[type="submit"]{
 		margin-bottom: 1em;
-		margin: 2em auto 0em auto;
+		margin: 2.5em auto 0em auto;
 		display: block;
+		width: 100%;
+		max-width: 100%;
+		min-height: 35px;
 	}
 
 	label{
 		display: block;
-		margin-bottom: 3px;
+		margin-bottom: 5px;
+		font-size: 15px;
+		@extend .bold;
+		color: lighten($dark,10%);
+		letter-spacing: .01em;
 	}
 
 	input{
 		width: 100%;
 		max-width: 100%;
 		color: $dark;
+		margin-bottom: 10px;
+		border: 1px solid lighten($medium,15%);
 	}
 
 	.woocommerce-form__label-for-checkbox{
-		text-align: center;
-		//border: 1px solid red;
-
 		span{
-			//border: 1px solid black;
+			font-size: 13px;
+			@media screen and (max-width: $sm) {
+				font-size: 12px;
+			}
 		}
 	}
 
 	input[name="rememberme"]{
 		display: inline-block;
-		text-align: right;
-		margin-right: 7px;
+		margin-right: 3px;
 		width: auto;
 		position: relative;
 		top: -1px;
-		border: 1px solid red;
-
-		@media screen and (max-width: $sm) {
-			top: 3px;
-		}
 	}
 
 	.woocommerce-LostPassword{
-		text-align: center;
-		//margin-top: .5em;
-		margin-bottom: 0;
-
-		@media screen and (max-width: $sm) {
-			margin-top: .25em;
-		}
-
+		text-align: right;
 		a{
+			padding-top: 2px;
 			display: block;
-			padding-top: 15px;
-			padding-bottom: 15px;
+			text-decoration: underline;
+			font-size: 13px;
+			@media screen and (max-width: $sm) {
+				font-size: 12px;
+				padding-top: 3px;
+			}
 		}
 	}
 }
