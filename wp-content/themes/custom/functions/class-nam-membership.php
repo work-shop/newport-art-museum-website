@@ -241,7 +241,7 @@ class NAM_Membership {
 
 			}
 
-		}, 1);
+		}, 0);
 
 		return $discount;
 
