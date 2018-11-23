@@ -291,10 +291,6 @@ abstract class NAM_Custom_Post_Type {
         $this->post = $post;
     }
 
-    public abstract function validate();
-
-    public abstract function create();
-
     // public abstract function render_card();
     //
     // public abstract function render_page();

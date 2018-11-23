@@ -81,14 +81,6 @@ class NAM_Event extends NAM_Shadowed_Post_Type {
 
     }
 
-    public function validate() {
-
-    }
-
-    public function create() {
-
-    }
-
     /**
      * This routine sets all the required product taxonomy terms for reporting
      * purposes.
@@ -103,6 +95,27 @@ class NAM_Event extends NAM_Shadowed_Post_Type {
         array_push( $categories, self::$plural_name );
 
         return $categories;
+
+    }
+
+
+    public static function register_validation_hooks() {
+
+        $called_class = get_called_class();
+        $current_screen = get_current_screen();
+
+        if ( $current_screen->post_type === 'events' ) {
+            add_filter('acf/validate_value/key=' . static::$field_keys['ticket_levels'], array( $called_class, 'validate' ), 10, 4);
+        }
+
+    }
+
+    /**
+     * Check to see if any ticket levels have been entered.
+     */
+    public static function validate( $valid, $value, $field, $input ) {
+
+        return $value != '';
 
     }
 

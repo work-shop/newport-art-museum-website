@@ -6,6 +6,7 @@ class NAM_Site_Admin {
 
         add_action('admin_menu', array( $this, 'manage_admin_menu_options' ) );
         add_action('acf/init', array($this, 'add_options_pages'));
+        add_action('current_screen', array( 'NAM_Event', 'register_validation_hooks' ));
         add_action( 'admin_head', array( $this, 'admin_css'));
 
         add_action('wp_dashboard_setup', array($this, 'remove_dashboard_widgets') );
