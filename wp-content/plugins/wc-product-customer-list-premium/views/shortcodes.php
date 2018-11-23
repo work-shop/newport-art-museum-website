@@ -194,7 +194,7 @@ function wpcl_shortcode($atts) {
 			wp_enqueue_script( 'wpcl-datatables-js');
 			wp_enqueue_script( 'wpcl-datatables-buttons-js');
 			wp_enqueue_script( 'wpcl-datatables-buttons-flash');
-			//wp_enqueue_script( 'wpcl-datatables-print'); 
+			//wp_enqueue_script( 'wpcl-datatables-print');
 			//wp_enqueue_script( 'wpcl-datatables-jszip');
 			if($export_pdf == 'true') { wp_enqueue_script( 'wpcl-datatables-pdfmake'); }
 			if($export_pdf == 'true') { wp_enqueue_script( 'wpcl-datatables-vfs-fonts'); }
@@ -321,7 +321,50 @@ function wpcl_shortcode($atts) {
 		if(isset($atts['custom_fields'])) {
 			$custom_fields = explode(',', $atts['custom_fields']);
 			foreach($custom_fields as $custom_field) {
-				$columns[] = $custom_field;
+
+                switch ($custom_field) {
+                    case '_order_student_first_name':
+                        $columns[] = 'First Name';
+                        break;
+
+                    case '_order_student_last_name':
+                        $columns[] = 'Last Name';
+                        break;
+
+                    case '_order_birthdate':
+                        $columns[] = 'Birthdate';
+                        break;
+
+                    case '_order_primary_phone_number':
+                        $columns[] = 'Phone';
+                        break;
+
+                    case '_order_primary_phone_type':
+                        $columns[] = 'Phone Type';
+                        break;
+
+                    case '_order_secondary_phone_number':
+                        $columns[] = 'Secondary Phone';
+                        break;
+
+                    case '_order_secondary_phone_type':
+                        $columns[] = 'Secondary Phone Type';
+                        break;
+
+                    case '_order_email_contact':
+                        $columns[] = 'Email';
+                        break;
+
+                    case '_order_preferred_pronoun':
+                        $columns[] = 'Preferred Pronoun';
+                        break;
+
+                    default:
+                        $columns[] = $custom_field;
+                        break;
+                }
+
+
 			}
 		}
 	}
@@ -333,7 +376,7 @@ function wpcl_shortcode($atts) {
 		<h3><?php echo $table_title; ?></h3>
 	<?php } ?>
 
-	<?php 
+	<?php
 	if($item_sales) {
 		$email_list = array();
 		$productcount = array();
@@ -494,7 +537,7 @@ function wpcl_shortcode($atts) {
 								<?php } ?>
 								<?php if($customer_id == 'true') { ?>
 								<td>
-									<p><?php 
+									<p><?php
 										if($order->get_customer_id()) {
 											echo '<a href="' . get_admin_url() . 'user-edit.php?user_id=' . $order->get_customer_id() . '" target="_blank">' . $order->get_customer_id() . '</a>';
 										}
@@ -503,7 +546,7 @@ function wpcl_shortcode($atts) {
 								<?php } ?>
 								<?php if($customer_username == 'true') { ?>
 								<td>
-									<p><?php 
+									<p><?php
 										$customerid = $order->get_customer_id();
 										if($customerid) {
 											$user_info = get_userdata($customerid);
@@ -518,7 +561,7 @@ function wpcl_shortcode($atts) {
 								<?php } ?>
 								<?php if($customer_display_name == 'true') { ?>
 								<td>
-									<p><?php 
+									<p><?php
 										$customerid = $order->get_customer_id();
 										if($customerid) {
 											$user_info = get_userdata($customerid);
@@ -557,13 +600,12 @@ function wpcl_shortcode($atts) {
 
 								<?php if( $order_variations == 'true' ) {
 									$item = $order->get_item($sale->order_item_id);
+                                    $variation = wc_get_product( $item->get_variation_id() );
 								?>
 								<td>
 									<p>
-										<?php 
-											foreach($item->get_meta_data() as $itemvariation) {
-												echo '<strong>' . wc_attribute_label($itemvariation->key) . '</strong>: &nbsp;' . wc_attribute_label($itemvariation->value) . '<br />';
-											}
+										<?php
+										    echo '<strong>' . $variation->get_description() . '</strong><br />';
 										?>
 									</p>
 								</td>
@@ -586,7 +628,7 @@ function wpcl_shortcode($atts) {
 								</td>
 								<?php } ?>
 								<?php
-								
+
 								if ( wpcl_activation()->is__premium_only() ) {
 									// PRO
 
@@ -594,7 +636,7 @@ function wpcl_shortcode($atts) {
 
 									if(isset($atts['custom_fields'])) {
 										$custom_fields = explode(',', $atts['custom_fields']);
-										foreach($custom_fields as $custom_field) { 
+										foreach($custom_fields as $custom_field) {
 											echo '<td><p>' . get_post_meta( $sale->order_id, $custom_field, true ) . '</p></td>';
 										}
 									}
@@ -602,7 +644,7 @@ function wpcl_shortcode($atts) {
 								}
 
 								?>
-								<?php 
+								<?php
 									// Add wpcl_shortcode_add_row
 									do_action('wpcl_shortcode_add_row', $order, $product, $sale, $atts);
 								?>
@@ -616,7 +658,7 @@ function wpcl_shortcode($atts) {
 					?>
 				</tbody>
 			</table>
-		
+
 		<?php if($order_qty_total == 'true') { ?>
 		<p class="total">
 			<?php echo '<strong>' . __('Total', 'wc-product-customer-list') . ' : </strong>' . array_sum($productcount); ?>

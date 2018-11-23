@@ -233,8 +233,8 @@ abstract class NAM_Custom_Post_Type {
 
                 } else {
 
-                    $customfields = '_order_student_first_name,_order_student_last_name,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,'
-                                  . '_order_secondary_phone_number,_order_secondary_phone_type,_order_email_contact,_order_preferred_pronoun';
+                    $customfields = '_order_student_first_name,_order_student_last_name,_order_email_contact,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,'
+                                  . '_order_secondary_phone_number,_order_secondary_phone_type,_order_preferred_pronoun';
                     /**
                      * This shortcode echos a list of purchasers of a given product
                      * to the page, and depends on the Woocommerce Customer List Plugin.
@@ -249,7 +249,7 @@ abstract class NAM_Custom_Post_Type {
                                                  'billing_first_name="false" ' .
                                                  'billing_last_name="false" ' .
                                                  'customer_username_link="true" ' .
-                                                 'order_number="true" ' .
+                                                 'order_number="false" ' .
                                                  'scrollx="true" ' .
                                                  'order_date="false" ' .
                                                  'order_variations="false" ' .
