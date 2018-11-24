@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<?php do_action( 'woocommerce_before_cart_totals' ); ?>
 
 	<div class="row">
-		<div class="cart-totals-col col-md-6 col-lg-4 offset-md-6 offset-lg-8">
+		<div class="cart-totals-col col-md-6 offset-md-6">
 
 			<!-- <h2><?php _e( 'Cart total', 'woocommerce' ); ?></h2> -->
 
@@ -125,7 +125,7 @@ endif;
 </div><!--/row-->
 
 <div class="row checkout-row">
-	<div class="col-md-6 col-lg-4 offset-md-6 offset-lg-8 p0">
+	<div class="col-md-6 offset-md-6 p0">
 		<div class="wc-proceed-to-checkout">
 			<?php do_action( 'woocommerce_proceed_to_checkout' ); ?>
 		</div>

@@ -6,7 +6,7 @@
 		</div>
 		<div class="member-check-links member-check-links-desktop">
 			<a href="/contact" class="button button-bordered mr2">Contact Us</a>
-			<a href="/member-account-information" class="button button-bordered">Member Account Info</a>
+			<a href="/member-account-information" class="button button-bordered">About Member Accounts</a>
 		</div>
 	</div>
 	<div class="member-check-2">
@@ -26,7 +26,7 @@
 		</div>
 		<div class="member-check-links member-check-links-mobile">
 			<a href="/contact" class="button button-bordered mr2">Contact Us</a>
-			<a href="/member-account-information" class="button button-bordered">Member Account Info</a>
+			<a href="/member-account-information" class="button button-bordered">About Member Accounts</a>
 		</div>
 	</div>
 </div>

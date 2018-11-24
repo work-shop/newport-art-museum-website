@@ -32,7 +32,7 @@ function postForm( form, successCallback, errorCallback ) {
 }
 
 function submitEventForm() {
-	console.log('ecommerce-helpers.js loaded');
+	//console.log('event-add-to-cart.js loaded');
 
     const targetURL = '/cart';
 

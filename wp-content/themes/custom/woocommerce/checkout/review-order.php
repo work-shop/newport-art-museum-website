@@ -69,21 +69,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); ?>
 				</div>
 			</div>
-			<?php if( $user_eligible_for_discount && $product_has_discount ): ?>
-				<div class="cart_item row review-order-row review-order-row-discount">
-					<div class="col product-name">
-						<p class="discount-label">
-							Membership Discount
-							<strong class="product-quantity">x 1</strong>
-						</p>
-					</div>
-					<div class="col-5 righted product-total">
-						<p class="discount-label discount-label-arrowed discount-label-total">
-							-<?php echo wc_price($discount); ?>
-						</p>
-					</div>
-				</div>
-			<?php endif; ?>
+
 			<?php
 		}
 	}
@@ -108,7 +94,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	</div>
 
 	<?php foreach ( WC()->cart->get_coupons() as $code => $coupon ) : ?>
-	<div class="row review-order-row  rowcart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
+	<div class="row review-order-row rowcart-discount coupon-<?php echo esc_attr( sanitize_title( $code ) ); ?>">
 		<div class="col">
 			<h4 class="bold">
 				<?php wc_cart_totals_coupon_label( $coupon ); ?>
@@ -134,12 +120,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 <?php foreach ( WC()->cart->get_fees() as $fee ) : ?>
 <div class="fee row review-order-row">
-	<div>
+	<div class="col">
 		<h4 class="bold">
 			<?php echo esc_html( $fee->name ); ?>
 		</h4>
 	</div>
-	<div>
+	<div class="col righted">
 		<h4 class="bold">
 			<?php wc_cart_totals_fee_html( $fee ); ?>
 		</h4>

@@ -157,6 +157,7 @@
 
 .cart-totals-col{
 	background: $khaki;
+	border-radius: 6px 6px 0px 0px;
 	//padding: 1.5em;
 
 	.row{
@@ -186,6 +187,10 @@
 	@media screen and (max-width: $sm) {
 		background: $brand;
 		box-shadow: 0px 3px 9px transparentize($slate, .3);
+	}
+
+	.button-full{
+		border-radius: 0px 0px 6px 6px;
 	}
 }
 
@@ -379,6 +384,10 @@ $nam-input-border: lighten($medium,15%);
 			display: none;
 		}
 
+		h3{
+			margin-top: 3.5em;
+		}
+
 		span.optional{
 			display: none;
 		}
@@ -498,20 +507,35 @@ $nam-input-border: lighten($medium,15%);
 	}
 }
 
+.checkout-col-form{
+	overflow: hidden;
+	margin-bottom: 3.5em;
+}
+
+.order-form-container{
+	border-radius: 6px;
+	overflow: hidden;
+	@extend .shadowed;
+}
+
 .order-form-top{
 	background: $khaki;
 	border-bottom: 1px solid darken($light,7%);		
-	padding: 20px 20px 0px 20px;
+	padding: 20px;
+	border-radius: 6px 6px 0px 0px;
+
 	@media screen and (max-width: $md) {
-		padding: 15px 15px 0px 15px;
+		padding: 15px;
 	}
 }
 
 .order-form-body{
 	background: $khaki;
-	border-bottom: 1px solid darken($light,7%);
-	padding: 20px;		
-	@media screen and (max-width: $md) {
+	border-radius: 0px 0px 6px 6px;
+	//@extend .shadowed;
+	padding: 20px 20px 0 20px;		
+	@media screen and (max-width: $sm) {
+		//padding: 20px 10px;
 	}
 }
 
@@ -542,6 +566,12 @@ input[name="createaccount"]{
 	h4{
 		margin-bottom: 0;
 		margin-top: 0;
+	}
+
+	&.bundled_table_item{
+		.product-name{
+			padding-top: 5px;
+		}
 	}
 
 	.bundled_table_item_subtotal{
@@ -587,6 +617,15 @@ input[name="createaccount"]{
 	margin-right: 5px;
 }
 
+strong, b, .bold{
+	.woocommerce-Price-amount{
+		@extend .bold;
+		*{
+			@extend .bold;
+		}
+	}
+}
+
 
 .processing .blockOverlay{
 	background: transparentize($light, .1) !important;
@@ -614,6 +653,29 @@ input[name="createaccount"]{
 	}
 }
 
+.woocommerce-additional-fields{
+	p{
+		max-width: 480px;
+		font-size: .9em;
+		//@extend .nam-form-label;
+
+		@media screen and (max-width: $sm) {
+			font-size: 1em;
+		}
+	}
+}
+
+.place-order{
+	margin-bottom: 0 !important;
+	.button{
+		@extend .button-full;
+		width: calc(100% + 40px);
+		margin-left: -20px;
+		margin-right: -20px;
+		border-radius: 0px 0px 6px 6px;
+	}
+}
+
 
 
 
@@ -623,11 +685,11 @@ input[name="createaccount"]{
 
 	.woocommerce-order-details{
 		margin-bottom: 4em;
-		//border: 1px solid red;
 	}
 
 	.woocommerce-table__line-item.order_item.bundled_table_item{
 		height: 40px;
+		border-bottom: 1px solid darken($light,5%) !important;
 	}
 }
 
@@ -712,6 +774,7 @@ strong span{
 	.form-body{
 		border-bottom: 1px solid darken($light,7%);		
 		padding: 30px 25px 50px 25px;
+
 		@media screen and (max-width: 1440px) {
 			padding: 30px 15px 50px 15px;
 		}
@@ -810,7 +873,12 @@ strong span{
 
 .woocommerce-password-strength{
 	margin-top: 10px;
+	@extend .small;
+	@extend .bold;
+}
 
+.woocommerce-password-hint{
+	line-height: 1.2;
 }
 
 
@@ -841,6 +909,10 @@ strong span{
 	h3{
 		@extend .bold;
 		margin-bottom: 1em;
+
+		&#order_review_heading{
+			margin-bottom: 0;
+		}
 	}
 }
 
@@ -1118,7 +1190,6 @@ body.woocommerce-cart,body.woocommerce-checkout{
 		color: $yellow;
 	}
 }
-
 
 
 

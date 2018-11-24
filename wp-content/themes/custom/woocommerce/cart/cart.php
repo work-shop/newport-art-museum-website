@@ -34,7 +34,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 wc_print_notices();
 ?>
 
-
 <form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
 
 	<?php do_action( 'woocommerce_before_cart_table' ); ?>
@@ -142,32 +141,6 @@ wc_print_notices();
 		?>
 	</div>
 </div>
-<?php if( $user_eligible_for_discount && $product_has_discount ): ?>
-	<div class="row cart-row cart-row-discount">
-		<div class="product-name col-4 col-md-6">
-			<p class="discount-label">
-				Membership Discount
-			</p>
-		</div>
-		<div class="product-price col" >
-			<p class="discount-label discount-label-arrowed">
-				-<?php echo wc_price($discount); ?>
-			</p>
-		</div>
-		<div class="product-quantity col" >
-			<p class="discount-label">
-				<?php if(false):?>1<?php endif; ?>
-			</p>
-		</div>
-		<div class="product-subtotal col righted">
-			<p class="discount-label discount-label-arrowed">
-				Subtotal: -<?php echo wc_price($discount); ?>
-			</p>
-		</div>
-		<div class="col-1 product-remove">
-		</div>
-	</div>
-<?php endif; ?>
 <?php endif; ?>
 <?php endforeach; ?>
 
