@@ -49,7 +49,7 @@ do_action('woocommerce_before_add_to_cart_form');
 
  if ($is_events) {
 
-  $purchase_options = NAM_Events::get_ticket_levels($product);
+  $purchase_options = NAM_Events::get_ticket_levels( get_the_ID(), $product);
 
 } else {
 

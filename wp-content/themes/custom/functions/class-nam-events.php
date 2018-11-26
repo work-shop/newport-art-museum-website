@@ -13,31 +13,35 @@ class NAM_Events {
 	 *
 	 * @param int $product_id the id of the shadowing product.
 	 */
-	public static function get_ticket_levels($product) {
+	public static function get_ticket_levels( $post_id, $product ) {
 
-		$variations = $product->get_available_variations();
+        $ticket_levels = get_field( NAM_Event::$field_keys['ticket_levels'], $post_id );
 
-		$variations = array_map(function ($variation) use ($product) {
+        $variations = array();
 
-			$discount = get_post_meta($variation['variation_id'], '_nam_membership_discount', true);
-			$ticket_level = get_term_by('slug', $variation['attributes']['attribute_pa_ticket_levels'], 'pa_ticket_levels');
+        foreach ($ticket_levels as $ticket_level) {
 
-			return array(
-				'title' => $variation['attributes']['attribute_pa_ticket_levels'],
-				'term' => $ticket_level,
-				'price' => $variation['display_price'],
-				'in_stock' => $variation['is_in_stock'],
-				'max_qty' => $variation['max_qty'],
-				'min_qty' => $variation['min_qty'],
-				'id' => $variation['variation_id'],
-				'product_id' => $product->id,
-				'membership_discount' => (double) $discount,
-				// 'variation' => $variation
-			);
+            $variation = wc_get_product( (int) $ticket_level['ticket_level_variation_id'] );
+            $discount = get_post_meta($variation->get_id(), '_nam_membership_discount', true);
+            $ticket_level_term = get_term_by('name', $ticket_level['ticket_level_name'], 'pa_ticket_levels');
 
-		}, $variations);
+            $variations[] = array(
+                'title' => $ticket_level['ticket_level_name'],
+                'term' => $ticket_level_term,
+                'price' => $variation->get_price(),
+                'in_stock' => $variation->is_in_stock(),
+                'max_qty' => $variation->get_stock_quantity(),
+                'min_qty' => 1,
+                'id' => $variation->get_id(),
+                'product_id' => $product->get_id(),
+                'membership_discount' => (double) $discount
+            );
+
+
+        }
 
 		return $variations;
+
 	}
 
 	public static function save_notices() {
