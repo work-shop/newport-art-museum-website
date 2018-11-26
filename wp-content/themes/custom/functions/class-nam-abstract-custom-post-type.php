@@ -218,6 +218,8 @@ abstract class NAM_Custom_Post_Type {
                                                  'show_titles="true" ' .
                                                  'billing_email="true" ' .
                                                  'billing_phone="true" ' .
+                                                 'order_qty="true" ' .
+                                                 'order_qty_total="true" ' .
                                                  'scrollx="true" ' .
                                                  'order_date="false" ' .
                                                  'order_variations="true" ' .
@@ -250,6 +252,7 @@ abstract class NAM_Custom_Post_Type {
                                                  'billing_last_name="false" ' .
                                                  'customer_username_link="true" ' .
                                                  'order_number="false" ' .
+                                                 'order_qty_total="true" ' .
                                                  'scrollx="true" ' .
                                                  'order_date="false" ' .
                                                  'order_variations="false" ' .
