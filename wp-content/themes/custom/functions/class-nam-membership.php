@@ -30,7 +30,7 @@ class NAM_Membership {
 		add_action(static::$calculate_totals_hook, array($called_class, 'calculate_membership_discounts'), 20, 1);
 
 		//add_action(static::$calculate_product_line_total_hook, array($called_class, 'calculate_line_discount_total'), 20, 4);
-		//add_filter(static::$display_cart_totals, array($called_class, 'show_base_price'), 10, 3);
+		add_filter(static::$display_cart_totals, array($called_class, 'show_bundle_base_price_minus_fees'), 10, 3);
 
 	}
 
@@ -74,6 +74,22 @@ class NAM_Membership {
 		}
 
 	}
+
+
+    public static function show_bundle_base_price_minus_fees( $old_display, $cart_item, $cart_item_key ) {
+
+        // NOTE: if this item is a product bundled with fees.
+        if ( $cart_item['data'] instanceof WC_Product_Bundle ) {
+
+            return wc_price($cart_item['data']->get_price());
+
+        } else {
+
+            return $old_display;
+
+        }
+
+    }
 
 	/**
 	 * Given the old display strong, cart item, and cart item key,
