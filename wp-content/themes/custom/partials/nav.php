@@ -173,7 +173,7 @@
 					</ul>
 				</li>
 				<li class="sub-menu-closed has-sub-menu ">
-					<a href="/join" class="dropdown-link <?php if( $GLOBALS['tree_slug'] === 'join' ): echo ' nav-current '; endif; ?>" id="nav-link-join" data-dropdown-target="join">Join</a>
+					<a href="/join" class="dropdown-link <?php if( $GLOBALS['tree_slug'] === 'join' ): echo ' nav-current '; endif; ?>" id="nav-link-join" data-dropdown-target="join">Membership</a>
 					<ul class="sub-menu">
 						<?php $links = get_field('join_menu_links','option'); ?>
 						<?php $links_additional = get_field('join_menu_additional_links','option'); ?>
