@@ -12,10 +12,10 @@
 				Sorry, we couldn't find an account with that email address.
 			</h4> 
 			<h4 class="mb1">
-				Your account may be under a different email,  your membership is expired, or we do not have your email on file.
+				Your account may be under a different email,  your membership may be expired, or we may not have your email on file.
 			</h4>
 			<h4 class="mb0">
-				If you had or have a membership you would like to renew, <a href="join" class="underline">purchase a new membership</a>, and include a note in your order, and we will update your membership record, and send you an email with your new account information. 
+				If you had or have a membership you would like to renew, <a href="join" class="underline">purchase a new membership</a> and include a note in your order, and we will update your membership record and send you an email with your new account information. 
 			</h4>
 		</div>
 	</div>
@@ -25,10 +25,10 @@
 				You have an account with that email address, but there's no membership associated with that account.
 			</h4>	
 			<h4 class="mb1">
-				Your membership may be associated with a different email, or your membership is expired.
+				Your membership may be associated with a different email, or your membership may be expired.
 			</h4>
 			<h4 class="mb0">
-				If you had or have a membership you would like to renew, <a href="join" class="underline">purchase a new membership</a>, and include a note in your order, and we will update your membership record, and send you an email with your new account information. 
+				If you had or have a membership you would like to renew, <a href="join" class="underline">purchase a new membership</a> and include a note in your order, and we will update your membership record and send you an email with your new account information. 
 			</h4>
 		</div>		
 	</div>

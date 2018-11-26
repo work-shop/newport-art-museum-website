@@ -48,7 +48,7 @@ body.member-checking{
 	padding: 45px;
 	padding-bottom: 145px;
 
-	@media screen and (max-width: $lg) {
+	@media screen and (max-width: 1380px) {
 		padding: 45px 30px;
 	}
 
@@ -66,7 +66,7 @@ body.member-checking{
 	padding: 45px;
 	position: relative;
 
-	@media screen and (max-width: $lg) {
+	@media screen and (max-width: 1380px) {
 		width: 340px;
 		padding: 45px 30px;
 	}
@@ -144,10 +144,15 @@ body.member-checking{
 		visibility: visible;
 		opacity: 1;
 		height: auto;
+		animation: puff .3s ease .3s 1;
 	}
 }
 
-
+@keyframes puff {
+    0% { transform: scale(1.0); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1.0); }
+}
 
 .member-check-message-box{
 	border-radius: 3px;
