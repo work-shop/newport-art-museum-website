@@ -34,6 +34,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 		// One per Customer
 		'one_per_order' => 'field_5bf5af2b2c46f',
 
+
+
 		// Fees and Surcharges
 	);
 
@@ -93,6 +95,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 	 * action is triggered.
 	 *
 	 * @param int $post_id  the id of the post being saved.
+     * @param boolean $duplicate true if the product is a duplicate.
 	 */
 	public static function do_product_management_actions($post_id, $duplicate = false) {
 
@@ -117,22 +120,12 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 			} else {
 
-				//$parent_posts = static::get_parent_posts( $shadow_post[0]->ID );
-
-				//$duplicate = get_post_meta( $post_id, '_nam_duplicate', true ) == 'yes';
-
 				if ($duplicate) {
-
-					//die( 'duplicate is true' );
 
 					delete_field(static::$field_keys['managed_field_related_post'], $post_id);
 					static::create_shadowing_product($post_id, $updated_post);
 
-					//update_post_meta( $post_id, '_nam_duplicate', false );
-
 				} else {
-
-					//throw new
 
 					static::update_shadowing_product($post_id, $updated_post, $shadow_post[0]);
 
@@ -363,21 +356,42 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 	 * be used to update existing variations
 	 *
 	 */
-	public static function create_ticket_level_variations($ticket_levels = array()) {
+	public static function create_ticket_level_variations($post_id, $ticket_levels = array()) {
 
-		return array_map(function ($ticket_level) {
+        $variations = array();
 
-			return array(
+        foreach ($ticket_levels as $i => $ticket_level) {
+
+            $needs_default = empty($ticket_level['ticket_level_name']) || empty($ticket_level['ticket_level_price']);
+            $name = (!empty($ticket_level['ticket_level_name'])) ? $ticket_level['ticket_level_name'] : 'Ticket Level ' . ($i + 1);
+            $price = (!empty($ticket_level['ticket_level_price'])) ? $ticket_level['ticket_level_price'] : 0;
+            $variation_id = (!empty($ticket_level['ticket_level_variation_id'])) ? (int) $ticket_level['ticket_level_variation_id'] : false;
+
+            if ( $needs_default ) {
+                static::set_default_ticket_level_data( $post_id, $name, $price, $i, $variation_id );
+            }
+
+            return array(
 				'attributes' => array(
-					'ticket_levels' => $ticket_level['ticket_level_name'],
+					'ticket_levels' => $name,
 				),
-				'price' => $ticket_level['ticket_level_price'],
-                'variation_id' => $ticket_level['ticket_level_variation_id']
+				'price' => $price,
+                'variation_id' => $variation_id
 			);
 
-		}, $ticket_levels);
+        }
+
+		return $variations;
 
 	}
+
+    public static function  set_default_ticket_level_data( $post_id, $name, $price, $i, $variation_id ) {
+
+        update_sub_field( array( 'ticket_levels', $i + 1, 'ticket_level_name' ), $name, $post_id );
+        update_sub_field( array( 'ticket_levels', $i + 1, 'ticket_level_price' ), $price, $post_id );
+        //update_field( array( 'ticket_levels', $i + 1, 'ticket_level_variation_id' ), $variation_id, $post_id );
+
+    }
 
 	/**
 	 * Create the relevant metadata required to create
@@ -393,7 +407,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         //$ticket_levels = static::get_existing_variations($product_id, $ticket_levels);
 
 		$available_attributes = array('ticket_levels');
-		$variations = static::create_ticket_level_variations($ticket_levels);
+		$variations = static::create_ticket_level_variations($post_id, $ticket_levels);
 
 		//static::delete_existing_variations($product_id);
 
@@ -462,7 +476,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
     public static function set_product_variation_meta( $title, $post_id, $product_id, $variation, $sold_individually ) {
 
         $variation_id = $variation['variation_id'];
-        $variation_type_name = $variation['attributes']['ticket_levels'];        
+        $variation_type_name = $variation['attributes']['ticket_levels'];
 
         $variation_name = 'ticket-level-' . $index . '-for-event-product-' . $product_id . '-for-event-' . $post_id;
         $variation_price = $variation['price'];
