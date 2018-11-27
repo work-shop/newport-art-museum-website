@@ -250,8 +250,8 @@ abstract class NAM_Custom_Post_Type {
                                                  'show_titles="true" ' .
                                                  'billing_email="true" ' .
                                                  'billing_phone="false" ' .
-                                                 'billing_first_name="false" ' .
-                                                 'billing_last_name="false" ' .
+                                                 'billing_first_name="true" ' .
+                                                 'billing_last_name="true" ' .
                                                  'customer_username_link="true" ' .
                                                  'order_number="false" ' .
                                                  'order_qty_total="true" ' .
