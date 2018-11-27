@@ -65,7 +65,7 @@ class NAM_Membership {
 
 				if ($total_discount > 0) {
 
-					$woocommerce->cart->add_fee('Membership Discount: ' . $name, (double) $total_discount, true, '');
+					$woocommerce->cart->add_fee('Membership Discount: ' . $name, -(double) $total_discount, true, '');
 
 				}
 
