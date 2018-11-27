@@ -74,14 +74,6 @@ class NAM_Classes {
 
 		return str_replace('_order_student_first_name', 'Student First Name', $content);
 
-		// foreach ( static::$classes_custom_fields as $field => $name ) {
-		//
-		//     $content = str_replace( $field, $name, $content );
-		//
-		// }
-		//
-		// return $content;
-
 	}
 
 	/**
@@ -105,5 +97,6 @@ class NAM_Classes {
 	}
 
 }
+
 
 ?>
