@@ -673,7 +673,8 @@ function wpcl_shortcode($atts) {
 		<?php } ?>
 
 		<?php if($email_all == 'true') { ?>
-			<a href="mailto:?bcc=<?php echo $email_list; ?>" class="button"><?php _e('Email all customers', 'wc-product-customer-list'); ?></a>
+            <?php $email_list = array_unique( $email_list ); ?>
+			<a href="mailto:?bcc=<?php echo join( $email_list, ',' ); ?>" class="button"><?php _e('Email all customers', 'wc-product-customer-list'); ?></a>
 		<?php } ?>
 
 		<?php do_action('wpcl_shortcode_after_table', $post_id, $email_list, $atts); ?>
