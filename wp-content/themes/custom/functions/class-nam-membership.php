@@ -13,6 +13,8 @@ class NAM_Membership {
 	public static $calculate_totals_hook = 'woocommerce_cart_calculate_fees';
 	public static $calculate_product_line_total_hook = 'woocommerce_cart_product_subtotal';
 	public static $display_cart_totals = 'woocommerce_cart_item_price';
+	public static $display_cart_totals_subtotal = 'woocommerce_cart_item_subtotal';
+    public static $display_order_item_subtotal = 'woocommerce_order_formatted_line_subtotal';
 
 	public static $field_keys = array(
 		'membership_discount_eligibility' => 'field_5bf5a1e6af83d',
@@ -29,6 +31,7 @@ class NAM_Membership {
 
 		add_action(static::$calculate_totals_hook, array($called_class, 'calculate_membership_discounts'), 20, 1);
 		add_filter(static::$display_cart_totals, array($called_class, 'show_bundle_base_price_minus_fees'), 10, 3);
+		add_filter(static::$display_order_item_subtotal, array($called_class, 'order_show_bundle_base_price_minus_fees'), 10, 3);
 
 	}
 
@@ -86,6 +89,27 @@ class NAM_Membership {
         }
 
     }
+
+    public static function order_show_bundle_base_price_minus_fees( $old_display, $cart_item, $cart_item_key ) {
+
+        $product = wc_get_product( $cart_item->get_product_id() );
+
+        //var_dump( $product );
+
+        // NOTE: if this item is a product bundled with fees.
+        if ( $product instanceof WC_Product_Bundle ) {
+
+            return wc_price( $product->get_price() );
+
+        } else {
+
+            return $old_display;
+
+        }
+
+    }
+
+
 
 	/**
 	 * get all the memberships that given user
