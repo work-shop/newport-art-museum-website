@@ -322,6 +322,7 @@ function wpcl_shortcode($atts) {
 			$custom_fields = explode(',', $atts['custom_fields']);
 			foreach($custom_fields as $custom_field) {
 
+                // NOTE: Nic's Plugin Hack to get the header rows to appear correctly.
                 switch ($custom_field) {
                     case '_order_student_first_name':
                         $columns[] = 'First Name';
@@ -602,10 +603,16 @@ function wpcl_shortcode($atts) {
 									$item = $order->get_item($sale->order_item_id);
                                     $variation = wc_get_product( $item->get_variation_id() );
 								?>
+
 								<td>
 									<p>
 										<?php
-										    echo '<strong>' . $variation->get_description() . '</strong><br />';
+                                            if ( $variation ) {
+                                                echo '<strong>' . $variation->get_description() . '</strong><br />';
+                                            } else {
+                                                echo '<em>Deleted Variation</em>';
+                                            }
+
 										?>
 									</p>
 								</td>
