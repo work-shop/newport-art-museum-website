@@ -40,12 +40,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		do_action( 'woocommerce_review_order_before_cart_contents' );
 		?>
 
-		<?php 
-		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ): 
-			$user_eligible_for_discount = true; 
-	else: 
-		$user_eligible_for_discount = false; 
-	endif; 
+		<?php
+		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ):
+			$user_eligible_for_discount = true;
+	else:
+		$user_eligible_for_discount = false;
+	endif;
 	?>
 
 	<?php
@@ -54,7 +54,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
 
-		if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ){ ?>
+        if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_checkout_cart_item_visible', true, $cart_item, $cart_item_key ) ){ ?>
 
 			<?php $discount = NAM_Membership::get_membership_discount( $product_id ); ?>
 			<?php $product_has_discount = $discount > 0; ?>
@@ -66,7 +66,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 					<?php echo wc_get_formatted_cart_item_data( $cart_item ); ?>
 				</div>
 				<div class="product-total col-5 righted">
-					<?php echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); ?>
+					<?php echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); ?>
 				</div>
 			</div>
 
@@ -179,12 +179,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</h4>
 	</div>
 </div>
-<?php 
-if( NAM_Membership::has_membership_in_cart() ): 
-	$has_recurring_products = true; 
-else: 
-	$has_recurring_products = false; 
-endif; 
+<?php
+if( NAM_Membership::has_membership_in_cart() ):
+	$has_recurring_products = true;
+else:
+	$has_recurring_products = false;
+endif;
 ?>
 <?php //temporarily hiding recurring total notes ?>
 <?php if ( $has_recurring_products && false ): ?>
