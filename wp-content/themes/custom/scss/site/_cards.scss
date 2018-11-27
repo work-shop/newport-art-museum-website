@@ -2,8 +2,8 @@
 .card{
 	position: relative;
 	overflow: hidden;
-	box-shadow: 0px 2px 5px transparentize(darken($slate,10%), .4);
-	transition: transform .15s;
+	box-shadow: 0px 2px 5px 0px transparentize(darken($slate,10%), .4);
+	//transition: transform 2s;
 
 	.nam-dash{
 		margin-bottom: 1.5vw;
@@ -15,10 +15,15 @@
 		}
 	}
 
-	&:hover{
-		// box-shadow: 0px 4px 9px transparentize(darken($slate,10%), .35);
-		transform: scale(1.015);
+	@media screen and (min-width: 768px) {
+		&:hover{
+		box-shadow: 0px 2px 9px 3px transparentize(darken($slate,10%), .1);
+		transition: all .3s .15s;
+		//transform: scale(1.015);
+		transform: translateY(-7px);
 	}
+}
+
 }
 
 .card-image{
