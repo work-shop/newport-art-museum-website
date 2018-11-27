@@ -23,8 +23,6 @@ class NAM_Events {
 
             if ( !empty($ticket_level['ticket_level_variation_id']) ) {
 
-                var_dump( $ticket_level['ticket_level_variation_id'] );
-
                 $variation = wc_get_product( (int) $ticket_level['ticket_level_variation_id'] );
 
                 $discount = get_post_meta($variation->get_id(), '_nam_membership_discount', true);
@@ -45,8 +43,6 @@ class NAM_Events {
             }
 
         }
-
-        var_dump( $variations );
 
 		return $variations;
 
