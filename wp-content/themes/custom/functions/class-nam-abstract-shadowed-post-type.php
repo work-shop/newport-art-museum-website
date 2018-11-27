@@ -741,7 +741,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 		$possible_sku = get_post_meta($product_id, '_sku', true);
 		if (!$possible_sku) {
-			update_post_meta($product_id, '_sku', sanitize_title_with_dashes($title, '', 'save') . '-' . mt_rand());
+			update_post_meta($product_id, '_sku', static::$slug . '-' . $post_id );
 		}
 
 		if ($manage_stock) {
