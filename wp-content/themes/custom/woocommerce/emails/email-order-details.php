@@ -67,7 +67,6 @@ do_action( 'woocommerce_email_before_order_table', $order, $sent_to_admin, $plai
 		<tfoot>
 			<?php
 			$totals = $order->get_order_item_totals();
-
 			if ( $totals ) {
 				$i = 0;
 				foreach ( $totals as $total ) {

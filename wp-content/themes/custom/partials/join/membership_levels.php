@@ -41,14 +41,24 @@
 										<div class="wysiwyg">
 											<?php the_field('membership_level_description'); ?>
 										</div>
-										<div class="accordion-link membership-link-button">
-											<a href="<?php echo $add_to_cart_url; ?>" class="">
-												Purchase New Membership
-											</a>
-											<a href="/renew-your-membership" class="ml1">
-												Renew Your Membership
-											</a>
+										<?php if( !is_user_logged_in() && NAM_Membership::has_membership_in_cart() ): ?>
+										<div class="bg-error p1 mt2">
+											<h5 class="bold m0">
+												You already have a membership in your <a href="/cart" class="underline">cart.</a> Memberships are limited to one per customer.
+											</h5>
 										</div>
+										<?php else: ?>
+											<div class="accordion-link membership-link-button">
+												<a href="<?php echo $add_to_cart_url; ?>" class="">
+													Purchase New Membership
+												</a>
+												<?php if(false): ?>
+													<a href="/renew-your-membership" class="ml1">
+														Renew Your Membership
+													</a>
+												<?php endif; ?>
+											</div>
+										<?php endif; ?>
 									</div>
 								</div>
 							</div>

@@ -115,4 +115,42 @@ add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
 add_filter( 'wc_add_to_cart_message_html', '__return_false' );
 
 
+//add capabilities to user roles
+// $role_object = get_role( 'shop_manager' );
+// // add $cap capability to this role object
+// $role_object->add_cap( 'edit_users' );
+// $role_object->add_cap( 'add_users' );
+// $role_object->add_cap( 'create_users' );
+// $role_object->add_cap( 'list_users' );
+
+function edit_shop_manager() {
+    // Get custom role
+    $shop_manager = get_role('shop_manager');
+    $shop_manager->add_cap('create_users');
+    $shop_manager->add_cap('edit_users');
+    $shop_manager->add_cap('manage_network_users');
+    $shop_manager->add_cap('delete_users');
+    $shop_manager->add_cap('list_users');
+    $shop_manager->add_cap('remove_users');
+    $shop_manager->add_cap('promote_users');
+}
+add_action( 'init', 'edit_shop_manager', 1000 );
+
+/**
+ * Modify the list of editable roles to prevent non-admin adding admin users.
+ * @param  array $roles
+ * @return array
+ */
+function override_wc_modify_editable_roles( $roles ) {
+	return false;
+	// if ( ! current_user_can( 'administrator' ) ) {
+	// 	//unset( $roles['administrator'] );
+	// }
+	// return $roles;
+}
+add_filter( 'editable_roles', 'override_wc_modify_editable_roles', 1 );
+
+
+
+
 ?>

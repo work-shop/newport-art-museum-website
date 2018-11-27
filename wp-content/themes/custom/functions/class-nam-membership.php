@@ -10,7 +10,7 @@ class NAM_Membership {
 	public static $membership_category_slug = 'membership-tiers';
 	public static $events_category_slug = 'events';
 	public static $classes_category_slug = 'classes';
-	public static $calculate_totals_hook = 'woocommerce_before_calculate_totals';
+	public static $calculate_totals_hook = 'woocommerce_cart_calculate_fees';
 	public static $calculate_product_line_total_hook = 'woocommerce_cart_product_subtotal';
 	public static $display_cart_totals = 'woocommerce_cart_item_price';
 
@@ -65,7 +65,7 @@ class NAM_Membership {
 
 				if ($total_discount > 0) {
 
-					$woocommerce->cart->add_fee('Membership Discount: ' . $name, -(double) $total_discount, true, '');
+					$woocommerce->cart->add_fee('Membership Discount: ' . $name, (double) $total_discount, true, '');
 
 				}
 

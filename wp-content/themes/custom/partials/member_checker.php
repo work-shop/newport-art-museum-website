@@ -21,7 +21,7 @@
 				</form>
 			</div>
 			<div class="member-check-login member-check-hidden">
-				<?php login_with_ajax(); ?>
+				
 			</div>
 		</div>
 		<div class="member-check-links member-check-links-mobile">
