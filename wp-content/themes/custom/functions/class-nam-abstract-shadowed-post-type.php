@@ -1,5 +1,10 @@
 <?php
 
+function nam_breakpoint( $var ) {
+    var_dump( $var );
+    throw new Exception('NAM Debugging Breakpoint');
+}
+
 abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 	public static $field_keys = array(
@@ -351,12 +356,59 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 	}
 
 	/**
-	 * Create a valid set of importable variations
-	 * from a given set of ticket levels. These will
-	 * be used to update existing variations
+	 * Create the relevant metadata required to create
+	 * a variable product that can represent the
+	 * different ticket levels in an event.
 	 *
 	 */
-	public static function create_ticket_level_variations($post_id, $ticket_levels = array()) {
+	public static function create_event_meta($title, $post_id, $product_id) {
+
+		//$multiple_ticket_levels = get_field(static::$field_keys['number_of_ticket_levels'], $post_id);
+
+		$ticket_levels = get_field(static::$field_keys['ticket_levels'], $post_id);
+
+		$available_attributes = array('ticket_levels');
+
+		$variations = static::create_ticket_level_variations($post_id, $ticket_levels);
+
+
+        static::delete_old_variations( $variations, $product_id );
+
+		static::insert_product_attributes($product_id, $ticket_levels);
+
+        static::modify_product_variations($title, $post_id, $product_id, $variations);
+
+	}
+
+    public static function delete_old_variations( $variations, $product_id ) {
+
+        $variation_ids = array_map( function( $v ) { return $v['variation_id']; }, $variations );
+
+        $children = get_posts(array(
+            'post_parent' => $product_id,
+            'post_type' => 'product_variation',
+        ));
+
+        foreach ( $children as $child ) {
+
+            if ( !in_array( $child->ID, $variation_ids )) {
+                // NOTE: It would be extra safe to implement a method here to
+                //       Check if the variation ID has ever been purchased:
+                //       - if yes, don't delete the variation for records-keeping purposes.
+                wp_delete_post($child->ID);
+            }
+
+        }
+
+    }
+
+    /**
+     * Create a valid set of importable variations
+     * from a given set of ticket levels. These will
+     * be used to update existing variations
+     *
+     */
+    public static function create_ticket_level_variations($post_id, $ticket_levels = array()) {
 
         $variations = array();
 
@@ -371,19 +423,19 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
                 static::set_default_ticket_level_data( $post_id, $name, $price, $i, $variation_id );
             }
 
-            return array(
-				'attributes' => array(
-					'ticket_levels' => $name,
-				),
-				'price' => $price,
+            $variations[] = array(
+                'attributes' => array(
+                    'ticket_levels' => $name,
+                ),
+                'price' => $price,
                 'variation_id' => $variation_id
-			);
+            );
 
         }
 
-		return $variations;
+        return $variations;
 
-	}
+    }
 
     public static function  set_default_ticket_level_data( $post_id, $name, $price, $i, $variation_id ) {
 
@@ -393,35 +445,6 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
     }
 
-	/**
-	 * Create the relevant metadata required to create
-	 * a variable product that can represent the
-	 * different ticket levels in an event.
-	 *
-	 */
-	public static function create_event_meta($title, $post_id, $product_id) {
-
-		$multiple_ticket_levels = get_field(static::$field_keys['number_of_ticket_levels'], $post_id);
-
-		$ticket_levels = get_field(static::$field_keys['ticket_levels'], $post_id);
-        //$ticket_levels = static::get_existing_variations($product_id, $ticket_levels);
-
-		$available_attributes = array('ticket_levels');
-		$variations = static::create_ticket_level_variations($post_id, $ticket_levels);
-
-		//static::delete_existing_variations($product_id);
-
-
-		static::insert_product_attributes($product_id, $ticket_levels);
-        static::modify_product_variations($title, $post_id, $product_id, $variations);
-
-		//static::insert_product_variations($title, $post_id, $product_id, $variations);
-
-        //update_post_meta( $product_id, '_nam_variation_history', $variation_data );
-
-	}
-
-
 
     public function modify_product_variations( $title, $post_id, $product_id, $variations ) {
 
@@ -429,21 +452,25 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
         foreach ($variations as $index => $variation) {
 
-            if ( $variation['variation_id'] ) {
-                // NOTE: In this case, we have a pre-existing variation to update.
+            $product_exists = wc_get_product( $variation['variation_id'] );
 
-                $variation['variation_id'] = (int) $variation['variation_id'];
+            if ( $variation['variation_id'] && $product_exists ) {
+                // NOTE: In this case, we have a pre-existing variation to update.
+                //       Just update the existing variation with the new Meta.
+
                 static::set_product_variation_meta( $title, $post_id, $product_id, $variation, $sold_individually  );
 
             } else {
-                // NOTE: This ticket level does not have an existing variation.
+                // NOTE: This ticket level does not have an existing variation,
+                //       or the pre-existing variation was deleted. We need to
+                //       create a new variation to manage this ticket level.
 
                 $variation['variation_id'] = static::create_product_variation( $title, $post_id, $product_id, $variation );
                 static::set_product_variation_meta( $title, $post_id, $product_id, $variation, $sold_individually  );
 
                 update_sub_field(
                     array('ticket_levels', $index + 1, 'ticket_level_variation_id' ),
-                    $variation_id,
+                    $variation['variation_id'],
                     $post_id
                 );
 
@@ -483,6 +510,8 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
         $discount = static::get_product_membership_discount($post_id, $variation_price);
 
         $attribute_term = get_term_by('name', $variation_type_name, 'pa_ticket_levels');
+
+        //nam_breakpoint( $attribute_term );
 
         update_post_meta($variation_id, 'attribute_pa_ticket_levels', $attribute_term->slug);
 
