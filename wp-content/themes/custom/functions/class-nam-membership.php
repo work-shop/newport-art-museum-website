@@ -28,8 +28,6 @@ class NAM_Membership {
 		$called_class = get_called_class();
 
 		add_action(static::$calculate_totals_hook, array($called_class, 'calculate_membership_discounts'), 20, 1);
-
-		//add_action(static::$calculate_product_line_total_hook, array($called_class, 'calculate_line_discount_total'), 20, 4);
 		add_filter(static::$display_cart_totals, array($called_class, 'show_bundle_base_price_minus_fees'), 10, 3);
 
 	}
@@ -39,13 +37,11 @@ class NAM_Membership {
 	 * on whether the purchaser is a member, or has a membership product
 	 * in their cart.
 	 *
+     * @param WC_Cart $cart_object the current contents of the cart.
 	 */
 	public static function calculate_membership_discounts($cart_object) {
 
-		global $woocommerce;
-
 		if (is_admin() && !defined('DOING_AJAX')) {return;}
-		if (did_action(static::$calculate_totals_hook) >= 2) {return;}
 
 		if (static::is_member() || static::has_membership_in_cart()) {
 
@@ -65,9 +61,9 @@ class NAM_Membership {
 
 				if ($total_discount > 0) {
 
-					$woocommerce->cart->add_fee('Membership Discount: ' . $name, -(double) $total_discount, true, '');
+					WC()->cart->add_fee('Membership Discount: ' . $name, -(double) $total_discount);
 
-				}
+                }
 
 			}
 
@@ -90,54 +86,6 @@ class NAM_Membership {
         }
 
     }
-
-	/**
-	 * Given the old display strong, cart item, and cart item key,
-	 * renderes the "base price" for a product bundle to the
-	 * cart table, rather than the total price of the bundle.
-	 *
-	 * @hooked woocommerce_cart_item_price
-	 */
-	public static function show_base_price($old_display, $cart_item, $cart_item_key) {
-
-		// NOTE: If it's a class - or an instance of a Product Bundle
-		if ($cart_item['data'] instanceof WC_Product_Bundle) {
-
-			if (static::is_member() || static::has_membership_in_cart()) {
-
-				$discount = NAM_Membership::get_membership_discount($cart_item['data']->id);
-
-				return wc_price($cart_item['data']->get_price() + $discount);
-
-			} else {
-
-				return wc_price($cart_item['data']->get_price());
-
-			}
-
-			// NOTE: if it's an event – or an instance of an variation.
-		} else if ($cart_item['variation_id'] !== 0) {
-
-			if (static::is_member() || static::has_membership_in_cart()) {
-
-				$discount = NAM_Membership::get_membership_discount($cart_item['variation_id']);
-
-				return wc_price($cart_item['data']->get_price() + $discount);
-
-			} else {
-
-				return wc_price($cart_item['data']->get_price());
-
-			}
-
-			// NOTE: Do the normal old thing.
-		} else {
-
-			return $old_display;
-
-		}
-
-	}
 
 	/**
 	 * get all the memberships that given user
