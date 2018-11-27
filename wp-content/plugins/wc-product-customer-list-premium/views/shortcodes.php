@@ -310,7 +310,8 @@ function wpcl_shortcode($atts) {
 	if($order_payment == 'true' ) { $columns[] = __('Payment method', 'wc-product-customer-list'); }
 	if($order_shipping == 'true' ) { $columns[] = __('Shipping method', 'wc-product-customer-list'); }
 	if($order_coupon == 'true' ) { $columns[] = __('Coupons used', 'wc-product-customer-list'); }
-	if($order_variations == 'true' ) { $columns[] = __('Variation', 'wc-product-customer-list'); }
+	//if($order_variations == 'true' ) { $columns[] = __('Variation', 'wc-product-customer-list'); } // NOTE: Nic modified this.
+	if($order_variations == 'true' ) { $columns[] = 'Ticket Level'; }
 	if($order_total == 'true' ) { $columns[] = __('Order total', 'wc-product-customer-list'); }
 	if($order_qty_total_column == 'true' ) { $columns[] = __('Total qty', 'wc-product-customer-list'); }
 	if($order_qty == 'true' ) { $columns[] = __('Qty', 'wc-product-customer-list'); }
