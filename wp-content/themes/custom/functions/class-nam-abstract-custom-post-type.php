@@ -272,7 +272,7 @@ abstract class NAM_Custom_Post_Type {
 
             } else {
 
-                echo '<p>Looks like this item doesn\'t have a product attached to it!';
+                echo '<p>This product currently has no customers</p>';
 
             }
         } else {
