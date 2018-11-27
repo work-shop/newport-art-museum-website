@@ -159,16 +159,16 @@ class NAM_Membership {
 			'post_status' => 'wc-active',
 		));
 
-		array_map(function ($sub) use ($flat_products) {
+        foreach ($subscriptions as $subscription) {
 
-			$sub = wcs_get_subscription($sub->ID);
-			$products = $sub->get_items();
+            $subscription = wcs_get_subscription($subscription->ID);
+			foreach( $subscription->get_items() as $item ) {
 
-			array_merge($flat_products, $products);
+                $flat_products[] = wc_get_product( $item->get_product_id() );
 
-			return $products;
+            }
 
-		}, $subscriptions);
+        }
 
 		return $flat_products;
 
@@ -237,7 +237,13 @@ class NAM_Membership {
 
 		$discount = array_reduce($merged_memberships, function ($max_multiplier, $membership) {
 
-			$parent = NAM_Membership_Tier::get_parent_posts($membership->id);
+            $discount_membership_multiplier = get_post_meta( $membership->get_id(), '_nam_discount_multiplier', true);
+
+            if ( $discount_multiplier ) {
+                return max( $max_multiplier, (int) $discount_membership_multiplier );
+            }
+
+			$parent = NAM_Membership_Tier::get_parent_posts($membership->get_id());
 
 			if (count($parent) == 0) {
 
