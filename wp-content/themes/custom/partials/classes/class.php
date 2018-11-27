@@ -42,7 +42,7 @@ $class_short_description = get_field('short_description');
                                     <?php the_field('class_start_date'); ?> - <?php the_field('class_end_date'); ?>
                                     <?php if( get_field('number_of_sessions') ): ?>
                                         <span class="class-dates-sessions bold">
-                                            (<?php the_field('number_of_sessions'); ?>)
+                                            (<?php the_field('number_of_sessions'); ?> Sessions)
                                         </span>
                                     <?php endif; ?>
                                 </h4>

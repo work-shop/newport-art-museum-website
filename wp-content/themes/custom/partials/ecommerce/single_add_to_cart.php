@@ -6,15 +6,11 @@ $is_events = get_post_type(get_the_ID()) == 'events';
 
 // NOTE: This is the number of tickets that the membership discount applies to.
 $membership_discount_multiplier = NAM_Membership::get_membership_discount_multiplier();
-
 do_action('woocommerce_before_add_to_cart_form');
-
 ?>
 
 <?php if ($class_in_cart && $is_classes): // we're on a class page and there's a class in the cart ?>
-
  <div class="sidebar-middle single-sidebar-middle">
-
    <div class="row add-to-cart-message">
      <div class="col-12">
        <p class="mb0">
@@ -26,7 +22,6 @@ do_action('woocommerce_before_add_to_cart_form');
       </p>
     </div>
   </div>
-
   <div class="row add-to-cart-limit">
     <div class="col-12">
       <h5 class="add-to-cart-label">
@@ -43,31 +38,19 @@ do_action('woocommerce_before_add_to_cart_form');
 <?php else: // we're on a non-class page or there's no class in the cart.  ?>
 
  <?php
-
 	// NOTE: Consider adding this.
 	// NOTE: https://diviengine.com/woocommerce-add-cart-ajax-single-variable-products-improve-ux/
-
  if ($is_events) {
-
   $purchase_options = NAM_Events::get_ticket_levels( get_the_ID(), $product);
-
 } else {
-
   $purchase_options = array($product);
-
 }
-
 ?>
-
-<?php foreach ($purchase_options as $i => $purchase_option) {
-  ?>
-
+<?php foreach ($purchase_options as $i => $purchase_option) { ?>
   <form class="cart form-<?php echo $i; ?>" action="<?php echo esc_url(get_permalink()); ?>" method="post" enctype='multipart/form-data'>
    <?php
-
    do_action('woocommerce_before_add_to_cart_button');
    do_action('woocommerce_before_add_to_cart_quantity');
-
    ?>
    <div class="sidebar-middle single-sidebar-middle">
 
@@ -150,7 +133,7 @@ do_action('woocommerce_before_add_to_cart_form');
                   </p>
                 <?php endif;?>
               </div><!-- .price-->
-            </div>
+            </div><!-- .col -->
             <?php if ($is_events): ?>
               <div class="col add-to-cart-quantity">
                 <?php
@@ -202,7 +185,6 @@ do_action('woocommerce_before_add_to_cart_form');
                </div>
              <?php endif;?>
            <?php endif;?>
-
            <?php if ($is_classes): ?>
             <div class="row add-to-cart-limit">
               <div class="col-12">
@@ -216,9 +198,7 @@ do_action('woocommerce_before_add_to_cart_form');
               </div>
             </div>
           <?php endif;?>
-
         </div><!-- .single-sidebar-middle -->
-
         <input type="hidden" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" />
         <?php if (!$is_events): ?>
           <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="single_add_to_cart_button button-full button alt">
@@ -228,12 +208,13 @@ do_action('woocommerce_before_add_to_cart_form');
         <?php do_action('woocommerce_after_add_to_cart_button');?>
       </form>
     <?php }?>
-
     <?php if ($is_events): ?>
       <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="events_add_to_cart_button single_add_to_cart_button button-full button alt">
         <?php echo esc_html($product->single_add_to_cart_text()); ?>
       </button>
     <?php endif;?>
 
+
   <?php endif;?>
   <?php do_action('woocommerce_after_add_to_cart_form');?>
+  
