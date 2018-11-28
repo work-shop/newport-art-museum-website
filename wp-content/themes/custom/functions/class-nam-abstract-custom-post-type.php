@@ -227,7 +227,9 @@ abstract class NAM_Custom_Post_Type {
                                                  'copy="true" ' .
                                                  'export_pdf="true" ' .
                                                  'export_csv="true" ' .
+                                                 'email_all="true" ' .
                                                  'search="true" ' .
+                                                 'paging="true" ' .
                                                  'info="true" ' .
                                                  ']';
 
@@ -246,10 +248,10 @@ abstract class NAM_Custom_Post_Type {
                     $shortcode = '[customer_list product="' . $product_id . '" ' .
                                                  'order_status="wc-completed,wc-processing" ' .
                                                  'show_titles="true" ' .
-                                                 'billing_email="false" ' .
+                                                 'billing_email="true" ' .
                                                  'billing_phone="false" ' .
-                                                 'billing_first_name="false" ' .
-                                                 'billing_last_name="false" ' .
+                                                 'billing_first_name="true" ' .
+                                                 'billing_last_name="true" ' .
                                                  'customer_username_link="true" ' .
                                                  'order_number="false" ' .
                                                  'order_qty_total="true" ' .
@@ -260,8 +262,10 @@ abstract class NAM_Custom_Post_Type {
                                                  'copy="true" ' .
                                                  'export_pdf="true" ' .
                                                  'export_csv="true" ' .
+                                                 'email_all="true" ' .
                                                  'search="true" ' .
                                                  'info="true" ' .
+                                                 'paging="true" ' .
                                                  'custom_fields="' . $customfields . '" ' .
                                                  ']';
 
