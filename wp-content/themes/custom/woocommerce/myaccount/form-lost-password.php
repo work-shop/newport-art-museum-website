@@ -26,7 +26,7 @@ defined( 'ABSPATH' ) || exit;
 	<h5 class="bold mb1">
 		Lost your password or logging into your new account for the first time?
 	</h5>
-	<p>
+	<p class="mb1">
 		Please enter your username or email address. You will receive a link to create a new password via email.
 		<?php //echo apply_filters( 'woocommerce_lost_password_message', esc_html__( 'Lost your password or logging into your new account for the first time?<br> Please enter your username or email address. You will receive a link to create a new password via email.', 'woocommerce' ) ); ?></p><?php // @codingStandardsIgnoreLine ?>
 	</p>
