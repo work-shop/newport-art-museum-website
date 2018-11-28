@@ -150,7 +150,18 @@ add_filter( 'wc_add_to_cart_message_html', '__return_false' );
 // }
 // add_filter( 'editable_roles', 'override_wc_modify_editable_roles', 1 );
 
+//automatically log user in after password reset
+function action_woocommerce_reset_password( $user ) {
+	$login=$_POST['reset_login'];
+	$pass=$_POST['password_1'];
+	$creds = array(
+		'user_login' => $login,
+		'user_password' => $pass,
+		'remember' => true
+	);
 
-
+	wp_signon( $creds, false );
+};
+add_action( 'woocommerce_customer_reset_password', 'action_woocommerce_reset_password', 10, 1 );
 
 ?>
