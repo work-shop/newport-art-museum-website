@@ -7,11 +7,20 @@ function members(){
 
 	$(document).ready( function() {
 
-		$('.member-check-form').submit(function(e) {
-			e.preventDefault();
-			var email = $(this).children('.member-check-email-input').val();
-			checkMemberByEmail( email );
-		});
+		if( $('.member-check-form').length > 0 ){
+
+			$('.member-check-form').submit(function(e) {
+				e.preventDefault();
+				var email = $(this).children('.member-check-email-input').val();
+				checkMemberByEmail( email );
+			});
+
+			if( $('.notice').length > 0 ){
+				console.log('notices present');
+				hasSubscription(true);
+			}
+
+		}
 
 	});
 
@@ -23,8 +32,7 @@ function checkMemberByEmail(email){
 	var endpoint = base + email;
 	globalEmail = email;
 
-	$('.lwa-username input').val(email);
-	console.log($('#lwa_user_remember'));
+	$('#username').val(email);
 
 	$('body').addClass('member-checking');
 	$('.member-check-form').attr('disabled','true');
@@ -76,12 +84,14 @@ function noMembership(){
 }
 
 
-function hasSubscription(){
+function hasSubscription(preserveEmail){
 	clearMessages();
 	$('.member-check-message-has-account').addClass('active');	
 	$('.member-check-login').addClass('active');		
 	$('.member-check-intro').hide();
-	$('#lwa_user_remember').val(globalEmail);
+	if( preserveEmail ===  false ){
+		$('#username').val(globalEmail);
+	}
 }
 
 

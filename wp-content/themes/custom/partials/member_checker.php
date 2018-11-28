@@ -10,10 +10,11 @@
 		</div>
 	</div>
 	<div class="member-check-2">
+		<?php //var_dump($_GET); ?>
 		<div class="mb3 member-check-form-container">
 			<div class="member-check-intro">
 				<form class="member-check-form">
-					<label>
+					<label id="member-check-heading">
 						Enter your email address
 					</label>
 					<input type="email" name="email" class="member-check-email-input">
@@ -21,7 +22,7 @@
 				</form>
 			</div>
 			<div class="member-check-login member-check-hidden">
-				
+				<?php get_template_part('partials/login_form'); ?>
 			</div>
 		</div>
 		<div class="member-check-links member-check-links-mobile">

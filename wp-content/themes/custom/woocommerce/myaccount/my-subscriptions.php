@@ -100,13 +100,17 @@ $user_was_imported = NAM_Membership::user_was_imported();
 			</table>
 			<?php else : ?>
 
-				<p class="no_subscriptions">
-					You have no active memberships. <a href="/join" class="button button-small">Purchase a membership</a>
-					<?php
+				<div class="row notice">
+					<div class="col">
+						<h4 class="no_subscriptions bold">
+							You have no memberships with this account. &nbsp; &nbsp;<a href="/join" class="button button-small">Purchase a membership</a>
+							<?php
 			// translators: placeholders are opening and closing link tags to take to the shop page
 			//printf( esc_html__( 'You have no active subscriptions. Find your first subscription in the %sstore%s.', 'woocommerce-subscriptions' ), '<a href="' . esc_url( apply_filters( 'woocommerce_subscriptions_message_store_url', get_permalink( wc_get_page_id( 'shop' ) ) ) ) . '">', '</a>' );
-					?>
-				</p>
+							?>
+						</h4>
+					</div>
+				</div>
 
 			<?php endif; ?>
 

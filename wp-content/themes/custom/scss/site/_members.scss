@@ -18,13 +18,13 @@ body.member-checking{
 			position: absolute;
 			top: 50%;
 			left: 50%;
-			margin-left: -20px;
-			margin-top: -20px;
-			width: 40px;
-			height: 40px;
+			margin-left: -40px;
+			margin-top: -40px;
+			width: 80px;
+			height: 80px;
 			z-index: 9998;
 			background-image: url('../images/loading.gif');
-			background-size: 40px 40px;
+			background-size: 80px 80px;
 			background-position: center center;
 		}
 	}
@@ -149,9 +149,9 @@ body.member-checking{
 }
 
 @keyframes puff {
-    0% { transform: scale(1.0); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1.0); }
+	0% { transform: scale(1.0); }
+	50% { transform: scale(1.05); }
+	100% { transform: scale(1.0); }
 }
 
 .member-check-message-box{
@@ -173,60 +173,115 @@ body.member-checking{
 }
 
 
+//login form
 
-.lwa{
+.member-check .member-check-login{
 
-	//background: $khaki;
-	//@extend .shadowed;
-	//border-radius: 6px;
+	.notice.row{
+		margin: 0 0 25px 0;
+		padding: 10px;
+		box-shadow: none;
+		border: 1px solid $error;
+		border-radius: 4px;
 
-	.lwa-heading,.lwa-middle,.lwa-bottom{
-		//padding-top: 30px;
-		padding-bottom: 30px; 
+		.notice-text{
+			@extend .col-12;
+			h4{
+				margin-bottom: 0;
+				font-size: 17px;
+
+				@media screen and (max-width: $lg) {
+					font-size: 15px;
+				}
+
+				@media screen and (max-width: $sm) {
+					font-size: 13px;
+				}
+			}
+		}
 	}
 
-	.lwa-heading{
-		padding-top: 0px;
+	.nam-login-form{
+		.woocommerce-form-login{
+			max-width: none;
+			margin: 0 auto;
+			background: none;
+			box-shadow: none;
+		}
+	}
+
+	.form-top{
+		padding: 0;
 		padding-bottom: 20px;
+		border: none;
+		display: none;
 	}
 
-	.lwa-bottom{
-		padding-top: 0px;
+	.form-body{
+		padding: 0;
+		border: none;
 	}
 
-
-	.lwa-heading,.lwa-middle{
-		//border-bottom: 1px solid darken($light,7%);
-
+	.form-bottom{
+		padding: 0;
 	}
 
-	label{
-		@extend .nam-form-label;
-	}
-
-	input[type="text"],input[type="password"]{
-		display: block;
-		width: 100%;
-		max-width: 100%;
-		margin-bottom: 1.5em;
-	}
-
-	input[type="submit"]{
-		width: 100%;
-		max-width: 100%;
-	}
-
-	.lwa-rememberme{
-		margin-right: 5px;
-		position: relative;
-		top: -2px;
-	}
-
-	.lwa-rememberme-container{
-		margin-bottom: .75em;
-	}
-
-	.lwa-status{
-		//margin: 15px !important;
-	}
 }
+
+
+// .lwa{
+
+// 	//background: $khaki;
+// 	//@extend .shadowed;
+// 	//border-radius: 6px;
+
+// 	.lwa-heading,.lwa-middle,.lwa-bottom{
+// 		//padding-top: 30px;
+// 		padding-bottom: 30px; 
+// 	}
+
+// 	.lwa-heading{
+// 		padding-top: 0px;
+// 		padding-bottom: 20px;
+// 	}
+
+// 	.lwa-bottom{
+// 		padding-top: 0px;
+// 	}
+
+
+// 	.lwa-heading,.lwa-middle{
+// 		//border-bottom: 1px solid darken($light,7%);
+
+// 	}
+
+// 	label{
+// 		@extend .nam-form-label;
+// 	}
+
+// 	input[type="text"],input[type="password"]{
+// 		display: block;
+// 		width: 100%;
+// 		max-width: 100%;
+// 		margin-bottom: 1.5em;
+// 	}
+
+// 	input[type="submit"]{
+// 		width: 100%;
+// 		max-width: 100%;
+// 	}
+
+// 	.lwa-rememberme{
+// 		margin-right: 5px;
+// 		position: relative;
+// 		top: -2px;
+// 	}
+
+// 	.lwa-rememberme-container{
+// 		margin-bottom: .75em;
+// 	}
+
+// 	.lwa-status{
+// 		//margin: 15px !important;
+// 	}
+// }
