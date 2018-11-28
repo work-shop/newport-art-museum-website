@@ -24,7 +24,7 @@
 						</label>
 					</div>
 					<div class="col-6 woocommerce-LostPassword lost_password">
-						<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>"><?php esc_html_e( 'Forgot Password', 'woocommerce' ); ?></a>
+						<a href="<?php echo esc_url( wp_lostpassword_url() ); ?>" id="lost-password-link"><?php esc_html_e( 'Forgot Password', 'woocommerce' ); ?></a>
 					</div>
 				</div>
 			</div>

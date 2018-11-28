@@ -22,6 +22,16 @@ function members(){
 
 		}
 
+		if( $('.woocommerce-ResetPassword.lost_reset_password').length > 0 ){
+
+			var urlEmail = getURLParameter('email');
+
+			if( urlEmail !== 'undefined' && typeof urlEmail !== 'undefined' ){
+				$('#user_login').val(urlEmail);
+			}
+
+		}
+
 	});
 
 }
@@ -86,11 +96,16 @@ function noMembership(){
 
 function hasSubscription(preserveEmail){
 	clearMessages();
-	$('.member-check-message-has-account').addClass('active');	
+	$('.member-check-message-has-account').addClass('active');
 	$('.member-check-login').addClass('active');		
 	$('.member-check-intro').hide();
 	if( preserveEmail ===  false ){
 		$('#username').val(globalEmail);
+	} else{
+		globalEmail = $('#username').val();
+		var href = $('#lost-password-link').attr('href');
+		href = href + '?email=' + globalEmail;
+		$('#lost-password-link').attr('href', href);
 	}
 }
 
@@ -118,5 +133,16 @@ function clearMessages(){
 	errorContainer.html('');
 }
 
+
+function getURLParameter(sParam){
+	var sPageURL = window.location.search.substring(1);
+	var sURLVariables = sPageURL.split('&');
+	for (var i = 0; i < sURLVariables.length; i++) {
+		var sParameterName = sURLVariables[i].split('=');
+		if (sParameterName[0] === sParam) {
+			return sParameterName[1];
+		}
+	}
+}
 
 export { members };
