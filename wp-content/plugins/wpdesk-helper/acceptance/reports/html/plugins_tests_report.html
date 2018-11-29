@@ -415,27 +415,27 @@
     <li>2 Features</li>
     <li>4 Scenarios</li>
     <li> Steps</li>
-    <li class="passed print-hide">2 Passed scenarios</li>
-    <li class="failed print-hide">2 Failing scenarios</li>
+    <li class="passed print-hide">4 Passed scenarios</li>
+    <li class="failed print-hide">0 Failing scenarios</li>
     <li class="passed print-hide"> Passed steps</li>
     <li class="failed print-hide"> Failing steps</li>
     <li class="skipped print-hide"> Skipped steps</li>
-    <li>Status <span class="failed">failed</span></li>
+    <li>Status <span class="passed">passed</span></li>
   </ul>
 
   <ul class="feature-list print-hide">
-      <li class="failed">
-        <a href="#F_tracker-message-wpdesk-helper-tests" title="Tracker message WPDesk Helper tests">Tracker message WPDesk Helper tests</a>
-        <ul class="scenario-list">
-            <li class="failed"><a href="#S_tracker-message-wpdesk-helper-tests;tracker-long-message-is-visible" title="Tracker long message is Visible">Tracker long message is Visible</a></li>
-            <li class="failed"><a href="#S_tracker-message-wpdesk-helper-tests;tracker-short-message-is-visible" title="Tracker short message is Visible">Tracker short message is Visible</a></li>
-        </ul>
-      </li>
       <li class="passed">
         <a href="#F_activate-and-deactivate-wpdesk-helper-plugin-tests" title="Activate and Deactivate WPDesk Helper plugin tests">Activate and Deactivate WPDesk Helper plugin tests</a>
         <ul class="scenario-list">
             <li class="passed"><a href="#S_activate-and-deactivate-wpdesk-helper-plugin-tests;plugin-wpdesk-helper-is-active" title="Plugin WPDesk Helper is active">Plugin WPDesk Helper is active</a></li>
             <li class="passed"><a href="#S_activate-and-deactivate-wpdesk-helper-plugin-tests;plugin-wpdesk-helper-is-inactive" title="Plugin WPDesk Helper is inactive">Plugin WPDesk Helper is inactive</a></li>
+        </ul>
+      </li>
+      <li class="passed">
+        <a href="#F_tracker-message-wpdesk-helper-tests" title="Tracker message WPDesk Helper tests">Tracker message WPDesk Helper tests</a>
+        <ul class="scenario-list">
+            <li class="passed"><a href="#S_tracker-message-wpdesk-helper-tests;tracker-long-message-is-visible" title="Tracker long message is Visible">Tracker long message is Visible</a></li>
+            <li class="passed"><a href="#S_tracker-message-wpdesk-helper-tests;tracker-short-message-is-visible" title="Tracker short message is Visible">Tracker short message is Visible</a></li>
         </ul>
       </li>
   </ul>
@@ -463,18 +463,6 @@
         <th>Status</th>
       </tr>
 
-        <tr class="failed">
-          <td>Tracker message WPDesk Helper tests</td>
-          <td class="scenarios-all"></td>
-          <td class="scenarios-passed passed"></td>
-          <td class="scenarios-failed failed"></td>
-          <td class="steps-all"></td>
-          <td class="steps-passed passed"></td>
-          <td class="steps-failed failed"></td>
-          <td class="steps-skipped skipped"></td>
-          <td class="duration">1 m 22.58 s</td>
-          <td class="status">failed</td>
-        </tr>
         <tr class="passed">
           <td>Activate and Deactivate WPDesk Helper plugin tests</td>
           <td class="scenarios-all"></td>
@@ -484,7 +472,19 @@
           <td class="steps-passed passed"></td>
           <td class="steps-failed failed"></td>
           <td class="steps-skipped skipped"></td>
-          <td class="duration">5.7 s</td>
+          <td class="duration">6.3 s</td>
+          <td class="status">passed</td>
+        </tr>
+        <tr class="passed">
+          <td>Tracker message WPDesk Helper tests</td>
+          <td class="scenarios-all"></td>
+          <td class="scenarios-passed passed"></td>
+          <td class="scenarios-failed failed"></td>
+          <td class="steps-all"></td>
+          <td class="steps-passed passed"></td>
+          <td class="steps-failed failed"></td>
+          <td class="steps-skipped skipped"></td>
+          <td class="duration">6.65 s</td>
           <td class="status">passed</td>
         </tr>
 
@@ -492,316 +492,6 @@
   </div>
  -->
 
-    <section class="report" id="F_tracker-message-wpdesk-helper-tests">
-      <h2>Feature: Tracker message WPDesk Helper tests <span class="tags">@wpdesk-helper</span></h2>
-
-      <p class="filename">&#x2F;tmp&#x2F;tests&#x2F;test-acceptance&#x2F;features&#x2F;tests_scenario&#x2F;wpdesk-helper&#x2F;trackerMessageIsVisibleWhenActivatePluginWpdeskHelperTests.feature</p>
-
-      <p class="story"></p>
-        <h3 id="S_tracker-message-wpdesk-helper-tests;tracker-long-message-is-visible">
-          Scenario: Tracker long message is Visible
-            <span class="scenario-tag">@wpdesk-helper</span>
-        </h3>
-
-        <table>
-          <tr class="header-row">
-            <th style="width: 100px;">Condition</th>
-            <th>Step</th>
-            <th style="width: 100px;">Line</th>
-            <th class="duration" style="width: 100px;">Duration</th>
-            <th style="width: 100px;">Status</th>
-          </tr>
-
-            <tr class="passed">
-              <td>Given </td>
-              <td>
-                user is logged in to wordPress
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>5</td>
-              <td class="duration">0.34 s</td>
-              <td class="status">passed</td>
-            </tr>
-
-            <tr class="hidden passed">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="passed">
-              <td>And </td>
-              <td>
-                i resets the consent to collect data in the database
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>6</td>
-              <td class="duration">0 s</td>
-              <td class="status">passed</td>
-            </tr>
-
-            <tr class="hidden passed">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="failed">
-              <td>When </td>
-              <td>
-                i open &quot;menu-plugins&quot; and activate plugin with slug &quot;wp-desk-helper&quot;
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>15</td>
-              <td class="duration">40.62 s</td>
-              <td class="status">failed</td>
-            </tr>
-
-            <tr class="hidden failed">
-              <td class="trace" colspan="4">
-                <pre>Error: Activate button not found
-    at browser.takeScreenshot.then.png (&#x2F;tmp&#x2F;tests&#x2F;conf&#x2F;protractor-cucumber-common.conf.js:147:26)
-    at ManagedPromise.invokeCallback_ (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:1366:14)
-    at TaskQueue.execute_ (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:2970:14)
-    at TaskQueue.executeNext_ (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:2953:27)
-    at asyncRun (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:2813:27)
-    at &#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:676:7
-    at &lt;anonymous&gt;
-    at process._tickCallback (internal&#x2F;process&#x2F;next_tick.js:182:7)</pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="skipped">
-              <td>And </td>
-              <td>
-                Skip tracker message
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>16</td>
-              <td class="duration"></td>
-              <td class="status">skipped</td>
-            </tr>
-
-            <tr class="hidden skipped">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="skipped">
-              <td>And </td>
-              <td>
-                i open submenu &quot;Settings&quot; from menu &quot;toplevel_page_wpdesk-helper&quot;
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>17</td>
-              <td class="duration"></td>
-              <td class="status">skipped</td>
-            </tr>
-
-            <tr class="hidden skipped">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="skipped">
-              <td>Then </td>
-              <td>
-                tracker message type &quot;long&quot; visible
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>18</td>
-              <td class="duration"></td>
-              <td class="status">skipped</td>
-            </tr>
-
-            <tr class="hidden skipped">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="skipped">
-              <td>And </td>
-              <td>
-                i open &quot;menu-plugins&quot; and deactivate plugin with slug &quot;wp-desk-helper&quot;
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>19</td>
-              <td class="duration"></td>
-              <td class="status">skipped</td>
-            </tr>
-
-            <tr class="hidden skipped">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-
-        </table>
-
-
-        
-        <img src="tracker_long_message_is_visible-14-1.png" />
-        <h3 id="S_tracker-message-wpdesk-helper-tests;tracker-short-message-is-visible">
-          Scenario: Tracker short message is Visible
-            <span class="scenario-tag">@wpdesk-helper</span>
-        </h3>
-
-        <table>
-          <tr class="header-row">
-            <th style="width: 100px;">Condition</th>
-            <th>Step</th>
-            <th style="width: 100px;">Line</th>
-            <th class="duration" style="width: 100px;">Duration</th>
-            <th style="width: 100px;">Status</th>
-          </tr>
-
-            <tr class="passed">
-              <td>Given </td>
-              <td>
-                user is logged in to wordPress
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>5</td>
-              <td class="duration">0.3 s</td>
-              <td class="status">passed</td>
-            </tr>
-
-            <tr class="hidden passed">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="passed">
-              <td>And </td>
-              <td>
-                i resets the consent to collect data in the database
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>6</td>
-              <td class="duration">0 s</td>
-              <td class="status">passed</td>
-            </tr>
-
-            <tr class="hidden passed">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="passed">
-              <td>When </td>
-              <td>
-                i open &quot;menu-plugins&quot; and activate plugin with slug &quot;wp-desk-helper&quot;
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>9</td>
-              <td class="duration">1 s</td>
-              <td class="status">passed</td>
-            </tr>
-
-            <tr class="hidden passed">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="failed">
-              <td>Then </td>
-              <td>
-                tracker message type &quot;short&quot; visible
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>10</td>
-              <td class="duration">40.32 s</td>
-              <td class="status">failed</td>
-            </tr>
-
-            <tr class="hidden failed">
-              <td class="trace" colspan="4">
-                <pre>Error: Element not found
-    at browser.takeScreenshot.then.png (&#x2F;tmp&#x2F;tests&#x2F;conf&#x2F;protractor-cucumber-common.conf.js:147:26)
-    at ManagedPromise.invokeCallback_ (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:1366:14)
-    at TaskQueue.execute_ (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:2970:14)
-    at TaskQueue.executeNext_ (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:2953:27)
-    at asyncRun (&#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:2813:27)
-    at &#x2F;tmp&#x2F;tests&#x2F;node_modules&#x2F;protractor&#x2F;node_modules&#x2F;selenium-webdriver&#x2F;lib&#x2F;promise.js:676:7
-    at &lt;anonymous&gt;
-    at process._tickCallback (internal&#x2F;process&#x2F;next_tick.js:182:7)</pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="skipped">
-              <td>And </td>
-              <td>
-                Check if buttons skip and Allow &amp; Continue visible in tracker message
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>11</td>
-              <td class="duration"></td>
-              <td class="status">skipped</td>
-            </tr>
-
-            <tr class="hidden skipped">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-            <tr class="skipped">
-              <td>And </td>
-              <td>
-                i open &quot;menu-plugins&quot; and deactivate plugin with slug &quot;wp-desk-helper&quot;
-                <table class="datatable">
-                <!--  -->
-                </table>
-              </td>
-              <td>12</td>
-              <td class="duration"></td>
-              <td class="status">skipped</td>
-            </tr>
-
-            <tr class="hidden skipped">
-              <td class="trace" colspan="4">
-                <pre></pre>
-              </td>
-              <td class="screenshot-link" data-index="0"></td>
-            </tr>
-
-        </table>
-
-
-        
-        <img src="tracker_short_message_is_visible-8-1.png" />
-    </section>
     <section class="report" id="F_activate-and-deactivate-wpdesk-helper-plugin-tests">
       <h2>Feature: Activate and Deactivate WPDesk Helper plugin tests <span class="tags">@wpdesk-helper</span></h2>
 
@@ -839,7 +529,7 @@
               <td class="trace" colspan="4">
                 <pre></pre>
               </td>
-              <td class="screenshot-link" data-index="1"></td>
+              <td class="screenshot-link" data-index="0"></td>
             </tr>
             <tr class="passed">
               <td>And </td>
@@ -858,7 +548,7 @@
               <td class="trace" colspan="4">
                 <pre></pre>
               </td>
-              <td class="screenshot-link" data-index="1"></td>
+              <td class="screenshot-link" data-index="0"></td>
             </tr>
             <tr class="passed">
               <td>When </td>
@@ -869,7 +559,7 @@
                 </table>
               </td>
               <td>9</td>
-              <td class="duration">2.76 s</td>
+              <td class="duration">3.29 s</td>
               <td class="status">passed</td>
             </tr>
 
@@ -877,7 +567,7 @@
               <td class="trace" colspan="4">
                 <pre></pre>
               </td>
-              <td class="screenshot-link" data-index="1"></td>
+              <td class="screenshot-link" data-index="0"></td>
             </tr>
             <tr class="passed">
               <td>Then </td>
@@ -888,7 +578,7 @@
                 </table>
               </td>
               <td>10</td>
-              <td class="duration">0.64 s</td>
+              <td class="duration">0.68 s</td>
               <td class="status">passed</td>
             </tr>
 
@@ -896,7 +586,7 @@
               <td class="trace" colspan="4">
                 <pre></pre>
               </td>
-              <td class="screenshot-link" data-index="1"></td>
+              <td class="screenshot-link" data-index="0"></td>
             </tr>
 
         </table>
@@ -927,7 +617,263 @@
                 </table>
               </td>
               <td>5</td>
-              <td class="duration">0.3 s</td>
+              <td class="duration">0.32 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="0"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                i resets the consent to collect data in the database
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>6</td>
+              <td class="duration">0.01 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="0"></td>
+            </tr>
+            <tr class="passed">
+              <td>When </td>
+              <td>
+                i open &quot;menu-plugins&quot; and deactivate plugin with slug &quot;wp-desk-helper&quot;
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>13</td>
+              <td class="duration">1.05 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="0"></td>
+            </tr>
+            <tr class="passed">
+              <td>Then </td>
+              <td>
+                check if plugin with slug &quot;wp-desk-helper&quot; is Inactive
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>14</td>
+              <td class="duration">0.62 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="0"></td>
+            </tr>
+
+        </table>
+
+
+        
+        
+    </section>
+    <section class="report" id="F_tracker-message-wpdesk-helper-tests">
+      <h2>Feature: Tracker message WPDesk Helper tests <span class="tags">@wpdesk-helper</span></h2>
+
+      <p class="filename">&#x2F;tmp&#x2F;tests&#x2F;test-acceptance&#x2F;features&#x2F;tests_scenario&#x2F;wpdesk-helper&#x2F;trackerMessageIsVisibleWhenActivatePluginWpdeskHelperTests.feature</p>
+
+      <p class="story"></p>
+        <h3 id="S_tracker-message-wpdesk-helper-tests;tracker-long-message-is-visible">
+          Scenario: Tracker long message is Visible
+            <span class="scenario-tag">@wpdesk-helper</span>
+        </h3>
+
+        <table>
+          <tr class="header-row">
+            <th style="width: 100px;">Condition</th>
+            <th>Step</th>
+            <th style="width: 100px;">Line</th>
+            <th class="duration" style="width: 100px;">Duration</th>
+            <th style="width: 100px;">Status</th>
+          </tr>
+
+            <tr class="passed">
+              <td>Given </td>
+              <td>
+                user is logged in to wordPress
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>5</td>
+              <td class="duration">0.32 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                i resets the consent to collect data in the database
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>6</td>
+              <td class="duration">0.01 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>When </td>
+              <td>
+                i open &quot;menu-plugins&quot; and activate plugin with slug &quot;wp-desk-helper&quot;
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>15</td>
+              <td class="duration">0.84 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                Skip tracker message
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>16</td>
+              <td class="duration">1.04 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                i open submenu &quot;Settings&quot; from menu &quot;toplevel_page_wpdesk-helper&quot;
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>17</td>
+              <td class="duration">0.48 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>Then </td>
+              <td>
+                tracker message type &quot;long&quot; visible
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>18</td>
+              <td class="duration">0.32 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                i open &quot;menu-plugins&quot; and deactivate plugin with slug &quot;wp-desk-helper&quot;
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>19</td>
+              <td class="duration">1.07 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+
+        </table>
+
+
+        
+        
+        <h3 id="S_tracker-message-wpdesk-helper-tests;tracker-short-message-is-visible">
+          Scenario: Tracker short message is Visible
+            <span class="scenario-tag">@wpdesk-helper</span>
+        </h3>
+
+        <table>
+          <tr class="header-row">
+            <th style="width: 100px;">Condition</th>
+            <th>Step</th>
+            <th style="width: 100px;">Line</th>
+            <th class="duration" style="width: 100px;">Duration</th>
+            <th style="width: 100px;">Status</th>
+          </tr>
+
+            <tr class="passed">
+              <td>Given </td>
+              <td>
+                user is logged in to wordPress
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>5</td>
+              <td class="duration">0.33 s</td>
               <td class="status">passed</td>
             </tr>
 
@@ -959,13 +905,13 @@
             <tr class="passed">
               <td>When </td>
               <td>
-                i open &quot;menu-plugins&quot; and deactivate plugin with slug &quot;wp-desk-helper&quot;
+                i open &quot;menu-plugins&quot; and activate plugin with slug &quot;wp-desk-helper&quot;
                 <table class="datatable">
                 <!--  -->
                 </table>
               </td>
-              <td>13</td>
-              <td class="duration">1.05 s</td>
+              <td>9</td>
+              <td class="duration">1 s</td>
               <td class="status">passed</td>
             </tr>
 
@@ -978,13 +924,51 @@
             <tr class="passed">
               <td>Then </td>
               <td>
-                check if plugin with slug &quot;wp-desk-helper&quot; is Inactive
+                tracker message type &quot;short&quot; visible
                 <table class="datatable">
                 <!--  -->
                 </table>
               </td>
-              <td>14</td>
-              <td class="duration">0.63 s</td>
+              <td>10</td>
+              <td class="duration">0.14 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                Check if buttons skip and Allow &amp; Continue visible in tracker message
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>11</td>
+              <td class="duration">0.14 s</td>
+              <td class="status">passed</td>
+            </tr>
+
+            <tr class="hidden passed">
+              <td class="trace" colspan="4">
+                <pre></pre>
+              </td>
+              <td class="screenshot-link" data-index="1"></td>
+            </tr>
+            <tr class="passed">
+              <td>And </td>
+              <td>
+                i open &quot;menu-plugins&quot; and deactivate plugin with slug &quot;wp-desk-helper&quot;
+                <table class="datatable">
+                <!--  -->
+                </table>
+              </td>
+              <td>12</td>
+              <td class="duration">0.96 s</td>
               <td class="status">passed</td>
             </tr>
 
@@ -1026,17 +1010,17 @@
         <th>Status</th>
       </tr>
 
-        <tr class="failed">
+        <tr class="passed">
           <td>@wpdesk-helper</td>
           <td class="scenarios-all">4</td>
-          <td class="scenarios-passed passed">2</td>
-          <td class="scenarios-failed failed">2</td>
+          <td class="scenarios-passed passed">4</td>
+          <td class="scenarios-failed failed">0</td>
           <td class="steps-all">21</td>
-          <td class="steps-passed passed">13</td>
-          <td class="steps-failed failed">2</td>
-          <td class="steps-skipped skipped">6</td>
-          <td class="duration">1 m 28.28 s</td>
-          <td class="status">failed</td>
+          <td class="steps-passed passed">21</td>
+          <td class="steps-failed failed">0</td>
+          <td class="steps-skipped skipped">0</td>
+          <td class="duration">12.95 s</td>
+          <td class="status">passed</td>
         </tr>
 
     </table>

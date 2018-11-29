@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WP Desk Helper\n"
-"POT-Creation-Date: 2018-06-20 15:51+0200\n"
-"PO-Revision-Date: 2018-06-20 15:53+0200\n"
+"POT-Creation-Date: 2018-11-29 14:23+0100\n"
+"PO-Revision-Date: 2018-11-29 14:24+0100\n"
 "Last-Translator: Piotr Jabłonowski <piotr.jablonowski@wpdesk.net>\n"
 "Language-Team: \n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: wpdesk-helper.php\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
@@ -24,96 +24,73 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-2: inc/wpdesk-tracker\n"
 "X-Poedit-SearchPathExcluded-3: vendor/10up\n"
 
-#: classes/class-helper.php:87 classes/class-helper.php:150
-#: classes/class-helper.php:151
+#: classes/class-helper.php:161 classes/class-helper.php:198
+#: classes/class-helper.php:199
 #: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:142
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: classes/class-helper.php:89
+#: classes/class-helper.php:163
 #: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:135
 msgid "Docs"
 msgstr "Docs"
 
-#: classes/class-helper.php:90
+#: classes/class-helper.php:164
 #: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:129
 msgid "Support"
 msgstr "Wsparcie"
 
-#: classes/class-helper.php:143 classes/class-helper.php:144
+#: classes/class-helper.php:191 classes/class-helper.php:192
 msgid "Licenses"
 msgstr "Licencje"
 
-#: classes/class-helper.php:161
+#: classes/class-helper.php:209
 msgid "Debug"
 msgstr "Debug"
 
-#: classes/class-helper.php:162
+#: classes/class-helper.php:210
 msgid "WP Desk Debug Log"
 msgstr "WP Desk Debug Log"
 
-#: classes/class-helper.php:166
+#: classes/class-helper.php:214
 msgid "Plugin usage tracking"
 msgstr "Dane użytkowania wtyczek"
 
-#: classes/class-helper.php:169
+#: classes/class-helper.php:217
 msgid "Allow WP Desk to track plugin usage"
 msgstr "Pozwól WP Desk na zbieranie danych użytkowania wtyczek"
 
-#: classes/class-helper.php:189 classes/class-helper.php:211
+#: classes/class-helper.php:237 classes/class-helper.php:259
 msgid "Enable"
 msgstr "Włącz"
 
-#: classes/class-helper.php:193
+#: classes/class-helper.php:241
 #, php-format
 msgid "No sensitive data is tracked, %sread more%s."
 msgstr "Żadne wrażliwe dane nie będą zbierane, %sprzeczytaj więcej%s."
 
-#: classes/class-helper.php:213
+#: classes/class-helper.php:261
 #, php-format
 msgid "Writes error log to %s."
 msgstr "Zapisuje log błędów do %s."
 
-#: classes/class-helper.php:222
+#: classes/class-helper.php:270
 msgid "WP Desk Helper Settings"
 msgstr "Ustawienia WP Desk Helper"
 
-#: classes/class-helper.php:256
+#: classes/class-helper.php:304
 #, php-format
 msgid "Invalid response from WP Desk server: %s"
 msgstr "Błędna odpowiedź serwera Wp Desk: %s"
 
-#: classes/class-helper.php:264
+#: classes/class-helper.php:312
 #, php-format
 msgid "%sInvalid response: <pre>%s</pre>"
 msgstr "%sBłędna odpowiedź: <pre>%s</pre>"
 
-#: classes/class-helper.php:342 classes/class-helper.php:359
-#: classes/class-wc-api-manager-menu.php:197
-msgid "Plugin activated. "
-msgstr "Wtyczka została włączona. "
-
-#: classes/class-helper.php:374 classes/class-wc-api-manager-menu.php:205
-msgid "Connection failed to the License Key API server. Try again later."
-msgstr "Nie udało się połączyć z serwerem licencji. Spróbuj później."
-
-#: classes/class-helper.php:485 classes/class-wc-api-manager-menu.php:350
+#: classes/class-helper.php:412 classes/class-wc-api-manager-menu.php:350
 msgid "Plugin license deactivated. "
 msgstr "Licencja wtyczki dezaktywowana. "
-
-#: classes/class-helper.php:585
-#, php-format
-msgid ""
-"Can not enable WP Desk Debug log! Cannot create directory %s or this "
-"directory is not writeable!"
-msgstr ""
-"Nie można włączyć WP Desk Debug log! Nie można utworzyć katalogu %s lub brak "
-"uprawnień do zapisu w tym katalogu!"
-
-#: classes/class-helper.php:592
-#, php-format
-msgid "WP Desk Debug Log is enabled. %sPlease disable it after testing%s."
-msgstr "WP Desk Debug Log jest włączony. %sWyłącz go po testach%s."
 
 #: classes/class-wc-api-manager-menu.php:74
 #: classes/class-wc-api-manager-menu.php:79
@@ -143,6 +120,16 @@ msgstr "Dezaktywacja licencji"
 #: classes/class-wc-api-manager-menu.php:114
 msgid "Deactivate API License Key"
 msgstr "Dezaktywuj klucz licencyjny"
+
+#: classes/class-wc-api-manager-menu.php:197
+#: classes/class-wpdesk-helper-license-activator.php:148
+msgid "Plugin activated. "
+msgstr "Wtyczka została włączona. "
+
+#: classes/class-wc-api-manager-menu.php:205
+#: classes/class-wpdesk-helper-license-activator.php:134
+msgid "Connection failed to the License Key API server. Try again later."
+msgstr "Nie udało się połączyć z serwerem licencji. Spróbuj później."
 
 #: classes/class-wc-api-manager-menu.php:311
 msgid ""
@@ -301,53 +288,122 @@ msgstr ""
 "Licencja na wtyczkę: %s została zmieniona. Możesz zarządzać licencjami <a "
 "href=\"%s\" target=\"_blank\">tutaj</a>."
 
-#: classes/class-wpdesk-helper-list-table.php:36
+#: classes/class-wpdesk-helper-debug-log.php:28
+#, php-format
+msgid ""
+"Can not enable WP Desk Debug log! Cannot create directory %s or this "
+"directory is not writeable!"
+msgstr ""
+"Nie można włączyć WP Desk Debug log! Nie można utworzyć katalogu %s lub brak "
+"uprawnień do zapisu w tym katalogu!"
+
+#: classes/class-wpdesk-helper-debug-log.php:47
+#, php-format
+msgid "Can not enable WP Desk Debug log! Cannot create file %s!"
+msgstr ""
+"Nie można włączyć WP Desk Debug log! Nie można utworzyć katalogu %s lub brak "
+"uprawnień do zapisu w tym katalogu!"
+
+#: classes/class-wpdesk-helper-debug-log.php:162
+#, php-format
+msgid "WP Desk Debug Log is enabled. %1$sPlease disable it after testing%2$s."
+msgstr "WP Desk Debug Log jest włączony. %sWyłącz go po testach%s."
+
+#: classes/class-wpdesk-helper-list-table.php:34
 msgid "No WP Desk plugins found."
 msgstr "Nie znaleziono wtyczek WP Desk."
 
-#: classes/class-wpdesk-helper-list-table.php:49
+#: classes/class-wpdesk-helper-list-table.php:47
 msgid "Plugin"
 msgstr "Wtyczka"
 
-#: classes/class-wpdesk-helper-list-table.php:50
+#: classes/class-wpdesk-helper-list-table.php:48
 msgid "License Status"
 msgstr "Status licencji"
 
-#: classes/class-wpdesk-helper-list-table.php:51
+#: classes/class-wpdesk-helper-list-table.php:49
 msgid "License Data"
 msgstr "Dane licencji"
 
-#: classes/class-wpdesk-helper-list-table.php:71
+#: classes/class-wpdesk-helper-list-table.php:69
 msgid "Deactivated"
 msgstr "Nieaktywna"
 
-#: classes/class-wpdesk-helper-list-table.php:73
+#: classes/class-wpdesk-helper-list-table.php:71
 msgid "Activated"
 msgstr "Aktywna"
 
-#: classes/inspire/plugin4.php:218
+#: classes/views/license-actions.php:4
+msgid "Key:"
+msgstr "Klucz:"
+
+#: classes/views/license-actions.php:8
+msgid "Email:"
+msgstr "E-mail:"
+
+#: classes/views/license-actions.php:15
+msgid "Activate"
+msgstr "Aktywuj"
+
+#: classes/views/license-actions.php:17
+msgid "Deactivate"
+msgstr "Dezaktywuj"
+
+#: classes/views/licenses.php:4
+msgid "WP Desk Licenses"
+msgstr "Licencje WP Desk"
+
+#: classes/views/licenses.php:14
+#, php-format
 msgid ""
-"An Unexpected HTTP Error occurred during the API request.</p> <p><a href=\"?"
-"\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+"Get your license keys <a href=\"%s\" target=\"_blank\">here</a>. You can "
+"activate/deactivate license keys <strong>unlimited times on different "
+"domains</strong> as long as you have an active subscription."
 msgstr ""
-"Wystąpił nieoczekiwany błąd HTTP podczas zapytania API.</p> <p><a href=\"?\" "
-"onclick=\"document.location.reload(); return false;\">Spróbuj ponownie</a>"
+"Pobierz klucze licencyjne <a href=\"%s\" target=\"_blank\">tutaj</a>. Możesz "
+"aktywować i dezaktywować klucze licencyjne <strong>dowolną ilość razy na "
+"różnych domenach</strong>, pod warunkiem, że licencja jest aktywna."
 
-#: classes/inspire/plugin4.php:223
-msgid "An unknown error occurred"
-msgstr "Wystąpił nieznany błąd"
+#. Author of the plugin/theme
+#: classes/views/wpdesk-page.php:3
+msgid "WP Desk"
+msgstr "WP Desk"
 
-#: classes/inspire/plugin4.php:387
-msgid "Ustawienia"
-msgstr "Ustawienia"
+#: classes/views/wpdesk-page.php:5
+msgid "Refresh"
+msgstr "Odśwież"
 
-#: classes/inspire/plugin4.php:388
-msgid "Dokumentacja"
-msgstr "Dokumentacja"
+#: classes/views/wpdesk-page.php:8
+msgid "Error: "
+msgstr "Błąd: "
 
-#: classes/inspire/plugin4.php:389
-msgid "Wsparcie"
-msgstr "Wsparcie"
+#: classes/views/wpdesk-page.php:11
+msgid ""
+"To diagnose problem we suggest run this commands from command line on your "
+"server:"
+msgstr ""
+"Aby zdiagnozować problem, proponujemy uruchomić to polecenie z wiersza "
+"poleceń na serwerze:"
+
+#: classes/views/wpdesk-page.php:70
+msgid "Download plugin"
+msgstr "Pobierz wtyczkę"
+
+#: classes/views/wpdesk-page.php:76
+msgid "Activate plugin"
+msgstr "Włącz wtyczkę"
+
+#: classes/views/wpdesk-page.php:82
+msgid "Activate key"
+msgstr "Aktywuj licencję"
+
+#: classes/views/wpdesk-page.php:88
+msgid "Configure"
+msgstr "Skonfiguruj"
+
+#: classes/views/wpdesk-page.php:97
+msgid "Update plugin"
+msgstr "Aktualizuj wtyczkę"
 
 #: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:162
 #, php-format
@@ -412,78 +468,6 @@ msgstr ""
 "Wtyczka &#8220;%s&#8221; nie może działać bez ustawienia php %s ustawionego "
 "na %s. Skontaktuj się z administratorem hostingu i poproś o ustawienie %s."
 
-#: wpdesk_helper_templates/license-actions.php:6
-msgid "Key:"
-msgstr "Klucz:"
-
-#: wpdesk_helper_templates/license-actions.php:10
-msgid "Email:"
-msgstr "E-mail:"
-
-#: wpdesk_helper_templates/license-actions.php:17
-msgid "Activate"
-msgstr "Aktywuj"
-
-#: wpdesk_helper_templates/license-actions.php:19
-msgid "Deactivate"
-msgstr "Dezaktywuj"
-
-#: wpdesk_helper_templates/licenses.php:6
-msgid "WP Desk Licenses"
-msgstr "Licencje WP Desk"
-
-#: wpdesk_helper_templates/licenses.php:16
-#, php-format
-msgid ""
-"Get your license keys <a href=\"%s\" target=\"_blank\">here</a>. You can "
-"activate/deactivate license keys <strong>unlimited times on different "
-"domains</strong> as long as you have an active subscription."
-msgstr ""
-"Pobierz klucze licencyjne <a href=\"%s\" target=\"_blank\">tutaj</a>. Możesz "
-"aktywować i dezaktywować klucze licencyjne <strong>dowolną ilość razy na "
-"różnych domenach</strong>, pod warunkiem, że licencja jest aktywna."
-
-#. Author of the plugin/theme
-#: wpdesk_helper_templates/wpdesk-page.php:7
-msgid "WP Desk"
-msgstr "WP Desk"
-
-#: wpdesk_helper_templates/wpdesk-page.php:9
-msgid "Refresh"
-msgstr "Odśwież"
-
-#: wpdesk_helper_templates/wpdesk-page.php:12
-msgid "Error: "
-msgstr "Błąd: "
-
-#: wpdesk_helper_templates/wpdesk-page.php:15
-msgid ""
-"To diagnose problem we suggest run this commands from command line on your "
-"server:"
-msgstr ""
-"Aby zdiagnozować problem, proponujemy uruchomić to polecenie z wiersza "
-"poleceń na serwerze:"
-
-#: wpdesk_helper_templates/wpdesk-page.php:74
-msgid "Download plugin"
-msgstr "Pobierz wtyczkę"
-
-#: wpdesk_helper_templates/wpdesk-page.php:80
-msgid "Activate plugin"
-msgstr "Włącz wtyczkę"
-
-#: wpdesk_helper_templates/wpdesk-page.php:86
-msgid "Activate key"
-msgstr "Aktywuj licencję"
-
-#: wpdesk_helper_templates/wpdesk-page.php:92
-msgid "Configure"
-msgstr "Skonfiguruj"
-
-#: wpdesk_helper_templates/wpdesk-page.php:101
-msgid "Update plugin"
-msgstr "Aktualizuj wtyczkę"
-
 #. Plugin Name of the plugin/theme
 msgid "WP Desk Helper"
 msgstr "WP Desk Helper"
@@ -496,6 +480,26 @@ msgstr "https://www.wpdesk.pl/"
 #. Description of the plugin/theme
 msgid "Enables WP Desk plugin activation and updates."
 msgstr "Umożliwia aktywację i aktualizacje wtyczek WP Desk."
+
+#~ msgid ""
+#~ "An Unexpected HTTP Error occurred during the API request.</p> <p><a href="
+#~ "\"?\" onclick=\"document.location.reload(); return false;\">Try again</a>"
+#~ msgstr ""
+#~ "Wystąpił nieoczekiwany błąd HTTP podczas zapytania API.</p> <p><a href=\"?"
+#~ "\" onclick=\"document.location.reload(); return false;\">Spróbuj "
+#~ "ponownie</a>"
+
+#~ msgid "An unknown error occurred"
+#~ msgstr "Wystąpił nieznany błąd"
+
+#~ msgid "Ustawienia"
+#~ msgstr "Ustawienia"
+
+#~ msgid "Dokumentacja"
+#~ msgstr "Dokumentacja"
+
+#~ msgid "Wsparcie"
+#~ msgstr "Wsparcie"
 
 #~ msgid "Get your license keys <a href=\"%s\" target=\"_blank\">here</a>."
 #~ msgstr ""

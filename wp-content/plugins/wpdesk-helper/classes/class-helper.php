@@ -25,18 +25,15 @@ class WPDesk_Helper extends \WPDesk\PluginBuilder\Plugin\AbstractPlugin {
 	protected $upgrade_url = 'https://www.wpdesk.pl';
 
 	/**
-	 * Upgrade URL .pl.
+	 * Upgrade URLs.
 	 *
-	 * @var string
+	 * @var array
 	 */
-	protected $upgrade_url_pl = 'https://www.wpdesk.pl';
-
-	/**
-	 * Upgrade URL .net.
-	 *
-	 * @var string
-	 */
-	protected $upgrade_url_net = 'https://www.wpdesk.net';
+	private $upgrade_urls = array(
+		'pl'  => 'https://www.wpdesk.pl',
+		'net' => 'https://www.wpdesk.net',
+		'fs'  => 'https://flexibleshipping.com',
+	);
 
 	/**
 	 * Updater.
@@ -287,8 +284,8 @@ class WPDesk_Helper extends \WPDesk\PluginBuilder\Plugin\AbstractPlugin {
 	 * @throws Exception
 	 */
 	public function wpdesk_api_get_plugins() {
-		if ( get_locale() != 'pl_PL' ) {
-			$this->upgrade_url = $this->upgrade_url_net;
+		if ( 'pl_PL' !== get_locale() ) {
+			$this->upgrade_url = $this->upgrade_urls['net'];
 		}
 		$transient_name = 'wpdesk_api_response' . get_locale();
 		$ret            = get_transient( $transient_name );
@@ -354,6 +351,18 @@ class WPDesk_Helper extends \WPDesk\PluginBuilder\Plugin\AbstractPlugin {
 		include 'views/wpdesk-page.php';
 	}
 
+	/**
+     * Activate license.
+     *
+	 * @param array  $plugin Plugin data.
+     * @param string $activation_email Activation email.
+     * @param string $api_key Api key.
+	 */
+	private function activate_license( array $plugin, $activation_email, $api_key ) {
+	    $activator = new WPDesk_Helper_License_Activator( $plugin, $this->upgrade_urls );
+	    $activator->activate_license( $activation_email, $api_key );
+    }
+
 	public function wpdesk_licenses() {
 		global $wpdesk_helper_plugins;
 		if ( ! isset( $wpdesk_helper_plugins ) ) {
@@ -371,133 +380,8 @@ class WPDesk_Helper extends \WPDesk\PluginBuilder\Plugin\AbstractPlugin {
 				if ( $_POST['action'] == 'activate' ) {
 					$activation_email = $_POST['activation_email'];
 					$api_key          = $_POST['api_key'];
-					$args             = [
-						'email'       => $activation_email,
-						'licence_key' => $api_key,
-					];
-
-					$plugin['api_manager']->upgrade_url = $this->upgrade_url_pl;
-					$activate_results                   = json_decode( $plugin['api_manager']->key()->activate( $args ),
-						true );
-					$activated                          = false;
-					if ( $activate_results['activated'] === true ) {
-						add_settings_error( 'activate_text', 'activate_msg',
-							__( 'Plugin activated. ', 'wpdesk-helper' ) . "{$activate_results['message']}.",
-							'updated' );
-						update_option( $plugin['api_manager']->activated_key, 'Activated' );
-
-						$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = $api_key;
-						$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = $activation_email;
-						update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-						$activated = true;
-						update_option( $plugin['api_manager']->upgrade_url_key,
-							$plugin['api_manager']->upgrade_url );
-					} else {
-						$this->upgrade_url                  = $this->upgrade_url_net;
-						$plugin['api_manager']->upgrade_url = $this->upgrade_url_net;
-
-						$activate_results = json_decode( $plugin['api_manager']->key()->activate( $args ), true );
-						if ( $activate_results['activated'] === true ) {
-							add_settings_error( 'activate_text', 'activate_msg',
-								__( 'Plugin activated. ', 'wpdesk-helper' ) . "{$activate_results['message']}.",
-								'updated' );
-							update_option( $plugin['api_manager']->activated_key, 'Activated' );
-
-							$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = $api_key;
-							$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = $activation_email;
-							update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-							$activated = true;
-							update_option( $plugin['api_manager']->upgrade_url_key,
-								$plugin['api_manager']->upgrade_url );
-						}
-					}
-
-					if ( $activate_results == false ) {
-						add_settings_error( 'api_key_check_text', 'api_key_check_error',
-							__( 'Connection failed to the License Key API server. Try again later.',
-								'wpdesk-helper' ), 'error' );
-						$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-						$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-						update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-						update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-					}
-
-					if ( ! $activated && isset( $activate_results['code'] ) ) {
-
-						if ( ! isset( $activate_results['additional info'] ) ) {
-							$activate_results['additional info'] = '';
-						}
-
-						switch ( $activate_results['code'] ) {
-							case '100':
-								add_settings_error( 'api_email_text', 'api_email_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-							case '101':
-								add_settings_error( 'api_key_text', 'api_key_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-							case '102':
-								add_settings_error( 'api_key_purchase_incomplete_text',
-									'api_key_purchase_incomplete_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-							case '103':
-								add_settings_error( 'api_key_exceeded_text', 'api_key_exceeded_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['a_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]        = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-							case '104':
-								add_settings_error( 'api_key_not_activated_text', 'api_key_not_activated_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-							case '105':
-								add_settings_error( 'api_key_invalid_text', 'api_key_invalid_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-							case '106':
-								add_settings_error( 'sub_not_active_text', 'sub_not_active_error',
-									"{$activate_results['error']}. {$activate_results['additional info']}",
-									'error' );
-								$plugin['api_manager']->options[ $plugin['api_manager']->activation_email ] = '';
-								$plugin['api_manager']->options[ $plugin['api_manager']->api_key ]          = '';
-								update_option( $plugin['api_manager']->data_key, $plugin['api_manager']->options );
-								update_option( $plugin['api_manager']->activated_key, 'Deactivated' );
-								break;
-						}
-					}
-
+				    $this->activate_license( $plugin, $activation_email, $api_key );
 					$this->init_helper_plugins();
-
 				}
 
 				if ( $_POST['action'] == 'deactivate' ) {

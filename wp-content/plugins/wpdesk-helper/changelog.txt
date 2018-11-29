@@ -1,5 +1,9 @@
 *** WP Desk Helper Changelog ***
 
+1.6.0 - 2018-11-29
+* Added flexibleshipping.com as licence server
+* Fixed opt-in on plugin activation
+
 1.5.0 - 2018-11-15
 * Added filter wpdesk_helper_show_log_notices
 * Added improvements to libraries
@@ -7,6 +11,7 @@
 1.4.5 - 2018-10-16
 * Added support for WooCommerce 3.5
 * Dropped support for WooCommerce 3.0 and older (the plugin may still work with older versions but we do not declare official support)
+
 
 1.4.4 - 2018-07-02
 * Fixed error with conflict in tracker

@@ -41,9 +41,29 @@
 		</div>
 		<div class="col-md-4 single-body-right">
 			<div class="single-body-right-content">
-				
-			</div>
+				<?php if( get_field('page_sidebar_heading') || get_field('page_sidebar_text') ): ?>
+				<div class="sidebar">
+					<div class="sidebar-inner">
+						<div class="exhibition-sidebar-content sidebar-content sidebar-box">
+							<?php if( get_field('page_sidebar_heading') ): ?>
+								<h4 class="bold sidebar-heading">
+									<?php the_field('page_sidebar_heading'); ?>
+								</h4>
+							<?php endif; ?>
+							<?php if( get_field('page_sidebar_text') ): ?>
+								<h4 class="sidebar-text">
+									<?php the_field('page_sidebar_text'); ?>
+								</h4>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+			<?php $link = get_field('page_sidebar_link'); ?>
+			<?php if( $link ): ?>
+				<a class="button button-full" href="<?php echo $link['url']; ?>" target="<?php echo $link['target']; ?>">
+					<?php echo $link['title']; ?>
+				</a>
+			<?php endif; ?>
 		</div>
-	</div>
-</div>
-</section>
+	</section>

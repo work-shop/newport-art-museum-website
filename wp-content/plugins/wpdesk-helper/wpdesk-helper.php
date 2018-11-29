@@ -3,7 +3,7 @@
 	Plugin Name: WP Desk Helper
 	Plugin URI: https://www.wpdesk.net/
 	Description: Enables WP Desk plugin activation and updates.
-	Version: 1.5.0
+	Version: 1.6.0
 	Author: WP Desk
 	Text Domain: wpdesk-helper
 	Domain Path: /lang/
@@ -24,7 +24,7 @@ if ( ! class_exists( 'WPDesk_Basic_Requirement_Checker' ) ) {
 }
 
 /* THESE TWO VARIABLES CAN BE CHANGED AUTOMATICALLY */
-$plugin_version           = '1.5.0';
+$plugin_version           = '1.6.0';
 $plugin_release_timestamp = '2018-06-11';
 
 $plugin_name        = 'WP Desk Helper';
@@ -59,4 +59,50 @@ if ( $requirements_checker->are_requirements_met() ) {
 	require_once dirname( __FILE__ ) . '/plugin-load.php';
 } else {
 	$requirements_checker->disable_plugin_render_notice();
+}
+
+if ( ! function_exists( 'should_enable_wpdesk_tracker' ) ) {
+	/**
+	 * Should enable WPDesk Tracker.
+	 *
+	 * @return bool
+	 */
+	function should_enable_wpdesk_tracker() {
+		$tracker_enabled = true;
+		if ( ! empty( $_SERVER['SERVER_ADDR'] ) && $_SERVER['SERVER_ADDR'] == '127.0.0.1' ) {
+			$tracker_enabled = false;
+		}
+		return apply_filters( 'wpdesk_tracker_enabled', $tracker_enabled );
+	}
+}
+
+
+if ( ! function_exists( 'wpdesk_helper_activated_plugin' ) ) {
+	/**
+	 * Activated plugin.
+	 *
+	 * @param string $plugin Plugin slug.
+	 * @param bool   $network_wide Network wide.
+	 */
+	function wpdesk_helper_activated_plugin( $plugin, $network_wide ) {
+		if ( should_enable_wpdesk_tracker() && ! apply_filters( 'wpdesk_tracker_do_not_ask', false ) ) {
+			if ( 'wpdesk-helper/wpdesk-helper.php' === $plugin ) {
+				$options = get_option( 'wpdesk_helper_options', [] );
+				if ( empty( $options ) ) {
+					$options = [];
+				}
+				if ( empty( $options['wpdesk_tracker_agree'] ) ) {
+					$options['wpdesk_tracker_agree'] = '1.6.0';
+				}
+				$wpdesk_tracker_skip_plugin = get_option( 'wpdesk_tracker_skip_wpdesk_helper', '0' );
+				if ( '0' === $options['wpdesk_tracker_agree'] && '0' === $wpdesk_tracker_skip_plugin ) {
+					update_option( 'wpdesk_tracker_notice', '1' );
+					update_option( 'wpdesk_tracker_skip_wpdesk_helper', '1' );
+					wp_safe_redirect( admin_url( 'admin.php?page=wpdesk_tracker&plugin=wpdesk-helper/wpdesk-helper.php' ) );
+					exit;
+				}
+			}
+		}
+	}
+	add_action( 'activated_plugin', 'wpdesk_helper_activated_plugin', 10, 2 );
 }

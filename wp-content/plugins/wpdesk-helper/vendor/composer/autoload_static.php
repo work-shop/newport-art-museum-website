@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit9d03a1060711b4284ca720f3630330f0
+class ComposerStaticInit4430e601b5f01d7068401d7f21b4159e
 {
     public static $files = array (
         'cb883ac9840733a88fe8e977664ea0ea' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/functions.php',
@@ -48,6 +48,7 @@ class ComposerStaticInit9d03a1060711b4284ca720f3630330f0
         'Psr\\Log\\NullLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/NullLogger.php',
         'Psr\\Log\\Test\\DummyTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
         'Psr\\Log\\Test\\LoggerInterfaceTest' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/LoggerInterfaceTest.php',
+        'Psr\\Log\\Test\\TestLogger' => __DIR__ . '/..' . '/psr/log/Psr/Log/Test/TestLogger.php',
         'WPDesk\\Notice\\AjaxHandler' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/AjaxHandler.php',
         'WPDesk\\Notice\\Factory' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/Factory.php',
         'WPDesk\\Notice\\Notice' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/Notice/Notice.php',
@@ -74,6 +75,7 @@ class ComposerStaticInit9d03a1060711b4284ca720f3630330f0
         'WPDesk_API_Password_Management' => __DIR__ . '/../..' . '/classes/class-wc-api-manager-passwords.php',
         'WPDesk_Helper' => __DIR__ . '/../..' . '/classes/class-helper.php',
         'WPDesk_Helper_Debug_Log' => __DIR__ . '/../..' . '/classes/class-wpdesk-helper-debug-log.php',
+        'WPDesk_Helper_License_Activator' => __DIR__ . '/../..' . '/classes/class-wpdesk-helper-license-activator.php',
         'WPDesk_Helper_List_Table' => __DIR__ . '/../..' . '/classes/class-wpdesk-helper-list-table.php',
         'WPDesk_Logger' => __DIR__ . '/../..' . '/inc/wpdesk-logger.php',
         'WPDesk_Logger_Factory' => __DIR__ . '/../..' . '/inc/wpdesk-logger-factory.php',
@@ -111,9 +113,9 @@ class ComposerStaticInit9d03a1060711b4284ca720f3630330f0
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit9d03a1060711b4284ca720f3630330f0::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit9d03a1060711b4284ca720f3630330f0::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit9d03a1060711b4284ca720f3630330f0::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit4430e601b5f01d7068401d7f21b4159e::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit4430e601b5f01d7068401d7f21b4159e::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit4430e601b5f01d7068401d7f21b4159e::$classMap;
 
         }, null, ClassLoader::class);
     }

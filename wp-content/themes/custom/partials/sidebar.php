@@ -2,11 +2,13 @@
     <div class="sidebar-inner">
         <form class="cart" action="/support" method="post" enctype='multipart/form-data'>
             <div class="contact-sidebar-content sidebar-content sidebar-box">
-                <h4 class="bold sidebar-heading">
-                    <?php the_field('page_sidebar_heading'); ?>
-                </h4>
+                <?php if( get_field('page_sidebar_heading') ): ?>
+                    <h4 class="bold sidebar-heading">
+                        <?php the_field('page_sidebar_heading'); ?>
+                    </h4>
+                <?php endif; ?>
+                <?php //donation page ?>
                 <?php if( is_page('66') ): ?>
-
                     <?php
                     $the_query = new WP_Query( array(
                         'post_type' => 'donation-tiers',
@@ -27,16 +29,13 @@
                             $product_id = get_field('managed_field_related_post', $id)[0];
                             $name_your_price = get_field('name_your_price_product', $id);
                             ?>
-                            
                             <?php if ( $name_your_price) :
-
                                 $name_your_price_id = $product_id->ID;
                                 $min_price = get_field('minimum_price', $id);
                                 $show_min_price = false;
                                 $suggested_price = get_field('suggested_price', $id);
                                 ob_start();
                                 ?>
-
                                 <?php // this is the NYP input for the Name Your Price product. All values are currently hardcoded. ?>
                                 <div class="nyp hidden" id="nyp-fields" data-price="<?php echo $suggested_price; ?>" data-minimum-error="Please enter at least <?php echo $min_price; ?>." data-hide-minimum="1" data-hide-minimum-error="Please enter a higher amount." data-max-price="" data-maximum-error="Please enter less than or equal to %%MAXIMUM%%." data-min-price="<?php echo $min_price; ?>">
                                     <input id="nyp" name="nyp" type="text" value="<?php echo $suggested_price ?>" title="nyp" class="input-text amount nyp-input text" placeholder="Enter an amount to donate" />
@@ -45,7 +44,6 @@
                                     <?php endif; ?>
                                 </div>
                                 <?php $name_your_price_html = ob_get_clean(); ?>
-
                                 <?php elseif ( $product_id) : ?>
                                     <?php 
                                     if( $countSet ===  false ): 
@@ -67,14 +65,10 @@
                                         $<?php echo $current_price; ?>
                                     </button>
                                     <?php $donation_tiers_html .= ob_get_clean(); ?>
-
                                 <?php endif; ?>
                                 <?php $count++; ?>
-
                             <?php endwhile; //have posts ?>
-
                             <?php wp_reset_postdata(); ?>
-
                             <div class="support-sidebar-donation-tiers">
                                 <?php echo $donation_tiers_html; ?>
                                 <button class="button-donation-tier button-donation-toggle">Other Amount</button>
@@ -85,12 +79,14 @@
                             <?php echo $name_your_price_html; ?>
                         </div>
                     <?php endif; ?>
-                    <h4 class="sidebar-text">
-                        <?php the_field('page_sidebar_text'); ?>
-                    </h4>
+                    <?php //endif donation page ?>
+                    <?php if( get_field('page_sidebar_text')): ?>
+                        <h4 class="sidebar-text">
+                            <?php the_field('page_sidebar_text'); ?>
+                        </h4>
+                    <?php endif; ?>
                 </div>
                 <?php if( is_page('66') ): ?>
-
                     <?php // This is the submit button for the write-in donation field ?>
                     <button type="submit" name="add-to-cart" id="nyp-button" value="<?php echo $name_your_price_id; ?>" class="single_add_to_cart_button button-full button alt hidden">Donate</button>
 
