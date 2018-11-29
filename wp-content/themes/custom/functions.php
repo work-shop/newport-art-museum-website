@@ -164,4 +164,27 @@ function action_woocommerce_reset_password( $user ) {
 };
 add_action( 'woocommerce_customer_reset_password', 'action_woocommerce_reset_password', 10, 1 );
 
+
+/*
+* Add columns to events post list
+*/
+function add_acf_columns ( $columns ) {
+	return array_merge ( $columns, array ( 
+		'event_date' => __ ( 'Event Date' )
+	) );
+}
+add_filter ( 'manage_events_posts_columns', 'add_acf_columns' );
+
+/*
+* Add column content to events post list
+*/
+function event_custom_column ( $column, $post_id ) {
+	switch ( $column ) {
+		case 'event_date':
+		the_field('event_date',$post_id);
+		break;
+	}
+}
+add_action ( 'manage_events_posts_custom_column', 'event_custom_column', 10, 2 );
+
 ?>
