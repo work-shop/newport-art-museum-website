@@ -59,6 +59,8 @@ class NAM_Fee extends NAM_Shadowed_Post_Type {
      */
     public static function get_product_categories( $post_id ) {
 
+        return array( self::$plural_name );
+
     }
 
 }
