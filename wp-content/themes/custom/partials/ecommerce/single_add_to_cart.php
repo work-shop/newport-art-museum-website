@@ -146,10 +146,10 @@ do_action('woocommerce_before_add_to_cart_form');
                   <div class="col add-to-cart-quantity">
                     <?php
                         woocommerce_quantity_input(array(
-                          'min_value' => 0,
+                          'min_value' => count( $purchase_options ) > 1 ? 0 : 1,
                           'max_value' => apply_filters('woocommerce_quantity_input_max', $product->get_max_purchase_quantity(), $product),
                           'input_value' => isset($_POST['quantity']) ? wc_stock_amount($_POST['quantity']) : $product->get_min_purchase_quantity(),
-                        ));                                          
+                        ));
                     ?>
                   </div>
                   <input type="hidden" name="variation_id" value="<?php echo $purchase_option['id'] ?>" />
