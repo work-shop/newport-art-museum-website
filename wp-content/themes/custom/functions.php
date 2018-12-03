@@ -195,16 +195,16 @@ add_action ( 'manage_events_posts_custom_column', 'event_custom_column', 10, 2 )
 
 
 //add custom column headers to CSV export
-// function wc_csv_export_modify_column_headers( $column_headers ) { 
+function wc_csv_export_modify_column_headers( $column_headers ) { 
 
-// 	$new_headers = array(
-// 		'item_category' => 'item_category'
-// 		// add other column headers here in the format column_key => Column Name
-// 	);
+	$new_headers = array(
+		'item_category' => 'item_category'
+		// add other column headers here in the format column_key => Column Name
+	);
 
-// 	return array_merge( $column_headers, $new_headers );
-// }
-// add_filter( 'wc_customer_order_csv_export_order_headers', 'wc_csv_export_modify_column_headers' );
+	return array_merge( $column_headers, $new_headers );
+}
+add_filter( 'wc_customer_order_csv_export_order_headers', 'wc_csv_export_modify_column_headers' );
 
 
 
