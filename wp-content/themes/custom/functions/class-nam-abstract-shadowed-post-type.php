@@ -128,6 +128,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 				if ($duplicate) {
 
 					delete_field(static::$field_keys['managed_field_related_post'], $post_id);
+                    static::delete_event_variation_ids( $post_id );
 					static::create_shadowing_product($post_id, $updated_post);
 
 				} else {
@@ -167,7 +168,6 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 		$result = update_field(static::$field_keys['managed_field_related_post'], array($product_id), (int) $post_id);
 
-		//throw new Exception('Testing Product Updating');
 	}
 
 	/**
@@ -354,6 +354,26 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 		return ($fees && count($fees) > 0) ? $fees : false;
 
 	}
+
+    /**
+     * Delete the existing variation_ids from a duplicated
+     * post to ensure that new variations are created for this
+     * product.
+     *
+     * @param int $post_id the id of the post to remove meta for.
+     */
+    public static function delete_event_variation_ids( $post_id ) {
+        if ( 'events' != static::$slug ) { return; }
+
+        $ticket_levels = get_field(static::$field_keys['ticket_levels'], $post_id);
+
+        foreach ( $ticket_levels as $i => $ticket_level ) {
+
+            delete_sub_field( array( 'ticket_levels', ($i + 1),  'ticket_level_variation_id' ), $post_id );
+
+        }
+
+    }
 
 	/**
 	 * Create the relevant metadata required to create
