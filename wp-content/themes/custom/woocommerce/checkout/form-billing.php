@@ -32,7 +32,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 		<?php $nam_cart_total = $woocommerce->cart->get_cart_total(); ?>
 		<?php if($nam_cart_total > 0): ?>
 			<h3>Billing Details</h3>
-			<?php else; ?>
+			<?php else: ?>
 			<h3>Contact Details</h3>
 		<?php endif; ?>
 
