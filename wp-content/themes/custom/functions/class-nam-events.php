@@ -33,11 +33,12 @@ class NAM_Events {
                     'term' => $ticket_level_term,
                     'price' => $variation->get_price(),
                     'in_stock' => $variation->is_in_stock(),
-                    'max_qty' => $variation->get_stock_quantity(),
+                    'max_qty' => ( $product->is_sold_individually() ) ? 1 : $variation->get_stock_quantity(),
                     'min_qty' => 1,
                     'id' => $variation->get_id(),
                     'product_id' => $product->get_id(),
-                    'membership_discount' => (double) $discount
+                    'membership_discount' => (double) $discount,
+                    'sold_individually' => $product->is_sold_individually()
                 );
 
             }
