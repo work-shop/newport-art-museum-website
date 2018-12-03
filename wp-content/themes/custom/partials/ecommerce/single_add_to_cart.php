@@ -65,11 +65,6 @@ do_action('woocommerce_before_add_to_cart_form');
             <?php endif;?>
           </h5>
         </div>
-        <div class="col hidden">
-          <h5 class="add-to-cart-label righted">
-            Quantity
-          </h5>
-        </div>
       </div>
       <div class="row add-to-cart-price">
         <div class="col">
@@ -90,7 +85,6 @@ do_action('woocommerce_before_add_to_cart_form');
             }
             ?>
             <?php //MEMBER PRICE ?>
-            <?php // NOTE: Issue is Here. $current_price > 0 ?>
             <?php if ($is_member_or_has_membership_in_cart && $current_price > 0): ?>
               <div class="row">
                 <div class="class-price-col-first">
