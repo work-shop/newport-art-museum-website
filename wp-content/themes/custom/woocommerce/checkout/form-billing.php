@@ -29,6 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<h3><?php _e( 'Billing &amp; Shipping', 'woocommerce' ); ?></h3>
 
 	<?php else : ?>
+		<?php global $woocommerce; ?>
 		<?php $nam_cart_total = $woocommerce->cart->get_cart_total(); ?>
 		<?php if($nam_cart_total > 0): ?>
 			<h3>Billing Details</h3>
