@@ -84,6 +84,16 @@ do_action('woocommerce_before_add_to_cart_form');
               $membership_discount = NAM_Membership::get_membership_discount($purchase_option->id);
             }
             ?>
+            <?php //NO DISCOUNT ?>
+            <?php if( $membership_discount == 0 ): ?>
+            <div class="row">
+              <div class="col">
+                <p class="no-discount-price m0">
+                  <?php echo wc_price($current_price); ?> Per person
+                </p>
+              </div>
+            </div>                
+          <?php else: //membership discount exists on product ?>
             <?php //MEMBER PRICE ?>
             <?php if ($is_member_or_has_membership_in_cart && $current_price > 0): ?>
               <div class="row">
@@ -100,32 +110,32 @@ do_action('woocommerce_before_add_to_cart_form');
                   <?php if( $is_events ): ?>
                     <p class="mt1 mb0 price-discount-label">
                       <span class="faded bold">Your membership entitles you to<br>
-                      <?php echo $membership_discount_multiplier; ?> discounted ticket<?php if($membership_discount_multiplier > 1):?>s<?php endif; ?></span>
-                    </p>
-                  <?php endif; ?>
-                </div>
-              </div>
-              <?php //NON MEMBER PRICE ?>
-              <?php elseif ($current_price > 0): ?>
-                <div class="row class-price-row mb1">
-                  <div class="class-price-col-first">
-                    <span class="icon" data-icon="%"></span>
-                  </div>
-                  <div class="class-price-col-second">
-                    <h5 class="bold m0 price-discount-label">
-                      Non-member price
-                    </h5>
-                    <p class="non-members-price m0">
-                      <?php echo wc_price($current_price); ?> Per person
-                    </p>
+                        <?php echo $membership_discount_multiplier; ?> discounted ticket<?php if($membership_discount_multiplier > 1):?>s<?php endif; ?></span>
+                      </p>
+                    <?php endif; ?>
                   </div>
                 </div>
-                <?php //removed member price row from here ?>
-                <?php else: ?>
-                  <p>
-                    Free
-                  </p>
-                <?php endif;?>
+                <?php //NON MEMBER PRICE ?>
+                <?php elseif ($current_price > 0): ?>
+                  <div class="row class-price-row mb1">
+                    <div class="class-price-col-first">
+                      <span class="icon" data-icon="%"></span>
+                    </div>
+                    <div class="class-price-col-second">
+                      <h5 class="bold m0 price-discount-label">
+                        Non-member price
+                      </h5>
+                      <p class="non-members-price m0">
+                        <?php echo wc_price($current_price); ?> Per person
+                      </p>
+                    </div>
+                  </div>
+                  <?php else: ?>
+                    <p>
+                      Free
+                    </p>
+                  <?php endif; //member or non member price?>
+                <?php endif; //discount or no discount ?>
               </div><!-- .price-->
             </div><!-- .col -->
             <?php if ($is_events): ?>
@@ -153,7 +163,7 @@ do_action('woocommerce_before_add_to_cart_form');
               <?php endif;?>
               <?php do_action('woocommerce_after_add_to_cart_quantity');?>
               <?php //moved member price row to here ?>
-              <?php if (!$is_member_or_has_membership_in_cart && $current_price > 0): ?>
+              <?php if (!$is_member_or_has_membership_in_cart && $current_price > 0 && $membership_discount > 0): ?>
                 <div class="col-12 member-price-col">
                   <a class="h5 bold price-discount-label modal-toggle" href="#" id="member-price-info" data-modal-target="modal-member-price-info">
                     <span class="faded bold">Member price <?php echo wc_price($current_price - $membership_discount); ?> Per person</span><span class="icon" data-icon="?"></span>
@@ -174,11 +184,11 @@ do_action('woocommerce_before_add_to_cart_form');
                      <p class="mb0">
                        <?php echo wc_price($fee_product->get_price()); ?> <?php echo $fee_product->name; ?> Per person
                      </p>
-                   <?php endforeach;?>
+                   <?php endforeach; ?>
                  </div>
                </div>
-             <?php endif;?>
-           <?php endif;?>
+             <?php endif; ?>
+           <?php endif; ?>
            <?php if ($is_classes): ?>
             <div class="row add-to-cart-limit">
               <div class="col-12">
@@ -201,7 +211,7 @@ do_action('woocommerce_before_add_to_cart_form');
         <?php endif;?>
         <?php do_action('woocommerce_after_add_to_cart_button');?>
       </form>
-    <?php }?>
+    <?php } ?>
     <?php if ($is_events): ?>
       <button type="submit" name="add-to-cart" value="<?php echo esc_attr($product->get_id()); ?>" class="events_add_to_cart_button single_add_to_cart_button button-full button alt">
         <?php echo esc_html($product->single_add_to_cart_text()); ?>
@@ -211,4 +221,3 @@ do_action('woocommerce_before_add_to_cart_form');
 
   <?php endif;?>
   <?php do_action('woocommerce_after_add_to_cart_form');?>
-  
