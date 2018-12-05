@@ -19,6 +19,9 @@
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
+
+do_action( 'woocommerce_before_cart' );
+
 ?>
 
 <?php if(false): ?>
@@ -26,12 +29,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<div class="notice woocommerce-error notice-membership-double-check">
 		<h4 class="bold">You're about to purchase a *new* membership. Would you like to renew your membership instead? &nbsp; <a href="/renew-your-membership" class="button button-brand">Renew Membership</a></h4>
 	</div>
-	<?php endif; ?>
-	<?php if( is_user_logged_in() && NAM_Membership::is_member() ): ?>
-	<div class="notice woocommerce-error notice-membership-double-check">
-		<h4 class="bold">You're about to purchase a *new* membership. Would you like to renew your membership instead? &nbsp; <a href="/my-account/subscriptions" class="modal-toggle button button-brand" data-modal-target="modal-login-ajax">Renew Membership</a></h4>
-	</div>
-	<?php endif; ?>
+<?php endif; ?>
+<?php if( is_user_logged_in() && NAM_Membership::is_member() ): ?>
+<div class="notice woocommerce-error notice-membership-double-check">
+	<h4 class="bold">You're about to purchase a *new* membership. Would you like to renew your membership instead? &nbsp; <a href="/my-account/subscriptions" class="modal-toggle button button-brand" data-modal-target="modal-login-ajax">Renew Membership</a></h4>
+</div>
+<?php endif; ?>
 <?php endif; ?>
 
 
@@ -69,12 +72,13 @@ wc_print_notices();
 		<?php
 		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ):
 			$user_eligible_for_discount = true;
-	else:
-		$user_eligible_for_discount = false;
-	endif;
-	?>
+		else:
+			$user_eligible_for_discount = false;
+		endif;
+		?>
 
-	<?php foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ):
+	<?php 
+	foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ):
 	$_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 	$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
@@ -90,12 +94,11 @@ wc_print_notices();
 		<?php $product_has_discount = $discount > 0; ?>
 		<?php //var_dump( $cart_item ); ?>
 
-		<?php //echo $discount; ?>
-		<?php //echo $product_has_discount; ?>
-		<?php //echo $user_eligible_for_discount; ?>
-
 		<div class="row cart-row woocommerce-cart-form__cart-item <?php if( $product_has_discount ): echo ' has-discount '; if( $user_eligible_for_discount ): echo ' discounted '; else: echo ' not-discounted '; endif; endif; ?> <?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>" data-discount="<?php echo $discount; ?>">
 			<div class="product-name col-4 col-md-6" data-title="<?php esc_attr_e( 'Product', 'woocommerce' ); ?>">
+
+				<?php do_action( 'woocommerce_after_cart_item_name', $cart_item, $cart_item_key ); ?>
+
 				<?php
 					//if ( ! $product_permalink ) {
 				echo apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;';
@@ -155,7 +158,6 @@ wc_print_notices();
 
 <?php if ( wc_coupons_enabled() ) { ?>
 	<div class="row cart-discount cart-row coupon bg-light">
-
 		<div class="col-md-6">
 			<h4 class="bold">
 				Have a Discount Code?
@@ -179,10 +181,9 @@ wc_print_notices();
 
 <?php do_action( 'woocommerce_cart_actions' ); ?>
 
-<?php wp_nonce_field( 'woocommerce-cart' ); ?>
-</div>
-
+<?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce'  ); ?>
 <?php do_action( 'woocommerce_after_cart_contents' ); ?>
+</div>
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 </form>
 
