@@ -24,7 +24,12 @@ do_action( 'woocommerce_before_cart' );
 
 ?>
 
-<?php if(false): ?>
+
+<!-- <div class="woocommerce-notices-wrapper"></div> -->
+
+<form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
+
+	<?php if(false): ?>
 	<?php if( !is_user_logged_in() && NAM_Membership::has_membership_in_cart() ): ?>
 	<div class="notice woocommerce-error notice-membership-double-check">
 		<h4 class="bold">You're about to purchase a *new* membership. Would you like to renew your membership instead? &nbsp; <a href="/renew-your-membership" class="button button-brand">Renew Membership</a></h4>
@@ -37,33 +42,26 @@ do_action( 'woocommerce_before_cart' );
 <?php endif; ?>
 <?php endif; ?>
 
+	<div class="woocommerce-cart-form__contents">
 
-<?php
-wc_print_notices();
-?>
+		<?php do_action( 'woocommerce_before_cart_table' ); ?>
 
-<form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
-
-	<?php do_action( 'woocommerce_before_cart_table' ); ?>
-
-	<div class="row cart-headings">
-		<div class="col-4 col-md-6">
-			<h4 class="bold cart-heading">Product</h4>
+		<div class="row cart-headings">
+			<div class="col-4 col-md-6">
+				<h4 class="bold cart-heading">Product</h4>
+			</div>
+			<div class="col">
+				<h4 class="bold cart-heading">Price</h4>
+			</div>
+			<div class="col">
+				<h4 class="bold cart-heading">Quantity</h4>
+			</div>
+			<div class="col">
+				<h4 class="bold cart-heading righted">Total</h4>
+			</div>
+			<div class="col-1 product-remove-heading">
+			</div>
 		</div>
-		<div class="col">
-			<h4 class="bold cart-heading">Price</h4>
-		</div>
-		<div class="col">
-			<h4 class="bold cart-heading">Quantity</h4>
-		</div>
-		<div class="col">
-			<h4 class="bold cart-heading righted">Total</h4>
-		</div>
-		<div class="col-1 product-remove-heading">
-		</div>
-	</div>
-
-	<div class="cart-contents">
 
 		<?php do_action( 'woocommerce_before_cart_contents' ); ?>
 
@@ -72,14 +70,14 @@ wc_print_notices();
 		<?php
 		if( NAM_Membership::is_member() || NAM_Membership::has_membership_in_cart() ):
 			$user_eligible_for_discount = true;
-		else:
-			$user_eligible_for_discount = false;
-		endif;
-		?>
+	else:
+		$user_eligible_for_discount = false;
+	endif;
+	?>
 
 	<?php 
 	foreach ( WC()->cart->get_cart() as $cart_item_key => $cart_item ):
-	$_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
+		$_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
 	$product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
 	if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) :
@@ -152,8 +150,6 @@ wc_print_notices();
 <?php endif; ?>
 <?php endforeach; ?>
 
-</div>
-
 <?php do_action( 'woocommerce_cart_contents' ); ?>
 
 <?php if ( wc_coupons_enabled() ) { ?>
@@ -168,7 +164,6 @@ wc_print_notices();
 			<input type="submit" class="button button-small ml3" name="apply_coupon" value="<?php esc_attr_e( 'Apply Discount', 'woocommerce' ); ?>" />
 		</div>
 		<?php do_action( 'woocommerce_cart_coupon' ); ?>
-
 	</div>
 <?php } ?>
 <div class="row cart-update">
@@ -183,6 +178,7 @@ wc_print_notices();
 
 <?php wp_nonce_field( 'woocommerce-cart', 'woocommerce-cart-nonce'  ); ?>
 <?php do_action( 'woocommerce_after_cart_contents' ); ?>
+
 </div>
 <?php do_action( 'woocommerce_after_cart_table' ); ?>
 </form>

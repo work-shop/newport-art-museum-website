@@ -240,6 +240,7 @@ input,textarea,select{
 
 .notice{
 	background: transparentize($message,.9);
+	border-radius: 4px;
 	border-bottom: 3px solid $brand;
 	padding: 1em 20px 0.5em 20px;
 	@extend .shadowed;

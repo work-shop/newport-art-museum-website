@@ -27,9 +27,9 @@ if ( !NAM_Events::save_notices() ) { wc_print_notices(); }
  */
 ?>
 
-<div class="notice woocommerce-message">
+
 	<?php do_action( 'woocommerce_cart_is_empty' ); ?>
-</div>
+
 
 <?php if ( wc_get_page_id( 'shop' ) > 0 ) : ?>
 
