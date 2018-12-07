@@ -13,16 +13,16 @@ source ./.env
 #scp -P $KINSTA_PORT -r ./uploads $KINSTA_USER@$KINSTA_IP:./public/wp-content/
 
 # Theme Uploads is on the following line
-scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes
-scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins/wc-product-customer-list-premium $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/plugins
+#scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes
+#scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins/wc-product-customer-list-premium $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/plugins
 #scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions/post-types/classes/class-nam-class.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/functions/post-types/classes/
 
 # WP ALL IMPORT image files is on the following line
 # scp -P $KINSTA_PORT -r ./wp-content/uploads/wpallimport/files $KINSTA_USER@$KINSTA_IP:./public/wp-content/uploads/wpallimport/
 
 # Plugin Uploads are on the following two lines
-#scp -P $KINSTA_PORT -r ./wp-content/plugins $KINSTA_USER@$KINSTA_IP:./public/wp-content/
-#scp -P $KINSTA_PORT -r ./wp-content/mu-plugins $KINSTA_USER@$KINSTA_IP:./public/wp-content/
+scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
+scp -P $KINSTA_STAGING_PORT -r ./wp-content/mu-plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
 
 
 
