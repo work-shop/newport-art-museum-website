@@ -57,7 +57,7 @@ $membership = NAM_Membership::get_membership_for_subscription( $subscription );
 	<table class="shop_table subscription_details mb4">
 		<tr>
 			<td class="bold"><?php esc_html_e( 'Status', 'woocommerce-subscriptions' ); ?></td>
-			<td><?php echo esc_html( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?></td>
+			<td><?php $status = wcs_get_subscription_status_name( $subscription->get_status() ); ?><?php if ( $status === 'On hold'): echo 'Expired'; else: echo $status; endif; ?></td>
 		</tr>
 		<?php //temporarily hiding start date ?>
 		<?php if( false ): ?> 

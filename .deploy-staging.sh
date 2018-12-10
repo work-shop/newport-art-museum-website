@@ -4,29 +4,24 @@
 
 source ./.env
 
-#SED_REPLACE="s_//localhost:3000_//precollege.wsri.host_g ; s_//localhost:3001_//precollege.wsri.host_g ; s_//localhost:8080_//precollege.wsri.host_g"
-
-#docker cp $DOCKER_WORDPRESS_CONTAINER:/var/www/html/wp-content/uploads ./dist/wp-content
-#docker exec $DOCKER_DATABASE_CONTAINER mysqldump -u$WORDPRESS_DB_USER -p$WORDPRESS_DB_PASSWORD $WORDPRESS_DB_NAME | sed -e "$SED_REPLACE" > ./dist/migration.sql
-
-# Files, Images Uploads is on the following line
+# Uploads
 #scp -P $KINSTA_PORT -r ./uploads $KINSTA_USER@$KINSTA_IP:./public/wp-content/
 
-# Theme Uploads is on the following line
+# Theme Uploads
 #scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes
+
+# Plugins and must use plugins
+#scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
+#scp -P $KINSTA_STAGING_PORT -r ./wp-content/mu-plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
+
+#specific plugins
 #scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins/wc-product-customer-list-premium $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/plugins
+
+#specific files
 #scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions/post-types/classes/class-nam-class.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/functions/post-types/classes/
 
-# WP ALL IMPORT image files is on the following line
-# scp -P $KINSTA_PORT -r ./wp-content/uploads/wpallimport/files $KINSTA_USER@$KINSTA_IP:./public/wp-content/uploads/wpallimport/
-
-# Plugin Uploads are on the following two lines
-scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
-scp -P $KINSTA_STAGING_PORT -r ./wp-content/mu-plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
-
-
-
-
+#functions.php
+scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/
 
 #scp -r ./dist/wp-content/uploads root@$DROPLET_IP:/var/www/html/wp-content/
 #scp ./dist/migration.sql root@$DROPLET_IP:/root

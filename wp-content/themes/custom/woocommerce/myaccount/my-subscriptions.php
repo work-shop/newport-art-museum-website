@@ -63,7 +63,9 @@ $user_was_imported = NAM_Membership::user_was_imported();
 							<?php do_action( 'woocommerce_my_subscriptions_after_subscription_id', $subscription ); ?>
 						</td>
 						<td class="subscription-status order-status" data-title="<?php esc_attr_e( 'Status', 'woocommerce-subscriptions' ); ?>">
-							<?php echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
+							<?php $status = wcs_get_subscription_status_name( $subscription->get_status() ); ?>
+							<?php if ( $status === 'On hold'): echo 'Expired'; else: echo $status; endif; ?>
+							<?php //echo esc_attr( wcs_get_subscription_status_name( $subscription->get_status() ) ); ?>
 						</td>
 						<td class="subscription-next-payment order-date" data-title="<?php echo esc_attr_x( 'Next Payment', 'table heading', 'woocommerce-subscriptions' ); ?>">
 							<?php if( $membership_name == 'Lifetime Membership' ): ?>

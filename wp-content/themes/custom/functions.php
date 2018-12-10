@@ -259,14 +259,14 @@ function sv_wc_csv_export_add_category_to_line_item( $line_item, $item, $product
 			$new_item_data['item_category'] = $product_category;
 
 			if( $order->status === 'processing' ){ //this evaluates properly, but I can't set status in next line
-				$new_item_data['status'] = 'Paid';
-			}
-			
+			$new_item_data['status'] = 'Paid';
 		}
 
 	}
 
-	return $new_item_data;
+}
+
+return $new_item_data;
 }
 add_filter( 'wc_customer_order_csv_export_order_line_item', 'sv_wc_csv_export_add_category_to_line_item', 10, 4 );
 
@@ -317,6 +317,75 @@ function sv_wc_csv_export_is_one_row( $csv_generator ) {
 
 endif;
 
+
+
+add_action( 'profile_update', 'profile_update_notification', 10, 2 );
+
+function profile_update_notification( $user_id, $old_user_data ) {
+
+	$user = get_user_by('id', $user_id);
+
+	if ( ! empty( $user ) ) {
+		
+		$old_first_name = $old_user_data->first_name;
+		$old_last_name = $old_user_data->last_name;
+		$old_email = $old_user_data->user_email;
+
+		$old = '';
+		$old .= get_user_meta( $user_id, 'billing_first_name', true );
+		$old .= ' ';
+		$old .= get_user_meta( $user_id, 'billing_last_name', true );
+		$old .= '<br>';
+		$old .= $old_email;
+		$old .= '<br>';
+
+		$new_first_name = $user->first_name;
+		$new_last_name = $user->last_name;
+		$new_email = $user->user_email;
+
+		$new = '';
+		$new .= $new_first_name;
+		$new .= ' ';
+		$new .= $new_last_name;
+		$new .= '<br>';
+		$new .= $new_email;
+		// $new .= '<br>';
+		// $new .= get_user_meta( $user_id, 'billing_company', true );
+		// $new .= '<br>';
+		// $new .= get_user_meta( $user_id, 'billing_address_1', true );
+		// $new .= '<br>';
+		// $new .= get_user_meta( $user_id, 'billing_address_2', true );
+		// $new .= '<br>';
+		// $new .= get_user_meta( $user_id, 'billing_city', true );
+		// $new .= '<br>';
+		// $new .= get_user_meta( $user_id, 'billing_state', true );
+		// $new .= ', ';
+		// $new .= get_user_meta( $user_id, 'billing_postcode', true );
+		// $new .= '<br>';
+		// $new .= get_user_meta( $user_id, 'billing_country', true );
+
+		$body = $new_first_name . ' ' . $new_last_name . ' just changed their account details on newportartmuseum.org'
+		. '<br><br>' 
+		. '<strong>OLD account details:</strong>' 
+		. '<br>' 
+		. $old
+		. '<br><br>'
+		. '<strong>NEW account details:</strong>' 
+		. '<br>' 
+		. $new
+		. '<br><br>' 
+		. 'Their billing address may have changed.' 
+		. '<br><br>' 
+		. 'View their account details <a href="https://newportartmuseum.org/wp-admin/user-edit.php?user_id=' . $user_id . '">here</a>.';
+
+		$to = 'hello@newportartmuseum.org';
+		$subject = $new_first_name . ' ' . $new_last_name . ' updated account details on newportartmuseum.org';
+		$headers = array('Content-Type: text/html; charset=UTF-8');
+
+		wp_mail( $to, $subject, $body, $headers );
+	}
+
+}
 
 
 
