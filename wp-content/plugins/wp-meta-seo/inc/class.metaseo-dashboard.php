@@ -52,21 +52,20 @@ class MetaSeoDashboard
         // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Variable has been prepare
         $posts = $wpdb->get_results('SELECT ID,post_content FROM ' . $wpdb->posts . ' WHERE ' . implode(' AND ', $where) . ' ORDER BY ID');
         if (count($posts) > 0) {
-            $doc = new DOMDocument();
-            libxml_use_internal_errors(true);
             $upload_dir = wp_upload_dir();
-
             foreach ($posts as $post) {
                 $meta_analysis = get_post_meta($post->ID, 'wpms_validate_analysis', true);
                 if (empty($meta_analysis)) {
                     $meta_analysis = array();
                 }
 
-                $doc->loadHTML($post->post_content);
-                $tags = $doc->getElementsByTagName('img');
-                foreach ($tags as $tag) {
-                    $img_src = $tag->getAttribute('src');
+                $img_tags = wpmsExtractTags($post->post_content, 'img', true, true);
+                foreach ($img_tags as $tag) {
+                    if (empty($tag['attributes']['src'])) {
+                        continue;
+                    }
 
+                    $img_src = $tag['attributes']['src'];
                     if (!preg_match('/\.(jpg|png|gif)$/i', $img_src, $matches)) {
                         continue;
                     }
@@ -76,8 +75,15 @@ class MetaSeoDashboard
                         continue;
                     }
 
-                    $width  = $tag->getAttribute('width');
-                    $height = $tag->getAttribute('height');
+                    $attrs = array('width', 'height', 'alt');
+                    foreach ($attrs as $attr) {
+                        if (empty($tag['attributes'][$attr])) {
+                            ${$attr}  = false;
+                        } else {
+                            ${$attr}  = $tag['attributes'][$attr];
+                        }
+                    }
+
                     if (list($real_width, $real_height) = getimagesize($img_path)) {
                         $ratio_origin = $real_width / $real_height;
                         //Check if img tag is missing with/height attribute value or not
@@ -95,7 +101,7 @@ class MetaSeoDashboard
                             $imgs_are_good ++;
                         }
 
-                        if (trim($tag->getAttribute('alt'))
+                        if ($alt && trim($alt)
                             || (!empty($meta_analysis) && !empty($meta_analysis['imgalt']))) {
                             $imgs_metas_are_good['alt'] ++;
                         }
@@ -592,8 +598,6 @@ class MetaSeoDashboard
             $offset
         )));
         if (count($posts) > 0) {
-            $doc = new DOMDocument();
-            libxml_use_internal_errors(true);
             $upload_dir = wp_upload_dir();
 
             foreach ($posts as $post) {
@@ -601,12 +605,14 @@ class MetaSeoDashboard
                 if (empty($meta_analysis)) {
                     $meta_analysis = array();
                 }
-                // load dom html
-                $doc->loadHTML($post->post_content);
-                $tags = $doc->getElementsByTagName('img');
-                foreach ($tags as $tag) {
-                    $img_src = $tag->getAttribute('src');
 
+                $img_tags = wpmsExtractTags($post->post_content, 'img', true, true);
+                foreach ($img_tags as $tag) {
+                    if (empty($tag['attributes']['src'])) {
+                        continue;
+                    }
+
+                    $img_src = $tag['attributes']['src'];
                     if (!preg_match('/\.(jpg|png|gif)$/i', $img_src, $matches)) {
                         continue;
                     }
@@ -616,8 +622,16 @@ class MetaSeoDashboard
                         continue;
                     }
 
-                    $width  = $tag->getAttribute('width');
-                    $height = $tag->getAttribute('height');
+                    $width = false;
+                    $height = false;
+                    if (isset($tag['attributes']['width'])) {
+                        $width = $tag['attributes']['width'];
+                    }
+
+                    if (isset($tag['attributes']['height'])) {
+                        $height = $tag['attributes']['height'];
+                    }
+
                     if (list($real_width, $real_height) = getimagesize($img_path)) {
                         $ratio_origin = $real_width / $real_height;
                         //Check if img tag is missing with/height attribute value or not
@@ -635,7 +649,7 @@ class MetaSeoDashboard
                             $imgs_are_good ++;
                         }
                         foreach ($meta_keys as $meta_key) {
-                            if (trim($tag->getAttribute($meta_key))
+                            if (isset($tag['attributes'][$meta_key])
                                 || (!empty($meta_analysis) && !empty($meta_analysis['imgalt']))) {
                                 $imgs_metas_are_good[$meta_key] ++;
                             }

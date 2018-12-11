@@ -376,11 +376,10 @@ foreach ( $plugin->sections as $section ) {
 
 													<?php if ( $is_custom_field ): ?>
 														<?php do_action( 'flexible_checkout_fields_settings_html', $key, $name, $settings ); ?>
-                                                        <div>
+                                                        <div class="field_type">
                                                             <label for="type_<?php echo $name ?>"><?php _e( 'Field Type', 'flexible-checkout-fields' ) ?></label>
 
-                                                            <select <?php /* id="woocommerce_checkout_fields_field_type" */ ?>
-                                                                    id="field_type_<?php echo $name ?>"
+                                                            <select class="field_type" id="field_type_<?php echo $name ?>"
                                                                     name="inspire_checkout_fields[settings][<?php echo $key ?>][<?php echo $name ?>][type]"
                                                                     disabled
                                                                     data-qa-id="field-type"
@@ -439,7 +438,7 @@ foreach ( $plugin->sections as $section ) {
                                                             />
                                                         </div>
 													<?php endif; ?>
-                                                    <div>
+                                                    <div class="field-class">
                                                         <label for="class_<?php echo $name ?>"><?php _e( 'CSS Class', 'flexible-checkout-fields' ) ?></label>
                                                         <input class="field_class" type="text" id="class_<?php echo $name ?>"
                                                                name="inspire_checkout_fields[settings][<?php echo $key ?>][<?php echo $name ?>][class]"
@@ -450,6 +449,9 @@ foreach ( $plugin->sections as $section ) {
                                                                data-qa-id="field-class"
                                                         />
                                                     </div>
+
+													<?php do_action( 'flexible_checkout_fields_setting_appearance_html', $key, $name, $settings ); ?>
+
                                                 </div>
 
 
@@ -695,9 +697,9 @@ foreach ( $plugin->sections as $section ) {
 
                 <?php do_action( 'flexible_checkout_fields_settings_js_html' ); ?>
 
-                html += '<div>';
+                html += '<div class="field_type">';
                 html += '<label for="type_' + field_slug + '"><?php _e( 'Field Type', 'flexible-checkout-fields' ) ?></label>';
-                html += '<select id="woocommerce_checkout_fields_field_type" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][type]" disabled data-qa-id="field-type">' + printSelectTypeOptions(field_type) + '</select>';
+                html += '<select class="field_type" id="field_type_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][type]" disabled data-qa-id="field-type">' + printSelectTypeOptions(field_type) + '</select>';
                 html += '</div>';
 
                 html += '</div>';
@@ -707,7 +709,7 @@ foreach ( $plugin->sections as $section ) {
                 html += '<label for="placeholder_' + field_slug + '"><?php _e( 'Placeholder', 'flexible-checkout-fields' ) ?></label>';
                 html += '<input class="field_placeholder" type="text" id="placeholder_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][placeholder]" value="" data-qa-id="field-placeholder" />';
                 html += '</div>';
-                html += '<div>';
+                html += '<div class="field-class">';
                 html += '<label for="class_' + field_slug + '"><?php _e( 'CSS Class', 'flexible-checkout-fields' ) ?></label>';
                 html += '<input class="field_class" type="text" id="class_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][class]" value="" data-qa-id="field-class" />';
                 html += '</div>';

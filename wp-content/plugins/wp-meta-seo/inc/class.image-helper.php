@@ -168,32 +168,36 @@ class ImageHelper
     public static function IScan($content, $imgs = array())
     {
         $ifound = array();
-        $doc    = new DOMDocument();
-        libxml_use_internal_errors(true);
-        $doc->loadHtml($content);
-        $tags = $doc->getElementsByTagName('img');
-
+        $img_tags = wpmsExtractTags($content, 'img', true, true);
         //For standard images names, convert spaces to -
         $_imgs = array();
         foreach ($imgs as $iname => $iid) {
             $iname         = preg_replace('/(\s{1,})/', '-', $iname);
             $_imgs[$iname] = $iid;
         }
-        if ($tags->length > 0) {
-            foreach ($tags as $order => $tag) {
+        if (!empty($img_tags)) {
+            foreach ($img_tags as $order => $tag) {
                 // only find img tag have source
-                $obj = $tag->getAttribute('src');
-                if ($obj === '') {
+                $attrs = array('src', 'width', 'height', 'alt');
+                foreach ($attrs as $attr) {
+                    if (empty($tag['attributes'][$attr])) {
+                        ${$attr}  = false;
+                    } else {
+                        ${$attr}  = $tag['attributes'][$attr];
+                    }
+                }
+
+                if (!$src) {
                     continue;
                 }
-                $img_name = self::IHasClone(array_keys($_imgs), $obj);
+                $img_name = self::IHasClone(array_keys($_imgs), $src);
                 if ($img_name) {
                     if (!empty($_imgs[$img_name])) {
                         $ifound[$order]['id']     = $_imgs[$img_name];
-                        $ifound[$order]['src']    = $obj;
-                        $ifound[$order]['width']  = $tag->getAttribute('width');
-                        $ifound[$order]['height'] = $tag->getAttribute('height');
-                        $ifound[$order]['alt']    = trim($tag->getAttribute('alt'));
+                        $ifound[$order]['src']    = $src;
+                        $ifound[$order]['width']  = $width;
+                        $ifound[$order]['height'] = $height;
+                        $ifound[$order]['alt']    = trim($alt);
                     } else {
                         continue;
                     }

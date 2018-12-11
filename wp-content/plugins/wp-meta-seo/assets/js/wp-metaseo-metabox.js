@@ -289,7 +289,7 @@ var replacedVars = [];  // jshint ignore:line
 var wpmsdivtitle = '';
 jQuery(document).ready(function ($) {
     // title
-    if (wpmseoMetaboxL10n.plugin_active.indexOf('gutenberg.php') !== -1 && typeof wp.blocks !== "undefined") {
+    if (typeof wp.blocks !== "undefined") {
         wpmsdivtitle = '.editor-post-title__input';
     } else {
         wpmsdivtitle = '#title';

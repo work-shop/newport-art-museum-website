@@ -26,7 +26,7 @@ $authUrl = $client->createAuthUrl();
     <input type="hidden" name="wpms_save_step" value="1"/>
     <div class="wizard-header">
         <div class="title font-size-35"><?php esc_html_e('Google Analytics', 'wp-meta-seo'); ?></div>
-        <p class="description"><?php esc_html_e('Enable Google Analytics tracking and reports using a Google Analytics direct connection. It require a Google Analytics account creation first', 'wp-meta-seo') ?></p>
+        <p class="ju-description"><?php esc_html_e('Enable Google Analytics tracking and reports using a Google Analytics direct connection. It require a Google Analytics account creation first', 'wp-meta-seo') ?></p>
         <a target="_blank" href="<?php echo esc_url($authUrl) ?>"
            class="ju-button orange-button no-background generate-access-code m-tb-20"><?php esc_html_e('Generate access code', 'wp-meta-seo'); ?></a>
     </div>

@@ -124,7 +124,7 @@ class MetaSeoAdmin
         add_action('edited_category', array($this, 'saveCategoryMeta'), 10, 2);
         add_action('create_category', array($this, 'saveCategoryMeta'), 10, 2);
         add_action('post_updated', array('MetaSeoImageListTable', 'updatePost'), 10, 3);
-        add_action('delete_post', array('MetaSeoImageListTable', 'deleteAttachment'));
+        add_action('delete_post', array('MetaSeoImageListTable', 'deletePost'));
 
         if (is_plugin_active(WPMSEO_ADDON_FILENAME)) {
             add_action('product_cat_add_form_fields', array($this, 'categoryField'));
@@ -133,6 +133,7 @@ class MetaSeoAdmin
             add_action('edit_term', array($this, 'saveCategoryMeta'), 10, 3);
         }
         add_action('wp_ajax_wpms', array($this, 'startProcess'));
+        add_filter('wpms_the_content', array($this, 'wpmsTheContent'), 10, 2);
     }
 
     /**
@@ -816,6 +817,31 @@ class MetaSeoAdmin
     }
 
     /**
+     * Get content
+     *
+     * @param string  $content Post content
+     * @param integer $post_id Post ID
+     *
+     * @return string
+     */
+    public function wpmsTheContent($content, $post_id)
+    {
+        $content = apply_filters(
+            'the_content',
+            $content,
+            $post_id
+        );
+
+        if (is_plugin_active('oxygen/functions.php')) {
+            $shortcodes = get_post_meta($post_id, 'ct_builder_shortcodes', true);
+            $cf = do_shortcode($shortcodes);
+            $content = $content.$cf;
+        }
+
+        return $content;
+    }
+
+    /**
      * Ajax load page analysis
      *
      * @return void
@@ -868,7 +894,14 @@ class MetaSeoAdmin
 
         $content = apply_filters(
             'the_content',
-            '<div>' . html_entity_decode(stripcslashes($_POST['datas']['content'])) . '</div>'
+            '<div>' . html_entity_decode(stripcslashes($content)) . '</div>',
+            $post_id
+        );
+
+        $content = apply_filters(
+            'wpms_the_content',
+            '<div>' . html_entity_decode(stripcslashes($_POST['datas']['content'])) . '</div>',
+            $_POST['datas']['post_id']
         );
 
         if (isset($_POST['datas']['first_load']) && !empty($meta_analysis) && !empty($meta_analysis['heading_title'])) {
@@ -890,155 +923,144 @@ class MetaSeoAdmin
                     0
                 );
             } else {
-                $dom = new DOMDocument;
-                libxml_use_internal_errors(true);
-                if ($dom->loadHTML($content)) {
-                    // Extracting the specified elements from the web page
-                    $tags_h1 = $dom->getElementsByTagName('h1');
-                    $tags_h2 = $dom->getElementsByTagName('h2');
-                    $tags_h3 = $dom->getElementsByTagName('h3');
-                    $tags_h4 = $dom->getElementsByTagName('h4');
-                    $tags_h5 = $dom->getElementsByTagName('h5');
-                    $tags_h6 = $dom->getElementsByTagName('h6');
+                // Extracting the specified elements from the web page
+                $tags_h1 = wpmsExtractTags($content, 'h1', false, true);
+                $tags_h2 = wpmsExtractTags($content, 'h2', false, true);
+                $tags_h3 = wpmsExtractTags($content, 'h3', false, true);
+                $tags_h4 = wpmsExtractTags($content, 'h4', false, true);
+                $tags_h5 = wpmsExtractTags($content, 'h5', false, true);
+                $tags_h6 = wpmsExtractTags($content, 'h6', false, true);
 
+                $test = false;
+                if (empty($tags_h1) && empty($tags_h2) && empty($tags_h3)
+                    && empty($tags_h4) && empty($tags_h5) && empty($tags_h6)) {
                     $test = false;
-                    if (empty($tags_h1) && empty($tags_h2) && empty($tags_h3)
-                        && empty($tags_h4) && empty($tags_h5) && empty($tags_h6)) {
-                        $test = false;
-                    } else {
-                        // check tag h1
-                        if (!empty($tags_h1)) {
-                            foreach ($tags_h1 as $order => $tagh1) {
-                                $words_tagh1 = preg_split(
-                                    '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
-                                    utf8_decode(strtolower($tagh1->nodeValue)),
-                                    - 1,
-                                    PREG_SPLIT_NO_EMPTY
-                                );
-                                if (is_array($words_tagh1) && is_array($words_post_title)) {
-                                    foreach ($words_tagh1 as $mh) {
-                                        if (in_array($mh, $words_post_title) && $mh !== '') {
-                                            $test = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                } else {
+                    // check tag h1
+                    if (!empty($tags_h1)) {
+                        foreach ($tags_h1 as $order => $tagh1) {
+                            $words_tagh1 = preg_split(
+                                '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
+                                utf8_decode(strtolower($tagh1['contents'])),
+                                - 1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
 
-                        // check tag h2
-                        if (!empty($tags_h2)) {
-                            foreach ($tags_h2 as $order => $tagh2) {
-                                $words_tagh2 = preg_split(
-                                    '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
-                                    utf8_decode(strtolower($tagh2->nodeValue)),
-                                    - 1,
-                                    PREG_SPLIT_NO_EMPTY
-                                );
-                                if (is_array($words_tagh2) && is_array($words_post_title)) {
-                                    foreach ($words_tagh2 as $mh) {
-                                        if (in_array($mh, $words_post_title) && $mh !== '') {
-                                            $test = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // check tag h3
-                        if (!empty($tags_h3)) {
-                            foreach ($tags_h3 as $order => $tagh3) {
-                                $words_tagh3 = preg_split(
-                                    '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
-                                    utf8_decode(strtolower($tagh3->nodeValue)),
-                                    - 1,
-                                    PREG_SPLIT_NO_EMPTY
-                                );
-                                if (is_array($words_tagh3) && is_array($words_post_title)) {
-                                    foreach ($words_tagh3 as $mh) {
-                                        if (in_array($mh, $words_post_title) && $mh !== '') {
-                                            $test = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // check tag h4
-                        if (!empty($tags_h4)) {
-                            foreach ($tags_h4 as $order => $tagh4) {
-                                $words_tagh4 = preg_split(
-                                    '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
-                                    utf8_decode(strtolower($tagh4->nodeValue)),
-                                    - 1,
-                                    PREG_SPLIT_NO_EMPTY
-                                );
-                                if (is_array($words_tagh4) && is_array($words_post_title)) {
-                                    foreach ($words_tagh4 as $mh) {
-                                        if (in_array($mh, $words_post_title) && $mh !== '') {
-                                            $test = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // check tag h5
-                        if (!empty($tags_h5)) {
-                            foreach ($tags_h5 as $order => $tagh5) {
-                                $words_tagh5 = preg_split(
-                                    '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
-                                    utf8_decode(strtolower($tagh5->nodeValue)),
-                                    - 1,
-                                    PREG_SPLIT_NO_EMPTY
-                                );
-                                if (is_array($words_tagh5) && is_array($words_post_title)) {
-                                    foreach ($words_tagh5 as $mh) {
-                                        if (in_array($mh, $words_post_title) && $mh !== '') {
-                                            $test = true;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-                        // check tag h6
-                        if (!empty($tags_h6)) {
-                            foreach ($tags_h6 as $order => $tagh6) {
-                                $words_tagh6 = preg_split(
-                                    '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
-                                    utf8_decode(strtolower($tagh6->nodeValue)),
-                                    - 1,
-                                    PREG_SPLIT_NO_EMPTY
-                                );
-                                if (is_array($words_tagh6) && is_array($words_post_title)) {
-                                    foreach ($words_tagh6 as $mh) {
-                                        if (in_array($mh, $words_post_title) && $mh !== '') {
-                                            $test = true;
-                                        }
+                            if (is_array($words_tagh1) && is_array($words_post_title)) {
+                                foreach ($words_tagh1 as $mh) {
+                                    if (in_array($mh, $words_post_title) && $mh !== '') {
+                                        $test = true;
                                     }
                                 }
                             }
                         }
                     }
 
-                    if ($test) {
-                        $output .= $this->createFieldAnalysis(
-                            'heading_title',
-                            $tooltip_page['title_in_heading'],
-                            'done',
-                            esc_html__('Page title word in content heading', 'wp-meta-seo'),
-                            1
-                        );
-                        $check ++;
-                    } else {
-                        $output .= $this->createFieldAnalysis(
-                            'heading_title',
-                            $tooltip_page['title_in_heading'],
-                            'warning',
-                            esc_html__('Page title word in content heading', 'wp-meta-seo'),
-                            0
-                        );
+                    // check tag h2
+                    if (!empty($tags_h2)) {
+                        foreach ($tags_h2 as $order => $tagh2) {
+                            $words_tagh2 = preg_split(
+                                '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
+                                utf8_decode(strtolower($tagh2['contents'])),
+                                - 1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            if (is_array($words_tagh2) && is_array($words_post_title)) {
+                                foreach ($words_tagh2 as $mh) {
+                                    if (in_array($mh, $words_post_title) && $mh !== '') {
+                                        $test = true;
+                                    }
+                                }
+                            }
+                        }
                     }
+
+                    // check tag h3
+                    if (!empty($tags_h3)) {
+                        foreach ($tags_h3 as $order => $tagh3) {
+                            $words_tagh3 = preg_split(
+                                '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
+                                utf8_decode(strtolower($tagh3['contents'])),
+                                - 1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            if (is_array($words_tagh3) && is_array($words_post_title)) {
+                                foreach ($words_tagh3 as $mh) {
+                                    if (in_array($mh, $words_post_title) && $mh !== '') {
+                                        $test = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // check tag h4
+                    if (!empty($tags_h4)) {
+                        foreach ($tags_h4 as $order => $tagh4) {
+                            $words_tagh4 = preg_split(
+                                '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
+                                utf8_decode(strtolower($tagh4['contents'])),
+                                - 1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            if (is_array($words_tagh4) && is_array($words_post_title)) {
+                                foreach ($words_tagh4 as $mh) {
+                                    if (in_array($mh, $words_post_title) && $mh !== '') {
+                                        $test = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // check tag h5
+                    if (!empty($tags_h5)) {
+                        foreach ($tags_h5 as $order => $tagh5) {
+                            $words_tagh5 = preg_split(
+                                '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
+                                utf8_decode(strtolower($tagh5['contents'])),
+                                - 1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            if (is_array($words_tagh5) && is_array($words_post_title)) {
+                                foreach ($words_tagh5 as $mh) {
+                                    if (in_array($mh, $words_post_title) && $mh !== '') {
+                                        $test = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    // check tag h6
+                    if (!empty($tags_h6)) {
+                        foreach ($tags_h6 as $order => $tagh6) {
+                            $words_tagh6 = preg_split(
+                                '/((^\p{P}+)|(\p{P}*\s+\p{P}*)|(\p{P}+$))/',
+                                utf8_decode(strtolower($tagh6['contents'])),
+                                - 1,
+                                PREG_SPLIT_NO_EMPTY
+                            );
+                            if (is_array($words_tagh6) && is_array($words_post_title)) {
+                                foreach ($words_tagh6 as $mh) {
+                                    if (in_array($mh, $words_post_title) && $mh !== '') {
+                                        $test = true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if ($test) {
+                    $output .= $this->createFieldAnalysis(
+                        'heading_title',
+                        $tooltip_page['title_in_heading'],
+                        'done',
+                        esc_html__('Page title word in content heading', 'wp-meta-seo'),
+                        1
+                    );
+                    $check ++;
                 } else {
                     $output .= $this->createFieldAnalysis(
                         'heading_title',
@@ -1228,41 +1250,51 @@ class MetaSeoAdmin
             );
             $check  += 2;
         } else {
-            $dom = new DOMDocument;
-            libxml_use_internal_errors(true);
-            if ($dom->loadHTML($content)) {
-                // Extracting the specified elements from the web page
-                $tags          = $dom->getElementsByTagName('img');
-                $img_wrong     = false;
-                $img_wrong_alt = false;
-                foreach ($tags as $order => $tag) {
-                    $src     = $tag->getAttribute('src');
-                    $imgpath = str_replace(site_url(), ABSPATH, $src);
-                    if (!file_exists($imgpath)) {
-                        continue;
-                    }
-                    if (!list($width_origin, $height_origin) = getimagesize($imgpath)) {
-                        continue;
-                    }
+            // Extracting the specified elements from the web page
+            $img_tags = wpmsExtractTags($content, 'img', true, true);
+            $img_wrong     = false;
+            $img_wrong_alt = false;
+            foreach ($img_tags as $order => $tag) {
+                if (!isset($tag['attributes']['src'])) {
+                    continue;
+                }
 
-                    if ((int) $tag->getAttribute('width') === 0 && (int) $tag->getAttribute('height') === 0) {
-                        $img_wrong = false;
-                    } else {
-                        if (!empty($width_origin) && !empty($height_origin)) {
-                            if (((int) $width_origin !== (int) $tag->getAttribute('width'))
-                                || ((int) $height_origin !== (int) $tag->getAttribute('height'))) {
-                                $img_wrong = true;
-                            }
+                $src = $tag['attributes']['src'];
+                $imgpath = str_replace(site_url(), ABSPATH, $src);
+                if (!file_exists($imgpath)) {
+                    continue;
+                }
+                if (!list($width_origin, $height_origin) = getimagesize($imgpath)) {
+                    continue;
+                }
+
+                if (empty($tag['attributes']['width']) && empty($tag['attributes']['height'])) {
+                    $img_wrong = false;
+                } else {
+                    if (!empty($width_origin) && !empty($height_origin)) {
+                        if (((int) $width_origin !== (int) $tag['attributes']['width'])
+                            || ((int) $height_origin !== (int) $tag['attributes']['height'])) {
+                            $img_wrong = true;
                         }
-                    }
-
-                    $image_alt = $tag->getAttribute('alt');
-                    if ($image_alt === '') {
-                        $img_wrong_alt = true;
                     }
                 }
 
-                if (isset($_POST['datas']['first_load']) && !empty($meta_analysis) && !empty($meta_analysis['imgresize'])) {
+                if (empty($tag['attributes']['alt'])) {
+                    $img_wrong_alt = true;
+                }
+            }
+
+            if (isset($_POST['datas']['first_load']) && !empty($meta_analysis) && !empty($meta_analysis['imgresize'])) {
+                $output .= $this->createFieldAnalysis(
+                    'imgresize',
+                    $tooltip_page['image_resize'],
+                    'done',
+                    esc_html__('Wrong image resize', 'wp-meta-seo'),
+                    1
+                );
+                $check ++;
+            } else {
+                if (!$img_wrong) {
                     $output .= $this->createFieldAnalysis(
                         'imgresize',
                         $tooltip_page['image_resize'],
@@ -1272,27 +1304,27 @@ class MetaSeoAdmin
                     );
                     $check ++;
                 } else {
-                    if (!$img_wrong) {
-                        $output .= $this->createFieldAnalysis(
-                            'imgresize',
-                            $tooltip_page['image_resize'],
-                            'done',
-                            esc_html__('Wrong image resize', 'wp-meta-seo'),
-                            1
-                        );
-                        $check ++;
-                    } else {
-                        $output .= $this->createFieldAnalysis(
-                            'imgresize',
-                            $tooltip_page['image_resize'],
-                            'warning',
-                            esc_html__('Wrong image resize', 'wp-meta-seo'),
-                            0
-                        );
-                    }
+                    $output .= $this->createFieldAnalysis(
+                        'imgresize',
+                        $tooltip_page['image_resize'],
+                        'warning',
+                        esc_html__('Wrong image resize', 'wp-meta-seo'),
+                        0
+                    );
                 }
+            }
 
-                if (isset($_POST['datas']['first_load']) && !empty($meta_analysis) && !empty($meta_analysis['imgalt'])) {
+            if (isset($_POST['datas']['first_load']) && !empty($meta_analysis) && !empty($meta_analysis['imgalt'])) {
+                $output .= $this->createFieldAnalysis(
+                    'imgalt',
+                    $tooltip_page['image_alt'],
+                    'done',
+                    esc_html__('Image have meta alt', 'wp-meta-seo'),
+                    1
+                );
+                $check ++;
+            } else {
+                if (!$img_wrong_alt) {
                     $output .= $this->createFieldAnalysis(
                         'imgalt',
                         $tooltip_page['image_alt'],
@@ -1302,40 +1334,14 @@ class MetaSeoAdmin
                     );
                     $check ++;
                 } else {
-                    if (!$img_wrong_alt) {
-                        $output .= $this->createFieldAnalysis(
-                            'imgalt',
-                            $tooltip_page['image_alt'],
-                            'done',
-                            esc_html__('Image have meta alt', 'wp-meta-seo'),
-                            1
-                        );
-                        $check ++;
-                    } else {
-                        $output .= $this->createFieldAnalysis(
-                            'imgalt',
-                            $tooltip_page['image_alt'],
-                            'warning',
-                            esc_html__('Image have meta alt', 'wp-meta-seo'),
-                            0
-                        );
-                    }
+                    $output .= $this->createFieldAnalysis(
+                        'imgalt',
+                        $tooltip_page['image_alt'],
+                        'warning',
+                        esc_html__('Image have meta alt', 'wp-meta-seo'),
+                        0
+                    );
                 }
-            } else {
-                $output .= $this->createFieldAnalysis(
-                    'imgresize',
-                    $tooltip_page['image_resize'],
-                    'warning',
-                    esc_html__('Wrong image resize', 'wp-meta-seo'),
-                    0
-                );
-                $output .= $this->createFieldAnalysis(
-                    'imgalt',
-                    $tooltip_page['image_alt'],
-                    'warning',
-                    esc_html__('Image have meta alt', 'wp-meta-seo'),
-                    0
-                );
             }
         }
 
@@ -1425,7 +1431,7 @@ class MetaSeoAdmin
         $post = get_post($link_detail->source_id);
         if (!empty($post)) {
             $content = $post->post_content;
-            $links   = MetaSeoBrokenLinkTable::extractTags($post->post_content, 'a', false, true);
+            $links   = wpmsExtractTags($post->post_content, 'a', false, true);
             foreach ($links as $link) {
                 if ($link['contents'] === $link_detail->link_text) {
                     $new_html = '<a';
@@ -1601,7 +1607,7 @@ class MetaSeoAdmin
         }
         global $wpdb;
         $action_name = $_POST['action_name'];
-        $limit        = 20;
+        $limit       = 20;
 
         switch ($action_name) {
             case 'copy_title_selected':
@@ -1609,7 +1615,7 @@ class MetaSeoAdmin
                     wp_send_json(array('status' => true));
                 }
                 foreach ($_POST['linkids'] as $linkId) {
-                    $link = $wpdb->get_row(
+                    $link      = $wpdb->get_row(
                         $wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE id = %d', $linkId)
                     );
                     $link_text = $link->link_text;
@@ -1620,7 +1626,7 @@ class MetaSeoAdmin
 
                 break;
             case 'copy_title_all':
-                $links  = $wpdb->get_results(
+                $links = $wpdb->get_results(
                     'SELECT * FROM ' . $wpdb->prefix . 'wpms_links WHERE type="url"'
                 );
                 foreach ($links as $link) {
@@ -3040,7 +3046,7 @@ class MetaSeoAdmin
                     $local_business_html = apply_filters('wpmsaddon_local_business', '', $local_business, $countrys);
 
                     $default_settings = wpmsGetDefaultSettings();
-                    $settings       = get_option('_metaseo_settings');
+                    $settings         = get_option('_metaseo_settings');
                     if (is_array($settings)) {
                         $settings = array_merge($default_settings, $settings);
                     } else {
@@ -3190,7 +3196,7 @@ class MetaSeoAdmin
                              *
                              * @return string
                              */
-                            $value = apply_filters('wpms_update_image_meta', $value, $attachment->ID, '_wp_attachment_image_alt', array('source'=>'bulk_copy_alt'));
+                            $value = apply_filters('wpms_update_image_meta', $value, $attachment->ID, '_wp_attachment_image_alt', array('source' => 'bulk_copy_alt'));
                             update_post_meta($attachment->ID, '_wp_attachment_image_alt', $value);
                             break;
 
@@ -3208,7 +3214,7 @@ class MetaSeoAdmin
                              *
                              * @ignore Hook already documented
                              */
-                            $value = apply_filters('wpms_update_image_meta', $value, $attachment->ID, 'post_title', array('source'=>'bulk_copy_title'));
+                            $value = apply_filters('wpms_update_image_meta', $value, $attachment->ID, 'post_title', array('source' => 'bulk_copy_title'));
                             wp_update_post(array('ID' => $attachment->ID, 'post_title' => $value));
                             break;
                         case 'img-copy-desc':
@@ -3222,7 +3228,7 @@ class MetaSeoAdmin
         } else {
             // selected
             if (isset($_POST['ids'])) {
-                $ids   = $_POST['ids'];
+                $ids = $_POST['ids'];
                 switch ($_POST['action_name']) {
                     case 'img-copy-alt':
                         $margs = array(
@@ -3237,7 +3243,7 @@ class MetaSeoAdmin
                         if (!empty($mposts_empty_alt)) {
                             foreach ($mposts_empty_alt as $post) {
                                 $i_info_url = pathinfo($post->guid);
-                                $value = $i_info_url['filename'];
+                                $value      = $i_info_url['filename'];
                                 /**
                                  * Filter before update meta for image
                                  *
@@ -3250,7 +3256,7 @@ class MetaSeoAdmin
                                  *
                                  * @ignore Hook already documented
                                  */
-                                $value = apply_filters('wpms_update_image_meta', $value, $post->ID, '_wp_attachment_image_alt', array('source'=>'bulk_copy_alt'));
+                                $value = apply_filters('wpms_update_image_meta', $value, $post->ID, '_wp_attachment_image_alt', array('source' => 'bulk_copy_alt'));
                                 update_post_meta($post->ID, '_wp_attachment_image_alt', $value);
                             }
                         } else {
@@ -3267,7 +3273,7 @@ class MetaSeoAdmin
                         if (!empty($posts_result)) {
                             foreach ($posts_result as $post) {
                                 $i_info_url = pathinfo($post->guid);
-                                $value = $i_info_url['filename'];
+                                $value      = $i_info_url['filename'];
                                 /**
                                  * Filter before update meta for image
                                  *
@@ -3280,7 +3286,7 @@ class MetaSeoAdmin
                                  *
                                  * @ignore Hook already documented
                                  */
-                                $value = apply_filters('wpms_update_image_meta', $value, $post->ID, 'post_title', array('source'=>'bulk_copy_title'));
+                                $value = apply_filters('wpms_update_image_meta', $value, $post->ID, 'post_title', array('source' => 'bulk_copy_title'));
                                 wp_update_post(array('ID' => $post->ID, 'post_title' => $value));
                             }
                         } else {
@@ -3371,7 +3377,7 @@ class MetaSeoAdmin
                  *
                  * @ignore Hook already documented
                  */
-                $value = apply_filters('wpms_update_content_meta', $value, $post->ID, $key, array('source'=>'copy_meta'));
+                $value = apply_filters('wpms_update_content_meta', $value, $post->ID, $key, array('source' => 'copy_meta'));
                 update_post_meta($post->ID, $key, $value);
             }
             wp_send_json(true);

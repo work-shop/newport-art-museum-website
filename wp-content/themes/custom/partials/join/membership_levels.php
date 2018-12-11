@@ -52,11 +52,9 @@
 												<a href="<?php echo $add_to_cart_url; ?>" class="">
 													Purchase New Membership
 												</a>
-												<?php if(false): ?>
-													<a href="/renew-your-membership" class="ml1">
-														Renew Your Membership
-													</a>
-												<?php endif; ?>
+												<a href="/renew-your-membership" class="ml1">
+													Renew Your Membership
+												</a>
 											</div>
 										<?php endif; ?>
 									</div>

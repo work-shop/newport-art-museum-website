@@ -57,7 +57,6 @@
             <?php if ( isset( $settings[$key][$name]['conditional_logic_fields_rules'] ) ) : ?>
                 <?php $count = 0; ?>
                 <?php foreach ( $settings[$key][$name]['conditional_logic_fields_rules'] as $rule ) : ?>
-<?php error_log(print_r($rule,true)); ?>
                     <?php $count++; ?>
                     <div class="rule">
                         <fieldset>

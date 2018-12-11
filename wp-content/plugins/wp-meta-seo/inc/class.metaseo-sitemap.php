@@ -956,9 +956,7 @@ class MetaSeoSitemap
                             $lastmod = $gglstmp_url->appendChild($xml->createElement('lastmod'));
 
                             $now  = $wpdb->get_var(
-                                $wpdb->prepare('SELECT post_modified FROM ' . $wpdb->posts . ', ' . $wpdb->term_relationships . '
- WHERE post_status = %s AND term_taxonomy_id = %d
-  AND $wpdb->posts.ID = $wpdb->term_relationships.object_id ORDER BY post_modified DESC', array(
+                                $wpdb->prepare('SELECT post_modified FROM ' . $wpdb->posts . ', ' . $wpdb->term_relationships . ' WHERE post_status = %s AND term_taxonomy_id = %d AND $wpdb->posts.ID = $wpdb->term_relationships.object_id ORDER BY post_modified DESC', array(
                                     'publish',
                                     $term_value->term_taxonomy_id
                                 ))

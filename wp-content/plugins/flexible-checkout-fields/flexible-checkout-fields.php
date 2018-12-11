@@ -3,15 +3,15 @@
     Plugin Name: Flexible Checkout Fields
     Plugin URI: https://www.wpdesk.net/products/flexible-checkout-fields-pro-woocommerce/
     Description: Manage your WooCommerce checkout fields. Change order, labels, placeholders and add new fields.
-    Version: 1.6.10
+    Version: 1.7
     Author: WP Desk
     Author URI: https://www.wpdesk.net/
     Text Domain: flexible-checkout-fields
     Domain Path: /lang/
 	Requires at least: 4.5
-    Tested up to: 4.9.8
+    Tested up to: 5.0.0
     WC requires at least: 3.1.0
-    WC tested up to: 3.5.0
+    WC tested up to: 3.5.2
 
     Copyright 2017 WP Desk Ltd.
 
@@ -33,7 +33,7 @@
 
     if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-	$plugin_version = '1.6.10';
+	$plugin_version = '1.7';
 	define( 'FLEXIBLE_CHECKOUT_FIELDS_VERSION', $plugin_version );
 
 
@@ -68,7 +68,7 @@
 
     class Flexible_Checkout_Fields_Plugin extends WPDesk_Plugin_1_8 {
 
-        protected $script_version = '1.6.10';
+        protected $script_version = '1.7';
 
         protected $fields = array();
 
@@ -139,6 +139,10 @@
 		    include( 'classes/filed-validation.php' );
 		    $this->field_validation = new Flexible_Checkout_Fields_Field_Validation( $this );
 		    $this->field_validation->hooks();
+
+		    include 'classes/myaccount-filed-processor.php';
+		    $myaccound_fields_processor = new Flexible_Checkout_Fields_Myaccount_Field_Processor( $this );
+		    $myaccound_fields_processor->hooks();
 
         }
 
@@ -257,6 +261,11 @@
                 'name' 					=> __( 'Select (Drop Down)', 'flexible-checkout-fields' ),
                 'pro'                   => true
             );
+
+	        $add_fields['wpdeskmultiselect'] = array(
+		        'name' 					=> __( 'Multi-select', 'flexible-checkout-fields' ),
+		        'pro'                   => true
+	        );
 
             $add_fields['datepicker'] = array(
                 'name' 					=> __( 'Date', 'flexible-checkout-fields' ),
@@ -692,7 +701,7 @@
 
         public function printCheckoutFields( $order, $request_type = null ) {
 
-        	$settings = $this->get_settings();
+        	$settings = $this->getCheckoutFields( $this->get_settings() );
 
             $checkout_field_type = $this->get_fields();
 
@@ -874,7 +883,7 @@
                     if ($save)
                     {
                         if(array_key_exists($key, $keys)){
-                            update_post_meta( $order_id, '_'.$key, esc_attr( $value ) );
+	                        update_post_meta( $order_id, '_' . $key, $value );
                         }
                     }
                 }

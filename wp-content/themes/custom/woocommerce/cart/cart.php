@@ -24,23 +24,24 @@ do_action( 'woocommerce_before_cart' );
 
 ?>
 
-
-<!-- <div class="woocommerce-notices-wrapper"></div> -->
-
-<form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
-
-	<?php if(false): ?>
-	<?php if( !is_user_logged_in() && NAM_Membership::has_membership_in_cart() ): ?>
-	<div class="notice woocommerce-error notice-membership-double-check">
-		<h4 class="bold">You're about to purchase a *new* membership. Would you like to renew your membership instead? &nbsp; <a href="/renew-your-membership" class="button button-brand">Renew Membership</a></h4>
-	</div>
+<?php //if(false): ?>
+<?php if( !is_user_logged_in() && NAM_Membership::has_membership_in_cart() ): ?>
+<div class="notice woocommerce-error notice-membership-double-check">
+	<h4 class="">You're about to purchase a <span class=" bold">new</span> membership. Would you like to renew your membership instead? &nbsp; <a href="/renew-your-membership" class="button button-brand">Renew Membership</a></h4>
+</div>
 <?php endif; ?>
-<?php if( is_user_logged_in() && NAM_Membership::is_member() ): ?>
+<?php if(false): ?>
+<?php if( is_user_logged_in() && NAM_Membership::is_member() && NAM_Membership::has_membership_in_cart() ): ?>
 <div class="notice woocommerce-error notice-membership-double-check">
 	<h4 class="bold">You're about to purchase a *new* membership. Would you like to renew your membership instead? &nbsp; <a href="/my-account/subscriptions" class="modal-toggle button button-brand" data-modal-target="modal-login-ajax">Renew Membership</a></h4>
 </div>
 <?php endif; ?>
 <?php endif; ?>
+<?php //endif; ?>
+
+
+<form class="woocommerce-cart-form" action="<?php echo esc_url( wc_get_cart_url() ); ?>" method="post">
+
 
 	<div class="woocommerce-cart-form__contents">
 

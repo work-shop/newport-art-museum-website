@@ -11,6 +11,7 @@
 					foreach ( $settings[$section_data['section']] as $key => $field ) {
 						if ( $field['visible'] == 0 && empty( $checkout_field_type[$field['type']]['exclude_in_admin'] ) ) {
 							$value = wpdesk_get_order_meta( $order, '_'.$key, true );
+							$value = apply_filters( 'flexible_checkout_fields_print_value', $value, $field );
 							?>
 							<b><?php echo $field['label']; ?>:</b> <?php echo $value; ?><br/>
 							<?php

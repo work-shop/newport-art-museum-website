@@ -131,7 +131,7 @@ $setting_switch_fields = array(
                               title="<?php echo esc_attr($tab['title']) ?>"><?php echo esc_html($tab['title']) ?></span>
                         <?php
                         if ($tab['id'] === 'system_check') {
-                            if (version_compare(PHP_VERSION, '7.2.0', '<') || !in_array('curl', get_loaded_extensions()) || !function_exists('gd_info')) {
+                            if (version_compare(PHP_VERSION, '7.2.0', '<') || !in_array('curl', get_loaded_extensions()) || !extension_loaded('libxml')) {
                                 echo '<i class="material-icons system-checkbox material-icons-menu-alert" style="float: right;vertical-align: text-bottom;">info</i>';
                             }
                         }

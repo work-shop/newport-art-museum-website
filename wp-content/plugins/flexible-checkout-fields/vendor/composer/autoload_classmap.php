@@ -10,6 +10,7 @@ return array(
     'Flexible_Checkout_Fields_Activation_Tracker' => $baseDir . '/classes/activation-tracker.php',
     'Flexible_Checkout_Fields_Disaplay_Options' => $baseDir . '/classes/display-options.php',
     'Flexible_Checkout_Fields_Field_Validation' => $baseDir . '/classes/filed-validation.php',
+    'Flexible_Checkout_Fields_Myaccount_Field_Processor' => $baseDir . '/classes/myaccount-filed-processor.php',
     'Flexible_Checkout_Fields_Settings' => $baseDir . '/classes/settings.php',
     'Flexible_Checkout_Fields_User_Profile' => $baseDir . '/classes/user-profile.php',
     'S214_Sysinfo' => $baseDir . '/classes/wpdesk/settings-api/modules/sysinfo/class.s214-sysinfo.php',

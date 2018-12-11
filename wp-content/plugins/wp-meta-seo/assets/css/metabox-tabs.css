@@ -658,3 +658,16 @@ div.wpmseo-tab-content {
     will-change: left, right;
     background-color: #ff8726;
 }
+
+#wpmseo_meta .description {
+    margin-top: 10px;
+    display: inline-block;
+    width: 100%;
+    font-size: 15px !important;
+    font-weight: normal;
+    font-style: normal !important;
+    font-stretch: normal;
+    line-height: 1.88;
+    letter-spacing: 0.8px;
+    color: #5f879b !important;
+}

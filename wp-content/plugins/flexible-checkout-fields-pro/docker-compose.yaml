@@ -1,0 +1,172 @@
+version: '2.0'
+
+services:
+
+  wordpress:
+    image: wpdesknet/phpunit-woocommerce:0-0
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql0
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql0
+
+  wordpress-0-1:
+    image: wpdesknet/phpunit-woocommerce:0-1
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql1
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql1
+
+  wordpress-0-2:
+    image: wpdesknet/phpunit-woocommerce:0-2
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql2
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql2
+
+  wordpress-0-3:
+    image: wpdesknet/phpunit-woocommerce:0-3
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql3
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql3
+
+  wordpress-0-4:
+    image: wpdesknet/phpunit-woocommerce:0-4
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql4
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql4
+
+  wordpress-0-5:
+    image: wpdesknet/phpunit-woocommerce:0-5
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql5
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql5
+
+  wordpress-1-0:
+    image: wpdesknet/phpunit-woocommerce:1-0
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql0
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql0
+
+  wordpress-2-0:
+    image: wpdesknet/phpunit-woocommerce:2-0
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql0
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql0
+
+  wordpress-3-0:
+    image: wpdesknet/phpunit-woocommerce:3-0
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql0
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql0
+
+  wordpress-4-0:
+    image: wpdesknet/phpunit-woocommerce:4-0
+    volumes:
+    - .././:/opt/project
+    depends_on:
+    - mysql0
+    environment:
+      WORDPRESS_DB_NAME: wptest
+      WORDPRESS_DB_USER: mysql
+      WORDPRESS_DB_PASSWORD: mysql
+      WORDPRESS_DB_HOST: mysql0
+
+  mysql0:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: wptest
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+
+  mysql1:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: wptest
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+
+  mysql2:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: wptest
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+
+  mysql3:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: wptest
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+
+  mysql4:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: wptest
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+
+  mysql5:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql
+      MYSQL_DATABASE: wptest
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: mysql
+

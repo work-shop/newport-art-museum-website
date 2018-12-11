@@ -4,13 +4,14 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7c87f82edda2e923a81038bc0edf2cd2
+class ComposerStaticInit55d83a75a0d27ed703ce6fce7ea38265
 {
     public static $classMap = array (
         'Browser' => __DIR__ . '/../..' . '/classes/wpdesk/settings-api/modules/sysinfo/browser.php',
         'Flexible_Checkout_Fields_Activation_Tracker' => __DIR__ . '/../..' . '/classes/activation-tracker.php',
         'Flexible_Checkout_Fields_Disaplay_Options' => __DIR__ . '/../..' . '/classes/display-options.php',
         'Flexible_Checkout_Fields_Field_Validation' => __DIR__ . '/../..' . '/classes/filed-validation.php',
+        'Flexible_Checkout_Fields_Myaccount_Field_Processor' => __DIR__ . '/../..' . '/classes/myaccount-filed-processor.php',
         'Flexible_Checkout_Fields_Settings' => __DIR__ . '/../..' . '/classes/settings.php',
         'Flexible_Checkout_Fields_User_Profile' => __DIR__ . '/../..' . '/classes/user-profile.php',
         'S214_Sysinfo' => __DIR__ . '/../..' . '/classes/wpdesk/settings-api/modules/sysinfo/class.s214-sysinfo.php',
@@ -52,7 +53,7 @@ class ComposerStaticInit7c87f82edda2e923a81038bc0edf2cd2
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->classMap = ComposerStaticInit7c87f82edda2e923a81038bc0edf2cd2::$classMap;
+            $loader->classMap = ComposerStaticInit55d83a75a0d27ed703ce6fce7ea38265::$classMap;
 
         }, null, ClassLoader::class);
     }
