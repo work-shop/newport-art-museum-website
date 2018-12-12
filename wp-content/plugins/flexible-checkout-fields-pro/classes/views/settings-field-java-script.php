@@ -5,18 +5,6 @@ var fcf_categories = [
 <?php endforeach; ?>
 ];
 
-function fcf_add_select_field_description( field_id ) {
-	jQuery('<p class="description"><?php _e( 'Enter <code>select2</code> to apply styling', 'flexible-checkout-fields-pro'); ?></p>').insertAfter('#' + field_id);
-}
-
-jQuery("input.field_class").each(function( index ) {
-	var field_type = jQuery(this).closest('li').find( 'select.field_type' ).val();
-	if ( field_type === 'select' || field_type === '<?php echo Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type::FIELD_TYPE_MULTISELECT; ?>' ) {
-		fcf_add_select_field_description(jQuery(this).attr('id'));
-	}
-});
-
-
 var fcf_all_field_options = <?php echo json_encode( $flexible_checkout_fields_all_field_options, JSON_FORCE_OBJECT );  ?>;
 var fcf_all_field_values = <?php echo json_encode( $flexible_checkout_fields_all_field_values, JSON_FORCE_OBJECT );  ?>;
 var fcf_all_conditions = <?php echo json_encode( $flexible_checkout_fields_all_conditions );  ?>;

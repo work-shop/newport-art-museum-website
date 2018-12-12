@@ -42,3 +42,4 @@ jQuery.noConflict();
 		
 	}); 
 })(jQuery);
+

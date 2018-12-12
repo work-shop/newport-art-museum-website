@@ -132,7 +132,7 @@ class Flexible_Checkout_Fields_Pro {
 				foreach ( $settings[$section_data['section']] as $key=>$field ) {
 					if ( isset( $_POST[$key]) ) {
 						$value = $_POST[$key];
-						wpdesk_update_order_meta( $order_id, '_'.$key, $value );
+						wpdesk_update_order_meta( $order_id, '_'.$key, esc_attr( $value ) );
 					}
 				}
 			}
@@ -703,22 +703,5 @@ class Flexible_Checkout_Fields_Pro {
         }
 	    return $checkout_fields;
     }
-
-	/**
-	 * Get option as array from string.
-	 *
-	 * @param string $options_as_string Options as string.
-	 *
-	 * @return array
-	 */
-	public function get_options_as_array_from_string( $options_as_string ) {
-		$options = array();
-		$rows    = explode( "\n", $options_as_string );
-		foreach ( $rows as $row ) {
-			$row_option                = explode( ':', $row );
-			$options[ $row_option[0] ] = isset( $row_option[1] ) ? $row_option[1] : $row_option[0];
-		}
-		return $options;
-	}
 
 }

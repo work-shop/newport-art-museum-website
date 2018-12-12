@@ -1,0 +1,415 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-05 07:27+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco - https://localise.biz/"
+
+#: phoen_advance_reporting.php:52
+msgid "Reporting"
+msgstr ""
+
+#: phoen_advance_reporting.php:54
+msgid "Product"
+msgstr ""
+
+#: phoen_advance_reporting.php:56
+msgid "Settings"
+msgstr ""
+
+#: phoen_advance_reporting.php:76
+msgid "<h3>General Settings</h3>"
+msgstr ""
+
+#: phoen_advance_reporting.php:134
+msgid "Simple Instock"
+msgstr ""
+
+#: phoen_advance_reporting.php:136
+msgid "Simple Out Of Stock"
+msgstr ""
+
+#: phoen_advance_reporting.php:138
+msgid "Variable Instock "
+msgstr ""
+
+#: phoen_advance_reporting.php:140
+msgid "Variable Out Of Stock"
+msgstr ""
+
+#: includes/phoen_report_simple.php:42 
+#: includes/phoen_report_simple_outstock.php:18 
+#: includes/phoen_report_van_out_stock.php:18 
+#: includes/phoen_report_product.php:37
+msgid "Search"
+msgstr ""
+
+#: includes/phoen_report_simple.php:48 includes/phoen_report_product.php:43
+msgid "Show Stock Less Than"
+msgstr ""
+
+#: includes/phoen_report_simple.php:51 includes/phoen_report_product.php:47
+msgid "submit"
+msgstr ""
+
+#: includes/phoen_report_simple.php:58 
+#: includes/phoen_report_simple_outstock.php:23 
+#: includes/phoen_report_product.php:55
+msgid "Download csv"
+msgstr ""
+
+#: includes/phoen_report_simple.php:70 
+#: includes/phoen_report_simple_outstock.php:31 
+#: includes/phoen_report_van_out_stock.php:61 
+#: includes/phoen_report_product.php:90
+msgid "Product Name"
+msgstr ""
+
+#: includes/phoen_report_simple.php:71 
+#: includes/phoen_report_simple_outstock.php:32 
+#: includes/phoen_report_van_out_stock.php:62 
+#: includes/phoen_report_product.php:91
+msgid "Sku"
+msgstr ""
+
+#: includes/phoen_report_simple.php:72 
+#: includes/phoen_report_simple_outstock.php:33 
+#: includes/phoen_report_van_out_stock.php:64 
+#: includes/phoen_report_product.php:93
+msgid "Category Name"
+msgstr ""
+
+#: includes/phoen_report_simple.php:73 
+#: includes/phoen_report_simple_outstock.php:34 
+#: includes/phoen_report_van_out_stock.php:63 
+#: includes/phoen_report_product.php:92
+msgid "Units In Stock"
+msgstr ""
+
+#: includes/phoen_report_simple.php:74 
+#: includes/phoen_report_simple_outstock.php:35
+msgid "Stock Status"
+msgstr ""
+
+#: includes/phoen_report_van_out_stock.php:23
+msgid "Download CSV"
+msgstr ""
+
+#: includes/phoen_reporting_settings.php:37
+msgid "Enable Reporting Plugin"
+msgstr ""
+
+#: includes/phoen_reporting_settings.php:52
+msgid "Save changes"
+msgstr ""
+
+#. Name of the plugin
+msgid "Advanced Reporting For Woocommerces Pro"
+msgstr ""
+
+#. Description of the plugin
+msgid "What does your plugin do and what features does it offer..."
+msgstr ""
+
+#. URI of the plugin
+msgid "www.phoeniixx.com"
+msgstr ""
+
+#. Author of the plugin
+msgid "phoeniixx"
+msgstr ""
+
+#. Author URI of the plugin
+msgid "http://www.phoeniixx.com/"
+msgstr ""
+
+msgid "Total Sales"
+msgstr ""
+
+msgid "Total Refund"
+msgstr ""
+
+msgid ""
+"Order Shipping Tax\n"
+msgstr ""
+
+msgid "Total Tax"
+msgstr ""
+
+msgid "Order Shipping Total"
+msgstr ""
+
+msgid "Last Order Date"
+msgstr ""
+
+msgid "Total Coupons"
+msgstr ""
+
+msgid "Total Registered"
+msgstr ""
+
+msgid "Total Guest Customers"
+msgstr ""
+
+msgid "Total Average Gross Monthly Sales "
+msgstr ""
+
+msgid ""
+"Total Average Net Monthly Sales\n"
+msgstr ""
+
+msgid "Total Items Purchased "
+msgstr ""
+
+msgid "Product Summary "
+msgstr ""
+
+msgid "Total Variable Instock "
+msgstr ""
+
+msgid "Total Variable Out Of Stock"
+msgstr ""
+
+msgid "Total Simple Instock"
+msgstr ""
+
+msgid ""
+"Total Simple Out Of Stock\n"
+msgstr ""
+
+msgid "Order Today"
+msgstr ""
+
+msgid "Earnings Today"
+msgstr ""
+
+msgid "New Orders"
+msgstr ""
+
+msgid "Earning"
+msgstr ""
+
+msgid "Last Day"
+msgstr ""
+
+msgid "From"
+msgstr ""
+
+msgid "Sales Order"
+msgstr ""
+
+msgid "Qty"
+msgstr ""
+
+msgid "Amount"
+msgstr ""
+
+msgid "Today"
+msgstr ""
+
+msgid "Yesterday "
+msgstr ""
+
+msgid "Week "
+msgstr ""
+
+msgid "Year "
+msgstr ""
+
+msgid "Top Customer"
+msgstr ""
+
+msgid "Billing Name"
+msgstr ""
+
+msgid "Billing Email"
+msgstr ""
+
+msgid "Payment Method"
+msgstr ""
+
+msgid "Order Count"
+msgstr ""
+
+msgid "Billing Country"
+msgstr ""
+
+msgid "Top Billing State"
+msgstr ""
+
+msgid "Billing State"
+msgstr ""
+
+msgid "Order ID"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "Address"
+msgstr ""
+
+msgid "Phone No"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "Coupan Used"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "Gross Amt"
+msgstr ""
+
+msgid "Top Coupon "
+msgstr ""
+
+msgid "Coupon Code"
+msgstr ""
+
+msgid "Coupon Count"
+msgstr ""
+
+msgid "Unsold Products Detail "
+msgstr ""
+
+msgid "Unit Price"
+msgstr ""
+
+msgid "Total Amount"
+msgstr ""
+
+msgid "Total Simple Out Of Stock"
+msgstr ""
+
+msgid "Today Summary"
+msgstr ""
+
+msgid "Todays Total Sale "
+msgstr ""
+
+msgid "Todays Avg. Sales"
+msgstr ""
+
+msgid "Todays Total Refund "
+msgstr ""
+
+msgid "Todays Order Tax"
+msgstr ""
+
+msgid "Todays Order Shipping Tax"
+msgstr ""
+
+msgid "Todays Total Tax"
+msgstr ""
+
+msgid "Month and Year Summary"
+msgstr ""
+
+msgid "Month Sales "
+msgstr ""
+
+msgid "Avg. Sales/Order "
+msgstr ""
+
+msgid "Avg. Sales/Day "
+msgstr ""
+
+msgid "Year Sales "
+msgstr ""
+
+msgid "Year Avg. Sales/Order"
+msgstr ""
+
+msgid "Year Avg. Sales/Day"
+msgstr ""
+
+msgid "Total Summary"
+msgstr ""
+
+msgid "Totale variabele instock"
+msgstr ""
+
+msgid "Top Payment Gateway"
+msgstr ""
+
+msgid "Summary Of The Year"
+msgstr ""
+
+msgid "Month"
+msgstr ""
+
+msgid "Total Sales Amt"
+msgstr ""
+
+msgid "Total Refund Amt"
+msgstr ""
+
+msgid "Total Discount Amt"
+msgstr ""
+
+msgid "Shipping Order"
+msgstr ""
+
+msgid "Order Tax"
+msgstr ""
+
+msgid "Total Shipping Tax"
+msgstr ""
+
+msgid "Total Tax Amt"
+msgstr ""
+
+msgid "Order Summary"
+msgstr ""
+
+msgid "Sales Order Status"
+msgstr ""
+
+msgid "Top Products"
+msgstr ""
+
+msgid "Top Category"
+msgstr ""
+
+msgid "Top Billing Country"
+msgstr ""
+
+msgid "Recent Orders"
+msgstr ""
+
+msgid "Order Discount Amt"
+msgstr ""
+
+msgid "Shipping Amt"
+msgstr ""
+
+msgid "Shipping Tax Amt"
+msgstr ""
+
+msgid "Order Tax Amt"
+msgstr ""
+
+msgid "Part Refund Amt"
+msgstr ""
+
+msgid "Net Amt"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "To"
+msgstr ""

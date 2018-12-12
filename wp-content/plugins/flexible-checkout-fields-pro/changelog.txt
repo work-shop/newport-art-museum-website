@@ -1,11 +1,5 @@
 *** Flexible Checkout Fields PRO for WooCommerce Changelog ***
 
-1.7.0 - 2018-12-06
-* Added custom fields metabox editor in order edit
-* Added multi-select field type
-* Added select2 default styling
-* Added WP Desk Libraries
-
 1.6.10 - 2018-11-15
 * Fixed unneeded required checkbox on heading field
 

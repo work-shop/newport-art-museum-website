@@ -3,8 +3,8 @@ Contributors: wpdesk
 Donate link: https://www.wpdesk.net/flexible-checkout-fields-woocommerce/
 Tags: woocommerce checkout fields, woocommerce custom fields, woocommerce checkout manager, woocommerce checkout editor, woocommerce fields manager, woocommerce fields editor, woocommerce custom checkout fields, woocommerce checkout options, woocommerce checkout pro, woocommerce custom sections, woocommerce file upload
 Requires at least: 4.5
-Tested up to: 5.0.0
-Stable tag: 1.7
+Tested up to: 4.9.8
+Stable tag: 1.6.10
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -62,7 +62,6 @@ Add new fields to WooCommerce checkout:
 * Checkbox
 * Radio button
 * Select (Drop Down)
-* Multi-select
 * Date
 * Time
 * Color Picker
@@ -119,9 +118,9 @@ This plugin is compatible with variable products.
 
 = WooCommerce Compatibility =
 
-**WooCommerce 3.5 ready!**
+**WooCommerce 3.4 ready!**
 
-Flexible Checkout Fields also plays well with older versions of WooCommerce. We tested the plugin with WooCommerce 3.1.0 and up.
+Flexible Checkout Fields also plays well with older versions of WooCommerce. We tested the plugin with WooCommerce 3.0.0 and up.
 
 = Well Documented =
 
@@ -188,13 +187,9 @@ If you are upgrading from the old WooCommerce Checkout Fields version (1.1, wooc
 
 == Changelog ==
 
-= 1.7.0 - 2018-12-06 =
-* Added required changes for PRO version and multi-select field
-* Added required changes for PRO version and select2 styling
-
 = 1.6.10 - 2018-10-16 =
 * Added support for WooCommerce 3.5
-* Dropped support for WooCommerce 3.0 and older (the plugin may still work with older versions but we do not declare official support)
+* Dropped support for WooCommerce below 3.0 (the plugin may still work with older versions but we do not declare official support)
 
 = 1.6.9 - 2018-09-18 =
 * Fixed edit address pages for WPML Strings

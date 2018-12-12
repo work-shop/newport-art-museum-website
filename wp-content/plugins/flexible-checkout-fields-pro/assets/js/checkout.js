@@ -81,17 +81,5 @@ jQuery(document).ready(function(){
     jQuery( 'body' ).on( 'updated_checkout', function () {
         fcf_fields_conditions();
     });
-
-    function fcf_select2_fields() {
-        if (jQuery.fn.selectWoo) {
-            jQuery('p.select2 select').selectWoo();
-        } else {
-            if (jQuery.fn.select2) {
-                jQuery('p.select2 select').select2();
-            }
-        }
-    }
-
-    fcf_select2_fields();
     fcf_fields_conditions();
 })

@@ -62,41 +62,39 @@ class Flexible_Checkout_Fields_Disaplay_Options {
 		$this->in_email_address = false;
 	}
 
-	/**
-	 * Displays additional fields.
-	 *
-	 * @param int $order_id Order id.
-	 */
 	public function additional_information_fields( $order_id ) {
 
-		$settings = $this->plugin->getCheckoutFields( $this->plugin->get_settings() );
+		$settings = $this->plugin->get_settings();
 
 		$checkout_field_type = $this->plugin->get_fields();
 
-		if ( ! empty( $settings ) && is_array( $settings ) ) {
+		if( !empty( $settings ) && is_array( $settings ) ) {
 			$return = array();
 			foreach ( $settings as $key => $type ) {
-				if ( in_array( $key, array( 'billing', 'shipping' ), true ) ) {
+				if ( in_array( $key, array( 'billing', 'shipping' ) ) ) {
 					continue;
 				}
 				if ( isset( $type ) && is_array( $type ) ) {
 					foreach ( $type as $field ) {
-						if ( isset( $field['visible'] ) && 0 === intval( $field['visible'] ) && isset( $field['custom_field'] ) && 1 === intval( $field['custom_field'] ) ) {
-							$value = wpdesk_get_order_meta( $order_id, '_' . $field['name'], true );
-							if ( $this->is_field_displayable( $field ) && '' !== $value ) {
-								if ( ! empty( $checkout_field_type[ $field['type'] ]['has_options'] ) ) {
-									$options = $field['options'];
-									if ( isset( $options[ $value ] ) ) {
-										$value = $options[ $value ];
+						if ( isset( $field['visible'] ) && $field['visible'] == 0 && isset( $field['custom_field'] ) && $field['custom_field'] == 1 ) {
+							$value = wpdesk_get_order_meta( $order_id, '_'.$field['name'] , true );
+							if ( $this->is_field_displayable( $field ) && $value ) {
+								if ( !empty( $checkout_field_type[$field['type']]['has_options'] ) ) {
+									$array_options = explode("\n", $field['option']);
+									if( !empty( $array_options ) ) {
+										foreach ( $array_options as $option ) {
+											$tmp = explode(':', $option , 2 );
+											$options[trim($tmp[0])] = wpdesk__( trim($tmp[1]), 'flexible-checkout-fields' );
+											unset( $tmp );
+										}
 									}
-								} else {
-									if ( ! isset( $field['type'] ) || 'file' !== $field['type'] ) {
-										$value = '';
-									}
+									$return[] = stripslashes( strip_tags( wpdesk__( $field['label'], 'flexible-checkout-fields' ) ) ) . ': ' . $options[$value];
+									unset($options);
 								}
-								$value = apply_filters( 'flexible_checkout_fields_print_value', $value, $field );
-								if ( '' !== $value ) {
-									$return[] = stripslashes( strip_tags( wpdesk__( $field['label'], 'flexible-checkout-fields' ) ) ) . ': ' . $value;
+								else{
+									if ( !isset( $field['type'] ) || $field['type'] != 'file' ) {
+										$return[] = stripslashes( strip_tags( wpdesk__( $field['label'], 'flexible-checkout-fields' ) ) ) . ': ' . $value;
+									}
 								}
 							}
 						}
@@ -105,7 +103,7 @@ class Flexible_Checkout_Fields_Disaplay_Options {
 			}
 			if ( count( $return ) > 0 ) {
 				echo '<div class="inspire_checkout_fields_additional_information">';
-				echo '<h3>' . __( 'Additional Information', 'flexible-checkout-fields' ) . '</h3>';
+				echo '<h3>'. __( 'Additional Information', 'flexible-checkout-fields' ) .'</h3>';
 				echo '<p>' . implode( '<br />', $return ) . '</p>';
 				echo '</div>';
 			}
@@ -151,8 +149,6 @@ class Flexible_Checkout_Fields_Disaplay_Options {
 						$meta_value = $options[$meta_value];
 					}
 				}
-
-				$meta_value = apply_filters( 'flexible_checkout_fields_user_meta_display_value', $meta_value, $field );
 
 				$val .= $meta_value;
 				$address[$field['name']] = $val;
@@ -340,8 +336,6 @@ class Flexible_Checkout_Fields_Disaplay_Options {
 						$meta_value = $options[$meta_value];
 					}
 				}
-
-				$meta_value = apply_filters( 'flexible_checkout_fields_print_value', $meta_value, $field );
 
 				$val .= $meta_value;
 

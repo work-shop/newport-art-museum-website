@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Flexible Checkout Fields\n"
-"POT-Creation-Date: 2018-12-06 12:40+0100\n"
-"PO-Revision-Date: 2018-12-06 12:40+0100\n"
+"POT-Creation-Date: 2018-02-20 21:56+0100\n"
+"PO-Revision-Date: 2018-02-20 22:03+0100\n"
 "Last-Translator: Piotr Jabłonowski <piotr.jablonowski@wpdesk.net>\n"
 "Language-Team: Maciej Swoboda <maciej.swoboda@gmail.com>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: flexible-checkout-fields-pro.php\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
@@ -21,74 +21,39 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
 
-#: classes/field/multi-select/field-type.php:89
-msgid "Multi-select"
-msgstr "Lista rozwijana (multi-select)"
-
-#: classes/field/multi-select/views/order-field.php:40
-#: templates/fields/colorpicker.php:15 templates/fields/datepicker.php:15
-#: templates/fields/file.php:15 templates/fields/inspirecheckbox.php:15
-#: templates/fields/inspireradio.php:15 templates/fields/multiselect.php:62
-#: templates/fields/timepicker.php:15
-msgid "Required Field"
-msgstr "Pole wymagane"
-
-#: classes/flexible-checkout-fields-conditional-logic.php:171
+#: classes/flexible-checkout-fields-conditional-logic.php:169
 msgid "Advanced"
 msgstr "Zaawansowane"
 
-#: classes/flexible-checkout-fields-conditional-logic.php:220
-#: classes/flexible-checkout-fields-conditional-logic.php:231
+#: classes/flexible-checkout-fields-conditional-logic.php:262
+#: classes/flexible-checkout-fields-conditional-logic.php:273
 msgid "Disabled section:"
 msgstr "Wyłączona sekcja:"
 
-#: classes/flexible-checkout-fields-conditional-logic.php:257
-#: classes/views/settings-field-java-script.php:343
+#: classes/flexible-checkout-fields-conditional-logic.php:299
+#: classes/views/settings-field-java-script.php:291
 msgid "checked"
 msgstr "zaznaczone"
 
-#: classes/flexible-checkout-fields-conditional-logic.php:258
-#: classes/views/settings-field-java-script.php:343
+#: classes/flexible-checkout-fields-conditional-logic.php:300
+#: classes/views/settings-field-java-script.php:291
 msgid "unchecked"
 msgstr "niezaznaczone"
 
-#: classes/flexible-checkout-fields-order-metabox.php:77
-#: tests/unit/test-order-metabox.php:647
-msgid "Flexible Checkout Fields"
-msgstr "Flexible Checkout Fields"
-
-#: classes/flexible-checkout-fields-pro-plugin.php:175
-#: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:147
+#: classes/flexible-checkout-fields-pro-plugin.php:61
+#: classes/wpdesk/class-plugin.php:209
 msgid "Settings"
 msgstr "Ustawienia"
 
-#: classes/flexible-checkout-fields-pro-plugin.php:177
-#: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:140
+#: classes/flexible-checkout-fields-pro-plugin.php:62
+#: classes/wpdesk/class-plugin.php:202
 msgid "Docs"
 msgstr "Docs"
 
-#: classes/flexible-checkout-fields-pro-plugin.php:178
-#: vendor/wpdesk/wp-builder/src/Plugin/AbstractPlugin.php:134
+#: classes/flexible-checkout-fields-pro-plugin.php:63
+#: classes/wpdesk/class-plugin.php:196
 msgid "Support"
 msgstr "Wsparcie"
-
-#: classes/flexible-checkout-fields-pro-plugin.php:318
-#, php-format
-msgid ""
-"<a href=\"%s\">Install the WP Desk Helper plugin</a> to activate and get "
-"updates for your WP Desk plugins."
-msgstr ""
-"<a href=\"%s\">Zainstaluj wtyczkę WP Desk Helper</a>, aby aktywować i "
-"otrzymywać aktualizacje wtyczek WP Desk."
-
-#: classes/flexible-checkout-fields-pro-plugin.php:322
-#, php-format
-msgid ""
-"<a href=\"%s\">Activate the WP Desk Helper plugin</a> to activate and get "
-"updates for your WP Desk plugins."
-msgstr ""
-"<a href=\"%s\">Włącz wtyczkę WP Desk Helper</a>, aby aktywować i otrzymywać "
-"aktualizacje wtyczek WP Desk."
 
 #: classes/flexible-checkout-fields-pro-types.php:125
 msgid "Attachments"
@@ -114,7 +79,7 @@ msgid "File uploaded"
 msgstr "Plik przesłany"
 
 #: classes/flexible-checkout-fields-pro.php:87
-#: classes/views/settings-js-options.php:23
+#: classes/views/settings-js-options.php:19
 msgid "Yes"
 msgstr "Tak"
 
@@ -223,8 +188,8 @@ msgid "Checkbox"
 msgstr "Wybór (checkbox)"
 
 #: classes/flexible-checkout-fields-pro.php:535
-#: classes/views/settings-js-change.php:17
-#: classes/views/settings-js-options.php:21
+#: classes/views/settings-js-change.php:16
+#: classes/views/settings-js-options.php:17
 msgid "Value"
 msgstr "Wartość"
 
@@ -332,34 +297,34 @@ msgid "Rule #%s"
 msgstr "Reguła #%s"
 
 #: classes/views/settings-field-advanced.php:69
-#: classes/views/settings-field-java-script.php:125
-#: classes/views/settings-field-java-script.php:276
-#: classes/views/settings-field-java-script.php:327
-#: classes/views/settings-field-java-script.php:362
-#: classes/views/settings-field-java-script.php:393
+#: classes/views/settings-field-java-script.php:120
+#: classes/views/settings-field-java-script.php:228
+#: classes/views/settings-field-java-script.php:277
+#: classes/views/settings-field-java-script.php:309
+#: classes/views/settings-field-java-script.php:340
 msgid "Select field"
 msgstr "Wybierz pole"
 
 #: classes/views/settings-field-advanced.php:84
-#: classes/views/settings-field-java-script.php:399
+#: classes/views/settings-field-java-script.php:346
 msgid "is"
 msgstr "jest"
 
 #: classes/views/settings-field-advanced.php:97
-#: classes/views/settings-field-java-script.php:246
-#: classes/views/settings-field-java-script.php:405
+#: classes/views/settings-field-java-script.php:198
+#: classes/views/settings-field-java-script.php:352
 msgid "Select value"
 msgstr "Wybierz wartość"
 
 #: classes/views/settings-field-advanced.php:109
-#: classes/views/settings-field-advanced.php:265
-#: classes/views/settings-field-java-script.php:411
-#: classes/views/settings-field-java-script.php:453
+#: classes/views/settings-field-advanced.php:240
+#: classes/views/settings-field-java-script.php:358
+#: classes/views/settings-field-java-script.php:392
 msgid "Delete rule"
 msgstr "Usuń regułę"
 
 #: classes/views/settings-field-advanced.php:117
-#: classes/views/settings-field-advanced.php:273
+#: classes/views/settings-field-advanced.php:248
 msgid "Add rule"
 msgstr "Dodaj regułę"
 
@@ -368,40 +333,36 @@ msgid "Enable Product/Category Conditional Logic"
 msgstr "Włącz logikę warunkową dla produktów/kategorii"
 
 #: classes/views/settings-field-advanced.php:193
-#: classes/views/settings-field-java-script.php:422
+#: classes/views/settings-field-java-script.php:369
 msgid "Cart contains"
 msgstr "Koszyk zawiera"
 
 #: classes/views/settings-field-advanced.php:206
-#: classes/views/settings-field-java-script.php:428
+#: classes/views/settings-field-java-script.php:375
 msgid "Product"
 msgstr "Produkt"
 
 #: classes/views/settings-field-advanced.php:213
-#: classes/views/settings-field-java-script.php:429
+#: classes/views/settings-field-java-script.php:376
 msgid "Product Category"
 msgstr "Produkt z kategorii"
 
-#: classes/views/settings-field-advanced.php:231
-#: classes/views/settings-field-java-script.php:441
+#: classes/views/settings-field-advanced.php:225
+#: classes/views/settings-field-java-script.php:382
 msgid "Select products"
 msgstr "Wybierz produkty"
 
-#: classes/views/settings-field-advanced.php:261
-#: classes/views/settings-field-java-script.php:448
+#: classes/views/settings-field-advanced.php:236
+#: classes/views/settings-field-java-script.php:387
 msgid "Select categories"
 msgstr "Wybierz kategorie"
 
-#: classes/views/settings-field-java-script.php:9
-msgid "Enter <code>select2</code> to apply styling"
-msgstr "Wprowadź <code>select2</code> aby zastosować stylizację"
-
-#: classes/views/settings-field-java-script.php:138
-#: classes/views/settings-field-java-script.php:243
+#: classes/views/settings-field-java-script.php:133
+#: classes/views/settings-field-java-script.php:195
 msgid "Select field first"
 msgstr "Najpierw wybierz pole"
 
-#: classes/views/settings-field-java-script.php:313
+#: classes/views/settings-field-java-script.php:263
 msgid ""
 "Unable to delete this field. This field is used in conditional logic on "
 "field(s): [fields]."
@@ -409,8 +370,8 @@ msgstr ""
 "Brak możliwości usunięcia tego pola. To pole jest używane w logice "
 "warunkowej na polu (polach): [fields]."
 
-#: classes/views/settings-field-java-script.php:388
-#: classes/views/settings-field-java-script.php:418
+#: classes/views/settings-field-java-script.php:335
+#: classes/views/settings-field-java-script.php:365
 msgid "New Rule"
 msgstr "Nowa reguła"
 
@@ -458,8 +419,8 @@ msgstr "Maksymalny rozmiar pliku"
 
 #: classes/views/settings-js-change.php:5
 #: classes/views/settings-js-change.php:11
-#: classes/views/settings-js-options.php:6
-#: classes/views/settings-js-options.php:15
+#: classes/views/settings-js-options.php:5
+#: classes/views/settings-js-options.php:12
 msgid "Placeholder"
 msgstr "Placeholder"
 
@@ -467,13 +428,13 @@ msgstr "Placeholder"
 msgid "Date format <code>dd.mm.yy</code>."
 msgstr "Format daty <code>dd.mm.rr</code>."
 
-#: classes/views/settings-js-options.php:4
-#: classes/views/settings-js-options.php:13
+#: classes/views/settings-js-options.php:3
+#: classes/views/settings-js-options.php:10
 msgid "Options"
 msgstr "Opcje"
 
-#: classes/views/settings-js-options.php:4
-#: classes/views/settings-js-options.php:13
+#: classes/views/settings-js-options.php:3
+#: classes/views/settings-js-options.php:10
 msgid ""
 "Format: <code>Value : Name</code>. Value will be in the code, name will be "
 "visible to the user. One option per line. Example:<br /><code>woman : I am a "
@@ -520,7 +481,7 @@ msgstr ""
 "Pamiętaj, że niektóre sekcje mogą być niedostępne w twoim motywie lub mogą "
 "się \"rozjeżdżać\". To nie jest kwestia wtyczki, ale motywu."
 
-#: classes/wpdesk/class-helper.php:52
+#: classes/wpdesk/class-helper.php:34
 #, php-format
 msgid ""
 "The %s%s%s License Key has not been activated, so the plugin is inactive! "
@@ -529,7 +490,53 @@ msgstr ""
 "Klucz licencyjny wtyczki %s%s%s nie został aktywowany, więc wtyczka jest "
 "nieaktywna! %sKliknij tutaj%s, aby aktywować klucz licencyjny wtyczki."
 
-#: plugin-create.php:60
+#: classes/wpdesk/class-settings.php:87
+#: classes/wpdesk/settings-api/class.s214-settings.php:1230
+msgid "Insert Image"
+msgstr "Wprowadź obrazek"
+
+#: classes/wpdesk/class-settings.php:88
+#: classes/wpdesk/settings-api/class.s214-settings.php:1231
+msgid "Select Image"
+msgstr "Select Image"
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:144
+#: classes/wpdesk/settings-api/class.s214-settings.php:146
+msgid "Section214 Settings"
+msgstr "Section214 Settings"
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:609
+msgid "Settings updated."
+msgstr "Settings updated."
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:996
+msgid ""
+"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
+"(Mac)."
+msgstr ""
+"Kliknij poniżej i naciśnij CTRL + C (Windows) lub Cmd + C (Mac), aby "
+"skopiować informacje systemowe."
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:999
+msgid "Download System Info File"
+msgstr "Pobierz plik informacji systemowych"
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:1079
+#: templates/fields/file.php:32
+msgid "Upload File"
+msgstr "Dodaj plik"
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:1109
+msgid "Deactivate License"
+msgstr "Dezaktywuj licencję"
+
+#: classes/wpdesk/settings-api/class.s214-settings.php:1140
+#, php-format
+msgid ""
+"The callback function used for the <strong>%s</strong> setting is missing."
+msgstr "Brakuje funkcji callback używanej przez <strong>%s</strong>."
+
+#: flexible-checkout-fields-pro.php:95
 #, php-format
 msgid ""
 "Flexible Checkout Fields PRO requires free Flexible Checkout Fields plugin. "
@@ -538,7 +545,7 @@ msgstr ""
 "Edycja pól zamówienia PRO wymaga darmowej wtyczki Edycja pól zamówienia. <a "
 "href=\"%s\">Zainstaluj Edycja pól zamówienia →</a>"
 
-#: plugin-create.php:66
+#: flexible-checkout-fields-pro.php:101
 #, php-format
 msgid ""
 "Flexible Checkout Fields PRO requires activating Flexible Checkout Fields "
@@ -547,208 +554,23 @@ msgstr ""
 "Edycja pól zamówienia PRO wymaga włączenia wtyczki Edycja pól zamówienia. <a "
 "href=\"%s\">Włącz Edycja pól zamówienia →</a>"
 
-#: plugin-create.php:79
-#, php-format
+#: flexible-checkout-fields-pro.php:112
 msgid ""
 "Flexible Checkout Fields PRO requires Flexible Checkout Fields plugin in "
-"version %1$s or newer. Please update."
+"version 1.6 or newer. Please update."
 msgstr ""
-"Flexible Checkout Fields PRO wymaga Flexible Checkout Fields w wersji %1$s "
-"lub nowszej. Proszę zaktualizuj."
+"Flexible Checkout Fields PRO wymaga Flexible Checkout Fields w wersji 1.6 "
+"lub nowszej. Proszę zaktualizuj!"
 
-#: templates/fields/file.php:32
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:1059
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:909
-msgid "Upload File"
-msgstr "Dodaj plik"
+#: templates/fields/colorpicker.php:15 templates/fields/datepicker.php:15
+#: templates/fields/file.php:15 templates/fields/inspirecheckbox.php:15
+#: templates/fields/inspireradio.php:15 templates/fields/timepicker.php:15
+msgid "Required Field"
+msgstr "Pole wymagane"
 
 #: templates/fields/file.php:33
 msgid "Remove File"
 msgstr "Usuń plik"
-
-#: vendor/10up/wp_mock/tests/FunctionMocksTest.php:65
-msgid "Test"
-msgstr "Test"
-
-#: vendor/10up/wp_mock/tests/FunctionMocksTest.php:75
-#: vendor/10up/wp_mock/tests/FunctionMocksTest.php:77
-msgid "Input"
-msgstr "Input"
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:162
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run on PHP versions older than %s. Please "
-"contact your host and ask them to upgrade."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać w wersjach PHP starszych niż %s. "
-"Skontaktuj się z administratorem hostingu i poproś o aktualizację."
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:166
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run on WordPress versions older than %s. "
-"Please update WordPress."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać w wersjach WordPress starszych niż "
-"%s. Prosimy o aktualizację WordPress."
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:170
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run on WooCommerce versions older than "
-"%s. Please update WooCommerce."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać w wersjach WooCommerce starszych "
-"niż %s. Prosimy o aktualizację WooCommerce."
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:174
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run without OpenSSL module version at "
-"least %s. Please update OpenSSL module."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać bez aktywacji OpenSSL co najmniej "
-"w wersji %s. Zaktualizuj wersję OpenSSL."
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:262
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run without %s active. Please install and "
-"activate %s plugin."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać bez aktywacji %s. Zainstaluj i "
-"aktywuj wtyczkę %s."
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:298
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run without %s php module installed. "
-"Please contact your host and ask them to install %s."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać bez modułu php: %s. Skontaktuj się "
-"z administratorem hostingu i poproś o instalację %s."
-
-#: vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php:326
-#, php-format
-msgid ""
-"The &#8220;%s&#8221; plugin cannot run without %s php setting set to %s. "
-"Please contact your host and ask them to set %s."
-msgstr ""
-"Wtyczka &#8220;%s&#8221; nie może działać bez ustawienia php %s ustawionego "
-"na %s. Skontaktuj się z administratorem hostingu i poproś o ustawienie %s."
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:144
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:146
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:66
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:68
-msgid "Section214 Settings"
-msgstr "Section214 Settings"
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:591
-msgid "Your settings have been saved."
-msgstr "Twoje ustawienia zostały zapisane."
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:976
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:836
-msgid ""
-"To copy the system info, click below then press Ctrl + C (PC) or Cmd + C "
-"(Mac)."
-msgstr ""
-"Kliknij poniżej i naciśnij CTRL + C (Windows) lub Cmd + C (Mac), aby "
-"skopiować informacje systemowe."
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:979
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:841
-msgid "Download System Info File"
-msgstr "Pobierz plik informacji systemowych"
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:1089
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:935
-msgid "Deactivate License"
-msgstr "Dezaktywuj licencję"
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:1120
-#, php-format
-msgid ""
-"The callback function used for the <strong>%s</strong> setting is missing."
-msgstr "Brakuje funkcji callback używanej przez <strong>%s</strong>."
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:1210
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:1052
-msgid "Insert Image"
-msgstr "Wprowadź obrazek"
-
-#: vendor/wpdesk/wp-settings/source/class.s214-settings.php:1211
-#: vendor/wpdesk/wp-settings/source/class.wpdesk-s214-settings.php:1053
-msgid "Select Image"
-msgstr "Select Image"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/S214_Plugin_Updater.php:188
-#, php-format
-msgid ""
-"There is a new version of %1$s available. %2$sView version %3$s details%4$s."
-msgstr "Dostępna jest nowa wersja %1$s. %2$s Pokaż %3$s szczegóły wersji %4$s."
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/S214_Plugin_Updater.php:196
-#, php-format
-msgid ""
-"There is a new version of %1$s available. %2$sView version %3$s details%4$s "
-"or %5$supdate now%6$s."
-msgstr ""
-"Jest dostępna nowa wersja %1$s. %2$s Zobacz szczegóły wersji %3$s %4$s lub "
-"%5$s zaktualizuj %6$s."
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/S214_Plugin_Updater.php:340
-msgid "You do not have permission to install plugin updates"
-msgstr "Nie masz uprawnień do instalacji aktualizacji wtyczki"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/S214_Plugin_Updater.php:340
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:197
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:270
-msgid "Error"
-msgstr "Błąd"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:141
-msgid "Licensing"
-msgstr "Licencje"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:159
-#, php-format
-msgid "%1$s License Key"
-msgstr "Klucz licencyjny %1$s"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:160
-msgid "Please enter your license key to enable automatic updates and support."
-msgstr ""
-"Wpisz swój klucz licencyjny, aby włączyć automatyczne aktualizacje i "
-"wsparcie."
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:197
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:270
-msgid "Nonce verification failed"
-msgstr "Błąd zabepieczeń (nonce)"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:352
-msgid "This license does not belong to the product you have entered it for."
-msgstr "Klucz licencyjny który wpisałeś nie należy do tego produktu."
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:357
-msgid "This license does not have any activations left"
-msgstr "Licencja nie posiada już wolnych aktywacji"
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:362
-msgid "This license key is expired. Please renew it."
-msgstr "Ten klucz licencyjny wygasł. Proszę odnów go."
-
-#: vendor/wpdesk/wp-settings/source/modules/licensing/class.s214-license.php:367
-#, php-format
-msgid ""
-"There was a problem activating your license key, please try again or contact "
-"support. Error code: %s"
-msgstr ""
-"Pojawił się problem z aktywacją klucza licencyjnego. Proszę spróbuj ponownie "
-"lub skontaktuj się z naszym wsparciem. Kod błędu: %s"
 
 #. Plugin Name of the plugin/theme
 msgid "Flexible Checkout Fields PRO"
@@ -772,9 +594,6 @@ msgstr "WP Desk"
 #. Author URI of the plugin/theme
 msgid "https://www.wpdesk.net/"
 msgstr "https://www.wpdesk.pl/"
-
-#~ msgid "Settings updated."
-#~ msgstr "Settings updated."
 
 #~ msgid "<strong>%s</strong> is required field."
 #~ msgstr "<strong>%s</strong> jest wymaganym polem."
@@ -805,6 +624,20 @@ msgstr "https://www.wpdesk.pl/"
 
 #~ msgid "Date format <code>dd.mm.yy</code>. Avaliab"
 #~ msgstr "Format daty <code>dd.mm.yy</code>"
+
+#~ msgid ""
+#~ "<a href=\"%s\">Install the WP Desk Helper plugin</a> to activate and get "
+#~ "updates for your WP Desk plugins."
+#~ msgstr ""
+#~ "<a href=\"%s\">Zainstaluj wtyczkę WP Desk Helper</a>, aby aktywować i "
+#~ "otrzymywać aktualizacje wtyczek WP Desk."
+
+#~ msgid ""
+#~ "<a href=\"%s\">Activate the WP Desk Helper plugin</a> to activate and get "
+#~ "updates for your WP Desk plugins."
+#~ msgstr ""
+#~ "<a href=\"%s\">Włącz wtyczkę WP Desk Helper</a>, aby aktywować i "
+#~ "otrzymywać aktualizacje wtyczek WP Desk."
 
 #~ msgid "Upload file"
 #~ msgstr "Dodaj plik"

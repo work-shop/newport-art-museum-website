@@ -10,6 +10,9 @@ source ./.env
 # Custom Theme
 scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes
 
+# Bundles only
+#scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom/bundles $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom
+
 # Plugins and must use plugins
 #scp -P $KINSTA_STAGING_PORT -r ./wp-content/plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
 #scp -P $KINSTA_STAGING_PORT -r ./wp-content/mu-plugins $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/
@@ -32,5 +35,6 @@ scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$
 #rm -rf ./dist/wp-content/uploads
 #rm ./dist/migration.sql
 
-
 # TODO: Add a hook to migrate and string-replace the database.
+
+curl -L https://staging.newportartmuseum.org/kinsta-clear-cache-all/ 
