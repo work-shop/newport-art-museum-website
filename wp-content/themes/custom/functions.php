@@ -40,6 +40,7 @@ require_once( __ROOT__ . '/functions/library/class-ws-flexible-content.php' );
 
 require_once( __ROOT__ . '/functions/library/museum_status.php' );
 require_once( __ROOT__ . '/functions/library/member_checker_api.php' );
+require_once( __ROOT__ . '/functions/library/csv_export_addons.php' );
 
 new NAM_Site();
 new NAM_Site_Admin();
@@ -115,41 +116,6 @@ add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
 add_filter( 'wc_add_to_cart_message_html', '__return_false' );
 
 
-//add capabilities to user roles
-// $role_object = get_role( 'shop_manager' );
-// // add $cap capability to this role object
-// $role_object->add_cap( 'edit_users' );
-// $role_object->add_cap( 'add_users' );
-// $role_object->add_cap( 'create_users' );
-// $role_object->add_cap( 'list_users' );
-
-// function edit_shop_manager() {
-//     // Get custom role
-//     $shop_manager = get_role('shop_manager');
-//     $shop_manager->add_cap('create_users');
-//     $shop_manager->add_cap('edit_users');
-//     $shop_manager->add_cap('manage_network_users');
-//     $shop_manager->add_cap('delete_users');
-//     $shop_manager->add_cap('list_users');
-//     $shop_manager->add_cap('remove_users');
-//     $shop_manager->add_cap('promote_users');
-// }
-// add_action( 'init', 'edit_shop_manager', 1000 );
-
-/**
- * Modify the list of editable roles to prevent non-admin adding admin users.
- * @param  array $roles
- * @return array
- */
-// function override_wc_modify_editable_roles( $roles ) {
-// 	return false;
-// 	// if ( ! current_user_can( 'administrator' ) ) {
-// 	// 	//unset( $roles['administrator'] );
-// 	// }
-// 	// return $roles;
-// }
-// add_filter( 'editable_roles', 'override_wc_modify_editable_roles', 1 );
-
 //automatically log user in after password reset
 function action_woocommerce_reset_password( $user ) {
 	$login=$_POST['reset_login'];
@@ -189,136 +155,6 @@ add_action ( 'manage_events_posts_custom_column', 'event_custom_column', 10, 2 )
 
 
 
-
-
-
-
-
-//add custom column headers to CSV export
-function wc_csv_export_modify_column_headers( $column_headers ) { 
-
-	$new_headers = array(
-		'item_category' => 'item_category'
-		// add other column headers here in the format column_key => Column Name
-	);
-
-	return array_merge( $column_headers, $new_headers );
-}
-add_filter( 'wc_customer_order_csv_export_order_headers', 'wc_csv_export_modify_column_headers' );
-
-
-
-function sv_wc_csv_export_reorder_columns( $column_headers ) {
-	// // remove order total from the original set of column headers, otherwise it will be duplicated
-	// unset( $column_headers['item_category'] );
-	$new_column_headers = array();
-	foreach ( $column_headers as $column_key => $column_name ) {
-		$new_column_headers[ $column_key ] = $column_name;
-		if ( 'item_name' == $column_key ) {
-			// add order total immediately after order_number
-			$new_column_headers['item_category'] = 'item_category';
-		}
-	}
-	return $new_column_headers;
-}
-add_filter( 'wc_customer_order_csv_export_order_headers', 'sv_wc_csv_export_reorder_columns' );
-
-
-
-function sv_wc_csv_export_add_category_to_line_item( $line_item, $item, $product, $order ) {
-
-	$new_item_data = array();
-
-	foreach ( $line_item as $key => $data ) {
-
-		$new_item_data[ $key ] = $data;
-
-		if ( 'sku' === $key ) {
-			$product_categories = get_the_terms( $product->id, 'product_cat' );
-			$category_text = '';
-
-			foreach ($product_categories as $category) {
-				$category_slug = $category->slug;
-				$category_text = $category_text . ' ' . $category_slug;
-			}
-
-			if (strpos($category_text, 'classes') !== false ) {
-				$product_category = 'Classes';
-			} elseif (strpos($category_text, 'events') !== false ) {
-				$product_category = 'Events';
-			} elseif (strpos($category_text, 'membership-tiers') !== false ) {
-				$product_category = 'Memberships';
-			} elseif (strpos($category_text, 'donation-tiers') !== false ) {
-				$product_category = 'Donations';
-			} elseif (strpos($category_text, 'fees') !== false ) {
-				$product_category = 'Fees';
-			} else {
-				$product_category = 'Uncategorized';
-			}
-
-			$new_item_data['item_category'] = $product_category;
-
-			if( $order->status === 'processing' ){ //this evaluates properly, but I can't set status in next line
-			$new_item_data['status'] = 'Paid';
-		}
-
-	}
-
-}
-
-return $new_item_data;
-}
-add_filter( 'wc_customer_order_csv_export_order_line_item', 'sv_wc_csv_export_add_category_to_line_item', 10, 4 );
-
-
-
-
-/**
- * Add the item_weight column data for the Default - One Row per Item format
- *
- * @param array $order_data the original order data
- * @param array $item       the item for this row
- * @return array - the updated order data
- */
-function sv_wc_csv_export_order_row_one_row_per_item_category( $order_data, $item ) {
-
-	$order_data['item_category'] = $item['item_category'];
-	return $order_data;
-}
-add_filter( 'wc_customer_order_csv_export_order_row_one_row_per_item', 'sv_wc_csv_export_order_row_one_row_per_item_category', 10, 2 );
-
-
-
-if ( ! function_exists( 'sv_wc_csv_export_is_one_row' ) ) :
-
-/**
- * Helper function to check the export format
- *
- * @param \WC_Customer_Order_CSV_Export_Generator $csv_generator the generator instance
- * @return bool - true if this is a one row per item format
- */
-function sv_wc_csv_export_is_one_row( $csv_generator ) {
-
-	$one_row_per_item = false;
-
-	if ( version_compare( wc_customer_order_csv_export()->get_version(), '4.0.0', '<' ) ) {
-
-		// pre 4.0 compatibility
-		$one_row_per_item = ( 'default_one_row_per_item' === $csv_generator->order_format || 'legacy_one_row_per_item' === $csv_generator->order_format );
-
-	} elseif ( isset( $csv_generator->format_definition ) ) {
-
-		// post 4.0 (requires 4.0.3+)
-		$one_row_per_item = 'item' === $csv_generator->format_definition['row_type'];
-	}
-
-	return $one_row_per_item;
-}
-
-endif;
-
-
-
 add_action( 'profile_update', 'profile_update_notification', 10, 2 );
 
 function profile_update_notification( $user_id, $old_user_data ) {
@@ -349,20 +185,6 @@ function profile_update_notification( $user_id, $old_user_data ) {
 		$new .= $new_last_name;
 		$new .= '<br>';
 		$new .= $new_email;
-		// $new .= '<br>';
-		// $new .= get_user_meta( $user_id, 'billing_company', true );
-		// $new .= '<br>';
-		// $new .= get_user_meta( $user_id, 'billing_address_1', true );
-		// $new .= '<br>';
-		// $new .= get_user_meta( $user_id, 'billing_address_2', true );
-		// $new .= '<br>';
-		// $new .= get_user_meta( $user_id, 'billing_city', true );
-		// $new .= '<br>';
-		// $new .= get_user_meta( $user_id, 'billing_state', true );
-		// $new .= ', ';
-		// $new .= get_user_meta( $user_id, 'billing_postcode', true );
-		// $new .= '<br>';
-		// $new .= get_user_meta( $user_id, 'billing_country', true );
 
 		$body = $new_first_name . ' ' . $new_last_name . ' just changed their account details on newportartmuseum.org'
 		. '<br><br>' 

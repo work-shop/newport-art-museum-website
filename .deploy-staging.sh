@@ -8,7 +8,7 @@ source ./.env
 #scp -P $KINSTA_PORT -r ./uploads $KINSTA_USER@$KINSTA_IP:./public/wp-content/
 
 # Custom Theme
-scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes
+#scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes
 
 # Bundles only
 #scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom/bundles $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom
@@ -24,7 +24,9 @@ scp -P $KINSTA_STAGING_PORT -r ./wp-content/themes/custom $KINSTA_STAGING_USER@$
 #scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions/post-types/classes/class-nam-class.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/functions/post-types/classes/
 
 #functions.php
-#scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/
+scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/
+scp -P $KINSTA_STAGING_PORT ./wp-content/themes/custom/functions/library/csv_export_addons.php $KINSTA_STAGING_USER@$KINSTA_STAGING_IP:./public/wp-content/themes/custom/functions/library/
+
 
 #scp -r ./dist/wp-content/uploads root@$DROPLET_IP:/var/www/html/wp-content/
 #scp ./dist/migration.sql root@$DROPLET_IP:/root
