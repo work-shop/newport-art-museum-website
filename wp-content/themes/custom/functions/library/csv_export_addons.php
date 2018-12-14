@@ -93,7 +93,7 @@ function sv_wc_csv_export_modify_line_item( $line_item, $item, $product, $order 
 
 			//set item membership discount
 			$item_membership_discount = '0';
-			$product_name = $product->get_title();
+			$product_name = $product->name;
 			$product_price = $product->get_price();
 			$item_total_after_membership_discount = $product_price;
 
