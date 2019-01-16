@@ -5,6 +5,7 @@ function wc_csv_export_modify_column_headers( $column_headers ) {
 
 	$new_headers = array(
 		'item_category' => 'item_category',
+		'paid_date' => 'paid_date',
 		'item_membership_discount' => 'item_membership_discount'
 		// add other column headers here in the format column_key => Column Name
 	);
@@ -14,11 +15,14 @@ function wc_csv_export_modify_column_headers( $column_headers ) {
 add_filter( 'wc_customer_order_csv_export_order_headers', 'wc_csv_export_modify_column_headers' );
 
 
-
+//reorder columns based on what column they're adjacent to
 function sv_wc_csv_export_reorder_columns( $column_headers ) {
 	
 	// // remove order total from the original set of column headers, otherwise it will be duplicated
 	// unset( $column_headers['order_total'] );
+
+	//turn off order date column to be replaced with paid_date
+	unset( $column_headers['order_date'] );
 
 	$new_column_headers = array();
 	foreach ( $column_headers as $column_key => $column_name ) {
@@ -29,6 +33,10 @@ function sv_wc_csv_export_reorder_columns( $column_headers ) {
 			$new_column_headers['item_category'] = 'item_category';
 		}
 
+		if ( 'order_id' == $column_key ) {
+			// add item_category immediately after order_id
+			$new_column_headers['paid_date'] = 'paid_date';
+		}
 
 		if ( 'item_subtotal' == $column_key ) {
 			// add item_membership_discount immediately after item_subtotal
@@ -87,8 +95,10 @@ function sv_wc_csv_export_modify_line_item( $line_item, $item, $product, $order 
 			$new_item_data['item_category'] = $product_category;
 
 
-			//modify the date	
-			$new_item_data['date'] = 'date';
+			//modify the date to be paid date instead of created date
+			$date_paid = $order->get_date_paid();
+			$date_paid = date_format($date_paid,"n/j/Y");	
+			$new_item_data['paid_date'] = $date_paid;
 
 
 			//set item membership discount
@@ -133,6 +143,7 @@ function sv_wc_csv_export_order_row_one_row_per_item_category( $order_data, $ite
 	$order_data['item_category'] = $item['item_category'];
 	$order_data['item_membership_discount'] = $item['item_membership_discount'];
 	$order_data['item_total_after_membership_discount'] = $item['item_total_after_membership_discount'];
+	$order_data['paid_date'] = $item['paid_date'];
 	return $order_data;
 
 }

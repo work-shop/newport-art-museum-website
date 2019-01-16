@@ -25,6 +25,8 @@ class Util {
 	 * @var Filesystem
 	 */
 	private $filesystem;
+	private $container;
+	private $form_data;
 
 	public function __construct(
 		Properties $properties,
@@ -32,6 +34,7 @@ class Util {
 	) {
 		$this->props      = $properties;
 		$this->filesystem = $filesystem;
+		$this->container  = Container::getInstance();
 	}
 
 	/**
@@ -410,11 +413,11 @@ class Util {
 	}
 
 	function set_time_limit() {
-			@set_time_limit( 0 );
+		@set_time_limit( 0 );
 	}
 
 	function display_errors() {
-		$error_log = Container::getInstance()->get( 'error_log' );
+		$error_log  = Container::getInstance()->get( 'error_log' );
 		$curr_error = $error_log->getError();
 		if ( ! empty( $curr_error ) ) {
 			echo $error_log->getError();
@@ -605,8 +608,10 @@ class Util {
 	 *
 	 * @return mixed
 	 */
-	function profile_value( $key ) {
-		$form_data = Container::getInstance()->get( 'form_data' )->getFormData();
+	function profile_value( $key, $form_data = [] ) {
+		if ( empty( $form_data ) ) {
+			$form_data = $this->container->get( 'form_data' )->getFormData();
+		}
 
 		if ( ! empty( $key ) && ! empty( $form_data ) && isset( $form_data[ $key ] ) ) {
 			return $form_data[ $key ];
@@ -925,12 +930,14 @@ class Util {
 
 	// Ripped from WP Core to be used in `plugins_loaded` hook
 	public static function is_plugin_active_for_network( $plugin ) {
-		if ( !is_multisite() )
+		if ( ! is_multisite() ) {
 			return false;
+		}
 
-		$plugins = get_site_option( 'active_sitewide_plugins');
-		if ( isset($plugins[$plugin]) )
+		$plugins = get_site_option( 'active_sitewide_plugins' );
+		if ( isset( $plugins[ $plugin ] ) ) {
 			return true;
+		}
 
 		return false;
 	}

@@ -68,7 +68,6 @@ class RegisterPro {
 			          'properties',
 		          ] );
 
-
 		//Api
 		$container->add( 'api', 'DeliciousBrains\WPMDB\Pro\Api' )
 		          ->withArguments( [
@@ -322,9 +321,6 @@ class RegisterPro {
 		          ] );
 	}
 
-	/**
-	 *
-	 */
 	public function register() {
 		$container                   = Container::getInstance();
 		$this->pro_migration_manager = $container->get( 'pro_migration_manager' );

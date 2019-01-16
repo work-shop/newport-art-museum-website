@@ -36,6 +36,14 @@ if ( ! defined( 'ABSPATH' ) ) {
 	?></p>
 </div>
 
+<?php 
+//echo '<pre>' , var_dump($order) , '</pre>';
+//echo $order->get_date_paid();
+//$date_paid = $order->get_date_paid();
+//$date=date_create("2013-03-15");
+//echo date_format($date_paid,"n/j/Y");
+//var_dump($order); ?>
+
 <?php if ( $notes = $order->get_customer_order_notes() ) : ?>
 	<div class="row">
 		<div class="col-12 col-md-6 view-order-order-updates">
