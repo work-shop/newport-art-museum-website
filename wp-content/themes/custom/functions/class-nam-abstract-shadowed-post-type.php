@@ -889,44 +889,46 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 
 	// STOCK ACTIONS ---
 
+    /**
+     * This function handles registering actions to take
+     * to keep stock levels between products and their parent posts
+     * consistent. Stock actions happen when:
+     *
+     * - A product is purchased.
+     * - A refund is processed.
+     * - stock is manually edited on the product.
+     */
 	public static function register_stock_actions() {
 		$called_class = get_called_class();
-		add_action('woocommerce_reduce_order_stock', array($called_class, 'reduce_parent_post_stock'));
+		//add_action('woocommerce_reduce_order_stock', array($called_class, 'reduce_parent_post_stock'));
+        add_action('woocommerce_variation_set_stock', array( $called_class, 'reduce_parent_post_stock'));
+        add_action('woocommerce_product_set_stock', array( $called_class, 'reduce_parent_post_stock'));
 	}
 
-	/**
-	 *
-	 *
-	 */
-	public static function reduce_parent_post_stock($order) {
+    /**
+     * Given a product whose stock has just been adjusted,
+     * set the parent post's stock to match the product's stock.
+     *
+     * @param WC_Product $product the product whose stock has just been updated.
+     */
+    public static function reduce_parent_post_stock( $product ) {
 
-		$items = $order->get_items();
+        $parent_post = static::get_parent_posts( $product->id );
 
-		foreach ($items as $item) {
+        if ( $parent_post ) {
 
-			$product_id = $item['product_id'];
-			$quantity = $item->get_quantity();
+            $parent_post_id = $parent_post[0];
+            $manage_stock = get_field(static::$field_keys['manage_stock'], $parent_post_id);
 
-			$parent_post = static::get_parent_posts($product_id);
+            if ( $manage_stock ) {
 
-			if ($parent_post) {
+                $stock_quantity = $product->get_stock_quantity();
+                update_field(static::$field_keys['stock_quantity'], $stock_quantity, $parent_post_id);
 
-				$parent_post_id = $parent_post[0];
+            }
 
-				$manage_stock = get_field(static::$field_keys['manage_stock'], $parent_post_id);
+        }
 
-				if ($manage_stock) {
-
-					$current_quantity = get_field(static::$field_keys['stock_quantity'], $parent_post_id);
-					$new_quantity = $current_quantity - $quantity;
-					update_field(static::$field_keys['stock_quantity'], $new_quantity, $parent_post_id);
-
-				}
-
-			}
-
-		}
-
-	}
+    }
 
 }
