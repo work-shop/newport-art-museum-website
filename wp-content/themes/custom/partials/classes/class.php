@@ -40,12 +40,14 @@ $class_short_description = get_field('short_description');
                             <?php if( get_field('class_start_date') ): ?>
                                 <h4 class="bold">
                                     <?php the_field('class_start_date'); ?> - <?php the_field('class_end_date'); ?>
-                                    <?php if( get_field('number_of_sessions') ): ?>
+                                </h4>
+                                <?php if( get_field('number_of_sessions') ): ?>
+                                    <h4 class="bold">
                                         <span class="class-dates-sessions bold">
                                             <?php the_field('number_of_sessions'); ?>
                                         </span>
-                                    <?php endif; ?>
-                                </h4>
+                                    </h4>
+                                <?php endif; ?>
                             <?php endif; ?>
                             <?php if( have_rows('class_days_and_times') ): ?>
                                 <h4 class="class-days bold">

@@ -1,0 +1,63 @@
+p.form-field._gift_card_amount_field span.variation-amount {
+    float: left;
+    background-color: #f1f1f1;
+    padding: 10px 20px;
+    border-radius: 5px;
+    margin: 5px;
+    position: relative;
+    border: 1px solid #cbcbcb;
+}
+
+p.form-field._gift_card_amount_field span.variation-amount span.amount {
+    font-size: 13px;
+    color: #838383;
+}
+
+p.form-field._gift_card_amount_field a.remove-amount {
+    position: absolute;
+    top: -8px;
+    right: -7px;
+    background-color: white;
+    padding: 0px;
+    line-height: 1;
+    color: #a0a5aa;
+    font-weight: bold;
+    font-size: 16px;
+    text-decoration: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    border: 1px solid #838383;
+}
+
+p.form-field._gift_card_amount_field a.remove-amount:hover {
+    background-color: #b20000;
+}
+
+p.form-field._gift_card_amount_field a.remove-amount:before {
+    content: 'x';
+    position: absolute;
+    left: 5px;
+    top: 1px;
+}
+
+p.form-field._gift_card_amount_field a.remove-amount:hover:before {
+    color: white;
+}
+
+#gift_card-amount {
+    width: 100px;
+    margin-right: 10px;
+}
+
+a.add-new-amount {
+    background-color: #009c0f;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    color: white;
+}
+
+span.add-new-amount-section {
+    display: inline-block;
+}
