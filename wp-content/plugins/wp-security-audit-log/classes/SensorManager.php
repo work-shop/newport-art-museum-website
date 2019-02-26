@@ -174,6 +174,30 @@ final class WSAL_SensorManager extends WSAL_AbstractSensor {
 			'wsal-auditlog-pricing',
 		);
 
+		// Get file name.
+		$filename = basename( $filepath, '.php' );
+
+		// Load LogInOut sensor on login page.
+		if ( 'wp-login.php' === $pagenow && 'LogInOut' === $filename ) {
+			return true;
+		}
+
+		/**
+		 * WSAL Filter: `wsal_load_public_sensor`
+		 *
+		 * Filter for the list of sensors to be loaded for visitors
+		 * or public. No sensor is allowed to load on the front-end
+		 * except the ones in this array.
+		 *
+		 * @since 3.3.1
+		 *
+		 * @param array $public_sensors - List of sensors to be loaded for visitors.
+		 */
+		$public_sensors = apply_filters( 'wsal_load_public_sensors', array( 'Public', 'LogInOut' ) );
+		if ( ! is_admin() && ! is_user_logged_in() && ! in_array( $filename, $public_sensors, true ) ) {
+			return false;
+		}
+
 		// Get current page query argument via $_GET array.
 		$current_page = filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING );
 
@@ -190,9 +214,6 @@ final class WSAL_SensorManager extends WSAL_AbstractSensor {
 		) {
 			return false;
 		}
-
-		// Get file name.
-		$filename = basename( $filepath, '.php' );
 
 		// If filename exists then continue.
 		if ( $filename ) {
@@ -262,7 +283,6 @@ final class WSAL_SensorManager extends WSAL_AbstractSensor {
 					break;
 			}
 		}
-
 		return $load_sensor;
 	}
 }

@@ -662,16 +662,16 @@ class MetaSeoImageListTable extends WP_List_Table
      */
     public function display_rows() // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps -- extends from WP_List_Table class
     {
-        $records   = $this->items;
-        $i         = 0;
+        $records = $this->items;
+        $i = 0;
         $alternate = '';
 
         list($columns, $hidden) = $this->get_column_info();
         if (!empty($records)) {
             foreach ($records as $rec) {
                 $alternate = 'alternate' === $alternate ? '' : 'alternate';
-                $i ++;
-                $classes  = $alternate;
+                $i++;
+                $classes = $alternate;
                 $img_meta = get_post_meta($rec->ID, '_wp_attachment_metadata', true);
                 if (empty($img_meta['file'])) {
                     continue;
@@ -688,145 +688,154 @@ class MetaSeoImageListTable extends WP_List_Table
                 } else {
                     $img_name = $img_meta['file'];
                 }
-                $type     = substr($img_meta['file'], strrpos($img_meta['file'], '.'));
+
+                $type = substr($img_meta['file'], strrpos($img_meta['file'], '.'));
                 $img_name = str_replace($type, '', $img_name);
 
                 $upload_dir = wp_upload_dir();
-                $img_path   = $upload_dir['basedir'] . '/' . $img_meta['file'];
+                $img_path = $upload_dir['basedir'] . '/' . $img_meta['file'];
                 //Get the date that image was uploaded
                 $img_date = get_the_date('', $rec->ID);
-                if (file_exists($img_path)) {
-                    if (is_readable($img_path)) {
-                        //Get image attributes including width and height
-                        list($img_width, $img_height, $img_type) = getimagesize($img_path);
-                        //Get image size
-                        $size = filesize($img_path) / 1024;
-                        if ($size > 1024) {
-                            $img_size  = ($size / 1024);
-                            $img_sizes = ' MB';
-                        } else {
-                            $img_size  = ($size);
-                            $img_sizes = ' KB';
-                        }
-                        $img_size = round($img_size, 1);
+                //Get image size
+                if (isset($img_meta['filesize'])) {
+                    $size = $img_meta['filesize'] / 1024;
+                    $img_width = (isset($img_meta['width'])) ? $img_meta['width'] : 0;
+                    $img_height = (isset($img_meta['height'])) ? $img_meta['height'] : 0;
+                } elseif (file_exists($img_path)) {
+                    //Get image attributes including width and height
+                    list($img_width, $img_height) = getimagesize($img_path);
+                    $size = filesize($img_path);
+                } else {
+                    $size = '';
+                }
+
+                if ($size === '') {
+                    $img_size = 0;
+                    $img_sizes = ' MB';
+                    $img_width = 0;
+                    $img_height = 0;
+                } else {
+                    $size = $size / 1024;
+                    if ($size > 1024) {
+                        $img_size = ($size / 1024);
+                        $img_sizes = ' MB';
                     } else {
-                        $img_size   = 0;
-                        $img_sizes  = ' MB';
-                        $img_width  = 0;
-                        $img_height = 0;
+                        $img_size = ($size);
+                        $img_sizes = ' KB';
+                    }
+                    $img_size = round($img_size, 1);
+                }
+
+                echo '<tr id="' . esc_attr('record_' . $rec->ID) . '" class="' . esc_attr($classes) . '" >';
+                foreach ($columns as $column_name => $column_display_name) {
+                    $class = sprintf('class="%1$s column-%1$s"', esc_attr($column_name));
+                    $style = '';
+
+                    if (in_array($column_name, $hidden)) {
+                        $style = ' style="display:none;"';
                     }
 
-                    echo '<tr id="' . esc_attr('record_' . $rec->ID) . '" class="' . esc_attr($classes) . '" >';
-                    foreach ($columns as $column_name => $column_display_name) {
-                        $class = sprintf('class="%1$s column-%1$s"', esc_attr($column_name));
-                        $style = '';
+                    $attributes = $class . $style;
 
-                        if (in_array($column_name, $hidden)) {
-                            $style = ' style="display:none;"';
-                        }
-
-                        $attributes = $class . $style;
-
-                        switch ($column_name) {
-                            case 'cb':
-                                echo '<td scope="row" class="check-column">';
-                                echo '<input id="cb-select-1" class="metaseo_post" type="checkbox"
+                    switch ($column_name) {
+                        case 'cb':
+                            echo '<td scope="row" class="check-column">';
+                            echo '<input id="cb-select-1" class="metaseo_post" type="checkbox"
                                  name="post[]" value="' . esc_attr($rec->ID) . '">';
-                                echo '</td>';
-                                break;
+                            echo '</td>';
+                            break;
 
-                            case 'col_id':
-                                echo '<td class="col_id" colspan="1">';
-                                echo esc_html($i);
-                                echo '</td>';
-                                break;
+                        case 'col_id':
+                            echo '<td class="col_id" colspan="1">';
+                            echo esc_html($i);
+                            echo '</td>';
+                            break;
 
-                            case 'col_image':
-                                $img = '<img src="' . esc_url($thumb_url) . '" width="70px" height="70px" class="metaseo-image"
+                        case 'col_image':
+                            $img = '<img src="' . esc_url($thumb_url) . '" width="70px" height="70px" class="metaseo-image"
   data-name="' . esc_attr($img_name . $type) . '" data-img-post-id="' . esc_attr($rec->ID) . '" />';
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="3">%1$s</td>', $img, $attributes);
-                                break;
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="3">%1$s</td>', $img, $attributes);
+                            break;
 
-                            case 'col_image_name':
-                                $ext  = strtoupper(str_replace('.', '', $type));
-                                $info = '<div class="img-name-wrapper">';
-                                $info .= '<input type="text" name="' . esc_attr('name_image[' . $rec->ID . ']') . '"
+                        case 'col_image_name':
+                            $ext = strtoupper(str_replace('.', '', $type));
+                            $info = '<div class="img-name-wrapper">';
+                            $info .= '<input type="text" name="' . esc_attr('name_image[' . $rec->ID . ']') . '"
                                  class="metaseo-img-meta metaseo-img-name" data-meta-type="change_image_name"
                                   id="' . esc_attr('img-name-' . $rec->ID) . '" data-post-id="' . esc_attr($rec->ID) . '" rows="2"
                                     data-extension="' . esc_attr($type) . '" value="' . esc_attr($img_name) . '">';
-                                $info .= '<p>' . esc_html($ext) . esc_html__(' Size: ', 'wp-meta-seo') . esc_html($img_size . $img_sizes) . '</p>';
-                                $info .= '<p>' . esc_html($img_width) . 'x' . esc_html($img_height) . '</p>';
-                                $info .= '<p>' . esc_html($img_date) . '</p>';
-                                $info .= '<span class="saved-info" style="position:relative">
+                            $info .= '<p>' . esc_html($ext) . esc_html__(' Size: ', 'wp-meta-seo') . esc_html($img_size . $img_sizes) . '</p>';
+                            $info .= '<p>' . esc_html($img_width) . 'x' . esc_html($img_height) . '</p>';
+                            $info .= '<p>' . esc_html($img_date) . '</p>';
+                            $info .= '<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>';
-                                $info .= '</div>';
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="4">%1$s</td>', $info, $attributes);
-                                break;
+                            $info .= '</div>';
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="4">%1$s</td>', $info, $attributes);
+                            break;
 
-                            case 'col_image_info':
-                                $info = '<div class="opt-info" id="' . esc_attr('opt-info-' . $rec->ID) . '"></div>';
-                                $info .= '<span class="metaseo-loading"></span>';
-                                $info .= '
+                        case 'col_image_info':
+                            $info = '<div class="opt-info" id="' . esc_attr('opt-info-' . $rec->ID) . '"></div>';
+                            $info .= '<span class="metaseo-loading"></span>';
+                            $info .= '
                                                         <div class="popup-bg"></div>
                                                         <div class="popup post-list">
                                                                         <span class="popup-close" title="Close">x</span>
                                     <div class="popup-content"></div>
                              </div>';
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="5" style="position:relative">%1$s</td>', $info, $attributes);
-                                break;
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="5" style="position:relative">%1$s</td>', $info, $attributes);
+                            break;
 
-                            case 'col_image_alternative':
-                                $input = '<textarea name="' . esc_attr('img_alternative[' . $rec->ID . ']') . '" class="metaseo-img-meta"
+                        case 'col_image_alternative':
+                            $input = '<textarea name="' . esc_attr('img_alternative[' . $rec->ID . ']') . '" class="metaseo-img-meta"
  data-meta-type="alt_text" id="' . esc_attr('img-alt-' . $rec->ID) . '" data-post-id="' . esc_attr($rec->ID) . '"
   rows="2">' . esc_textarea($rec->alt) . '</textarea>';
-                                $input .= ('<span class="saved-info" style="position:relative">
+                            $input .= ('<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>');
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
-                                break;
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
+                            break;
 
-                            case 'col_image_title':
-                                $input = '<textarea name="' . esc_attr('img_title[' . $rec->ID . ']') . '" class="metaseo-img-meta"
+                        case 'col_image_title':
+                            $input = '<textarea name="' . esc_attr('img_title[' . $rec->ID . ']') . '" class="metaseo-img-meta"
  data-meta-type="image_title" id="' . esc_attr('img-title-' . $rec->ID) . '" data-post-id="' . esc_attr($rec->ID) . '"
   rows="2">' . esc_textarea($rec->title) . '</textarea>';
-                                $input .= ('<span class="saved-info" style="position:relative">
+                            $input .= ('<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>');
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
-                                break;
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
+                            break;
 
-                            case 'col_image_legend':
-                                $input = '<textarea name="' . esc_attr('img_legend[' . $rec->ID . ']') . '" class="metaseo-img-meta"
+                        case 'col_image_legend':
+                            $input = '<textarea name="' . esc_attr('img_legend[' . $rec->ID . ']') . '" class="metaseo-img-meta"
  data-meta-type="image_caption" id="' . esc_attr('img-legend-' . $rec->ID) . '" data-post-id="' . esc_attr($rec->ID) . '"
   rows="2">' . esc_textarea($rec->legend) . '</textarea>';
-                                $input .= '<span class="saved-info" style="position:relative">
+                            $input .= '<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>';
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
-                                break;
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
+                            break;
 
-                            case 'col_image_desc':
-                                $input = '<textarea name="' . esc_attr('img_desc[' . $rec->ID . ']') . '" class="metaseo-img-meta"
+                        case 'col_image_desc':
+                            $input = '<textarea name="' . esc_attr('img_desc[' . $rec->ID . ']') . '" class="metaseo-img-meta"
  data-meta-type="image_description" id="' . esc_attr('img-desc-' . $rec->ID) . '" data-post-id="' . esc_attr($rec->ID) . '"
   rows="2">' . esc_textarea($rec->des) . '</textarea>';
-                                $input .= ('<span class="saved-info" style="position:relative">
+                            $input .= ('<span class="saved-info" style="position:relative">
                                                         <span class="spinner"></span>
                                                         </span>');
-                                // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
-                                echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
-                                break;
-                        }
+                            // phpcs:ignore WordPress.Security.EscapeOutput -- Content escaped in previous line (same function)
+                            echo sprintf('<td %2$s colspan="3">%1$s</td>', $input, $attributes);
+                            break;
                     }
-
-                    echo '</tr>';
                 }
+
+                echo '</tr>';
             }
         }
     }
@@ -2007,7 +2016,7 @@ class MetaSeoImageListTable extends WP_List_Table
                             continue;
                         }
 
-                        $src      = $tag->getAttribute('src');
+                        $src      = $tag['attributes']['src'];
                         $postid   = self::getAttachmentId($src);
                         $path     = get_attached_file($postid);
                         $infos    = pathinfo($path);

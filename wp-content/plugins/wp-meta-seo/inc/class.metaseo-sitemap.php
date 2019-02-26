@@ -346,11 +346,21 @@ class MetaSeoSitemap
                 '_',
                 str_replace('http://', '', str_replace('https://', '', ABSPATH))
             );
-            $value    = trim(ABSPATH, '/') . '/wpms-sitemap_' . $home_url . '.xml';
-            $link     = get_option('siteurl') . '/wpms-sitemap_' . $home_url . '.xml';
+            if ((int)$this->settings_sitemap['wpms_sitemap_root'] === 1) {
+                $value    = trim(ABSPATH, '/') . '/sitemap_' . $home_url . '.xml';
+                $link     = get_option('siteurl') . '/sitemap_' . $home_url . '.xml';
+            } else {
+                $value    = trim(ABSPATH, '/') . '/wpms-sitemap_' . $home_url . '.xml';
+                $link     = get_option('siteurl') . '/wpms-sitemap_' . $home_url . '.xml';
+            }
         } else {
-            $value = trim(ABSPATH, '/') . '/' . $this->wpms_sitemap_name;
-            $link  = get_option('siteurl') . '/' . $this->wpms_sitemap_name;
+            if ((int)$this->settings_sitemap['wpms_sitemap_root'] === 1) {
+                $value = trim(ABSPATH, '/') . '/' . $this->wpms_sitemap_default_name;
+                $link  = get_option('siteurl') . '/' . $this->wpms_sitemap_default_name;
+            } else {
+                $value = trim(ABSPATH, '/') . '/' . $this->wpms_sitemap_name;
+                $link  = get_option('siteurl') . '/' . $this->wpms_sitemap_name;
+            }
         }
         echo '<input readonly id="wpms_sitemap_link" name="_metaseo_settings_sitemap[wpms_sitemap_link]"
          type="text" value="' . esc_attr($value) . '" size="50" class="wpms-large-input wpms-no-margin wpms_width_90" />';
@@ -592,7 +602,7 @@ class MetaSeoSitemap
                 'urlset'
             )
         );
-
+        $gglstmp_urlset->setAttribute('xmlns:xhtml', 'http://www.w3.org/1999/xhtml');
         /* add home page */
         $list_links[] = home_url('/');
         $url          = $gglstmp_urlset->appendChild($xml->createElement('url'));
@@ -2346,12 +2356,18 @@ ORDER BY p.post_date DESC', array($post_type)));
             }
         }
 
+        if ((int)$this->settings_sitemap['wpms_sitemap_root'] === 1) {
+            $sitemapUrl = site_url($this->wpms_sitemap_default_name);
+        } else {
+            $sitemapUrl = site_url($this->wpms_sitemap_name);
+        }
+
         /**
          * Submit sitemaps, don't ping if blog is not public.
          *
          * @param string Sitemap URL
          */
-        do_action('wpms_submit_sitemap', site_url($this->wpms_sitemap_name));
+        do_action('wpms_submit_sitemap', $sitemapUrl);
         if ($type === 'ajax') {
             wp_send_json(array('status' => true, 'message' => 'success'));
         }

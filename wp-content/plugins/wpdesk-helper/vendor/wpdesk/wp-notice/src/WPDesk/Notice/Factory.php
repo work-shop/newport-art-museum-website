@@ -23,7 +23,7 @@ class Factory
      */
     public static function notice($noticeContent = '', $noticeType = 'info', $isDismissible = false, $priority = 10)
     {
-        return new Notice($noticeType, $noticeContent, $isDismissible, $priority);
+        return new Notice($noticeContent, $noticeType, $isDismissible, $priority);
     }
 
     /**
@@ -38,11 +38,11 @@ class Factory
      */
     public static function permanentDismissibleNotice(
         $noticeContent = '',
-        $noticeType = '',
         $noticeName = '',
+        $noticeType = '',
         $priority = 10
     ) {
-        return new PermanentDismissibleNotice($noticeType, $noticeContent, $noticeName, $priority);
+        return new PermanentDismissibleNotice($noticeContent, $noticeName, $noticeType, $priority);
     }
 
 }

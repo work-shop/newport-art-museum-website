@@ -452,7 +452,7 @@ class WPMSEOMetabox extends WPMSEOMeta
         $service         = false;
         ?>
         <div class="wpmseo-metabox-tabs-div">
-        <ul class="wpmseo-metabox-tabs tabs wpmstabs" id="wpmseo-metabox-tabs">
+        <ul class="wpmseo-metabox-tabs tabs ju-tabs wpmstabs" id="wpmseo-metabox-tabs">
             <li class="tab wpmstab col">
                 <a class="wpmseo_tablink"
                    href="#wpmseo_general"><?php esc_html_e('SEO Page optimization', 'wp-meta-seo'); ?></a>

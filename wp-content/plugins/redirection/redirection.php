@@ -3,7 +3,7 @@
 Plugin Name: Redirection
 Plugin URI: https://redirection.me/
 Description: Manage all your 301 redirects and monitor 404 errors
-Version: 3.6.3
+Version: 3.7.3
 Author: John Godley
 Author URI: https://johngodley.com
 Text Domain: redirection
@@ -29,19 +29,25 @@ if ( ! defined( 'REDIRECTION_FLYING_SOLO' ) ) {
 	define( 'REDIRECTION_FLYING_SOLO', apply_filters( 'redirection_flying_solo', true ) );
 }
 
+// This file must support PHP < 5.4 so as not to crash
+if ( version_compare( phpversion(), '5.4' ) < 0 ) {
+	add_action( 'plugin_action_links_' . basename( dirname( REDIRECTION_FILE ) ) . '/' . basename( REDIRECTION_FILE ), 'red_deprecated_php', 10, 4 );
+
+	function red_deprecated_php( $links ) {
+		array_unshift( $links, '<a href="https://redirection.me/support/problems/php-version/" style="color: red; text-decoration: underline">' . sprintf( __( 'Disabled! Detected PHP %s, need PHP 5.4+', 'redirection' ), phpversion() ) . '</a>' );
+		return $links;
+	}
+
+	return;
+}
+
 include dirname( __FILE__ ) . '/redirection-version.php';
 include dirname( __FILE__ ) . '/redirection-settings.php';
 include dirname( __FILE__ ) . '/models/redirect.php';
 include dirname( __FILE__ ) . '/models/module.php';
 include dirname( __FILE__ ) . '/models/log.php';
 include dirname( __FILE__ ) . '/models/flusher.php';
-
-if ( version_compare( phpversion(), '5.4' ) < 0 ) {
-	include dirname( __FILE__ ) . '/models/match-deprecated.php';
-} else {
-	include dirname( __FILE__ ) . '/models/match.php';
-}
-
+include dirname( __FILE__ ) . '/models/match.php';
 include dirname( __FILE__ ) . '/models/action.php';
 include dirname( __FILE__ ) . '/models/request.php';
 
@@ -66,6 +72,7 @@ function red_start_rest() {
 	include_once dirname( __FILE__ ) . '/redirection-api.php';
 
 	Redirection_Api::init();
+	Redirection_Admin::init();
 
 	remove_action( 'rest_api_init', 'red_start_rest' );
 }

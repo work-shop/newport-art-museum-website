@@ -3,8 +3,8 @@ Contributors: wpdesk
 Donate link: https://www.wpdesk.net/flexible-checkout-fields-woocommerce/
 Tags: woocommerce checkout fields, woocommerce custom fields, woocommerce checkout manager, woocommerce checkout editor, woocommerce fields manager, woocommerce fields editor, woocommerce custom checkout fields, woocommerce checkout options, woocommerce checkout pro, woocommerce custom sections, woocommerce file upload
 Requires at least: 4.5
-Tested up to: 4.9.8
-Stable tag: 1.6.10
+Tested up to: 5.0.3
+Stable tag: 1.8.2
 Requires PHP: 5.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
@@ -62,6 +62,7 @@ Add new fields to WooCommerce checkout:
 * Checkbox
 * Radio button
 * Select (Drop Down)
+* Multi-select
 * Date
 * Time
 * Color Picker
@@ -118,9 +119,9 @@ This plugin is compatible with variable products.
 
 = WooCommerce Compatibility =
 
-**WooCommerce 3.4 ready!**
+**WooCommerce 3.5 ready!**
 
-Flexible Checkout Fields also plays well with older versions of WooCommerce. We tested the plugin with WooCommerce 3.0.0 and up.
+Flexible Checkout Fields also plays well with older versions of WooCommerce. We tested the plugin with WooCommerce 3.1.0 and up.
 
 = Well Documented =
 
@@ -187,9 +188,37 @@ If you are upgrading from the old WooCommerce Checkout Fields version (1.1, wooc
 
 == Changelog ==
 
+= 1.8.2 - 2019-01-31 =
+* Fixed fields order in configuration
+* Fixed unwanted validation on additional sections when PRO plugin disabled
+* Fixed box display for incorrect validation
+* Fixed errors after save fields
+* Fixed Polylang translations on select options
+* Fixed non city countries validation
+
+= 1.8.1 - 2019-01-15 =
+* Fixed CSS WP Menu
+
+= 1.8 - 2018-12-19 =
+* Added ability to edit placeholder on City and Postcode
+* Added file field in thank you page and emails
+* Added functionality for removed ability to edit file field for customer
+* Fixed: PHP warning invalid argument supplied for foreach
+* Removed display checkbox on My Account - address for file field
+
+= 1.7.2 - 2018-12-19 =
+* Fixed missing additional fields in emails
+
+= 1.7.1 - 2018-12-13 =
+* Added DIVI compatibility
+
+= 1.7.0 - 2018-12-06 =
+* Added required changes for PRO version and multi-select field
+* Added required changes for PRO version and select2 styling
+
 = 1.6.10 - 2018-10-16 =
 * Added support for WooCommerce 3.5
-* Dropped support for WooCommerce below 3.0 (the plugin may still work with older versions but we do not declare official support)
+* Dropped support for WooCommerce 3.0 and older (the plugin may still work with older versions but we do not declare official support)
 
 = 1.6.9 - 2018-09-18 =
 * Fixed edit address pages for WPML Strings

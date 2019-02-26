@@ -170,7 +170,11 @@ foreach ( $plugin->sections as $section ) {
 											    $settings[ $key ][ $name ]['type'] = 'text';
 										    }
 										?>
-                                        <li class="field-item menu-item<?php if ( ! $field_visible ): ?> field-hidden<?php endif; ?>" data-qa-id="field-item" data-qa-id2="<?php if ( isset( $settings[ $key ][ $name ]['label'] ) ): echo esc_attr( $settings[ $key ][ $name ]['label'] ); elseif ( isset( $field['label'] ) ): echo $field['label']; endif; ?>">
+                                        <li
+	                                        class="field-item menu-item<?php if ( ! $field_visible ): ?> field-hidden<?php endif; ?> fcf-field-<?php echo $field_type; ?>"
+	                                        data-qa-id="field-item"
+	                                        data-qa-id2="<?php if ( isset( $settings[ $key ][ $name ]['label'] ) ): echo esc_attr( $settings[ $key ][ $name ]['label'] ); elseif ( isset( $field['label'] ) ): echo esc_attr( $field['label'] ); endif; ?>"
+                                        >
                                             <div class="menu-item-bar">
                                                 <div class="menu-item-handle field-item-handle">
 													<?php if ( ! empty( $settings[ $key ][ $name ]['custom_field'] ) && $settings[ $key ][ $name ]['custom_field'] == '1' ): ?>
@@ -309,7 +313,7 @@ foreach ( $plugin->sections as $section ) {
                                                                   name="inspire_checkout_fields[settings][<?php echo $key ?>][<?php echo $name ?>][label]"
                                                                   data-qa-id="field-name"
                                                         ><?php if ( isset( $settings[ $key ][ $name ]['label'] ) ): echo esc_html( $settings[ $key ][ $name ]['label'] );
-															elseif ( isset( $field['label'] ) ): echo $field['label']; endif; ?></textarea>
+															elseif ( isset( $field['label'] ) ): echo esc_html( $field['label'] ); endif; ?></textarea>
 
                                                         <p class="description"><?php _e( 'You can use HTML.', 'flexible-checkout-fields' ); ?></p>
                                                     </div>
@@ -376,11 +380,10 @@ foreach ( $plugin->sections as $section ) {
 
 													<?php if ( $is_custom_field ): ?>
 														<?php do_action( 'flexible_checkout_fields_settings_html', $key, $name, $settings ); ?>
-                                                        <div>
+                                                        <div class="field_type">
                                                             <label for="type_<?php echo $name ?>"><?php _e( 'Field Type', 'flexible-checkout-fields' ) ?></label>
 
-                                                            <select <?php /* id="woocommerce_checkout_fields_field_type" */ ?>
-                                                                    id="field_type_<?php echo $name ?>"
+                                                            <select class="field_type" id="field_type_<?php echo $name ?>"
                                                                     name="inspire_checkout_fields[settings][<?php echo $key ?>][<?php echo $name ?>][type]"
                                                                     disabled
                                                                     data-qa-id="field-type"
@@ -419,8 +422,8 @@ foreach ( $plugin->sections as $section ) {
                                                                 $disabled = '';
                                                                 $tip = '';
                                                                 if ( in_array( $name, array(
-                                                                    'billing_city', 'billing_state', 'billing_postcode', 'billing_country',
-                                                                    'shipping_city', 'shipping_state', 'shipping_postcode', 'shipping_country'
+                                                                    'billing_state', 'billing_country',
+                                                                    'shipping_state', 'shipping_country'
                                                                 ) ) ) {
 		                                                            $disabled = 'disabled';
                                                                     $tip = __( 'This field is address locale dependent and cannot be modified.', 'flexible-checkout-fields' );
@@ -433,13 +436,13 @@ foreach ( $plugin->sections as $section ) {
                                                             <input class="field_placeholder"
                                                                    <?php echo $disabled; ?> type="text" id="placeholder_<?php echo $name ?>"
                                                                    name="inspire_checkout_fields[settings][<?php echo $key ?>][<?php echo $name ?>][placeholder]"
-                                                                   value="<?php if ( ! empty( $settings[ $key ][ $name ]['placeholder'] ) ): echo $settings[ $key ][ $name ]['placeholder'];
-															       else: echo isset( $field['placeholder'] ) ? $field['placeholder'] : ''; endif; ?>" <?php echo $required; ?>
+                                                                   value="<?php if ( ! empty( $settings[ $key ][ $name ]['placeholder'] ) ): echo esc_attr( $settings[ $key ][ $name ]['placeholder'] );
+															       else: echo isset( $field['placeholder'] ) ? esc_attr( $field['placeholder'] ) : ''; endif; ?>" <?php echo $required; ?>
                                                                    data-qa-id="field-placeholder"
                                                             />
                                                         </div>
 													<?php endif; ?>
-                                                    <div>
+                                                    <div class="field-class">
                                                         <label for="class_<?php echo $name ?>"><?php _e( 'CSS Class', 'flexible-checkout-fields' ) ?></label>
                                                         <input class="field_class" type="text" id="class_<?php echo $name ?>"
                                                                name="inspire_checkout_fields[settings][<?php echo $key ?>][<?php echo $name ?>][class]"
@@ -450,6 +453,9 @@ foreach ( $plugin->sections as $section ) {
                                                                data-qa-id="field-class"
                                                         />
                                                     </div>
+
+													<?php do_action( 'flexible_checkout_fields_setting_appearance_html', $key, $name, $settings ); ?>
+
                                                 </div>
 
 
@@ -457,7 +463,7 @@ foreach ( $plugin->sections as $section ) {
 
                                                     <?php foreach ( $fields_display_on as $display_on_field_key => $display_on_field ) : ?>
                                                         <?php if ( $display_on_field_key == 'address' && !in_array( $key, array( 'billing', 'shipping' ) ) ) continue; ?>
-                                                        <div>
+                                                        <div class="fcf-display-on-<?php echo $display_on_field_key; ?>">
                                                             <?php
                                                                 $checked = ' checked';
                                                                 $style   = '';
@@ -615,7 +621,7 @@ foreach ( $plugin->sections as $section ) {
                     return false;
                 }
                 var html = '';
-                html += '<li class="field-item menu-item element_' + field_slug + ' just-added" data-qa-id="field-item" data-qa-id2="' + htmlEncode( field_label ) + '">';
+                html += '<li class="field-item menu-item element_' + field_slug + ' just-added fcf-field-' + field_type + '" data-qa-id="field-item" data-qa-id2="' + htmlEncode( field_label ) + '">';
                 //html += '<li class="field-item menu-item">';
                 html += '<div class="menu-item-bar">';
                 html += '<div class="menu-item-handle field-item-handle">';
@@ -695,9 +701,9 @@ foreach ( $plugin->sections as $section ) {
 
                 <?php do_action( 'flexible_checkout_fields_settings_js_html' ); ?>
 
-                html += '<div>';
+                html += '<div class="field_type">';
                 html += '<label for="type_' + field_slug + '"><?php _e( 'Field Type', 'flexible-checkout-fields' ) ?></label>';
-                html += '<select id="woocommerce_checkout_fields_field_type" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][type]" disabled data-qa-id="field-type">' + printSelectTypeOptions(field_type) + '</select>';
+                html += '<select class="field_type" id="field_type_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][type]" disabled data-qa-id="field-type">' + printSelectTypeOptions(field_type) + '</select>';
                 html += '</div>';
 
                 html += '</div>';
@@ -707,7 +713,7 @@ foreach ( $plugin->sections as $section ) {
                 html += '<label for="placeholder_' + field_slug + '"><?php _e( 'Placeholder', 'flexible-checkout-fields' ) ?></label>';
                 html += '<input class="field_placeholder" type="text" id="placeholder_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][placeholder]" value="" data-qa-id="field-placeholder" />';
                 html += '</div>';
-                html += '<div>';
+                html += '<div class="field-class">';
                 html += '<label for="class_' + field_slug + '"><?php _e( 'CSS Class', 'flexible-checkout-fields' ) ?></label>';
                 html += '<input class="field_class" type="text" id="class_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][class]" value="" data-qa-id="field-class" />';
                 html += '</div>';
@@ -717,7 +723,7 @@ foreach ( $plugin->sections as $section ) {
                 html += '<div class="field-settings-tab-container field-settings-display-options" style="display:none;">';
 
                 <?php foreach ( $fields_display_on as $display_on_field_key => $display_on_field ) : ?>
-                    html += '<div>';
+                    html += '<div class=" fcf-display-on-<?php echo $display_on_field_key; ?>">';
                     html += '<input type="hidden" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][display_on_<?php echo $display_on_field_key; ?>]" value="0"/>';
                     html += '<label>';
                     html += '<input class="field_required" type="checkbox" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][display_on_<?php echo $display_on_field_key; ?>]" value="1" checked data-qa-id="field-display-on-address" />';
@@ -874,8 +880,15 @@ foreach ( $plugin->sections as $section ) {
         // Activate Spinner on Save
         jQuery('input[type="submit"]').on('click', function (event) {
             jQuery('#inspire_checkout_field [required]').each(function () {
-                if (jQuery(this).val() == '' && jQuery(this).is(':hidden')) {
-                    jQuery(this).closest('li').find('.item-controls>a').click();
+                if (jQuery(this).val() === '' && jQuery(this).is(':hidden')) {
+                    jQuery(this).css('border-color', 'red' );
+                    var classes = jQuery(this).closest('.field-settings-tab-container').attr('class').split(' ');
+                    var tab = classes[1].split('-')[2];
+                    jQuery(this).closest('.field-settings').find('.field-settings-tab-container').hide();
+                    jQuery(this).closest('.field-settings').find('.nav-tab-wrapper a').removeClass('nav-tab-active');
+                    jQuery(this).closest('.field-settings').find('a[href="#' + tab + '"]').addClass('nav-tab-active');
+                    jQuery('.' + classes[1] ).show();
+                    jQuery(this).closest('li').find('.field-settings').slideDown();
                 }
             });
             if (jQuery(this).hasClass("reset_settings")) {

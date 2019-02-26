@@ -759,6 +759,24 @@ class MetaSeoAdmin
      */
     public function adminRedirects()
     {
+        // Disable all admin notice for page belong to plugin
+        add_action('admin_print_scripts', function () {
+            global $wp_filter;
+            // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- No action, nonce is not required
+            if ((!empty($_GET['page']) && in_array($_GET['page'], array('wpms-setup', 'metaseo_settings','metaseo_console')))) {
+                if (is_user_admin()) {
+                    if (isset($wp_filter['user_admin_notices'])) {
+                        unset($wp_filter['user_admin_notices']);
+                    }
+                } elseif (isset($wp_filter['admin_notices'])) {
+                    unset($wp_filter['admin_notices']);
+                }
+                if (isset($wp_filter['all_admin_notices'])) {
+                    unset($wp_filter['all_admin_notices']);
+                }
+            }
+        });
+
         // Setup wizard redirect
         if (is_null(get_option('_wpmf_activation_redirect', null)) && is_null(get_option('wpms_version', null))) {
             // phpcs:ignore WordPress.Security.NonceVerification.NoNonceVerification -- View request, no action

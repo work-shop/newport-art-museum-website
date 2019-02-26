@@ -39,9 +39,11 @@ class Flexible_Checkout_Fields_Myaccount_Field_Processor {
 	public function hooks() {
 		$settings = $this->plugin->get_settings();
 		foreach ( $settings as $section ) {
-			foreach ( $section as $key => $field ) {
-				if ( $this->is_custom_field( $field ) ) {
-					add_filter( 'woocommerce_process_myaccount_field_' . $key, array( $this, 'wp_unslash_field_value' ) );
+			if ( is_array( $section ) ) {
+				foreach ( $section as $key => $field ) {
+					if ( $this->is_custom_field( $field ) ) {
+						add_filter( 'woocommerce_process_myaccount_field_' . $key, array( $this, 'wp_unslash_field_value' ) );
+					}
 				}
 			}
 		}

@@ -66,7 +66,7 @@ class MetaSeoDashboard
                     }
 
                     $img_src = $tag['attributes']['src'];
-                    if (!preg_match('/\.(jpg|png|gif)$/i', $img_src, $matches)) {
+                    if (!preg_match('/\.(jpg|jpeg|png|gif)$/i', $img_src, $matches)) {
                         continue;
                     }
 

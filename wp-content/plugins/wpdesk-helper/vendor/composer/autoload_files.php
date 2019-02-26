@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    'cb883ac9840733a88fe8e977664ea0ea' => $vendorDir . '/wpdesk/wp-notice/src/WPDesk/functions.php',
+    '0509b34a4bd7aebefeac629c9dc8a978' => $vendorDir . '/wpdesk/wp-notice/src/WPDesk/notice-functions.php',
 );

@@ -306,13 +306,19 @@ class MenuEd_ShadowPluginFramework {
    * @return bool
    */
 	function is_in_wpmu_plugin_dir( $filename = '' ){
-		if ( !defined('WPMU_PLUGIN_DIR') ) return false;
+		if ( !defined('WPMU_PLUGIN_DIR') ) {
+			return false;
+		}
 		
 		if ( empty($filename) ){
 			$filename = $this->plugin_file;
 		}
-		
-		return (strpos( realpath($filename), realpath(WPMU_PLUGIN_DIR) ) !== false);
+
+		$muPluginDir = realpath(WPMU_PLUGIN_DIR);
+		if ( empty($muPluginDir) ) {
+			return false;
+		}
+		return (strpos( realpath($filename), $muPluginDir ) !== false);
 	}
 	
 	/**

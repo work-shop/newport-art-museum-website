@@ -77,6 +77,9 @@ class wsMenuEditorExtras {
 			'wp-name',     //Weblog title
 			'wp-version',  //Current WP version
 			'wp-user-display-name', //Current user's display name,
+			'wp-user-first-name',   // first name,
+			'wp-user-last-name',    // last name,
+			'wp-user-login',        // and username/login.
 			'wp-logout-url', //A URL that lets the current user log out.
 		);
 		foreach($info_shortcodes as $tag){
@@ -221,7 +224,7 @@ class wsMenuEditorExtras {
 		if ( empty($code) ){
 			$code = isset($atts[0]) ? $atts[0] : '';
 		}
-		
+
 		$info = '['.$code.']'; //Default value
 		switch($code){
 			case 'wp-wpurl':
@@ -245,8 +248,19 @@ class wsMenuEditorExtras {
 				break;
 
 			case 'wp-user-display-name':
-				$user = wp_get_current_user();
-				$info = is_object($user) ? strval($user->get('display_name')) : '';
+				$info = $this->get_current_user_property('display_name');
+				break;
+
+			case 'wp-user-first-name':
+				$info = $this->get_current_user_property('first_name');
+				break;
+
+			case 'wp-user-last-name':
+				$info = $this->get_current_user_property('last_name');
+				break;
+
+			case 'wp-user-login':
+				$info = $this->get_current_user_property('user_login');
 				break;
 
 			case 'wp-logout-url':
@@ -255,6 +269,14 @@ class wsMenuEditorExtras {
 		}
 		
 		return $info;
+	}
+
+	private function get_current_user_property($property) {
+		$user = wp_get_current_user();
+		if (is_object($user)) {
+			return strval($user->get($property));
+		}
+		return '';
 	}
 
 	/**
@@ -277,8 +299,10 @@ class wsMenuEditorExtras {
 			//but it still seems wrong to go this far just to extract a <span> tag.
 			$title = $this->current_shortcode_item['defaults']['menu_title'];
 			if ( stripos($title, '<span') !== false ) {
+				/** @noinspection PhpComposerExtensionStubsInspection */
 				$dom = new domDocument;
 				if ( @$dom->loadHTML($title) ) {
+					/** @noinspection PhpComposerExtensionStubsInspection */
 					$xpath = new DOMXpath($dom);
 					$result = $xpath->query('//span[contains(@class,"update-plugins") or contains(@class,"awaiting-mod")]');
 					if ( $result->length > 0 ) {
@@ -2226,6 +2250,13 @@ wsEditorData.importMenuNonce = "<?php echo esc_js(wp_create_nonce('import_custom
 				'title' => 'Plugins',
 			)
 		);
+		/*$modules['role-editor'] = array(
+			'path' => AME_ROOT_DIR . '/extras/modules/role-editor/load.php',
+			'className' => 'ameRoleEditor',
+			'requiredPhpVersion' => '5.3.6',
+			'title' => 'Role Editor',
+		);*/
+
 		return $modules;
 	}
 }

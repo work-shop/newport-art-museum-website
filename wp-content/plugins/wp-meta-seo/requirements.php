@@ -173,7 +173,7 @@ class JUCheckRequirements
         self::checkRequirementFunctions();
         self::checkRequiredPlugins();
         self::checkMinimumAddonsVersion();
-        if (is_admin() && !wp_doing_ajax()) {
+        if (is_admin() && !(defined('DOING_AJAX') && DOING_AJAX)) {
             self::displayNotify();
         }
 

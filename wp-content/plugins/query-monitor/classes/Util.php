@@ -179,8 +179,9 @@ class QM_Util {
 				break;
 		}
 
-		return self::$file_components[ $file ] = (object) compact( 'type', 'name', 'context' );
+		self::$file_components[ $file ] = (object) compact( 'type', 'name', 'context' );
 
+		return self::$file_components[ $file ];
 	}
 
 	public static function populate_callback( array $callback ) {
@@ -323,7 +324,8 @@ class QM_Util {
 	}
 
 	public static function get_query_type( $sql ) {
-		$sql = $type = trim( $sql );
+		$sql  = trim( $sql );
+		$type = $sql;
 
 		if ( 0 === strpos( $sql, '/*' ) ) {
 			// Strip out leading comments such as `/*NO_SELECT_FOUND_ROWS*/` before calculating the query type
@@ -412,6 +414,33 @@ class QM_Util {
 			preg_match_all( '#\\\\([a-zA-Z0-9_])#', $matches[0], $m );
 			return '\\' . implode( '\\', $m[1] ) . '\\';
 		}, $fqn );
+	}
+
+	/**
+	 * Helper function for JSON encoding data and formatting it in a consistent and compatible manner.
+	 *
+	 * @param mixed $data The data to be JSON encoded.
+	 * @return string The JSON encoded data.
+	 */
+	public static function json_format( $data ) {
+		$json_options = JSON_PRETTY_PRINT;
+
+		if ( defined( 'JSON_UNESCAPED_SLASHES' ) ) {
+			// phpcs:ignore PHPCompatibility.Constants.NewConstants.json_unescaped_slashesFound
+			$json_options |= JSON_UNESCAPED_SLASHES;
+		}
+
+		$json = json_encode( $data, $json_options );
+
+		if ( ! defined( 'JSON_UNESCAPED_SLASHES' ) ) {
+			$json = wp_unslash( $json );
+		}
+
+		return $json;
+	}
+
+	public static function is_stringy( $data ) {
+		return ( is_string( $data ) || ( is_object( $data ) && method_exists( $data, '__toString' ) ) );
 	}
 
 	public static function sort( array &$array, $field ) {

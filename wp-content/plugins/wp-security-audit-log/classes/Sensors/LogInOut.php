@@ -32,7 +32,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 	 * Transient name.
 	 * WordPress will prefix the name with "_transient_" or "_transient_timeout_" in the options table.
 	 */
-	const TRANSIENT_FAILEDLOGINS = 'wsal-failedlogins-known';
+	const TRANSIENT_FAILEDLOGINS         = 'wsal-failedlogins-known';
 	const TRANSIENT_FAILEDLOGINS_UNKNOWN = 'wsal-failedlogins-unknown';
 
 	/**
@@ -52,6 +52,10 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 		add_action( 'wp_login_failed', array( $this, 'EventLoginFailure' ) );
 		add_action( 'clear_auth_cookie', array( $this, 'GetCurrentUser' ), 10 );
 		add_filter( 'wp_login_blocked', array( $this, 'EventLoginBlocked' ), 10, 1 );
+
+		if ( is_plugin_active( 'two-factor/two-factor.php' ) ) {
+			add_action( 'login_redirect', array( $this, 'event_2fa_login' ), 10, 1 );
+		}
 
 		// Directory for logged in users log files.
 		$user_upload_dir  = wp_upload_dir();
@@ -88,6 +92,47 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 	 */
 	public function GetCurrentUser() {
 		$this->_current_user = wp_get_current_user();
+	}
+
+	/**
+	 * Login Event for Two-Factor plugin.
+	 *
+	 * @since 3.3
+	 *
+	 * @param string $redirect_url – Redirect URL.
+	 * @return string
+	 */
+	public function event_2fa_login( $redirect_url ) {
+		// @codingStandardsIgnoreStart
+		$provider = isset( $_POST['provider'] ) ? sanitize_text_field( wp_unslash( $_POST['provider'] ) ) : '';
+		$user_id  = isset( $_POST['wp-auth-id'] ) ? (int) sanitize_text_field( wp_unslash( $_POST['wp-auth-id'] ) ) : '';
+		// @codingStandardsIgnoreEnd
+
+		// Default Two-Factor options.
+		$providers_2fa = array( 'Two_Factor_Email', 'Two_Factor_Totp', 'Two_Factor_FIDO_U2F', 'Two_Factor_Backup_Codes', 'Two_Factor_Dummy' );
+
+		// Get users.
+		$user = get_userdata( $user_id );
+		if ( ! $user ) {
+			return $redirect_url;
+		}
+
+		// If provider and user are set and provider is known then log the event.
+		if ( $provider && $user && in_array( $provider, $providers_2fa, true ) ) {
+			// Get user roles.
+			$user_roles = $this->plugin->settings->GetCurrentUserRoles( $user->roles );
+			if ( $this->plugin->settings->IsLoginSuperAdmin( $user->user_login ) ) {
+				$user_roles[] = 'superadmin';
+			}
+
+			$this->plugin->alerts->Trigger(
+				1000, array(
+					'Username'         => $user->user_login,
+					'CurrentUserRoles' => $user_roles,
+				), true
+			);
+		}
+		return $redirect_url;
 	}
 
 	/**
@@ -151,7 +196,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 		}
 		$this->plugin->alerts->Trigger(
 			1000, array(
-				'Username' => $user_login,
+				'Username'         => $user_login,
 				'CurrentUserRoles' => $user_roles,
 			), true
 		);
@@ -164,7 +209,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 		if ( 0 != $this->_current_user->ID ) {
 			$this->plugin->alerts->Trigger(
 				1001, array(
-					'CurrentUserID' => $this->_current_user->ID,
+					'CurrentUserID'    => $this->_current_user->ID,
 					'CurrentUserRoles' => $this->plugin->settings->GetCurrentUserRoles( $this->_current_user->roles ),
 				), true
 			);
@@ -271,14 +316,14 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 		// Filter $_POST global array for security.
 		$post_array = filter_input_array( INPUT_POST );
 
-		$username = isset( $post_array['log'] ) ? $post_array['log'] : $username;
-		$username = sanitize_user( $username );
+		$username       = isset( $post_array['log'] ) ? $post_array['log'] : $username;
+		$username       = sanitize_user( $username );
 		$new_alert_code = 1003;
-		$user = get_user_by( 'login', $username );
-		$site_id = (function_exists( 'get_current_blog_id' ) ? get_current_blog_id() : 0);
+		$user           = get_user_by( 'login', $username );
+		$site_id        = ( function_exists( 'get_current_blog_id' ) ? get_current_blog_id() : 0 );
 		if ( $user ) {
 			$new_alert_code = 1002;
-			$user_roles = $this->plugin->settings->GetCurrentUserRoles( $user->roles );
+			$user_roles     = $this->plugin->settings->GetCurrentUserRoles( $user->roles );
 			if ( $this->plugin->settings->IsLoginSuperAdmin( $username ) ) {
 				$user_roles[] = 'superadmin';
 			}
@@ -374,7 +419,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 					$occ_unknown->UpdateMetaValue( 'Users', $users );
 				} else {
 					// In this case the value doesn't exist so set the value to array.
-					$users = array();
+					$users   = array();
 					$users[] = $username;
 				}
 
@@ -387,10 +432,10 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 				// Log an alert for a login attempt with unknown username.
 				$this->plugin->alerts->Trigger(
 					$new_alert_code, array(
-						'Attempts' => 1,
-						'Users' => $users,
+						'Attempts'    => 1,
+						'Users'       => $users,
 						'LogFileText' => '',
-						'ClientIP' => $ip,
+						'ClientIP'    => $ip,
 					)
 				);
 			}
@@ -408,7 +453,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 			$user_roles = $this->plugin->settings->GetCurrentUserRoles( $user->roles );
 			$this->plugin->alerts->Trigger(
 				4003, array(
-					'Username' => $user->user_login,
+					'Username'         => $user->user_login,
 					'CurrentUserRoles' => $user_roles,
 				), true
 			);
@@ -421,7 +466,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 	 * @param string $username - Username.
 	 */
 	public function EventLoginBlocked( $username ) {
-		$user = get_user_by( 'login', $username );
+		$user       = get_user_by( 'login', $username );
 		$user_roles = $this->plugin->settings->GetCurrentUserRoles( $user->roles );
 
 		if ( $this->plugin->settings->IsLoginSuperAdmin( $username ) ) {
@@ -429,7 +474,7 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 		}
 		$this->plugin->alerts->Trigger(
 			1004, array(
-				'Username' => $username,
+				'Username'         => $username,
 				'CurrentUserRoles' => $user_roles,
 			), true
 		);
@@ -443,18 +488,18 @@ class WSAL_Sensors_LogInOut extends WSAL_AbstractSensor {
 	 * @return string $latest_filename - File name.
 	 */
 	private function GetLastModified( $uploads_dir_path, $filename ) {
-		$filename = substr( $filename, 0, -4 );
-		$latest_mtime = 0;
+		$filename        = substr( $filename, 0, -4 );
+		$latest_mtime    = 0;
 		$latest_filename = '';
 		if ( $handle = opendir( $uploads_dir_path ) ) {
-			while ( false !== ($entry = readdir( $handle )) ) {
+			while ( false !== ( $entry = readdir( $handle ) ) ) {
 				if ( '.' != $entry && '..' != $entry ) {
 					$entry = strip_tags( $entry ); // Strip HTML Tags.
 					$entry = preg_replace( '/[\r\n\t ]+/', ' ', $entry ); // Remove Break/Tabs/Return Carriage.
 					$entry = preg_replace( '/[\"\*\/\:\<\>\?\'\|]+/', ' ', $entry ); // Remove Illegal Chars for folder and filename.
 					if ( preg_match( '/^' . $filename . '/i', $entry ) > 0 ) {
 						if ( filemtime( $uploads_dir_path . $entry ) > $latest_mtime ) {
-							$latest_mtime = filemtime( $uploads_dir_path . $entry );
+							$latest_mtime    = filemtime( $uploads_dir_path . $entry );
 							$latest_filename = $entry;
 						}
 					}

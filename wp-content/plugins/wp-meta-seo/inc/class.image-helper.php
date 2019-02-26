@@ -554,7 +554,7 @@ class ImageHelper
         }
         $post_content   = $res->post_content;
         $imgs_to_resize = get_post_meta($img_post_id, '_metaseo_resize_image', true);
-        if (preg_match_all('/<img [^<>]+ \/>/i', $post_content, $matches)) {
+        if (preg_match_all('#<img.*/>#Usmi', $post_content, $matches)) {
             $replacement = array();
             foreach ($matches[0] as $order => $tag) {
                 $replacement[$order] = $tag;

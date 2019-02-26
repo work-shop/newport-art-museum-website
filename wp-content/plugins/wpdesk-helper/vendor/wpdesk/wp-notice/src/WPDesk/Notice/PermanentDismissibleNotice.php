@@ -28,13 +28,18 @@ class PermanentDismissibleNotice extends Notice
      * WPDesk_Flexible_Shipping_Notice constructor.
      *
      * @param string $noticeContent Notice content.
-     * @param string $noticeType Notice type.
      * @param string $noticeName Notice dismiss option name.
+     * @param string $noticeType Notice type.
      * @param int    $priority Priority
      * @param array $attributes Attributes.
      */
-    public function __construct($noticeContent, $noticeType, $noticeName, $priority = 10, $attributes = array())
-    {
+    public function __construct(
+        $noticeContent,
+        $noticeName,
+        $noticeType = 'info',
+        $priority = 10,
+        $attributes = array()
+    ) {
         parent::__construct($noticeContent, $noticeType, true, $priority, $attributes);
         $this->noticeName = $noticeName;
         $this->noticeDismissOptionName = static::OPTION_NAME_PREFIX . $noticeName;
@@ -60,7 +65,8 @@ class PermanentDismissibleNotice extends Notice
     protected function getAttributesAsString()
     {
         $attributesAsString = parent::getAttributesAsString();
-        $attributesAsString .= sprintf('data-notice-name="%1$s"', esc_attr($this->noticeName));
+        $attributesAsString .= sprintf(' data-notice-name="%1$s"', esc_attr($this->noticeName));
+        $attributesAsString .= sprintf(' id="wpdesk-notice-%1$s"', esc_attr($this->noticeName));
         return $attributesAsString;
     }
 

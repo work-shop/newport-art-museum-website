@@ -76,7 +76,9 @@ final class ITSEC_Lockout {
 		add_filter( 'authenticate', array( $this, 'check_authenticate_lockout' ), 30 );
 
 		// Updated temp whitelist to ensure that admin users are automatically added.
-		add_action( 'init', array( $this, 'update_temp_whitelist' ), 0 );
+		if ( ! defined( 'ITSEC_DISABLE_TEMP_WHITELIST' ) || ! ITSEC_DISABLE_TEMP_WHITELIST ) {
+			add_action( 'init', array( $this, 'update_temp_whitelist' ), 0 );
+		}
 
 		//Register all plugin modules
 		add_action( 'plugins_loaded', array( $this, 'register_modules' ) );
@@ -126,6 +128,10 @@ final class ITSEC_Lockout {
 	 * on Nginx systems. So on every page load we check that if the current host is locked out or not.
 	 */
 	public function check_for_host_lockouts() {
+
+		if ( defined( 'WP_CLI' ) && WP_CLI ) {
+			return;
+		}
 
 		$host = ITSEC_Lib::get_ip();
 
@@ -564,8 +570,8 @@ final class ITSEC_Lockout {
 			'current' => true,
 		) );
 
-		$where = $limit  = '';
-		$wheres = array();
+		$where  = $limit = $join = $order = '';
+		$wheres = $prepare = array();
 
 		switch ( $type ) {
 
@@ -591,6 +597,16 @@ final class ITSEC_Lockout {
 			$wheres[] = "`lockout_start_gmt` > '{$after}'";
 		}
 
+		if ( ! empty( $args['search'] ) ) {
+			$search  = '%' . $wpdb->esc_like( $args['search'] ) . '%';
+			$prepare = array_merge( $prepare, array_pad( array(), 6, $search ) );
+
+			$u        = $wpdb->users;
+			$l        = $wpdb->base_prefix . 'itsec_lockouts';
+			$join     .= " LEFT JOIN `{$u}` ON ( `{$l}`.`lockout_user` = `{$u}`.`ID` )";
+			$wheres[] = "( `{$u}`.`user_login` LIKE %s OR `{$u}`.`user_email` LIKE %s OR `{$u}`.`user_nicename` LIKE %s OR `{$u}`.`display_name` LIKE %s OR `{$l}`.`lockout_username` LIKE %s or `{$l}`.`lockout_host` LIKE %s)";
+		}
+
 		if ( $wheres ) {
 			$where = ' WHERE ' . implode( ' AND ', $wheres );
 		}
@@ -599,15 +615,40 @@ final class ITSEC_Lockout {
 			$limit = ' LIMIT ' . absint( $args['limit'] );
 		}
 
+		if ( ! empty( $args['orderby'] ) ) {
+			$columns   = array( 'lockout_id', 'lockout_start', 'lockout_expire' );
+			$direction = isset( $args['order'] ) ? $args['order'] : 'DESC';
+
+			if ( ! in_array( $args['orderby'], $columns, true ) ) {
+				_doing_it_wrong( __METHOD__, "Orderby must be one of 'lockout_id', 'lockout_start', or 'lockout_expire'.", 4109 );
+
+				return array();
+			}
+
+			if ( ! in_array( $direction, array( 'ASC', 'DESC' ), true ) ) {
+				_doing_it_wrong( __METHOD__, "Order must be one of 'ASC' or 'DESC'.", 4109 );
+
+				return array();
+			}
+
+			$order = " ORDER BY `{$args['orderby']}` $direction";
+		}
+
 		if ( isset( $args['return'] ) && 'count' === $args['return'] ) {
 			$select   = 'SELECT COUNT(1) as COUNT';
 			$is_count = true;
 		} else {
-			$select   = 'SELECT *';
+			$select   = "SELECT `{$wpdb->base_prefix}itsec_lockouts`.*";
 			$is_count = false;
 		}
 
-		$results = $wpdb->get_results( "{$select} FROM `" . $wpdb->base_prefix . "itsec_lockouts`" . $where . $limit . ';', ARRAY_A );
+		$sql = "{$select} FROM `{$wpdb->base_prefix}itsec_lockouts` {$join}{$where}{$order}{$limit};";
+
+		if ( $prepare ) {
+			$sql = $wpdb->prepare( $sql, $prepare );
+		}
+
+		$results = $wpdb->get_results( $sql, ARRAY_A );
 
 		if ( $is_count && $results ) {
 			return $results[0]['COUNT'];
@@ -712,6 +753,11 @@ final class ITSEC_Lockout {
 	 * @return bool
 	 */
 	public function is_visitor_temp_whitelisted() {
+
+		if ( defined( 'ITSEC_DISABLE_TEMP_WHITELIST' ) && ITSEC_DISABLE_TEMP_WHITELIST ) {
+			return false;
+		}
+
 		$whitelist = $this->get_temp_whitelist();
 		$ip = ITSEC_Lib::get_ip();
 
@@ -989,6 +1035,37 @@ final class ITSEC_Lockout {
 	}
 
 	/**
+	 * Get all the registered lockout modules.
+	 *
+	 * @return array
+	 */
+	public function get_lockout_modules() {
+		return $this->lockout_modules;
+	}
+
+	/**
+	 * Get lockout details.
+	 *
+	 * @param int $id
+	 *
+	 * @return array|false
+	 */
+	public function get_lockout( $id ) {
+		global $wpdb;
+
+		$results = $wpdb->get_results( $wpdb->prepare(
+			"SELECT * FROM `{$wpdb->base_prefix}itsec_lockouts` WHERE `lockout_id` = %d",
+			$id
+		), ARRAY_A );
+
+		if ( ! is_array( $results ) || ! isset( $results[0] ) ) {
+			return false;
+		}
+
+		return $results[0];
+	}
+
+	/**
 	 * Process clearing lockouts on view log page
 	 *
 	 * @since 4.0
@@ -1017,7 +1094,7 @@ final class ITSEC_Lockout {
 					)
 				);
 
-				return $success === false ? false : true;
+				return (bool) $success;
 
 			}
 		}

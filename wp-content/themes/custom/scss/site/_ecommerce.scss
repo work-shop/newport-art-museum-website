@@ -381,7 +381,7 @@ $nam-input-border: lighten($medium,15%);
 	}
 
 	.woocommerce-additional-fields{
-		h3:first-child{
+		&>h3{
 			display: none;
 		}
 

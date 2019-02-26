@@ -134,12 +134,12 @@ add_action( 'woocommerce_customer_reset_password', 'action_woocommerce_reset_pas
 /*
 * Add columns to events post list
 */
-function add_acf_columns ( $columns ) {
+function add_acf_events_columns ( $columns ) {
 	return array_merge ( $columns, array ( 
 		'event_date' => __ ( 'Event Date' )
 	) );
 }
-add_filter ( 'manage_events_posts_columns', 'add_acf_columns' );
+add_filter ( 'manage_events_posts_columns', 'add_acf_events_columns' );
 
 /*
 * Add column content to events post list
@@ -152,6 +152,49 @@ function event_custom_column ( $column, $post_id ) {
 	}
 }
 add_action ( 'manage_events_posts_custom_column', 'event_custom_column', 10, 2 );
+
+
+
+/*
+* Add columns to classes post list
+*/
+function add_acf_classes_columns ( $columns ) {
+	return array_merge ( $columns, array ( 
+		'dates' => __ ( 'Class Dates' ),
+		'classes_categories' => __ ( 'Classes Categories' )
+	) );
+}
+add_filter ( 'manage_classes_posts_columns', 'add_acf_classes_columns' );
+
+/*
+* Add column content to classes post list
+*/
+function class_custom_column ( $column, $post_id ) {
+	switch ( $column ) {
+		case 'dates':
+		the_field('class_start_date',$post_id);
+		echo ' - ';
+		the_field('class_end_date',$post_id);
+		break;
+		case 'classes_categories':
+		$terms = get_terms( 'classes-categories' );
+		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ){
+			foreach ( $terms as $term ) {
+				echo $term->name . ' &nbsp; &nbsp; ';
+			}
+		}
+		break;
+	}
+}
+add_action ( 'manage_classes_posts_custom_column', 'class_custom_column', 10, 2 );
+
+
+// function my_classes_columns( $columns ) {
+//     $columns['classes_categories'] = 'Classes Categories';
+//     //$columns['movie_reviews_rating'] = 'Rating';
+//     return $columns;
+// }
+// add_filter( 'manage_edit-classes_columns', 'my_classes_columns' );
 
 
 
@@ -208,7 +251,6 @@ function profile_update_notification( $user_id, $old_user_data ) {
 	}
 
 }
-
 
 
 ?>

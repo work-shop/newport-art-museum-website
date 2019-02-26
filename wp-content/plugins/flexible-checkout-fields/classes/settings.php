@@ -257,6 +257,7 @@
           */
 
         public function updateSettingsAction(){
+
             if ( !empty( $_POST ) ) {
                 if ( !empty($_POST['option_page']) && in_array( $_POST['option_page'], array('inspire_checkout_fields_settings', 'inspire_checkout_fields_checkboxes') ) ) {
                     if ( !empty( $_POST[$this->plugin->get_namespace()] ) ) {
@@ -273,7 +274,7 @@
                         				if ( empty( $settings[$key] ) ) {
 					                        $settings[$key] = array();
 				                        }
-                        				foreach ( $settings[$key] as $field_name=>$field ) {
+                        				foreach ( $settings[ $key ] as $field_name => $field ) {
                         					if ( isset( $field['custom_field'] ) && $field['custom_field'] == '1' ) {
                         						if ( isset( $field['short_name'] ) && $field['short_name'] ) {
                         							$new_field_name = $key . '_' . $field['short_name'];
@@ -290,8 +291,17 @@
 							                        else {
 								                        $field['name'] = $new_field_name;
 							                        }
-							                        $field['label'] = stripslashes($field['label']);
 						                        }
+					                        }
+                        					if ( empty( $field['label'] ) ) {
+						                        $field['label'] = '';
+					                        } else {
+						                        $field['label'] = wp_unslash( $field['label'] );
+					                        }
+                        					if ( empty( $field['placeholder'] ) ) {
+						                        $field['placeholder'] = '';
+					                        } else {
+						                        $field['placeholder'] = wp_unslash( $field['placeholder'] );
 					                        }
 					                        $section_settings[$field_name] = $field;
 				                        }
@@ -304,7 +314,7 @@
                         	}
                             update_option( 'inspire_checkout_fields_' . $name, $settings );
                             $settings = get_option( 'inspire_checkout_fields_' . $name, array() );
-                            $this->plugin->get_sections();
+                            $this->plugin->init_sections();
                         }
                     }
                     elseif ( empty( $_POST[$this->plugin->get_namespace()] ) && $_POST['option_page'] == 'inspire_checkout_fields_checkboxes' ) {

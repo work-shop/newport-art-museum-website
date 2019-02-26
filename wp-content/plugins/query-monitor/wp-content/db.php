@@ -120,6 +120,8 @@ class QM_DB extends wpdb {
 				}
 			} else {
 				if ( is_resource( $this->dbh ) ) {
+					// Please do not report this code as a PHP 7 incompatibility. Observe the surrounding logic.
+					// @codingStandardsIgnoreLine
 					$code = mysql_errno( $this->dbh );
 				}
 			}
@@ -133,5 +135,5 @@ class QM_DB extends wpdb {
 
 }
 
-// phpcs:ignore WordPress.WP.GlobalVariablesOverride.OverrideProhibited
+// phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
 $wpdb = new QM_DB( DB_USER, DB_PASSWORD, DB_NAME, DB_HOST );

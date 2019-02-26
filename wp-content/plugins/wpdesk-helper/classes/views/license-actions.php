@@ -6,7 +6,7 @@
 		</tr>
 		<tr>
 			<td><?php _e( 'Email:', 'wpdesk-helper' ); ?></td>
-			<td><input class="wpdesk_helper_input" name="activation_email" size="55" type="text" value="<?php echo $activation_email; ?>" <?php echo $disabled; ?> /></td>
+			<td><input class="wpdesk_helper_input" name="activation_email" size="55" type="email" value="<?php echo $activation_email; ?>" <?php echo $disabled; ?> /></td>
 		</tr>
 		<tr>
 			<td></td>

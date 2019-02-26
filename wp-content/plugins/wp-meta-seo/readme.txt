@@ -2,8 +2,8 @@
 Contributors: JoomUnited
 Tags: google, webmaster tools, keywords, meta, meta description, meta keywords, meta title, robots meta, search engine optimization, seo, wordpress seo, yahoo, image optimization, image resize, custom post seo, redirect, redirection, 301, broken link
 Requires at least: 4.0
-Tested up to: 5.0.0
-Stable tag: 4.0.2
+Tested up to: 5.1
+Stable tag: 4.0.3
 Requires PHP: 5.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -277,299 +277,305 @@ Yes WP Meta SEO is compatible with Gutenberg editor since 3.7 version.
 
 == Changelog ==
 
+= 4.0.3 =
+ * Fix : XML Sitemap cannot be parsed in google console
+ * Fix : Resize images and check on dashboard
+ * Fix : Fix list image in image editor
+ * Fix : Fix an HTTP error when delete posts
+
 = 4.0.2 =
-* Fix : Title undefined in gutenberg editor
-* Fix : Compatible with Oxygen Builder
-* Fix : Error when save post
+ * Fix : Title undefined in gutenberg editor
+ * Fix : Compatible with Oxygen Builder
+ * Fix : Error when save post
 
 = 4.0.1 =
-* Fix : Email report doesn't work
-* Fix : Css conflict in meta box
+ * Fix : Email report doesn't work
+ * Fix : Css conflict in meta box
 
 = 4.0.0 =
-* Add : New admin UX and design
-* Add : Settings UX with AJAX search engine
-* Add : Implement new plugin dashboard with new criteria checks
-* Add : Implement bulk actions on meta bulk editor
-* Add : Implement bulk actions on image information bulk editor
-* Add : Implement bulk actions on the link title manager
-* Add : Check color for meta lenght: check is meta is too short or too long
-* Add : Plugin installer with quick configuration
-* Add : Environment checker on install (PHP Version, PHP Extensions, Apache Modules)
-* Add : System Check menu to notify of server configuration problems after install
-* Fix : Sitemap display on frontend
+ * Add : New admin UX and design
+ * Add : Settings UX with AJAX search engine
+ * Add : Implement new plugin dashboard with new criteria checks
+ * Add : Implement bulk actions on meta bulk editor
+ * Add : Implement bulk actions on image information bulk editor
+ * Add : Implement bulk actions on the link title manager
+ * Add : Check color for meta lenght: check is meta is too short or too long
+ * Add : Plugin installer with quick configuration
+ * Add : Environment checker on install (PHP Version, PHP Extensions, Apache Modules)
+ * Add : System Check menu to notify of server configuration problems after install
+ * Fix : Sitemap display on frontend
 
 = 3.7.7 =
-* Add : Add actions and filters for developers
+ * Add : Add actions and filters for developers
 
 = 3.7.6 =
-* Fix : Redirect to home page when WPMS Addon is not activated
+ * Fix : Redirect to home page when WPMS Addon is not activated
 
 = 3.7.5 =
-* Fix : Warning returned on frontend
-* Fix : Load Dashboard widget content using ajax method (large amount of data)
-* Fix : PHP warning in redirect URL interface
+ * Fix : Warning returned on frontend
+ * Fix : Load Dashboard widget content using ajax method (large amount of data)
+ * Fix : PHP warning in redirect URL interface
 
 = 3.7.4 =
-* Fix : Update alt meta for Elementor image in content
-* Fix : Redirect URL
+ * Fix : Update alt meta for Elementor image in content
+ * Fix : Redirect URL
 
 = 3.7.3 =
-* Fix : Enhance code readability and performance
+ * Fix : Enhance code readability and performance
 
 = 3.7.2 =
-* Fix : JUtranslation share with JoomUnited
+ * Fix : JUtranslation share with JoomUnited
 
 = 3.7.1 =
-* Fix : Sitemap categories not properly added
-* Fix : Broken link display column header
-* Fix : Render meta description on frontend
+ * Fix : Sitemap categories not properly added
+ * Fix : Broken link display column header
+ * Fix : Render meta description on frontend
 
 = 3.7.0 =
-* Add : Compatible with Gutemberg editor
-* Fix : Reload analysis in metabox
-* Fix : Render title tag
+ * Add : Compatible with Gutemberg editor
+ * Fix : Reload analysis in metabox
+ * Fix : Render title tag
 
 = 3.6.8 =
-* Fix : Conflict with Origin PageBuilder plugin
-* Fix : Save post and page slow request
+ * Fix : Conflict with Origin PageBuilder plugin
+ * Fix : Save post and page slow request
 
 = 3.6.7 =
-* Fix : Meta box not loaded on WordPress multisite
+ * Fix : Meta box not loaded on WordPress multisite
 
 = 3.6.6 =
-* Fix : Sitemap column display
-* Fix : Reload Google Analytics data
+ * Fix : Sitemap column display
+ * Fix : Reload Google Analytics data
 
 = 3.6.5 =
-* Fix : Compatibility with php 5.3 and 5.4
+ * Fix : Compatibility with php 5.3 and 5.4
 
 = 3.6.4 =
-* Fix : Google analytics tracking code removed some characters
-* Fix : Send email (SEO report)
-* Fix : Query duplicate meta
+ * Fix : Google analytics tracking code removed some characters
+ * Fix : Send email (SEO report)
+ * Fix : Query duplicate meta
 
 = 3.6.3 =
-* Add : Change meta description max length (320 characters)
-* Fix : Conflict with Antispam Bee plugin
-* Fix : Page title word in content heading
+ * Add : Change meta description max length (320 characters)
+ * Fix : Conflict with Antispam Bee plugin
+ * Fix : Page title word in content heading
 
 = 3.6.2 =
-* Fix : Saving translation does not apply
-* Fix : JS error when edit a post (public false)
+ * Fix : Saving translation does not apply
+ * Fix : JS error when edit a post (public false)
 
 = 3.6.1 =
-* Fix : Fatal error on frontend on certain configuration
+ * Fix : Fatal error on frontend on certain configuration
 
 = 3.6.0 =
-* Add : Full code reformating  for better performance and code comments
-* Add : Using PHPCS to make standard definitions
+ * Add : Full code reformating  for better performance and code comments
+ * Add : Using PHPCS to make standard definitions
 
 = 3.5.3 =
-* Fix : Display WordPress page with sitemap
-* Fix : Set default image for facebook and Twitter
-* Fix : Return error when using undefined get_term_meta function
+ * Fix : Display WordPress page with sitemap
+ * Fix : Set default image for facebook and Twitter
+ * Fix : Return error when using undefined get_term_meta function
 
 = 3.5.2 =
-* Fix : Create robots.txt file for multisite
-* Fix : Add meta tags og:type and fb:app_id (Facebook page share)
+ * Fix : Create robots.txt file for multisite
+ * Fix : Add meta tags og:type and fb:app_id (Facebook page share)
 
 = 3.5.1 =
-* Language filter for meta, images and sitemap XML
-* Fix : Encoding issue on dashboard page
-* Fix : JS error when empty post content
+ * Language filter for meta, images and sitemap XML
+ * Fix : Encoding issue on dashboard page
+ * Fix : JS error when empty post content
 
 = 3.5.0 =
-* Fix : Check content of page builders: Visual composer, DIVI Builder, Beaver Builder, ACF, Site Origine, Themify builder, Live composer, Elementor plugins
-* Add : Generate rich snippet breadcrumb shortcode and PHP code
-* Fix : Redesign the image edition window
+ * Fix : Check content of page builders: Visual composer, DIVI Builder, Beaver Builder, ACF, Site Origine, Themify builder, Live composer, Elementor plugins
+ * Add : Generate rich snippet breadcrumb shortcode and PHP code
+ * Fix : Redesign the image edition window
 
 = 3.4.1 =
-* Add : Meta keywords field in category meta edition
-* Add : Update dashboard description and image compression layout
-* Fix : Warning when 'wpio_images' table does not exist
+ * Add : Meta keywords field in category meta edition
+ * Add : Update dashboard description and image compression layout
+ * Fix : Warning when 'wpio_images' table does not exist
 
 = 3.4.0 =
-* Add : Simple Analytics tracking only based on UA or JS snippet
-* Add : Add image indexation system for large websites (image bulk editor)
-* Add : Apply material design over all plugin views
-* Add : Image information: Filter only images that require optimization
-* Fix : Conflict with WP Latest Posts plugin
+ * Add : Simple Analytics tracking only based on UA or JS snippet
+ * Add : Add image indexation system for large websites (image bulk editor)
+ * Add : Apply material design over all plugin views
+ * Add : Image information: Filter only images that require optimization
+ * Fix : Conflict with WP Latest Posts plugin
 
 = 3.3.2 =
-* Fix : Remove custom redirect rule not applied
-* Fix : Wrong value in meta description for category
-* Fix : Custom post types alway displayed in HTML sitemaps
+ * Fix : Remove custom redirect rule not applied
+ * Fix : Wrong value in meta description for category
+ * Fix : Custom post types alway displayed in HTML sitemaps
 
 = 3.3.1 =
-* Fix : Remove upgrade notification when the ADDON is installed
-* Fix : Change style for dashboard widgets
-* Fix : Change layout and fix criteria in SEO page optimization
+ * Fix : Remove upgrade notification when the ADDON is installed
+ * Fix : Change style for dashboard widgets
+ * Fix : Change layout and fix criteria in SEO page optimization
 
 = 3.3.0 =
-* Add : If an image information are filled, add it by default if empty if image is re-used
-* Add : Compatibility with WPML, Polylang for meta edition and Media SEO content
-* Add : Possibility to edit meta information on categories
-* Add : Pro version notifications of features in some views
-* Add : Dashboard widget with 6 SEO criteria
-* Fix : Change the 404 error page title to remove the plugin name by default
+ * Add : If an image information are filled, add it by default if empty if image is re-used
+ * Add : Compatibility with WPML, Polylang for meta edition and Media SEO content
+ * Add : Possibility to edit meta information on categories
+ * Add : Pro version notifications of features in some views
+ * Add : Dashboard widget with 6 SEO criteria
+ * Fix : Change the 404 error page title to remove the plugin name by default
 
 = 3.2.6 =
-* Add : Add builtin translation tool
-* Fix : Wrong function used to get description length
+ * Add : Add builtin translation tool
+ * Fix : Wrong function used to get description length
 
 = 3.2.5 =
-* Add : Check DOM PHP activation install to avoid fatal error
-* Fix : Image information edition with greek characters
+ * Add : Check DOM PHP activation install to avoid fatal error
+ * Fix : Image information edition with greek characters
 
 = 3.2.4 =
-* Add : WP Meta SEO Addon compatibility
-* Fix : Conflict with DIVI layout injector plugin
+ * Add : WP Meta SEO Addon compatibility
+ * Fix : Conflict with DIVI layout injector plugin
 
 = 3.2.3 =
-* Fix : Image resize list does not refresh
-* Fix : Meta image text replaced by image information
-* Fix : Dashboard Alexa rank display
-* Fix : Sharp URL suffix are detected as 404 by the redirect manager
-* Fix : Phone numbers with '+' are detected as 404 by the redirect manager
-* Fix : German characters are broken in the link manager
+ * Fix : Image resize list does not refresh
+ * Fix : Meta image text replaced by image information
+ * Fix : Dashboard Alexa rank display
+ * Fix : Sharp URL suffix are detected as 404 by the redirect manager
+ * Fix : Phone numbers with '+' are detected as 404 by the redirect manager
+ * Fix : German characters are broken in the link manager
 
 = 3.2.2 =
-* Fix : Image information edition with a quote becomes empty
-* Fix : Meta edition character count does not refresh using AJAX
+ * Fix : Image information edition with a quote becomes empty
+ * Fix : Meta edition character count does not refresh using AJAX
 
 = 3.2.1 =
-* Add : Compatibility with WP Speed of Light plugin: https://www.joomunited.com/wordpress-products/wp-speed-of-light
+ * Add : Compatibility with WP Speed of Light plugin: https://www.joomunited.com/wordpress-products/wp-speed-of-light
 
 = 3.2.0 =
-* Add : Enable Google Analytics tracking with token access
-* Add : Tracking options to exclude WordPress user groups from analytics
-* Add : File download statistics activation
-* Add : Display Analytics statistics: session, users, organic...
+ * Add : Enable Google Analytics tracking with token access
+ * Add : Tracking options to exclude WordPress user groups from analytics
+ * Add : File download statistics activation
+ * Add : Display Analytics statistics: session, users, organic...
 
 = 3.0.2 =
-* Add : Add Import meta from Yoast premium plugin
-* Fix : Font called from http instead of https from dashboard
+ * Add : Add Import meta from Yoast premium plugin
+ * Fix : Font called from http instead of https from dashboard
 
 = 3.0.1 =
-* Fix : XML menu generation don't handle menu levels
-* Fix : Mailto links are indexed as 404 error in the redirect manager
-* Fix : PHP warning when link editor is activated in editor
-* Fix : Secure code
+ * Fix : XML menu generation don't handle menu levels
+ * Fix : Mailto links are indexed as 404 error in the redirect manager
+ * Fix : PHP warning when link editor is activated in editor
+ * Fix : Secure code
 
 = 3.0.0 =
-* Add : Add XML sitemap feature
-* Add : Add HTML sitemap feature
-* Add : Add sitemap source: menus (any content), post, page, category, author
-* Add : Add HTML sitemap content position in page
-* Add : Add XML sitemap copy option on root option
-* Add : Add XML sitemap link in robot.txt option
-* Add : Add help text for all the sitemap parameters
-* Add : Add help text for all the global parameters
-* Add : Add AJAX sitemap regeneration
+ * Add : Add XML sitemap feature
+ * Add : Add HTML sitemap feature
+ * Add : Add sitemap source: menus (any content), post, page, category, author
+ * Add : Add HTML sitemap content position in page
+ * Add : Add XML sitemap copy option on root option
+ * Add : Add XML sitemap link in robot.txt option
+ * Add : Add help text for all the sitemap parameters
+ * Add : Add help text for all the global parameters
+ * Add : Add AJAX sitemap regeneration
 
 = 2.2.1 =
-* Add : Update sql sentences to improve query speed
+ * Add : Update sql sentences to improve query speed
 
 = 2.2.0 =
-* Add : Follow/Nofollow bulk link edition
-* Add : Link re-index tool from the bulk link editor
-* Add : Follow/Nofollow on Wordpress content (onpage SEO)
-* Add : Index/Noindex on Wordpress content (onpage SEO)
+ * Add : Follow/Nofollow bulk link edition
+ * Add : Link re-index tool from the bulk link editor
+ * Add : Follow/Nofollow on Wordpress content (onpage SEO)
+ * Add : Index/Noindex on Wordpress content (onpage SEO)
 
 = 2.1.0 =
-* Add : Add ImageRecycle images and PDF compression integration (https://www.imagerecycle.com)
+ * Add : Add ImageRecycle images and PDF compression integration (https://www.imagerecycle.com)
 
 = 2.0.3 =
-* Fix : On page analysis return wrong result on header title in content
-* Fix : Update language on image bulk edit view
+ * Fix : On page analysis return wrong result on header title in content
+ * Fix : Update language on image bulk edit view
 
 = 2.0.2 =
-* Fix : Detect new type of 404 and add tooltip
-* Fix : Comment content not detected
-* Fix : Autosaving too fast in safari or firefox
+ * Fix : Detect new type of 404 and add tooltip
+ * Fix : Comment content not detected
+ * Fix : Autosaving too fast in safari or firefox
 
 = 2.0.1 =
-* Fix : Google font style on Safari browser
+ * Fix : Google font style on Safari browser
 
 = 2.0.0 =
-* Add : Add 404 and redirect manager
-* Add : Add Options to redirect all 404 to home page
-* Add : Add Setup 404 page as: WP Meta SEO page, custom page, default page
+ * Add : Add 404 and redirect manager
+ * Add : Add Options to redirect all 404 to home page
+ * Add : Add Setup 404 page as: WP Meta SEO page, custom page, default page
 
 = 1.7.3 =
-* Fix : og: link broken (facebook)
+ * Fix : og: link broken (facebook)
 
 = 1.7.2 =
-* Add : Page title as content title or as SEO meta title (option)
+ * Add : Page title as content title or as SEO meta title (option)
 
 = 1.7.1 =
-* Add : Edit separately the content title from the meta title (for search engine)
-* Fix : Fix RSS feed is broken with WP Meta SEO 1.7.0
+ * Add : Edit separately the content title from the meta title (for search engine)
+ * Fix : Fix RSS feed is broken with WP Meta SEO 1.7.0
 
 = 1.7.0 =
-* Add : Add link SEO title field in link editor tool
-* Add : Add a SEO bulk edition view on your links titles (of all your content)
-* Add : Automatic meta SEO addition for category view: add category title as meta title and category description as meta description
-* Add : Add SEO dashboard check for link titles
-* Fix : WooCommerce meta description and title in category view (automatic)
-* Fix : WP Meta SEO language to be conform to plugin directory translation tool
+ * Add : Add link SEO title field in link editor tool
+ * Add : Add a SEO bulk edition view on your links titles (of all your content)
+ * Add : Automatic meta SEO addition for category view: add category title as meta title and category description as meta description
+ * Add : Add SEO dashboard check for link titles
+ * Fix : WooCommerce meta description and title in category view (automatic)
+ * Fix : WP Meta SEO language to be conform to plugin directory translation tool
 
 = 1.6.0 =
-* Add : Add meta keywords edition in bulk editor
-* Add : Add option to for SEO criteria validation
+ * Add : Add meta keywords edition in bulk editor
+ * Add : Add option to for SEO criteria validation
 
 = 1.5.1 =
-* Fix : Home page meta not working on some themes
-* Fix : Break foreach when search title in SEO content (title in heading)
+ * Fix : Home page meta not working on some themes
+ * Fix : Break foreach when search title in SEO content (title in heading)
 
 = 1.5.0 =
-* Add : Add help tooltip to explain on page validation SEO criteria
-* Add : Add help tooltip to explain dashboard SEO parameters
-* Add : Put snippet preview title in a column on SEO bulk view edition
-* Add : Add SEO and check notification for robot.txt that lock search engine
-* Add : Update EN and FR language files
+ * Add : Add help tooltip to explain on page validation SEO criteria
+ * Add : Add help tooltip to explain dashboard SEO parameters
+ * Add : Put snippet preview title in a column on SEO bulk view edition
+ * Add : Add SEO and check notification for robot.txt that lock search engine
+ * Add : Update EN and FR language files
 
 = 1.4.0 =
-* Add : Bulk copy new option: content title to meta title
-* Add : Bulk copy new option: image name to alt text
-* Add : Bulk copy new option: image name to image title
-* Fix : Twitter card on SEO on page optimization
-* Fix : SEO meta empty in some themes
+ * Add : Bulk copy new option: content title to meta title
+ * Add : Bulk copy new option: image name to alt text
+ * Add : Bulk copy new option: image name to image title
+ * Fix : Twitter card on SEO on page optimization
+ * Fix : SEO meta empty in some themes
 
 = 1.3.0 =
-* Add : New SEO check dashboard
-* Add : Check for SEO permalinks
-* Add : Check for meta description
-* Add : Check for image HTML resizing
-* Add : Check for image SEO: title, alt and description
-* Add : Check for new content
+ * Add : New SEO check dashboard
+ * Add : Check for SEO permalinks
+ * Add : Check for meta description
+ * Add : Check for image HTML resizing
+ * Add : Check for image SEO: title, alt and description
+ * Add : Check for new content
 
 = 1.2.0 =
-* Add : Change language to po/mo files
-* Add : Include .pot file and French language
-* Add : Setting for home page meta
-* Add : Bigger edit meta boxes
-* Add : Update icon of notification in meta view
+ * Add : Change language to po/mo files
+ * Add : Include .pot file and French language
+ * Add : Setting for home page meta
+ * Add : Bigger edit meta boxes
+ * Add : Update icon of notification in meta view
 
 = 1.1.0 =
-* Add : On page SEO analysis
-* Add : Social sharing custom content
+ * Add : On page SEO analysis
+ * Add : Social sharing custom content
 
 = 1.0.4 =
-* Fix : Check empty array
+ * Fix : Check empty array
 
 = 1.0.3 =
-* Fix : Escape meta title and meta description
+ * Fix : Escape meta title and meta description
 
 = 1.0.2 =
-* Fix : Filter broken and icons broken
+ * Fix : Filter broken and icons broken
 
 = 1.0.1 =
-* Fix : display (no title) in column title if post is no titled
+ * Fix : display (no title) in column title if post is no titled
 
 = 1.0.0 =
-* Add : Initial release
+ * Add : Initial release
 
 
 

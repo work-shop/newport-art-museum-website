@@ -1,5 +1,14 @@
 *** WP Desk Helper Changelog ***
 
+1.6.4 - 2019-02-07
+* Added support for deactivation filter
+
+1.6.3 - 2019-01-07
+* Updated WP Desk Libraries
+
+1.6.2 - 2019-01-07
+* Remove whitespace characters from key and email input
+
 1.6.1 - 2018-12-03
 * Fixed broken files
 

@@ -184,7 +184,7 @@ span.inspire-file-error {
     padding: 4px 10px 0;
 }
 
-.display-options-file, .display-options-info, .display-options-heading {
+.display-options-info, .display-options-heading {
 	display: none;
 }
 
@@ -203,6 +203,6 @@ span.inspire-file-error {
 	display: none;
 }
 
-p.help, p.description, span.description, .form-wrap p {
+p.help, .field-item p.description, .add-new-field-content p.description, span.description, .form-wrap p {
 	overflow: auto;
 }

@@ -120,7 +120,7 @@ $setting_switch_fields = array(
                    placeholder="<?php esc_html_e('Search settings', 'wp-meta-seo') ?>"
             >
         </div>
-        <ul class="tabs ju-menu-tabs">
+        <ul class="ju-tabs tabs ju-menu-tabs">
             <?php foreach ($tabs_data as $tab) : ?>
                 <li class="tab" data-tab-title="<?php echo esc_attr($tab['title']) ?>">
                     <a href="#<?php echo esc_attr($tab['id']) ?>"

@@ -378,8 +378,8 @@ class WPDesk_Helper extends \WPDesk\PluginBuilder\Plugin\AbstractPlugin {
 			}
 			if ( $plugin ) {
 				if ( $_POST['action'] == 'activate' ) {
-					$activation_email = $_POST['activation_email'];
-					$api_key          = $_POST['api_key'];
+					$activation_email = trim( $_POST['activation_email'] );
+					$api_key          = trim( $_POST['api_key'] );
 				    $this->activate_license( $plugin, $activation_email, $api_key );
 					$this->init_helper_plugins();
 				}

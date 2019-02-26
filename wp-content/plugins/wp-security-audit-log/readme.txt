@@ -5,8 +5,8 @@ License: GPLv3
 License URI: http://www.gnu.org/licenses/gpl.html
 Tags: wordpress security plugin, wordpress security audit log, audit log, activity logs, event log wordpress, wordpress user tracking, wordpress activity log, wordpress audit, security event log, audit trail, wordpress security monitor, wordpress admin, wordpress admin monitoring, user activity, admin, multisite, dashboard, notification, wordpress monitoring, email notification, wordpress email alerts, tracking, user tracking, user activity report, wordpress audit trail
 Requires at least: 3.6
-Tested up to: 4.9.7
-Stable tag: 3.2.5
+Tested up to: 5.0.3
+Stable tag: 3.3.1.1
 Requires PHP: 5.4.43
 
 An easy to use & comprehensive WordPress activity log plugin to log all changes on WordPress sites & multisite networks.
@@ -114,7 +114,7 @@ Refer to the <strong>[WordPress activity log plugin datasheet](https://www.wpsec
 ### As Featured On:
 
 * [GoDaddy](https://www.godaddy.com/garage/decode-security-logs-wordpress/)
-* [Kinsta](https://kinsta.com/blog/wordpress-activity-log/) 
+* [Kinsta](https://kinsta.com/blog/wordpress-activity-log/)
 * [Pagely](https://pagely.com/blog/2015/01/log-wordpress-dashboard-activity-improved-security-auditing/)
 * [Shout Me Loud](https://www.shoutmeloud.com/wordpress-security-audit-log.html)
 * [The Dev Couple](https://thedevcouple.com/wp-security-audit-log-review/)
@@ -195,16 +195,17 @@ Please refer to our [Support & Documentation pages](https://www.wpsecurityauditl
 
 == Changelog ==
 
-= 3.2.5 (2018-11-15) =
+Release notes: [Infinite scroll for activity logs & performance enhancement](https://www.wpsecurityauditlog.com/releases/infinite-scroll-performance-improvements-update-3-3-1-1)
 
-Release Notes: [Announcing Activity Log for MainWP](https://www.wpsecurityauditlog.com/releases/announcing-activity-log-mainwp-extension/)
+= 3.3.1.1 (2019-02-06) =
 
-* **New Events for the activity log**
-	* Event ID 2127: Changed the name of a category
-	* Event ID 2128: Changed the slug of a category
+* **New Features**
+	* New [infinite scroll view in audit log viewer](https://www.wpsecurityauditlog.com/support-documentation/change-audit-log-viewer-pagination-infinite-scroll/) making the browsing of the activity logs much faster.
 
-* **New Functionality**
-	* Added support in the plugin for the [Activity Log for MainWP extension](https://www.wpsecurityauditlog.com/activity-log-mainwp-extension/).
+* **Plugin Improvements**
+	* Improved the search filters - now they are much faster.
+	* Improved user session handling to better handle >1,000 sessions.
+	* Replaced PHP severity with event log severity in the list of Events.
 
 * **Bug Fixes**
-	* Fixed an issue in the licensing which allowed users with Starter plan to access features from the professional plan.
+	* Scan Now button for the [WordPress file integrity scanner](https://www.wpsecurityauditlog.com/support-documentation/wordpress-files-changes-warning-activity-logs/) is grayed out when auto scanning is disabled.

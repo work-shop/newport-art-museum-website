@@ -3,15 +3,15 @@
     Plugin Name: Flexible Checkout Fields
     Plugin URI: https://www.wpdesk.net/products/flexible-checkout-fields-pro-woocommerce/
     Description: Manage your WooCommerce checkout fields. Change order, labels, placeholders and add new fields.
-    Version: 1.6.10
+    Version: 1.8.2
     Author: WP Desk
     Author URI: https://www.wpdesk.net/
     Text Domain: flexible-checkout-fields
     Domain Path: /lang/
-	Requires at least: 4.5
-    Tested up to: 4.9.8
+	Requires at least: 4.6
+    Tested up to: 5.0.3
     WC requires at least: 3.1.0
-    WC tested up to: 3.5.0
+    WC tested up to: 3.5.4
 
     Copyright 2017 WP Desk Ltd.
 
@@ -33,7 +33,7 @@
 
     if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-	$plugin_version = '1.6.10';
+	$plugin_version = '1.8.2';
 	define( 'FLEXIBLE_CHECKOUT_FIELDS_VERSION', $plugin_version );
 
 
@@ -68,7 +68,7 @@
 
     class Flexible_Checkout_Fields_Plugin extends WPDesk_Plugin_1_8 {
 
-        protected $script_version = '1.6.10';
+        protected $script_version = '1.8.2';
 
         protected $fields = array();
 
@@ -89,6 +89,7 @@
 
 	        parent::__construct( $base_file, $plugin_data );
 
+		    $this->load_dependencies();
 	        $this->init();
 	        $this->hooks();
 
@@ -130,16 +131,33 @@
 
             add_action( 'woocommerce_get_country_locale_default', array( $this, 'woocommerce_get_country_locale_default' ), 11 );
 
+		    include( 'classes/field.php' );
+
             include( 'classes/display-options.php' );
             new Flexible_Checkout_Fields_Disaplay_Options( $this );
 
 	        include( 'classes/user-profile.php' );
-	        new Flexible_Checkout_Fields_User_Profile( $this );
+	        $user_profile = new Flexible_Checkout_Fields_User_Profile( $this );
+		    $user_profile->hooks();
 
 		    include( 'classes/filed-validation.php' );
 		    $this->field_validation = new Flexible_Checkout_Fields_Field_Validation( $this );
 		    $this->field_validation->hooks();
 
+		    include 'classes/myaccount-filed-processor.php';
+		    $my_account_fields_processor = new Flexible_Checkout_Fields_Myaccount_Field_Processor( $this );
+		    $my_account_fields_processor->hooks();
+
+		    include 'classes/myaccount-edit-address.php';
+		    $my_account_edit_address = new Flexible_Checkout_Fields_Myaccount_Edit_Address( $this );
+		    $my_account_edit_address->hooks();
+        }
+
+	    /**
+	     * Load dependencies.
+	     */
+        private function load_dependencies() {
+	    	require_once 'classes/field-options.php';
         }
 
 	    public function init() {
@@ -158,7 +176,7 @@
 	    public function plugins_loaded() {
 		    $this->init_fields();
 			//do użycia dla pola miasto, kod pocztowy i stan
-		    $this->get_sections();
+		    $this->init_sections();
 	    }
 
 	    public function getSettingValue( $name, $default = null ) {
@@ -195,35 +213,37 @@
 	        return $fields;
         }
 
-        public function get_sections() {
-        	$sections = array(
-        			'billing' => array(
-        					'section'			=> 'billing',
-        					'tab'				=> 'fields_billing',
-        					'tab_title'			=> __( 'Billing', 'flexible-checkout-fields' ),
-        					'custom_section' 	=> false
-        			),
-        			'shipping' => array(
-        					'section'			=> 'shipping',
-        					'tab'				=> 'fields_shipping',
-        					'tab_title'			=> __( 'Shipping', 'flexible-checkout-fields' ),
-        					'custom_section' 	=> false
-        			),
-        			'order' => array(
-        					'section'			=> 'order',
-        					'tab'				=> 'fields_order',
-        					'tab_title'			=> __( 'Order', 'flexible-checkout-fields' ),
-        					'custom_section' 	=> false
-        			)
-        	);
+		/**
+		 * Init sections.
+		 */
+		public function init_sections() {
+			$sections = array(
+				'billing'  => array(
+					'section'        => 'billing',
+					'tab'            => 'fields_billing',
+					'tab_title'      => __( 'Billing', 'flexible-checkout-fields' ),
+					'custom_section' => false
+				),
+				'shipping' => array(
+					'section'        => 'shipping',
+					'tab'            => 'fields_shipping',
+					'tab_title'      => __( 'Shipping', 'flexible-checkout-fields' ),
+					'custom_section' => false
+				),
+				'order'    => array(
+					'section'        => 'order',
+					'tab'            => 'fields_order',
+					'tab_title'      => __( 'Order', 'flexible-checkout-fields' ),
+					'custom_section' => false
+				)
+			);
 
-            $all_sections = unserialize( serialize( $sections ) );
+			$all_sections = unserialize( serialize( $sections ) );
 
-        	$this->sections = apply_filters( 'flexible_checkout_fields_sections', $sections );
+			$this->sections = apply_filters( 'flexible_checkout_fields_sections', $sections );
 
-        	$this->all_sections = apply_filters( 'flexible_checkout_fields_all_sections', $all_sections );
-
-        }
+			$this->all_sections = apply_filters( 'flexible_checkout_fields_all_sections', $all_sections );
+		}
 
         function init_fields() {
         	$this->fields['text'] = array(
@@ -257,6 +277,11 @@
                 'name' 					=> __( 'Select (Drop Down)', 'flexible-checkout-fields' ),
                 'pro'                   => true
             );
+
+	        $add_fields['wpdeskmultiselect'] = array(
+		        'name' 					=> __( 'Multi-select', 'flexible-checkout-fields' ),
+		        'pro'                   => true
+	        );
 
             $add_fields['datepicker'] = array(
                 'name' 					=> __( 'Date', 'flexible-checkout-fields' ),
@@ -301,11 +326,46 @@
         	return apply_filters( 'flexible_checkout_fields_fields' , $this->fields );
         }
 
-        function get_settings() {
-            $default = array();
-            $settings = get_option('inspire_checkout_fields_settings', $default );
-            return $settings;
-        }
+
+		/**
+		 * Remove unavailable sections from settings.
+		 * Removes sections added by PRO plugin, after PRO plugin disable.
+		 *
+		 * @param array $settings Settings.
+		 * @return array
+		 */
+		private function get_settings_for_available_sections( array $settings ) {
+			$this->init_sections();
+			if ( is_array( $settings ) && is_array( $this->sections ) ) {
+				foreach ( $settings as $section => $section_settings ) {
+					$unset = true;
+					foreach ( $this->sections as $section_data ) {
+						if ( $section_data['section'] === $section ) {
+							$unset = false;
+						}
+					}
+					if ( $unset ) {
+						unset( $settings[ $section ] );
+					}
+				}
+			}
+
+			return $settings;
+		}
+
+		/**
+		 * Get settings.
+		 *
+		 * @return array
+		 */
+		public function get_settings() {
+			$settings = get_option( 'inspire_checkout_fields_settings', array() );
+			if ( ! is_array( $settings ) ) {
+				$settings = array();
+			}
+
+			return $this->get_settings_for_available_sections( $settings );
+		}
 
         function woocommerce_before_checkout_form() {
         	WC()->session->set( 'checkout-fields', array() );
@@ -315,12 +375,15 @@
         }
 
         /**
-         * wordpress action
+         * Enqueue admin scripts and styles.
          *
-         * inits css
+         * @param string $hooq Current admin page name.
          */
         public function admin_enqueue_scripts( $hooq ) {
-            wp_enqueue_style( 'jquery-ui-style', '//ajax.googleapis.com/ajax/libs/jqueryui/' . '1.9.2' . '/themes/smoothness/jquery-ui.css' );
+            if ( isset( $hooq ) && 'woocommerce_page_inspire_checkout_fields_settings' === $hooq ) {
+                wp_enqueue_style('jquery-ui-style',
+                    '//ajax.googleapis.com/ajax/libs/jqueryui/' . '1.9.2' . '/themes/smoothness/jquery-ui.css');
+            }
             wp_enqueue_style( 'inspire_checkout_fields_admin_style', trailingslashit( $this->get_plugin_assets_url() ) . 'css/admin.css', array(), $this->script_version );
 
 	        wp_enqueue_script( 'jquery' );
@@ -465,7 +528,7 @@
                     	foreach ( $type as $field_name => $field ) {
                     		if ( apply_filters( 'flexible_checkout_fields_condition', true, $field ) ) {
 	                            if ( $field['visible'] == 0 or
-	                            	( ( isset( $_GET['page'] ) && $_GET['page'] == 'inspire_checkout_fields_settings' ) and $field['visible'] == 1) or $field['name'] == 'billing_country' or $field['name'] == 'shipping_country')
+	                            	( ( isset( $_GET['page'] ) && $_GET['page'] == 'inspire_checkout_fields_settings' ) && $field['visible'] == 1) || $field['name'] == 'billing_country' || $field['name'] == 'shipping_country')
 	                            {
 		                            $custom_field = false;
 		                            if( isset( $field['custom_field'] ) && $field['custom_field'] == 1 ) {
@@ -501,7 +564,7 @@
 	                                else {
 	                                    $new[$key][$field['name']]['class'] = explode( ' ', $field['class'] );
 	                                }
-	                                if ( ($field['name'] == 'billing_country' or $field['name'] == 'shipping_country') and $field['visible'] == 1 ){
+	                                if ( ($field['name'] == 'billing_country' || $field['name'] == 'shipping_country') && $field['visible'] == 1 ){
 	                                    $new[$key][$field['name']]['class'][1] = "inspire_checkout_fields_hide";
 	                                }
 	                                if ( ! $custom_field ) {
@@ -527,26 +590,9 @@
 	                                if ( $custom_field ) {
 	                                    $new[$key][$field['name']]['type'] = $field['type'];
 
-	                                    if ( isset( $checkout_field_type[$field['type']]['has_options'] ) ){
-	                                        $array_options = explode("\n", $field['option']);
-	                                        if(!empty($array_options)){
-	                                            foreach ($array_options as $option) {
-	                                                $tmp = explode( ':', $option, 2 );
-	                                                $option_value = trim($tmp[0]);
-	                                                if ( isset( $tmp[1] ) ) {
-		                                                $tmp[1] = strip_tags( $tmp[1], '<img><a><strong><em><br>' );
-		                                                $tmp[1] = wp_unslash( $tmp[1] );
-		                                                $option_label = $tmp[1];
-	                                                }
-	                                                else {
-	                                                	$option_label = $option_value;
-	                                                }
-	                                                $options[$option_value] = wpdesk__( $option_label, 'flexible-checkout-fields' );
-	                                                unset($tmp);
-	                                            }
-	                                            $new[$key][$field['name']]['options'] = $options;
-	                                            unset($options);
-	                                        }
+	                                    if ( isset( $checkout_field_type[$field['type']]['has_options'] ) ) {
+	                                    	$field_options = new Flexible_Checkout_Fields_Field_Options( $field['option'] );
+		                                    $new[ $key ][ $field['name'] ]['options'] = $field_options->get_options_as_array();
 	                                    }
 	                                }
 
@@ -574,15 +620,21 @@
 		                $new[$type][$key]['priority'] = $priority;
 	                }
                 }
+
                 if ( $request_type == null ) {
                     if ( !empty($fields['account'] ) ) {
                         $new['account'] = $fields['account'];
                     }
+
+	                $new = $this->restore_default_city_validation( $new, $_POST, 'billing' );
+	                $new = $this->restore_default_city_validation( $new, $_POST, 'shipping' );
+
                     return $new;
                 }
                 else{
                 	if ( isset( $new[$request_type] ) ) {
-		                return $new[$request_type];
+		                $new = $this->restore_default_city_validation( $new, $_POST, $request_type );
+		                return $new[ $request_type ];
 	                }
 	                else {
                 		return array();
@@ -594,6 +646,35 @@
             }
         }
 
+	    /**
+	     * Restores the default validation for the city
+	     *
+	     * @param array $fields
+	     * @param array $request
+	     * @param string $request_type the type of shipping address (billing or shipping)
+	     *
+	     * @return array
+	     */
+	    private function restore_default_city_validation( array $fields, array $request, $request_type ) {
+
+		    $city    = $request_type . '_city';
+		    $country = $request_type . '_country';
+
+		    if( isset( $fields[ $request_type ][ $city ]['required'] ) && isset( $request[ $country ] ) ) {
+			    $slug       = $request[ $country ];
+			    $countries  = new WC_Countries();
+			    $locales    = $countries->get_country_locale();
+			    if ( isset( $locales[ $slug ]['city']['required'] ) ) {
+				    $required = $locales[ $slug ]['city']['required'];
+				    if( !$required ) {
+					    $fields[ $request_type ][ $city ]['required']    = 0;
+					    $fields[ $request_type ][ $city ]['hidden']      = 1;
+				    }
+			    }
+		    }
+		    return $fields;
+	    }
+
         public function getCheckoutUserFields($fields, $request_type = null) {
             $settings = $this->get_settings();
 
@@ -604,7 +685,7 @@
             if ( !empty($settings[$request_type] ) ) {
                 foreach ( $settings[$request_type] as $key => $field ) {
 
-                    if($field['visible'] == 0 or $field['name'] == 'billing_country' or $field['name'] == 'shipping_country' or ( isset($_GET['page']) && $_GET['page'] == 'inspire_checkout_fields_settings' and $field['visible'] == 1)){
+                    if($field['visible'] == 0 || $field['name'] == 'billing_country' || $field['name'] == 'shipping_country' || ( isset($_GET['page']) && $_GET['page'] == 'inspire_checkout_fields_settings' && $field['visible'] == 1)){
                         if(!empty($fields[$key])){
                             $new[$key] = $fields[$key];
                         }
@@ -635,7 +716,7 @@
                         }
 
 	                    if ( !empty( $field['name'] ) ) {
-		                    if ( ( $field['name'] == 'billing_country' or $field['name'] == 'shipping_country' ) and $field['visible'] == 1 ) {
+		                    if ( ( $field['name'] == 'billing_country' || $field['name'] == 'shipping_country' ) && $field['visible'] == 1 ) {
 			                    $new[ $key ]['class'][1] = "inspire_checkout_fields_hide";
 		                    }
 	                    }
@@ -645,21 +726,8 @@
                         }
 
                         if( isset( $field['type'] ) && ( !empty( $checkout_field_type[$field['type']]['has_options'] ) ) ) {
-                            $array_options = explode( "\n", $field['option'] );
-                            if ( !empty( $array_options ) ) {
-                                foreach ( $array_options as $option ) {
-                                    $tmp = explode( ':', $option, 2 );
-                                    $option_value = trim($tmp[0]);
-                                    $option_label = $option_value;
-                                    if ( isset($tmp[1]) ) {
-                                    	$option_label = trim( $tmp[1] );
-                                    }
-                                    $options[$option_value] = wpdesk__( $option_label, 'flexible-checkout-fields' );
-                                    unset($tmp);
-                                }
-                                $new[$key]['options'] = $options;
-                                unset($options);
-                            }
+	                        $field_options = new Flexible_Checkout_Fields_Field_Options( $field['option'] );
+	                        $new[ $key ]['options'] = $field_options->get_options_as_array();
                         }
                     }
                 }
@@ -692,7 +760,7 @@
 
         public function printCheckoutFields( $order, $request_type = null ) {
 
-        	$settings = $this->get_settings();
+        	$settings = $this->getCheckoutFields( $this->get_settings() );
 
             $checkout_field_type = $this->get_fields();
 
@@ -795,27 +863,27 @@
         }
 
         public function changeShippingFields($fields) {
-            return $this -> getCheckoutFields($fields, 'shipping');
+            return $this->getCheckoutFields($fields, 'shipping');
         }
 
         public function changeBillingFields($fields) {
-            return $this -> getCheckoutFields($fields, 'billing');
+            return $this->getCheckoutFields($fields, 'billing');
         }
 
         public function changeOrderFields($fields) {
-            return $this -> getCheckoutFields($fields, 'order');
+            return $this->getCheckoutFields($fields, 'order');
         }
 
         public function changeAdminBillingFields($labels) {
-            return $this -> changeAdminLabelsCheckoutFields($labels, 'billing');
+            return $this->changeAdminLabelsCheckoutFields($labels, 'billing');
         }
 
         public function changeAdminShippingFields($labels) {
-            return $this -> changeAdminLabelsCheckoutFields($labels, 'shipping');
+            return $this->changeAdminLabelsCheckoutFields($labels, 'shipping');
         }
 
         public function changeAdminOrderFields($labels) {
-            return $this -> changeAdminLabelsCheckoutFields($labels, 'order');
+            return $this->changeAdminLabelsCheckoutFields($labels, 'order');
         }
 
         public function addCustomBillingFieldsToAdmin($order){
@@ -831,15 +899,15 @@
         }
 
         public function addCustomFieldsBillingFields($fields) {
-            return $this->getCheckoutUserFields($fields, 'billing');
+	        return $this->getCheckoutUserFields( $fields, 'billing');
         }
 
         public function addCustomFieldsShippingFields($fields) {
-            return $this-> getCheckoutUserFields($fields, 'shipping');
+	        return $this->getCheckoutUserFields( $fields, 'shipping');
         }
 
         public function addCustomFieldsOrderFields($fields) {
-            return $this -> getCheckoutUserFields($fields, 'order');
+            return $this->getCheckoutUserFields($fields, 'order');
         }
 
         function updateCheckoutFields( $order_id ) {
@@ -865,7 +933,10 @@
                 						array_keys( isset( $settings['order'] ) ? $settings['order'] : array() )
                 				)
                 		);
+
+
                 foreach ($_POST as $key => $value) {
+
                     $save = true;
                     if (empty($_POST['ship_to_different_address']))
                     {
@@ -874,7 +945,7 @@
                     if ($save)
                     {
                         if(array_key_exists($key, $keys)){
-                            update_post_meta( $order_id, '_'.$key, esc_attr( $value ) );
+	                        update_post_meta( $order_id, '_' . $key, $value );
                         }
                     }
                 }

@@ -394,7 +394,7 @@ if ( ! class_exists( 'WPDesk_Tracker' ) ) {
 				$params['additional_info'] = $_REQUEST['additional_info'];
 			}
 
-			$this->send_payload_to_wpdesk( $params );
+			$this->send_payload_to_wpdesk( apply_filters( 'wpdesk_tracker_deactivation_data', $params ) );
 		}
 
 		/**

@@ -4,10 +4,10 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitc7abeb1c9befdfc125e18197f7bf03e9
+class ComposerStaticInit7943dbd0017f2f34f3298880978c87ec
 {
     public static $files = array (
-        'cb883ac9840733a88fe8e977664ea0ea' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/functions.php',
+        '0509b34a4bd7aebefeac629c9dc8a978' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/notice-functions.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -113,9 +113,9 @@ class ComposerStaticInitc7abeb1c9befdfc125e18197f7bf03e9
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitc7abeb1c9befdfc125e18197f7bf03e9::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitc7abeb1c9befdfc125e18197f7bf03e9::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitc7abeb1c9befdfc125e18197f7bf03e9::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit7943dbd0017f2f34f3298880978c87ec::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit7943dbd0017f2f34f3298880978c87ec::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit7943dbd0017f2f34f3298880978c87ec::$classMap;
 
         }, null, ClassLoader::class);
     }

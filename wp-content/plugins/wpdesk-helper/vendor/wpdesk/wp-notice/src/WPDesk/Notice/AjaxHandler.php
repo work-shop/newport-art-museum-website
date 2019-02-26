@@ -30,9 +30,9 @@ class AjaxHandler implements HookablePluginDependant
     /**
      * AjaxHandler constructor.
      *
-     * @param string $assetsURL Assets URL.
+     * @param string|null $assetsURL Assets URL.
      */
-    public function __construct($assetsURL)
+    public function __construct($assetsURL = null)
     {
         $this->assetsURL = $assetsURL;
     }
@@ -42,7 +42,11 @@ class AjaxHandler implements HookablePluginDependant
      */
     public function hooks()
     {
-        add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
+        if ($this->assetsURL) {
+            add_action('admin_enqueue_scripts', [$this, 'enqueueAdminScripts']);
+        } else {
+            add_action('admin_head', [$this,'addScriptToAdminHead']);
+        }
         add_action('wp_ajax_wpdesk_notice_dismiss', [$this, 'processAjaxNoticeDismiss']);
     }
 
@@ -59,6 +63,14 @@ class AjaxHandler implements HookablePluginDependant
             self::SCRIPTS_VERSION
         );
         wp_enqueue_script(self::SCRIPT_HANDLE);
+    }
+
+    /**
+     * Add Java Script to admin header.
+     */
+    public function addScriptToAdminHead()
+    {
+        include 'views/admin-head-js.php';
     }
 
     /**

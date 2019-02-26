@@ -60,6 +60,65 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 	}
 
 	/**
+	 * View Save.
+	 *
+	 * @since 3.3
+	 */
+	private function save() {
+		// Filter $_POST array.
+		$post_array = filter_input_array( INPUT_POST );
+
+		$enabled  = array_map( 'intval', $post_array['alert'] );
+		$disabled = array();
+		foreach ( $this->_plugin->alerts->GetAlerts() as $alert ) {
+			if ( ! in_array( $alert->type, $enabled, true ) ) {
+				$disabled[] = $alert->type;
+			}
+		}
+
+		if ( isset( $post_array['disable-visitor-events'] ) && 'yes' === $this->_plugin->GetGlobalOption( 'disable-visitor-events', 'no' ) ) {
+			$public_events = $this->_plugin->alerts->get_public_events();
+			$disabled      = array_diff( $disabled, $public_events );
+		}
+		$this->_plugin->alerts->SetDisabledAlerts( $disabled );
+
+		$this->_plugin->SetGlobalOption( 'log-404', isset( $post_array['log_404'] ) ? 'on' : 'off' );
+		$this->_plugin->SetGlobalOption( 'purge-404-log', isset( $post_array['purge_log'] ) ? 'on' : 'off' );
+		$this->_plugin->SetGlobalOption( 'log-404-referrer', isset( $post_array['log_404_referrer'] ) ? 'on' : 'off' );
+
+		$this->_plugin->SetGlobalOption( 'log-visitor-404', isset( $post_array['log_visitor_404'] ) ? 'on' : 'off' );
+		$this->_plugin->SetGlobalOption( 'purge-visitor-404-log', isset( $post_array['purge_visitor_log'] ) ? 'on' : 'off' );
+		$this->_plugin->SetGlobalOption( 'log-visitor-404-referrer', isset( $post_array['log_visitor_404_referrer'] ) ? 'on' : 'off' );
+		$this->_plugin->SetGlobalOption( 'wc-all-stock-changes', isset( $post_array['wc_all_stock_changes'] ) ? 'on' : 'off' );
+
+		$this->_plugin->settings->Set404LogLimit( $post_array['user_404Limit'] );
+		$this->_plugin->settings->SetVisitor404LogLimit( $post_array['visitor_404Limit'] );
+
+		$this->_plugin->settings->set_failed_login_limit( $post_array['log_failed_login_limit'] );
+		$this->_plugin->settings->set_visitor_failed_login_limit( $post_array['log_visitor_failed_login_limit'] );
+
+		// Get file change scan alerts.
+		$file_change_alerts = $this->_plugin->alerts->get_alerts_by_sub_category( 'File Changes' );
+		$file_change_alerts = array_keys( $file_change_alerts );
+
+		// Toggle file change.
+		$file_change_toggle = 'disable';
+
+		// Check each file change alert to see if it is active or not.
+		foreach ( $file_change_alerts as $alert ) {
+			if ( ! in_array( $alert, $disabled, true ) ) { // If any one alert is active, then.
+				$file_change_toggle = 'enable'; // Enable the file change.
+			}
+		}
+
+		// Set the option.
+		$this->_plugin->SetGlobalOption( 'scan-file-changes', $file_change_toggle );
+
+		// Set the visitor events option.
+		$this->_plugin->SetGlobalOption( 'disable-visitor-events', isset( $post_array['disable-visitor-events'] ) ? 'no' : 'yes' );
+	}
+
+	/**
 	 * Method: Get View.
 	 */
 	public function Render() {
@@ -79,14 +138,7 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 		if ( isset( $post_array['submit'] ) && isset( $post_array['alert'] ) ) {
 			check_admin_referer( 'wsal-togglealerts' );
 			try {
-				$enabled  = array_map( 'intval', $post_array['alert'] );
-				$disabled = array();
-				foreach ( $this->_plugin->alerts->GetAlerts() as $alert ) {
-					if ( ! in_array( $alert->type, $enabled ) ) {
-						$disabled[] = $alert->type;
-					}
-				}
-				$this->_plugin->alerts->SetDisabledAlerts( $disabled );
+				$this->save();
 				?>
 				<div class="updated">
 					<p><?php esc_html_e( 'Settings have been saved.', 'wp-security-audit-log' ); ?></p>
@@ -99,37 +151,6 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 				</div>
 				<?php
 			}
-			$this->_plugin->SetGlobalOption( 'log-404', isset( $post_array['log_404'] ) ? 'on' : 'off' );
-			$this->_plugin->SetGlobalOption( 'purge-404-log', isset( $post_array['purge_log'] ) ? 'on' : 'off' );
-			$this->_plugin->SetGlobalOption( 'log-404-referrer', isset( $post_array['log_404_referrer'] ) ? 'on' : 'off' );
-
-			$this->_plugin->SetGlobalOption( 'log-visitor-404', isset( $post_array['log_visitor_404'] ) ? 'on' : 'off' );
-			$this->_plugin->SetGlobalOption( 'purge-visitor-404-log', isset( $post_array['purge_visitor_log'] ) ? 'on' : 'off' );
-			$this->_plugin->SetGlobalOption( 'log-visitor-404-referrer', isset( $post_array['log_visitor_404_referrer'] ) ? 'on' : 'off' );
-			$this->_plugin->SetGlobalOption( 'wc-all-stock-changes', isset( $post_array['wc_all_stock_changes'] ) ? 'on' : 'off' );
-
-			$this->_plugin->settings->Set404LogLimit( $post_array['user_404Limit'] );
-			$this->_plugin->settings->SetVisitor404LogLimit( $post_array['visitor_404Limit'] );
-
-			$this->_plugin->settings->set_failed_login_limit( $post_array['log_failed_login_limit'] );
-			$this->_plugin->settings->set_visitor_failed_login_limit( $post_array['log_visitor_failed_login_limit'] );
-
-			// Get file change scan alerts.
-			$file_change_alerts = $this->_plugin->alerts->get_alerts_by_sub_category( 'File Changes' );
-			$file_change_alerts = array_keys( $file_change_alerts );
-
-			// Toggle file change.
-			$file_change_toggle = 'disable';
-
-			// Check each file change alert to see if it is active or not.
-			foreach ( $file_change_alerts as $alert ) {
-				if ( ! in_array( $alert, $disabled, true ) ) { // If any one alert is active, then.
-					$file_change_toggle = 'enable'; // Enable the file change.
-				}
-			}
-
-			// Set the option.
-			$this->_plugin->SetGlobalOption( 'scan-file-changes', $file_change_toggle );
 		}
 
 		// Log level form submission.
@@ -153,7 +174,8 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 		$is_custom       = ! empty( $events_diff ) ? true : false; // If difference is not empty then mode is custom.
 		$log_details     = $this->_plugin->GetGlobalOption( 'details-level', false ); // Get log level option.
 
-		$subcat_alerts = array( 1004, 2010, 6007, 2111, 2119, 2016, 2053, 7000, 8009, 8014, 9007, 9027, 9002, 8809, 8813, 6000, 6001, 6019 );
+		$subcat_alerts = array( 1004, 2010, 6007, 2111, 2119, 2016, 2053, 7000, 8009, 8014, 9007, 9047, 9027, 9002, 9057, 9063, 9035, 8809, 8813, 6000, 6001, 6019, 6028 );
+		$public_events = $this->_plugin->alerts->get_public_events(); // Get public events.
 		?>
 		<p>
 			<form method="post" id="wsal-alerts-level">
@@ -182,12 +204,19 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 			</form>
 		</p>
 		<h2 id="wsal-tabs" class="nav-tab-wrapper">
-			<?php foreach ( $safe_names as $name => $safe ) : ?>
+			<?php
+			foreach ( $safe_names as $name => $safe ) :
+				if ( __( 'Third Party Plugins', 'wp-security-audit-log' ) === $name ) :
+					?>
+					<a href="#tab-visitor-events" class="nav-tab">
+						<?php esc_html_e( 'Visitor Events', 'wp-security-audit-log' ); ?>
+					</a>
+				<?php endif; ?>
 				<a href="#tab-<?php echo esc_attr( $safe ); ?>" class="nav-tab"><?php echo esc_html( $name ); ?></a>
 			<?php endforeach; ?>
 		</h2>
 		<form id="audit-log-viewer" method="post">
-			<input type="hidden" name="page" value="<?php echo filter_input( INPUT_GET, 'page', FILTER_SANITIZE_STRING ); ?>" />
+			<input type="hidden" name="page" value="<?php echo isset( $_GET['page'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_GET['page'] ) ) ) : false; ?>" />
 			<?php wp_nonce_field( 'wsal-togglealerts' ); ?>
 
 			<div class="nav-tabs">
@@ -405,10 +434,18 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 															esc_html_e( 'Topics', 'wp-security-audit-log' );
 														} elseif ( 9007 === $alert->type ) {
 															esc_html_e( 'Product Admin', 'wp-security-audit-log' );
+														} elseif ( 9047 === $alert->type ) {
+															esc_html_e( 'Product Attribute', 'wp-security-audit-log' );
 														} elseif ( 9027 === $alert->type ) {
 															esc_html_e( 'Store Admin', 'wp-security-audit-log' );
 														} elseif ( 9002 === $alert->type ) {
 															esc_html_e( 'Categories', 'wp-security-audit-log' );
+														} elseif ( 9057 === $alert->type ) {
+															esc_html_e( 'Attributes', 'wp-security-audit-log' );
+														} elseif ( 9063 === $alert->type ) {
+															esc_html_e( 'Coupons', 'wp-security-audit-log' );
+														} elseif ( 9035 === $alert->type ) {
+															esc_html_e( 'Orders', 'wp-security-audit-log' );
 														} elseif ( 8809 === $alert->type ) {
 															esc_html_e( 'Website Changes', 'wp-security-audit-log' );
 														} elseif ( 8813 === $alert->type ) {
@@ -419,6 +456,8 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 															esc_html_e( 'Settings', 'wp-security-audit-log' );
 														} elseif ( 6019 === $alert->type ) {
 															esc_html_e( 'Cron Jobs', 'wp-security-audit-log' );
+														} elseif ( 6028 === $alert->type ) {
+															esc_html_e( 'File Changes Scanning', 'wp-security-audit-log' );
 														}
 														?>
 													</h3>
@@ -435,12 +474,31 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 													class="alert"
 													<?php checked( $active[ $alert->type ] ); ?>
 													value="<?php echo esc_attr( (int) $alert->type ); ?>"
-													<?php echo esc_attr( $disabled ); ?>
+													<?php
+													if ( ! empty( $disabled ) ) {
+														echo esc_attr( $disabled );
+													} elseif ( 'no' !== $this->_plugin->GetGlobalOption( 'disable-visitor-events', 'no' ) && in_array( $alert->type, $public_events, true ) ) {
+														echo 'disabled';
+													}
+													?>
 													<?php echo ( __( 'File Changes', 'wp-security-audit-log' ) === $subname ) ? 'onclick="wsal_toggle_file_changes(this)"' : false; ?>
 												/>
 											</th>
 											<td><?php echo esc_html( str_pad( $alert->type, 4, '0', STR_PAD_LEFT ) ); ?></td>
-											<td><?php echo esc_html( $this->_plugin->constants->GetConstantBy( 'value', $alert->code )->name ); ?></td>
+											<td>
+												<?php
+												$severity_obj = $this->_plugin->constants->GetConstantBy( 'value', $alert->code );
+												if ( 'E_CRITICAL' === $severity_obj->name ) {
+													esc_html_e( 'Critical', 'wp-security-audit-log' );
+												} elseif ( 'E_WARNING' === $severity_obj->name ) {
+													esc_html_e( 'Warning', 'wp-security-audit-log' );
+												} elseif ( 'E_NOTICE' === $severity_obj->name ) {
+													esc_html_e( 'Notification', 'wp-security-audit-log' );
+												} else {
+													esc_html_e( 'Notification', 'wp-security-audit-log' );
+												}
+												?>
+											</td>
 											<td><?php echo esc_html( $alert->desc ); ?></td>
 										</tr>
 										<?php
@@ -580,6 +638,34 @@ class WSAL_Views_ToggleAlerts extends WSAL_AbstractView {
 						?>
 					</div>
 				<?php endforeach; ?>
+				<div class="wsal-tab" id="tab-visitor-events">
+					<h4><?php esc_html_e( 'The plugin also keeps a log of some events that website visitors (non-logged in users) do because it is typically required by site admins. You can disable these events from here:', 'wp-security-audit-log' ); ?></h4>
+					<table class="form-table">
+						<th><label for="enable-visitor-events"><?php esc_html_e( 'Enable website visitors events', 'wp-security-audit-log' ); ?></label></th>
+						<td>
+							<fieldset>
+								<?php $disable_visitor_events = $this->_plugin->GetGlobalOption( 'disable-visitor-events', 'no' ); ?>
+								<label for="disable-visitor-events">
+									<input type="checkbox" id="disable-visitor-events" name="disable-visitor-events" <?php checked( $disable_visitor_events, 'no' ); ?> value="no" />
+									<?php esc_html_e( 'Enable', 'wp-security-audit-log' ); ?>
+								</label>
+							</fieldset>
+						</td>
+					</table>
+					<p class="description"><?php esc_html_e( 'Below is the list of the events which are disabled when the above option is disabled:', 'wp-security-audit-log' ); ?></p>
+					<ul>
+						<?php
+						$wsal_alerts = $this->_plugin->alerts->GetAlerts(); // Get alerts list.
+						foreach ( $public_events as $public_event ) :
+							if ( isset( $wsal_alerts[ $public_event ] ) ) :
+								?>
+								<li><?php echo esc_html( $wsal_alerts[ $public_event ]->type . ' — ' . $wsal_alerts[ $public_event ]->desc ); ?></li>
+								<?php
+							endif;
+						endforeach;
+						?>
+					</ul>
+				</div>
 			</div>
 			<p class="submit"><input type="submit" name="submit" id="submit" class="button button-primary" value="<?php echo esc_attr( __( 'Save Changes', 'wp-security-audit-log' ) ); ?>"></p>
 		</form>

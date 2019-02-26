@@ -30,8 +30,14 @@ class WSAL_Settings {
 	const OPT_DEV_PHP_ERRORS     = 'p';
 	const OPT_DEV_REQUEST_LOG    = 'r';
 	const OPT_DEV_BACKTRACE_LOG  = 'b';
+	const ERROR_CODE_INVALID_IP  = 901;
 
-	const ERROR_CODE_INVALID_IP = 901;
+	/**
+	 * List of Site Admins.
+	 *
+	 * @var array
+	 */
+	private $site_admins = array();
 
 	/**
 	 * Dev Options.
@@ -148,8 +154,8 @@ class WSAL_Settings {
 	 * Enable Geek Mode.
 	 */
 	public function set_geek_mode() {
-		// Disable alerts of geek mode.
-		$this->SetDisabledAlerts( array() );
+		$this->_plugin->SetGlobalOption( 'disable-visitor-events', 'no' ); // Set disable visitor events to no.
+		$this->SetDisabledAlerts( array() ); // Disable alerts of geek mode.
 	}
 
 	/**
@@ -293,6 +299,28 @@ class WSAL_Settings {
 	 */
 	public function set_admin_bar_notif( $newvalue ) {
 		$this->_plugin->SetGlobalOption( 'disable-admin-bar-notif', ! $newvalue );
+	}
+
+	/**
+	 * Check admin bar notification updates refresh option.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @return string
+	 */
+	public function get_admin_bar_notif_updates() {
+		return $this->_plugin->GetGlobalOption( 'admin-bar-notif-updates', 'page-refresh' );
+	}
+
+	/**
+	 * Set admin bar notifications.
+	 *
+	 * @since 3.3.1
+	 *
+	 * @param string $newvalue - New option value.
+	 */
+	public function set_admin_bar_notif_updates( $newvalue ) {
+		$this->_plugin->SetGlobalOption( 'admin-bar-notif-updates', $newvalue );
 	}
 
 	/**
@@ -626,35 +654,40 @@ class WSAL_Settings {
 	 */
 	protected function GetAdmins() {
 		if ( $this->_plugin->IsMultisite() ) {
-			/**
-			 * Get list of admins.
-			 *
-			 * @see https://gist.github.com/1508426/65785a15b8638d43a9905effb59e4d97319ef8f8
-			 */
-			global $wpdb;
-			$cap = $wpdb->prefix . 'capabilities';
-			$sql = "SELECT DISTINCT $wpdb->users.user_login"
-				. " FROM $wpdb->users"
-				. " INNER JOIN $wpdb->usermeta ON ($wpdb->users.ID = $wpdb->usermeta.user_id )"
-				. " WHERE $wpdb->usermeta.meta_key = '$cap'"
-				. " AND CAST($wpdb->usermeta.meta_value AS CHAR) LIKE  '%\"administrator\"%'";
-			return $wpdb->get_col( $sql );
-		} else {
-			$result = array();
-			$query = 'role=administrator&fields[]=user_login';
-			foreach ( get_users( $query ) as $user ) {
-				$result[] = $user->user_login;
+			if ( empty( $this->site_admins ) ) {
+				/**
+				 * Get list of admins.
+				 *
+				 * @see https://gist.github.com/1508426/65785a15b8638d43a9905effb59e4d97319ef8f8
+				 */
+				global $wpdb;
+				$cap = $wpdb->prefix . 'capabilities';
+				$sql = "SELECT DISTINCT $wpdb->users.user_login"
+					. " FROM $wpdb->users"
+					. " INNER JOIN $wpdb->usermeta ON ($wpdb->users.ID = $wpdb->usermeta.user_id )"
+					. " WHERE $wpdb->usermeta.meta_key = '$cap'"
+					. " AND CAST($wpdb->usermeta.meta_value AS CHAR) LIKE  '%\"administrator\"%'";
+
+				// Get admins.
+				$this->site_admins = $wpdb->get_col( $sql );
 			}
-			return $result;
+		} else {
+			if ( empty( $this->site_admins ) ) {
+				$query = 'role=administrator&fields[]=user_login';
+				foreach ( get_users( $query ) as $user ) {
+					$this->site_admins[] = $user->user_login;
+				}
+			}
 		}
+		return $this->site_admins;
 	}
 
 	/**
 	 * Returns access tokens for a particular action.
 	 *
 	 * @param string $action - Type of action.
-	 * @throws Exception - Unknown action exception.
-	 * @return string[] List of tokens (usernames, roles etc).
+	 * @throws Exception     - Unknown action exception.
+	 * @return array         - List of tokens (usernames, roles etc).
 	 */
 	public function GetAccessTokens( $action ) {
 		$allowed = array();
@@ -662,9 +695,16 @@ class WSAL_Settings {
 			case 'view':
 				$allowed = $this->GetAllowedPluginViewers();
 				$allowed = array_merge( $allowed, $this->GetAllowedPluginEditors() );
-				if ( ! $this->IsRestrictAdmins() ) {
+				if ( ! $this->_plugin->IsMultisite() && ! $this->IsRestrictAdmins() ) {
 					$allowed = array_merge( $allowed, $this->GetSuperAdmins() );
 					$allowed = array_merge( $allowed, $this->GetAdmins() );
+				} elseif ( $this->_plugin->IsMultisite() && ! $this->IsRestrictAdmins() ) {
+					if ( 'only_superadmins' === $this->get_restrict_plugin_setting() ) {
+						$allowed = array_merge( $allowed, $this->GetSuperAdmins() );
+					} else {
+						$allowed = array_merge( $allowed, $this->GetSuperAdmins() );
+						$allowed = array_merge( $allowed, $this->GetAdmins() );
+					}
 				}
 				break;
 			case 'edit':
@@ -1098,7 +1138,7 @@ class WSAL_Settings {
 	}
 
 	public function GetColumnsSelected() {
-		return $this->_plugin->GetGlobalOption( 'columns' );
+		return $this->_plugin->GetGlobalOption( 'columns', array() );
 	}
 
 	public function SetColumns( $columns ) {
@@ -1473,7 +1513,7 @@ class WSAL_Settings {
 	 * Method: Meta data formater.
 	 *
 	 * @param string  $name      - Name of the data.
-	 * @param mix     $value     - Value of the data.
+	 * @param mixed   $value     - Value of the data.
 	 * @param integer $occ_id    - Event occurrence ID.
 	 * @param mixed   $highlight - Highlight format.
 	 * @return string
@@ -1516,6 +1556,9 @@ class WSAL_Settings {
 
 			case '%EditorLinkPost%' == $name:
 				return ' View the <a target="_blank" href="' . esc_url( $value ) . '">post</a>';
+
+			case '%EditorLinkOrder%' == $name:
+				return '<a target="_blank" href="' . esc_url( $value ) . '">' . __( 'View Order', 'wp-security-audit-log' ) . '</a>';
 
 			case '%EditorLinkPage%' == $name:
 				return ' View the <a target="_blank" href="' . esc_url( $value ) . '">page</a>';
@@ -1570,10 +1613,10 @@ class WSAL_Settings {
 				return '<a href="javascript:;" onclick="download_failed_login_log( this )" data-download-nonce="' . esc_attr( wp_create_nonce( 'wsal-download-failed-logins' ) ) . '" title="' . esc_html__( 'Download the log file.', 'wp-security-audit-log' ) . '">' . esc_html__( 'Download the log file.', 'wp-security-audit-log' ) . '</a>';
 
 			case strncmp( $value, 'http://', 7 ) === 0:
-			case strncmp( $value, 'https://', 7 ) === 0:
+			case strncmp( $value, 'https://', 8 ) === 0:
 				return '<a href="' . esc_html( $value ) . '" title="' . esc_html( $value ) . '" target="_blank">' . esc_html( $value ) . '</a>';
 
-			case '%PostStatus%' === $name:
+			case in_array( $name, array( '%PostStatus%', '%ProductStatus%' ), true ):
 				if ( ! empty( $value ) && 'publish' === $value ) {
 					return $highlight_start_tag . esc_html__( 'published', 'wp-security-audit-log' ) . $highlight_end_tag;
 				} else {
@@ -1619,6 +1662,17 @@ class WSAL_Settings {
 			case '%TableNames%' === $name:
 				$value = str_replace( ',', ', ', $value );
 				return $highlight_start_tag . esc_html( $value ) . $highlight_end_tag;
+
+			case '%FileSettings%' === $name:
+				$file_settings_args = array(
+					'page' => 'wsal-settings',
+					'tab'  => 'file-changes',
+				);
+				$file_settings      = add_query_arg( $file_settings_args, admin_url( 'admin.php' ) );
+				return '<a href="' . esc_url( $file_settings ) . '">' . esc_html__( 'plugin settings', 'wp-security-audit-log' ) . '</a>';
+
+			case '%ContactSupport%' === $name:
+				return '<a href="https://www.wpsecurityauditlog.com/contact/" target="_blank">' . esc_html__( 'contact our support', 'wp-security-audit-log' ) . '</a>';
 
 			default:
 				return $highlight_start_tag . esc_html( $value ) . $highlight_end_tag;
@@ -1686,5 +1740,221 @@ class WSAL_Settings {
 		$get_array = filter_input_array( INPUT_GET );
 
 		return isset( $get_array['wsal-cbid'] ) ? (int) $get_array['wsal-cbid'] : 0;
+	}
+
+	/**
+	 * Query sites from WPDB.
+	 *
+	 * @since 3.3.0.1
+	 *
+	 * @param int|null $limit — Maximum number of sites to return (null = no limit).
+	 * @return object — Object with keys: blog_id, blogname, domain
+	 */
+	public function get_sites( $limit = null ) {
+		global $wpdb;
+
+		$sql = 'SELECT blog_id, domain FROM ' . $wpdb->blogs;
+		if ( ! is_null( $limit ) ) {
+			$sql .= ' LIMIT ' . $limit;
+		}
+		$res = $wpdb->get_results( $sql );
+		foreach ( $res as $row ) {
+			$row->blogname = get_blog_option( $row->blog_id, 'blogname' );
+		}
+		return $res;
+	}
+
+	/**
+	 * The number of sites on the network.
+	 *
+	 * @since 3.3.0.1
+	 *
+	 * @return int
+	 */
+	public function get_site_count() {
+		global $wpdb;
+		$sql = 'SELECT COUNT(*) FROM ' . $wpdb->blogs;
+		return (int) $wpdb->get_var( $sql );
+	}
+
+	/**
+	 * Method: Meta data formater.
+	 *
+	 * @since 3.3
+	 *
+	 * @param string  $name      - Name of the data.
+	 * @param mixed   $value     - Value of the data.
+	 * @param integer $occ_id    - Event occurrence ID.
+	 * @param mixed   $highlight - Highlight format.
+	 * @return string
+	 */
+	public function slack_meta_formatter( $name, $value, $occ_id, $highlight ) {
+		switch ( true ) {
+			case '%Message%' === $name:
+				return esc_html( $value );
+
+			case '%PromoLink%' === $name:
+			case '%CommentLink%' === $name:
+			case '%CommentMsg%' === $name:
+				return $value;
+
+			case '%MetaLink%' === $name:
+				return '';
+
+			case '%RevisionLink%' === $name:
+				$check_value = (string) $value;
+				if ( 'NULL' !== $check_value ) {
+					return ' Click <' . esc_url( $value ) . '|here> to see the content changes.';
+				} else {
+					return false;
+				}
+
+			case '%EditorLinkPost%' === $name:
+				return ' View the <' . esc_url( $value ) . '|post>';
+
+			case '%EditorLinkOrder%' === $name:
+				return ' <' . esc_url( $value ) . '|View Order>';
+
+			case '%EditorLinkPage%' === $name:
+				return ' View the <' . esc_url( $value ) . '|page>';
+
+			case '%CategoryLink%' === $name:
+				return ' View the <' . esc_url( $value ) . '|category>';
+
+			case '%TagLink%' === $name:
+				return ' View the <' . esc_url( $value ) . '|tag>';
+
+			case '%EditorLinkForum%' === $name:
+				return ' View the <' . esc_url( $value ) . '|forum>';
+
+			case '%EditorLinkTopic%' === $name:
+				return ' View the <' . esc_url( $value ) . '|topic>';
+
+			case in_array( $name, array( '%MetaValue%', '%MetaValueOld%', '%MetaValueNew%' ), true ):
+				return '*' . ( strlen( $value ) > 50 ? ( esc_html( substr( $value, 0, 50 ) ) . '...' ) : esc_html( $value ) ) . '*';
+
+			case '%ClientIP%' === $name:
+				if ( is_string( $value ) ) {
+					return '*' . str_replace( array( '"', '[', ']' ), '', $value ) . '*';
+				} else {
+					return '_unknown_';
+				}
+
+			case '%LinkFile%' === $name:
+				if ( 'NULL' != $value ) {
+					return '';
+				} else {
+					return 'Click <' . esc_url( add_query_arg( 'page', 'wsal-togglealerts', admin_url( 'admin.php' ) ) ) . '|here> to log such requests to file';
+				}
+
+			case '%URL%' === $name:
+				return '.';
+
+			case '%LogFileLink%' === $name: // Failed login file link.
+				return '';
+
+			case '%Attempts%' === $name: // Failed login attempts.
+				$check_value = (int) $value;
+				if ( 0 === $check_value ) {
+					return '';
+				} else {
+					return $value;
+				}
+
+			case '%LogFileText%' === $name: // Failed login file text.
+				return '';
+
+			case strncmp( $value, 'http://', 7 ) === 0:
+			case strncmp( $value, 'https://', 8 ) === 0:
+				return '<' . esc_html( $value ) . '|' . esc_html( $value ) . '>';
+
+			case in_array( $name, array( '%PostStatus%', '%ProductStatus%' ), true ):
+				if ( ! empty( $value ) && 'publish' === $value ) {
+					return '*' . esc_html__( 'published', 'wp-security-audit-log' ) . '*';
+				} else {
+					return '*' . esc_html( $value ) . '*';
+				}
+
+			case '%multisite_text%' === $name:
+				if ( $this->_plugin->IsMultisite() && $value ) {
+					$site_info = get_blog_details( $value, true );
+					if ( $site_info ) {
+						return ' on site <' . esc_url( $site_info->siteurl ) . '|' . esc_html( $site_info->blogname ) . '>';
+					}
+					return;
+				}
+				return;
+
+			case '%ReportText%' === $name:
+				return;
+
+			case '%ChangeText%' === $name:
+				return;
+
+			case '%ScanError%' === $name:
+				if ( 'NULL' === $value ) {
+					return false;
+				}
+				/* translators: Mailto link for support. */
+				return ' with errors. ' . sprintf( __( 'Contact us on %s for assistance', 'wp-security-audit-log' ), '<mailto:support@wpsecurityauditlog.com|support@wpsecurityauditlog.com>' );
+
+			case '%TableNames%' === $name:
+				$value = str_replace( ',', ', ', $value );
+				return '*' . esc_html( $value ) . '*';
+
+			case '%FileSettings%' === $name:
+				$file_settings_args = array(
+					'page' => 'wsal-settings',
+					'tab'  => 'file-changes',
+				);
+				$file_settings      = add_query_arg( $file_settings_args, admin_url( 'admin.php' ) );
+				return '<' . esc_url( $file_settings ) . '|' . esc_html__( 'plugin settings', 'wp-security-audit-log' ) . '>';
+
+			case '%ContactSupport%' === $name:
+				return '<https://www.wpsecurityauditlog.com/contact|' . esc_html__( 'contact our support', 'wp-security-audit-log' ) . '>';
+
+			default:
+				return '*' . esc_html( $value ) . '*';
+		}
+	}
+
+	/**
+	 * Checks Infinite Scroll.
+	 *
+	 * Returns true if infinite scroll is enabled.
+	 *
+	 * @since 3.3.1.1
+	 *
+	 * @return boolean
+	 */
+	public function is_infinite_scroll() {
+		return 'infinite-scroll' === $this->get_events_type_nav() ? true : false;
+	}
+
+	/**
+	 * Checks Events Navigation Type.
+	 *
+	 * Returns type of navigation for events log viewer.
+	 *
+	 * @since 3.3.1.1
+	 *
+	 * @return string
+	 */
+	public function get_events_type_nav() {
+		return $this->_plugin->GetGlobalOption( 'events-nav-type', 'infinite-scroll' );
+	}
+
+	/**
+	 * Sets Events Navigation Type.
+	 *
+	 * Sets type of navigation for events log viewer.
+	 *
+	 * @since 3.3.1.1
+	 *
+	 * @param string $nav_type - Navigation type.
+	 * @return string
+	 */
+	public function set_events_type_nav( $nav_type ) {
+		$this->_plugin->SetGlobalOption( 'events-nav-type', $nav_type );
 	}
 }

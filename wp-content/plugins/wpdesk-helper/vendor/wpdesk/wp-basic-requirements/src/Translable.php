@@ -1,9 +1,7 @@
 <?php
 
 /**
- * Have info about textdomain - how to translate texts
- *
- * have to be compatible with PHP 5.2.x
+ * @deprecated Have typo so better use WPDesk_Translatable
  */
 interface WPDesk_Translable  {
 	/** @return string */

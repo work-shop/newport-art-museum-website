@@ -213,32 +213,42 @@ abstract class NAM_Custom_Post_Type {
                 if ( static::$slug === 'events' ) {
 
                     $shortcode = '[customer_list product="' . $product_id . '" ' .
-                                                 'order_status="wc-completed,wc-processing" ' .
-                                                 'order_number="true" ' .
-                                                 'show_titles="true" ' .
-                                                 'billing_email="true" ' .
-                                                 'billing_phone="true" ' .
-                                                 'order_qty="true" ' .
-                                                 'order_qty_total="true" ' .
-                                                 'scrollx="true" ' .
-                                                 'order_date="false" ' .
-                                                 'order_variations="true" ' .
-                                                 'sortable="true" ' .
-                                                 'copy="true" ' .
-                                                 'export_pdf="true" ' .
-                                                 'export_csv="true" ' .
-                                                 'email_all="true" ' .
-                                                 'search="true" ' .
-                                                 'paging="true" ' .
-                                                 'info="true" ' .
-                                                 ']';
+                    'order_status="wc-completed,wc-processing" ' .
+                    'order_number="true" ' .
+                    'show_titles="true" ' .
+                    'billing_email="true" ' .
+                    'billing_phone="true" ' .
+                    'order_qty="true" ' .
+                    'order_qty_total="true" ' .
+                    'scrollx="true" ' .
+                    'order_date="false" ' .
+                    'order_variations="true" ' .
+                    'sortable="true" ' .
+                    'copy="true" ' .
+                    'export_pdf="true" ' .
+                    'export_csv="true" ' .
+                    'email_all="true" ' .
+                    'search="true" ' .
+                    'paging="true" ' .
+                    'info="true" ' .
+                    ']';
 
                     echo do_shortcode( $shortcode );
 
                 } else {
 
-                    $customfields = '_order_student_first_name,_order_student_last_name,_order_email_contact,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,'
-                                  . '_order_secondary_phone_number,_order_secondary_phone_type,_order_preferred_pronoun';
+                    $customfields = '_order_student_first_name,_order_student_last_name,_order_email_contact,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,' . '_order_secondary_phone_number,_order_secondary_phone_type,_order_preferred_pronoun';
+
+
+                    $customfieldsCamps = ',_order_camp_student_allergies';
+
+                    $terms = wp_get_post_terms( $product_id, 'product_cat' );
+                    foreach ( $terms as $term ) $categories[] = $term->slug;
+                    if ( in_array( 'classes-camps', $categories ) ) :
+                      $customfields = $customfields . $customfieldsCamps;
+                    endif;
+
+
                     /**
                      * This shortcode echos a list of purchasers of a given product
                      * to the page, and depends on the Woocommerce Customer List Plugin.
@@ -246,28 +256,28 @@ abstract class NAM_Custom_Post_Type {
                      * Details of shortcode parameters [here](https://wordpress.org/plugins/wc-product-customer-list/#description).
                      */
                     $shortcode = '[customer_list product="' . $product_id . '" ' .
-                                                 'order_status="wc-completed,wc-processing" ' .
-                                                 'show_titles="true" ' .
-                                                 'billing_email="true" ' .
-                                                 'billing_phone="false" ' .
-                                                 'billing_first_name="true" ' .
-                                                 'billing_last_name="true" ' .
-                                                 'customer_username_link="true" ' .
-                                                 'order_number="false" ' .
-                                                 'order_qty_total="true" ' .
-                                                 'scrollx="true" ' .
-                                                 'order_date="false" ' .
-                                                 'order_variations="false" ' .
-                                                 'sortable="true" ' .
-                                                 'copy="true" ' .
-                                                 'export_pdf="true" ' .
-                                                 'export_csv="true" ' .
-                                                 'email_all="true" ' .
-                                                 'search="true" ' .
-                                                 'info="true" ' .
-                                                 'paging="true" ' .
-                                                 'custom_fields="' . $customfields . '" ' .
-                                                 ']';
+                    'order_status="wc-completed,wc-processing" ' .
+                    'show_titles="true" ' .
+                    'billing_email="true" ' .
+                    'billing_phone="false" ' .
+                    'billing_first_name="true" ' .
+                    'billing_last_name="true" ' .
+                    'customer_username_link="true" ' .
+                    'order_number="false" ' .
+                    'order_qty_total="true" ' .
+                    'scrollx="true" ' .
+                    'order_date="false" ' .
+                    'order_variations="false" ' .
+                    'sortable="true" ' .
+                    'copy="true" ' .
+                    'export_pdf="true" ' .
+                    'export_csv="true" ' .
+                    'email_all="true" ' .
+                    'search="true" ' .
+                    'info="true" ' .
+                    'paging="true" ' .
+                    'custom_fields="' . $customfields . '" ' .
+                    ']';
 
                     echo do_shortcode( $shortcode );
                 }

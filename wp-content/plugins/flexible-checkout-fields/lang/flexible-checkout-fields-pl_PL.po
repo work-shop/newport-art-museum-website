@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: WooCommerce Flexible Checkout Fields\n"
-"POT-Creation-Date: 2018-06-25 13:02+0200\n"
-"PO-Revision-Date: 2018-06-25 13:05+0200\n"
+"POT-Creation-Date: 2018-12-13 11:29+0100\n"
+"PO-Revision-Date: 2018-12-13 11:29+0100\n"
 "Last-Translator: Piotr Jabłonowski <piotr.jablonowski@wpdesk.net>\n"
 "Language-Team: Maciej Swoboda <maciej.swoboda@gmail.com>\n"
 "Language: pl_PL\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 2.2\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-WPHeader: flexible-checkout-fields.php\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
@@ -20,8 +20,9 @@ msgstr ""
 "_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Poedit-SearchPathExcluded-0: *.js\n"
+"X-Poedit-SearchPathExcluded-1: vendor\n"
 
-#: classes/display-options.php:106 classes/user-profile.php:135
+#: classes/display-options.php:108 classes/user-profile.php:135
 msgid "Additional Information"
 msgstr "Dodatkowe informacje"
 
@@ -74,7 +75,7 @@ msgstr ""
 "Notatka do twojego zamówienia, np. informacje o dostarczeniu przesyłki."
 
 #: classes/settings.php:147 classes/views/settings-settings.php:11
-#: classes/wpdesk/class-plugin.php:209 flexible-checkout-fields.php:914
+#: classes/wpdesk/class-plugin.php:209 flexible-checkout-fields.php:915
 msgid "Settings"
 msgstr "Ustawienia"
 
@@ -137,22 +138,22 @@ msgid "Add New Field"
 msgstr "Dodaj nowe pole"
 
 #: classes/views/settings-fields.php:53 classes/views/settings-fields.php:380
-#: classes/views/settings-fields.php:703
+#: classes/views/settings-fields.php:701
 msgid "Field Type"
 msgstr "Typ pola"
 
 #: classes/views/settings-fields.php:65 classes/views/settings-fields.php:306
-#: classes/views/settings-fields.php:677
+#: classes/views/settings-fields.php:675
 msgid "Label"
 msgstr "Etykieta"
 
 #: classes/views/settings-fields.php:70 classes/views/settings-fields.php:314
-#: classes/views/settings-fields.php:679
+#: classes/views/settings-fields.php:677
 msgid "You can use HTML."
 msgstr "Możesz używać HTML."
 
 #: classes/views/settings-fields.php:74 classes/views/settings-fields.php:323
-#: classes/views/settings-fields.php:683
+#: classes/views/settings-fields.php:681
 msgid "Name"
 msgstr "Nazwa"
 
@@ -185,7 +186,7 @@ msgstr "Dodaj pole"
 msgid "Edit Section"
 msgstr "Edytuj sekcję"
 
-#: classes/views/settings-fields.php:136 classes/views/settings-fields.php:507
+#: classes/views/settings-fields.php:136 classes/views/settings-fields.php:509
 #: classes/views/settings-settings.php:35
 msgid "Save Changes"
 msgstr "Zapisz zmiany"
@@ -194,35 +195,35 @@ msgstr "Zapisz zmiany"
 msgid "Section Fields"
 msgstr "Pola sekcji"
 
-#: classes/views/settings-fields.php:218 classes/views/settings-fields.php:634
+#: classes/views/settings-fields.php:218 classes/views/settings-fields.php:632
 msgid "Edit"
 msgstr "Edytuj"
 
-#: classes/views/settings-fields.php:226 classes/views/settings-fields.php:641
+#: classes/views/settings-fields.php:226 classes/views/settings-fields.php:639
 msgid "General"
 msgstr "Główne"
 
-#: classes/views/settings-fields.php:228 classes/views/settings-fields.php:642
+#: classes/views/settings-fields.php:228 classes/views/settings-fields.php:640
 msgid "Appearance"
 msgstr "Wygląd"
 
-#: classes/views/settings-fields.php:230 classes/views/settings-fields.php:643
+#: classes/views/settings-fields.php:230 classes/views/settings-fields.php:641
 msgid "Display On"
 msgstr "Wyświetlanie"
 
-#: classes/views/settings-fields.php:264 classes/views/settings-fields.php:666
+#: classes/views/settings-fields.php:264 classes/views/settings-fields.php:664
 msgid "Enable Field"
 msgstr "Pokaż pole"
 
-#: classes/views/settings-fields.php:300 classes/views/settings-fields.php:673
+#: classes/views/settings-fields.php:300 classes/views/settings-fields.php:671
 msgid "Required Field"
 msgstr "Pole wymagane"
 
-#: classes/views/settings-fields.php:342 classes/views/settings-fields.php:689
+#: classes/views/settings-fields.php:342 classes/views/settings-fields.php:687
 msgid "Validation"
 msgstr "Walidacja"
 
-#: classes/views/settings-fields.php:353 classes/views/settings-fields.php:697
+#: classes/views/settings-fields.php:353 classes/views/settings-fields.php:695
 msgid "For Post Code validation works only with country."
 msgstr "Dla walidacji kodu pocztowego musi być wybrany kraj."
 
@@ -241,57 +242,49 @@ msgstr ""
 "Przykład:<br /><code>kobieta : Jestem kobietą</code><br /><code>mezczyzna : "
 "Jestem mężczyzną</code>"
 
-#: classes/views/settings-fields.php:416 classes/views/settings-fields.php:711
-#: classes/views/settings-fields.php:750 classes/views/settings-fields.php:829
+#: classes/views/settings-fields.php:415 classes/views/settings-fields.php:709
+#: classes/views/settings-fields.php:748 classes/views/settings-fields.php:827
 msgid "Placeholder"
 msgstr "Placeholder"
 
-#: classes/views/settings-fields.php:426
+#: classes/views/settings-fields.php:425
 msgid "This field is address locale dependent and cannot be modified."
 msgstr "Nazwa tego pola nie może być edytowana."
 
-#: classes/views/settings-fields.php:443 classes/views/settings-fields.php:715
+#: classes/views/settings-fields.php:442 classes/views/settings-fields.php:713
 msgid "CSS Class"
 msgstr "Klasa CSS"
 
-#: classes/views/settings-fields.php:491 classes/views/settings-fields.php:737
+#: classes/views/settings-fields.php:493 classes/views/settings-fields.php:735
 msgid "Delete Field"
 msgstr "Usuń pole"
 
-#: classes/views/settings-fields.php:510
+#: classes/views/settings-fields.php:512
 msgid "Reset Section Settings"
 msgstr "Resetuj ustawienia sekcji"
 
-#: classes/views/settings-fields.php:537
+#: classes/views/settings-fields.php:539
 #, php-format
 msgid "Invalid field name: %s. The name already exists."
 msgstr "Błędna nazwa pola: %s. Ta nazwa już istnieje."
 
-#: classes/views/settings-fields.php:549
+#: classes/views/settings-fields.php:551
 msgid "Field name can not be empty!"
 msgstr "Nazwa pola nie może być pusta!"
 
-#: classes/views/settings-fields.php:553
+#: classes/views/settings-fields.php:555
 msgid "Field name can not be number!"
 msgstr "Nazwa pola nie może być numerem!"
 
-#: classes/views/settings-fields.php:557
-msgid ""
-"Invalid field name. Field name can contains only lower case letters, digits "
-"and _ (underline) character!"
-msgstr ""
-"Błędna nazwa pola. Nazwa pola może zawierać jedynie małe litery, cyfry oraz "
-"_ (znak podkreślenia)!"
-
-#: classes/views/settings-fields.php:685
+#: classes/views/settings-fields.php:683
 msgid "Meta name: "
 msgstr "Meta name: "
 
-#: classes/views/settings-fields.php:762
+#: classes/views/settings-fields.php:760
 msgid "Field label can not be empty!"
 msgstr "Etykieta pola nie może być pusta!"
 
-#: classes/views/settings-fields.php:844
+#: classes/views/settings-fields.php:842
 #, php-format
 msgid ""
 "Do you really want to delete this field: %s? Deleting a field remove it from "
@@ -300,7 +293,7 @@ msgstr ""
 "Czy na pewno chcesz usunąć to pole: %s? Doprowadzi to do usunięcia pola "
 "również we wszystkich zamówieniach."
 
-#: classes/views/settings-fields.php:886
+#: classes/views/settings-fields.php:884
 msgid ""
 "Do you really want to reset section settings?. Resetting a section remove "
 "all added fields from orders."
@@ -372,11 +365,11 @@ msgstr ""
 "Klucz licencyjny wtyczki %s%s%s nie został aktywowany, więc wtyczka jest "
 "nieaktywna! %sKliknij tutaj%s, aby aktywować klucz licencyjny wtyczki."
 
-#: classes/wpdesk/class-plugin.php:196 flexible-checkout-fields.php:917
+#: classes/wpdesk/class-plugin.php:196 flexible-checkout-fields.php:918
 msgid "Support"
 msgstr "Wsparcie"
 
-#: classes/wpdesk/class-plugin.php:202 flexible-checkout-fields.php:916
+#: classes/wpdesk/class-plugin.php:202 flexible-checkout-fields.php:917
 msgid "Docs"
 msgstr "Docs"
 
@@ -425,87 +418,91 @@ msgid ""
 "The callback function used for the <strong>%s</strong> setting is missing."
 msgstr "Brakuje funkcji callback użytej w ustawieniu <strong>%s</strong>."
 
-#: flexible-checkout-fields.php:205
+#: flexible-checkout-fields.php:207
 msgid "Billing"
 msgstr "Płatność"
 
-#: flexible-checkout-fields.php:211
+#: flexible-checkout-fields.php:213
 msgid "Shipping"
 msgstr "Wysyłka"
 
-#: flexible-checkout-fields.php:217
+#: flexible-checkout-fields.php:219
 msgid "Order"
 msgstr "Zamówienie"
 
-#: flexible-checkout-fields.php:232
+#: flexible-checkout-fields.php:234
 msgid "Single Line Text"
 msgstr "Pojedyncza linia (input)"
 
-#: flexible-checkout-fields.php:236
+#: flexible-checkout-fields.php:238
 msgid "Paragraph Text"
 msgstr "Obszar tekstowy (textarea)"
 
-#: flexible-checkout-fields.php:244 flexible-checkout-fields.php:249
+#: flexible-checkout-fields.php:246 flexible-checkout-fields.php:251
 msgid "Checkbox"
 msgstr "Wybór (checkbox)"
 
-#: flexible-checkout-fields.php:254
+#: flexible-checkout-fields.php:256
 msgid "Radio button"
 msgstr "Wybór (radio)"
 
-#: flexible-checkout-fields.php:259
+#: flexible-checkout-fields.php:261
 msgid "Select (Drop Down)"
 msgstr "Lista rozwijana (select)"
 
-#: flexible-checkout-fields.php:264
+#: flexible-checkout-fields.php:266
+msgid "Multi-select"
+msgstr "Lista rozwijana (multi-select)"
+
+#: flexible-checkout-fields.php:271
 msgid "Date"
 msgstr "Data"
 
-#: flexible-checkout-fields.php:269
+#: flexible-checkout-fields.php:276
 msgid "Time"
 msgstr "Czas"
 
-#: flexible-checkout-fields.php:274
+#: flexible-checkout-fields.php:281
 msgid "Color Picker"
 msgstr "Wybór koloru"
 
-#: flexible-checkout-fields.php:279
+#: flexible-checkout-fields.php:286
 msgid "Headline"
 msgstr "Nagłówek"
 
-#: flexible-checkout-fields.php:284
+#: flexible-checkout-fields.php:291
 msgid "HTML"
 msgstr "HTML"
 
-#: flexible-checkout-fields.php:289
+#: flexible-checkout-fields.php:296
 msgid "File Upload"
 msgstr "Przesyłanie pliku"
 
-#: flexible-checkout-fields.php:368
+#: flexible-checkout-fields.php:369
 msgid "Uploading file..."
 msgstr "Przesyłanie plik..."
 
-#: flexible-checkout-fields.php:400
+#: flexible-checkout-fields.php:401
 msgid "Close"
 msgstr "Zamknij"
 
-#: flexible-checkout-fields.php:401
+#: flexible-checkout-fields.php:402
 msgid "Today"
 msgstr "Dzisiaj"
 
-#: flexible-checkout-fields.php:404
+#: flexible-checkout-fields.php:405
 msgid "Next"
 msgstr "Następny"
 
-#: flexible-checkout-fields.php:405
+#: flexible-checkout-fields.php:406
 msgid "Previous"
 msgstr "Poprzedni"
 
-#: flexible-checkout-fields.php:923
+#: flexible-checkout-fields.php:924
 msgid "Upgrade"
 msgstr "Kup PRO"
 
-#: flexible-checkout-fields.php:935
+#: flexible-checkout-fields.php:936
 msgid "Advanced"
 msgstr "Zaawansowane"
 
@@ -681,6 +678,19 @@ msgstr "WP Desk"
 #. Author URI of the plugin/theme
 msgid "https://www.wpdesk.net/"
 msgstr "https://www.wpdesk.pl/"
+
+#~ msgid "Test"
+#~ msgstr "Test"
+
+#~ msgid "Input"
+#~ msgstr "Input"
+
+#~ msgid ""
+#~ "Invalid field name. Field name can contains only lower case letters, "
+#~ "digits and _ (underline) character!"
+#~ msgstr ""
+#~ "Błędna nazwa pola. Nazwa pola może zawierać jedynie małe litery, cyfry "
+#~ "oraz _ (znak podkreślenia)!"
 
 #~ msgid "Database Name"
 #~ msgstr "Nazwa w bazie danych"
