@@ -1,7 +1,7 @@
 <?php
 
-if ( ! interface_exists( 'WPDesk_Translable' ) ) {
-	require_once dirname(__FILE__) . '/../Translable.php';
+if ( ! interface_exists( 'WPDesk_Translatable' ) ) {
+	require_once __DIR__ . '/../Translatable.php';
 }
 
 
@@ -10,7 +10,7 @@ if ( ! interface_exists( 'WPDesk_Translable' ) ) {
  *
  * have to be compatible with PHP 5.2.x
  */
-interface WPDesk_Has_Plugin_Info extends WPDesk_Translable {
+interface WPDesk_Has_Plugin_Info extends WPDesk_Translatable {
 	/**
 	 * @return string
 	 */

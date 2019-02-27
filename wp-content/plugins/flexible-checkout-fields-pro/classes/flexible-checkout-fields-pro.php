@@ -1,15 +1,21 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
-
+/**
+ * Class Flexible_Checkout_Fields_Pro
+ */
 class Flexible_Checkout_Fields_Pro {
 
-    protected $plugin = null;
+	/**
+	 * Plugin.
+	 *
+	 * @var Flexible_Checkout_Fields_Pro_Plugin
+	 */
+	private $plugin;
 
 	/**
 	 * Flexible_Checkout_Fields_Pro constructor.
 	 *
-	 * @param Flexible_Checkout_Fields_Pro_Plugin $plugin
+	 * @param Flexible_Checkout_Fields_Pro_Plugin $plugin Plugin.
 	 */
 	public function __construct( Flexible_Checkout_Fields_Pro_Plugin $plugin ) {
 
@@ -26,8 +32,6 @@ class Flexible_Checkout_Fields_Pro {
 		add_action( 'flexible_checkout_fields_settings_js_options', array( $this, 'flexible_checkout_fields_settings_js_options' ) );
 
 		add_action( 'flexible_checkout_fields_settings_js_change', array( $this, 'flexible_checkout_fields_settings_js_change' ) );
-
-		add_filter( 'flexible_checkout_fields_print_value', array( $this, 'flexible_checkout_fields_print_value' ), 10, 2 );
 
 		add_filter( 'flexible_checkout_fields_admin_labels', array( $this, 'flexible_checkout_fields_admin_labels' ), 10, 3 );
 
@@ -132,7 +136,7 @@ class Flexible_Checkout_Fields_Pro {
 				foreach ( $settings[$section_data['section']] as $key=>$field ) {
 					if ( isset( $_POST[$key]) ) {
 						$value = $_POST[$key];
-						wpdesk_update_order_meta( $order_id, '_'.$key, esc_attr( $value ) );
+						wpdesk_update_order_meta( $order_id, '_'.$key, $value );
 					}
 				}
 			}
@@ -487,24 +491,6 @@ class Flexible_Checkout_Fields_Pro {
 
 	}
 
-	public function flexible_checkout_fields_print_value( $value, $field ) {
-		if ( $field['type'] == 'select' || $field['type'] == 'inspireradio' ) {
-			$array_options = explode("\n", $field['option'] );
-            if ( !empty( $array_options ) ) {
-            	foreach ($array_options as $option) {
-            		$tmp = explode(':', $option);
-                    $options[trim($tmp[0])] = trim($tmp[1]);
-                    unset($tmp);
-                }
-                if ( isset( $options[$value] ) ) {
-                	$value = $options[$value];
-                }
-                unset($options);
-            }
-		}
-		return $value;
-	}
-
 	public function flexible_checkout_fields_settings_js_change( ) {
 		include( 'views/settings-js-change.php' );
 	}
@@ -565,6 +551,7 @@ class Flexible_Checkout_Fields_Pro {
 				'has_required'			=> false,
 				'disable_placeholder' 	=> true,
 				'exclude_in_admin'		=> true,
+				'exclude_for_user'		=> true,
 		);
 
 		$add_fields['info'] = array(
@@ -572,20 +559,10 @@ class Flexible_Checkout_Fields_Pro {
 				'has_required'			=> false,
 				'disable_placeholder' 	=> true,
 				'exclude_in_admin'		=> true,
+				'exclude_for_user'		=> true,
 		);
 
-
-		$upload_folder = '/wp-content/uploads/woocommerce_uploads/checkout_fields';
-		add_filter( 'upload_dir', array( $this->plugin->pro_types, 'upload_dir' ) );
-		$wp_upload_dir = wp_upload_dir();
-		remove_filter( 'upload_dir', array( $this->plugin->pro_types, 'upload_dir' ) );
-		$upload_folder = substr( $wp_upload_dir['path'], strlen( ABSPATH ) );
-		$add_fields['file'] = array(
-				'name' 					=> __( 'File Upload', 'flexible-checkout-fields-pro' ),
-				'description'			=> sprintf( __( 'Files will be saved to: %s', 'flexible-checkout-fields-pro' ), '<br/>' . $upload_folder ),
-				'disable_placeholder' 	=> true,
-				'exclude_in_admin'		=> true,
-		);
+		$add_fields[ Flexible_Checkout_Fields_Pro_File_Field_Type::FIELD_TYPE_FILE ] = $this->plugin->get_file_field_type()->get_field_type_definition();
 
 		foreach ( $add_fields as $key => $field ) {
 			$fields[$key] = $field;
@@ -703,5 +680,22 @@ class Flexible_Checkout_Fields_Pro {
         }
 	    return $checkout_fields;
     }
+
+	/**
+	 * Get option as array from string.
+	 *
+	 * @param string $options_as_string Options as string.
+	 *
+	 * @return array
+	 */
+	public function get_options_as_array_from_string( $options_as_string ) {
+		$options = array();
+		$rows    = explode( "\n", $options_as_string );
+		foreach ( $rows as $row ) {
+			$row_option                = explode( ':', $row );
+			$options[ $row_option[0] ] = isset( $row_option[1] ) ? $row_option[1] : $row_option[0];
+		}
+		return $options;
+	}
 
 }

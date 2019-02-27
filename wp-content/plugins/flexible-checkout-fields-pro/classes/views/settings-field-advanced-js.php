@@ -11,6 +11,7 @@
 	//$content = str_replace( PHP_EOL, "';" . PHP_EOL . "advanced_tab_content +='", $content );
     $content = json_encode($content);
 ?>
+
 var advanced_tab_content = <?php echo $content; ?>;
 var advanced_tab_content2 = advanced_tab_content;
 advanced_tab_content2 = advanced_tab_content2.replace( 'key_replace', field_section );

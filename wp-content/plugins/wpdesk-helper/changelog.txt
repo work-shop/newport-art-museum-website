@@ -1,5 +1,8 @@
 *** WP Desk Helper Changelog ***
 
+1.6.5 - 2019-02-25
+* Fixed warnings in logger and plugin updater
+
 1.6.4 - 2019-02-07
 * Added support for deactivation filter
 

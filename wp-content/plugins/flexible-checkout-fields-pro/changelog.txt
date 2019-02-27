@@ -1,5 +1,38 @@
 *** Flexible Checkout Fields PRO for WooCommerce Changelog ***
 
+1.9.0 - 2019-02-25
+* Added function: get_flexible_checkout_fields_pro_plugin - returns plugin object
+* Fixed admin script loading
+* Fixed HTML fields sorting bug
+
+1.8.2 - 2019-01-31
+* Fixed radio in FCF meta box
+* Fixed multi-select field type
+
+1.8.1 - 2019-01-29
+
+* Fixed conditional logic based on products on Thank You page
+* Fixed conditional rules based on checkbox field
+
+* Hide checkbox: display on My Account - address for file field
+* File field in thank you page and emails
+* Removed ability to edit file field for customer
+
+1.8 - 2019-01-07
+* Added file field in thank you page and emails
+* Added functionality for removed ability to edit file field for customer
+* Removed display checkbox on My Account - address for file field
+
+
+1.7.1 2018-12-19
+* Fixed WPML translations in select field on order edit page
+
+1.7.0 - 2018-12-06
+* Added custom fields metabox editor in order edit
+* Added multi-select field type
+* Added select2 default styling
+* Added WP Desk Libraries
+
 1.6.10 - 2018-11-15
 * Fixed unneeded required checkbox on heading field
 

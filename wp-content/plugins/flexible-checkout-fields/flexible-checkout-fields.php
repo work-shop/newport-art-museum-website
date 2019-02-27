@@ -3,15 +3,15 @@
     Plugin Name: Flexible Checkout Fields
     Plugin URI: https://www.wpdesk.net/products/flexible-checkout-fields-pro-woocommerce/
     Description: Manage your WooCommerce checkout fields. Change order, labels, placeholders and add new fields.
-    Version: 1.8.2
+    Version: 1.9.0
     Author: WP Desk
     Author URI: https://www.wpdesk.net/
     Text Domain: flexible-checkout-fields
     Domain Path: /lang/
 	Requires at least: 4.6
-    Tested up to: 5.0.3
+    Tested up to: 5.1.0
     WC requires at least: 3.1.0
-    WC tested up to: 3.5.4
+    WC tested up to: 3.5.5
 
     Copyright 2017 WP Desk Ltd.
 
@@ -33,7 +33,7 @@
 
     if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
-	$plugin_version = '1.8.2';
+	$plugin_version = '1.9.0';
 	define( 'FLEXIBLE_CHECKOUT_FIELDS_VERSION', $plugin_version );
 
 
@@ -68,7 +68,7 @@
 
     class Flexible_Checkout_Fields_Plugin extends WPDesk_Plugin_1_8 {
 
-        protected $script_version = '1.8.2';
+        protected $script_version = '1.9.0';
 
         protected $fields = array();
 
@@ -1008,12 +1008,40 @@
 
     }
 
-    /**
-     * Checks if Flexible Checkout Fields PRO is active
-     *
-     */
-	function is_flexible_checkout_fields_pro_active() {
-		return wpdesk_is_plugin_active( 'flexible-checkout-fields-pro/flexible-checkout-fields-pro.php' );
+	if ( !function_exists( 'is_flexible_checkout_fields_pro_active' ) ) {
+		/**
+		 * Get PRO plugin.
+		 *
+		 * @return Flexible_Checkout_Fields_Pro_Plugin|null
+		 */
+		function get_flexible_checkout_fields_pro_plugin() {
+			if ( class_exists( '\WPDesk\PluginBuilder\Storage\StaticStorage' ) ) {
+				$storage = new \WPDesk\PluginBuilder\Storage\StaticStorage();
+				try {
+					return $storage->get_from_storage( Flexible_Checkout_Fields_Pro_Plugin::class );
+				} catch ( \WPDesk\PluginBuilder\Storage\Exception\ClassNotExists $e ) {
+					return null;
+				}
+			}
+			return null;
+		}
+	}
+
+
+	if ( !function_exists( 'is_flexible_checkout_fields_pro_active' ) ) {
+		/**
+		 * Checks if Flexible Checkout Fields PRO is active
+		 *
+		 * @return bool
+		 */
+		function is_flexible_checkout_fields_pro_active() {
+			$pro_plugin = get_flexible_checkout_fields_pro_plugin();
+			if ( !empty( $pro_plugin ) && method_exists( $pro_plugin, 'get_plugin_is_active' ) ) {
+				return $pro_plugin->get_plugin_is_active();
+			} else {
+				return wpdesk_is_plugin_active( 'flexible-checkout-fields-pro/flexible-checkout-fields-pro.php' );
+			}
+		}
 	}
 
 	if ( !function_exists( 'wpdesk__' ) ) {

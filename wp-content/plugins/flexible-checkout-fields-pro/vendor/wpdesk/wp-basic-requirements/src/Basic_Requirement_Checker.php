@@ -1,21 +1,21 @@
 <?php
 
-if ( ! interface_exists( 'WPDesk_Translable' ) ) {
-	require_once 'Translable.php';
+if ( ! interface_exists( 'WPDesk_Translatable' ) ) {
+	require_once 'Translatable.php';
 }
 
 /**
  * Checks requirements for plugin
  * have to be compatible with PHP 5.2.x
  */
-class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
+class WPDesk_Basic_Requirement_Checker implements WPDesk_Translatable {
 	const EXTENSION_NAME_OPENSSL = 'openssl';
 	const HOOK_ADMIN_NOTICES_ACTION = 'admin_notices';
 
 	/** @var string */
-	private $plugin_name = '';
+	private $plugin_name;
 	/** @var string */
-	private $plugin_file = '';
+	private $plugin_file;
 	/** @var string */
 	private $min_php_version;
 	/** @var string */
@@ -107,7 +107,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return $this
 	 */
 	public function add_plugin_require( $plugin_name, $nice_plugin_name = null ) {
-		if ( is_null( $nice_plugin_name ) ) {
+		if ( $nice_plugin_name === null ) {
 			$this->plugin_require[ $plugin_name ] = $plugin_name;
 		} else {
 			$this->plugin_require[ $plugin_name ] = $nice_plugin_name;
@@ -123,7 +123,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return $this
 	 */
 	public function add_php_module_require( $module_name, $nice_name = null ) {
-		if ( is_null( $nice_name ) ) {
+		if ( $nice_name === null ) {
 			$this->module_require[ $module_name ] = $module_name;
 		} else {
 			$this->module_require[ $module_name ] = $nice_name;
@@ -158,19 +158,19 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 */
 	private function prepare_requirement_notices() {
 		$notices = array();
-		if ( ! $this->is_php_at_least( $this->min_php_version ) ) {
+		if ( ! self::is_php_at_least( $this->min_php_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run on PHP versions older than %s. Please contact your host and ask them to upgrade.',
 				$this->get_text_domain() ), esc_html( $this->plugin_name ), $this->min_php_version ) );
 		}
-		if ( ! $this->is_wp_at_least( $this->min_wp_version ) ) {
+		if ( ! self::is_wp_at_least( $this->min_wp_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run on WordPress versions older than %s. Please update WordPress.',
 				$this->get_text_domain() ), esc_html( $this->plugin_name ), $this->min_wp_version ) );
 		}
-		if ( ! is_null( $this->min_wc_version ) && $this->can_check_plugin_version() && ! $this->is_wc_at_least( $this->min_wc_version ) ) {
+		if ( $this->min_wc_version !== null && $this->can_check_plugin_version() && ! self::is_wc_at_least( $this->min_wc_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run on WooCommerce versions older than %s. Please update WooCommerce.',
 				$this->get_text_domain() ), esc_html( $this->plugin_name ), $this->min_wc_version ) );
 		}
-		if ( ! is_null( $this->min_openssl_version ) && ! $this->is_open_ssl_at_least( $this->min_openssl_version ) ) {
+		if ( $this->min_openssl_version !== null && ! self::is_open_ssl_at_least( $this->min_openssl_version ) ) {
 			$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run without OpenSSL module version at least %s. Please update OpenSSL module.',
 				$this->get_text_domain() ), esc_html( $this->plugin_name ),
 				'0x' . dechex( $this->min_openssl_version ) ) );
@@ -189,7 +189,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return mixed
 	 */
 	public static function is_php_at_least( $min_version ) {
-		return version_compare( phpversion(), $min_version, '>=' );
+		return version_compare( PHP_VERSION, $min_version, '>=' );
 	}
 
 	/**
@@ -258,7 +258,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	private function append_plugin_require_notices( $notices ) {
 		if ( count( $this->plugin_require ) > 0 ) {
 			foreach ( $this->plugin_require as $plugin_name => $nice_plugin_name ) {
-				if ( ! $this->is_wp_plugin_active( $plugin_name ) ) {
+				if ( ! self::is_wp_plugin_active( $plugin_name ) ) {
 					$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run without %s active. Please install and activate %s plugin.',
 						$this->get_text_domain() ), esc_html( $this->plugin_name ),
 						esc_html( basename( $nice_plugin_name ) ), esc_html( basename( $nice_plugin_name ) ) ) );
@@ -294,7 +294,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	private function append_module_require_notices( $notices ) {
 		if ( count( $this->module_require ) > 0 ) {
 			foreach ( $this->module_require as $module_name => $nice_module_name ) {
-				if ( ! $this->is_module_active( $module_name ) ) {
+				if ( ! self::is_module_active( $module_name ) ) {
 					$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run without %s php module installed. Please contact your host and ask them to install %s.',
 						$this->get_text_domain() ), esc_html( $this->plugin_name ),
 						esc_html( basename( $nice_module_name ) ), esc_html( basename( $nice_module_name ) ) ) );
@@ -322,7 +322,7 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	private function append_settings_require_notices( $notices ) {
 		if ( count( $this->setting_require ) > 0 ) {
 			foreach ( $this->setting_require as $setting => $value ) {
-				if ( ! $this->is_setting_set( $setting, $value ) ) {
+				if ( ! self::is_setting_set( $setting, $value ) ) {
 					$notices[] = $this->prepare_notice_message( sprintf( __( 'The &#8220;%s&#8221; plugin cannot run without %s php setting set to %s. Please contact your host and ask them to set %s.',
 						$this->get_text_domain() ), esc_html( $this->plugin_name ), esc_html( basename( $setting ) ),
 						esc_html( basename( $value ) ), esc_html( basename( $setting ) ) ) );
@@ -340,19 +340,52 @@ class WPDesk_Basic_Requirement_Checker implements WPDesk_Translable {
 	 * @return bool
 	 */
 	public static function is_setting_set( $name, $value ) {
-		return ini_get( $name ) === strval( $value );
+		return ini_get( $name ) === (string) $value;
 	}
 
 	/**
 	 * @return void
+     *
+     * @deprecated use render_notices or disable_plugin
 	 */
 	public function disable_plugin_render_notice() {
 		add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'render_notices_action' ) );
 	}
 
+    /**
+     * Renders requirement notices in admin panel
+     *
+     * @return void
+     */
+    public function render_notices() {
+        add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'render_notices_action' ) );
+    }
+
+    /**
+     * Renders requirement notices in admin panel
+     *
+     * @return void
+     */
+    public function disable_plugin() {
+        add_action( self::HOOK_ADMIN_NOTICES_ACTION, array( $this, 'deactivate_action' ) );
+    }
+
+    /**
+     * @internal Do not use as public. Public only for wp action.
+     *
+     * @return void
+     */
+    public function deactivate_action() {
+        if ( isset( $this->plugin_file ) ) {
+            deactivate_plugins( plugin_basename( $this->plugin_file ) );
+        }
+    }
+
 	/**
-	 * Shoud be called as WordPress action
+	 * Should be called as WordPress action
 	 *
+     * @internal Do not use as public. Public only for wp action.
+     *
 	 * @return void
 	 */
 	public function render_notices_action() {

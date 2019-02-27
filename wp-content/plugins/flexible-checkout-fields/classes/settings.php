@@ -293,15 +293,19 @@
 							                        }
 						                        }
 					                        }
-                        					if ( empty( $field['label'] ) ) {
-						                        $field['label'] = '';
+                        					if ( is_array( $field ) ) {
+						                        if ( empty( $field['label'] ) ) {
+							                        $field['label'] = '';
+						                        } else {
+							                        $field['label'] = wp_unslash( $field['label'] );
+						                        }
+						                        if ( empty( $field['placeholder'] ) ) {
+							                        $field['placeholder'] = '';
+						                        } else {
+							                        $field['placeholder'] = wp_unslash( $field['placeholder'] );
+						                        }
 					                        } else {
-						                        $field['label'] = wp_unslash( $field['label'] );
-					                        }
-                        					if ( empty( $field['placeholder'] ) ) {
-						                        $field['placeholder'] = '';
-					                        } else {
-						                        $field['placeholder'] = wp_unslash( $field['placeholder'] );
+                        						$field = wp_unslash( $field );
 					                        }
 					                        $section_settings[$field_name] = $field;
 				                        }

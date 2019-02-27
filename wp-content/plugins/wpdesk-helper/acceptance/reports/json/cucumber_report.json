@@ -12,7 +12,7 @@
             "keyword": "Before ",
             "result": {
               "status": "passed",
-              "duration": 3353362652
+              "duration": 3135314152
             },
             "hidden": true,
             "match": {
@@ -25,7 +25,7 @@
             "name": "user is logged in to wordPress",
             "result": {
               "status": "passed",
-              "duration": 282066611
+              "duration": 400332137
             },
             "line": 5,
             "match": {
@@ -38,7 +38,7 @@
             "name": "i resets the consent to collect data in the database",
             "result": {
               "status": "passed",
-              "duration": 26143946
+              "duration": 18639116
             },
             "line": 6,
             "match": {
@@ -51,7 +51,7 @@
             "name": "i open \"menu-plugins\" and activate plugin with slug \"wp-desk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 1835967541
+              "duration": 1765344103
             },
             "line": 9,
             "match": {
@@ -64,7 +64,7 @@
             "name": "check if plugin with slug \"wp-desk-helper\" is Active",
             "result": {
               "status": "passed",
-              "duration": 622855229
+              "duration": 705171931
             },
             "line": 10,
             "match": {
@@ -76,7 +76,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 2305414111
+              "duration": 1973491807
             },
             "hidden": true,
             "match": {
@@ -103,7 +103,7 @@
             "keyword": "Before ",
             "result": {
               "status": "passed",
-              "duration": 1088921319
+              "duration": 1119783130
             },
             "hidden": true,
             "match": {
@@ -116,7 +116,7 @@
             "name": "user is logged in to wordPress",
             "result": {
               "status": "passed",
-              "duration": 287999148
+              "duration": 348826916
             },
             "line": 5,
             "match": {
@@ -129,7 +129,7 @@
             "name": "i resets the consent to collect data in the database",
             "result": {
               "status": "passed",
-              "duration": 23558049
+              "duration": 10324254
             },
             "line": 6,
             "match": {
@@ -142,7 +142,7 @@
             "name": "i open \"menu-plugins\" and deactivate plugin with slug \"wp-desk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 1021093577
+              "duration": 1104930508
             },
             "line": 13,
             "match": {
@@ -155,7 +155,7 @@
             "name": "check if plugin with slug \"wp-desk-helper\" is Inactive",
             "result": {
               "status": "passed",
-              "duration": 573041685
+              "duration": 664967331
             },
             "line": 14,
             "match": {
@@ -167,7 +167,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1964679775
+              "duration": 1955614059
             },
             "hidden": true,
             "match": {
@@ -209,7 +209,7 @@
             "keyword": "Before ",
             "result": {
               "status": "passed",
-              "duration": 1039789051
+              "duration": 1182295161
             },
             "hidden": true,
             "match": {
@@ -222,7 +222,7 @@
             "name": "user is logged in to wordPress",
             "result": {
               "status": "passed",
-              "duration": 289754023
+              "duration": 339868024
             },
             "line": 5,
             "match": {
@@ -235,7 +235,7 @@
             "name": "i resets the consent to collect data in the database",
             "result": {
               "status": "passed",
-              "duration": 868865
+              "duration": 1566455
             },
             "line": 6,
             "match": {
@@ -248,7 +248,7 @@
             "name": "i open \"menu-plugins\" and activate plugin with slug \"wp-desk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 851658023
+              "duration": 922692813
             },
             "line": 9,
             "match": {
@@ -261,7 +261,7 @@
             "name": "tracker message type \"short\" visible",
             "result": {
               "status": "passed",
-              "duration": 129870410
+              "duration": 121615629
             },
             "line": 10,
             "match": {
@@ -274,7 +274,7 @@
             "name": "Check if buttons skip and Allow & Continue visible in tracker message",
             "result": {
               "status": "passed",
-              "duration": 106626559
+              "duration": 113617664
             },
             "line": 11,
             "match": {
@@ -287,7 +287,7 @@
             "name": "i open \"menu-plugins\" and deactivate plugin with slug \"wp-desk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 1007231335
+              "duration": 1062209651
             },
             "line": 12,
             "match": {
@@ -299,7 +299,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 2995249526
+              "duration": 1995335740
             },
             "hidden": true,
             "match": {
@@ -326,7 +326,7 @@
             "keyword": "Before ",
             "result": {
               "status": "passed",
-              "duration": 1103106700
+              "duration": 1165525771
             },
             "hidden": true,
             "match": {
@@ -339,7 +339,7 @@
             "name": "user is logged in to wordPress",
             "result": {
               "status": "passed",
-              "duration": 293782208
+              "duration": 347065801
             },
             "line": 5,
             "match": {
@@ -352,7 +352,7 @@
             "name": "i resets the consent to collect data in the database",
             "result": {
               "status": "passed",
-              "duration": 23562493
+              "duration": 10096972
             },
             "line": 6,
             "match": {
@@ -365,7 +365,7 @@
             "name": "i open \"menu-plugins\" and activate plugin with slug \"wp-desk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 842592197
+              "duration": 960497844
             },
             "line": 15,
             "match": {
@@ -378,7 +378,7 @@
             "name": "Skip tracker message",
             "result": {
               "status": "passed",
-              "duration": 1244413698
+              "duration": 2171520431
             },
             "line": 16,
             "match": {
@@ -391,7 +391,7 @@
             "name": "i open submenu \"Settings\" from menu \"toplevel_page_wpdesk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 550684251
+              "duration": 551930455
             },
             "line": 17,
             "match": {
@@ -404,7 +404,7 @@
             "name": "tracker message type \"long\" visible",
             "result": {
               "status": "passed",
-              "duration": 269540397
+              "duration": 310445316
             },
             "line": 18,
             "match": {
@@ -417,7 +417,7 @@
             "name": "i open \"menu-plugins\" and deactivate plugin with slug \"wp-desk-helper\"",
             "result": {
               "status": "passed",
-              "duration": 987569385
+              "duration": 1104646647
             },
             "line": 19,
             "match": {
@@ -429,7 +429,7 @@
             "keyword": "After ",
             "result": {
               "status": "passed",
-              "duration": 1974705828
+              "duration": 1908258956
             },
             "hidden": true,
             "match": {

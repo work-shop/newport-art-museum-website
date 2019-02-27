@@ -34,6 +34,10 @@ switch ( $field['type'] ) {
 		$field_args['type'] = 'select';
 		woocommerce_wp_select( $field_args );
 		break;
+	case 'inspireradio':
+		$field_args['type'] = 'radio';
+		woocommerce_wp_radio( $field_args );
+		break;
 	case Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type::FIELD_TYPE_MULTISELECT:
 		$field_args['type']  = Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type::FIELD_TYPE_MULTISELECT;
 		$field_args['name'] .= '[]';

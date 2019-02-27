@@ -5,42 +5,9 @@
  *
  * Class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
  */
-class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
-	implements \WPDesk\PluginBuilder\Plugin\HookablePluginDependant {
-
-	use \WPDesk\PluginBuilder\Plugin\PluginAccess;
+class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type extends Flexible_Checkout_Fields_Pro_Field_Type {
 
 	const FIELD_TYPE_MULTISELECT = 'wpdeskmultiselect';
-
-	const TYPE    = 'type';
-	const OPTIONS = 'options';
-
-	const ALLOWED_HTML_TAGS_IN_OPTION = '<img><a><strong><em><br>';
-
-	/**
-	 * Renderer.
-	 *
-	 * @var WPDesk\View\Renderer\Renderer
-	 */
-	private $renderer;
-
-	/**
-	 * Checkout fields PRO.
-	 *
-	 * @var Flexible_Checkout_Fields_Pro
-	 */
-	private $checkout_fields_pro;
-
-	/**
-	 * Flexible_Checkout_Fields_Pro_Multi_Select constructor.
-	 *
-	 * @param Flexible_Checkout_Fields_Pro   $checkout_fields_pro Checkout fields PRO.
-	 * @param \WPDesk\View\Renderer\Renderer $renderer Renderer.
-	 */
-	public function __construct( $checkout_fields_pro, WPDesk\View\Renderer\Renderer $renderer ) {
-		$this->renderer            = $renderer;
-		$this->checkout_fields_pro = $checkout_fields_pro;
-	}
 
 	/**
 	 * Is multiselect field?
@@ -50,10 +17,7 @@ class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
 	 * @return bool
 	 */
 	private function is_multiselect( array $field ) {
-		if ( isset( $field[ self::TYPE ] ) && self::FIELD_TYPE_MULTISELECT === $field[ self::TYPE ] ) {
-			return true;
-		}
-		return false;
+		return $this->is_field_type_of( $field, self::FIELD_TYPE_MULTISELECT );
 	}
 
 	/**
@@ -67,10 +31,12 @@ class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
 		add_filter( 'flexible_checkout_fields_user_meta_display_value', array( $this, 'field_print_value' ), 10, 2 );
 		$settings = $this->checkout_fields_pro->get_settings();
 		foreach ( $settings as $section ) {
-			foreach ( $section as $key => $field ) {
-				if ( $this->is_multiselect( $field ) ) {
-					add_filter( 'woocommerce_process_myaccount_field_' . $key, array( $this, 'save_my_account_field' ) );
-					add_filter( 'woocommerce_process_admin_order_field_' . $key, array( $this, 'save_admin_order_field' ) );
+			if ( is_array( $section ) ) {
+				foreach ( $section as $key => $field ) {
+					if ( $this->is_multiselect( $field ) ) {
+						add_filter( 'woocommerce_process_myaccount_field_' . $key, array( $this, 'save_my_account_field' ) );
+						add_filter( 'woocommerce_process_admin_order_field_' . $key, array( $this, 'save_admin_order_field' ) );
+					}
 				}
 			}
 		}
@@ -85,7 +51,7 @@ class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
 	 * @return array
 	 */
 	public function add_multi_select_to_fields( array $fields ) {
-		$fields[self::FIELD_TYPE_MULTISELECT] = array(
+		$fields[ self::FIELD_TYPE_MULTISELECT ] = array(
 			'name'                => __( 'Multi-select', 'flexible-checkout-fields-pro' ),
 			'disable_placeholder' => true,
 			'has_options'         => true,
@@ -138,34 +104,6 @@ class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
 	}
 
 	/**
-	 * Prepare options for field.
-	 * Prepares options array from option string.
-	 *
-	 * @param array $field Field.
-	 *
-	 * @return array
-	 */
-	private function prepare_options_for_field( array $field ) {
-		$options     = array();
-		$options_row = explode( "\n", $field['option'] );
-		if ( ! empty( $options_row ) ) {
-			foreach ( $options_row as $option ) {
-				$tmp          = explode( ':', $option, 2 );
-				$option_value = trim( $tmp[0] );
-				if ( isset( $tmp[1] ) ) {
-					$option_label = wp_unslash( strip_tags( $tmp[1], self::ALLOWED_HTML_TAGS_IN_OPTION ) );
-				} else {
-					$option_label = $option_value;
-				}
-				$options[ $option_value ] = wpdesk__( $option_label, 'flexible-checkout-fields' );
-				unset( $tmp );
-			}
-			unset( $options_array );
-		}
-		return $options;
-	}
-
-	/**
 	 * Field print value.
 	 *
 	 * @param string $value Value.
@@ -202,7 +140,7 @@ class Flexible_Checkout_Fields_Pro_Multi_Select_Field_Type
 	 */
 	public function save_my_account_field( $value ) {
 		if ( is_array( $value ) ) {
-			$value = json_encode( $value );
+			$value = wp_json_encode( $value );
 		}
 		return $value;
 	}

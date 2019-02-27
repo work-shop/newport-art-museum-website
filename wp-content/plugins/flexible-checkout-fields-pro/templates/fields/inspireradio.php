@@ -31,7 +31,7 @@ if ( ! empty( $args['custom_attributes'] ) && is_array( $args['custom_attributes
                     type="radio"
                     class="input-radio input-inspireradio"
                     name="<?php echo $key; ?>"
-                    id="<?php echo $okey; ?>"
+                    id="<?php echo $key; ?>_<?php echo $okey; ?>"
                     value="<?php echo $okey; ?>" <?php echo $checked; ?>
 			        <?php echo empty( $custom_attributes ) ? '' : implode( ' ', $custom_attributes ); ?>
             /> <?php echo $option; ?></label>

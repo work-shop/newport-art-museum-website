@@ -45,10 +45,10 @@ require_once('/path/to/wp-desk/wp-notice/init.php');
 Simple usage looks like:
 
 ```php
-$notice = wpdesk_notice('Notice text goes here');
+$notice = wpdesk_wp_notice('Notice text goes here');
 
 // Is equivalent to:
-$notice = WPDeskNotice('Notice text goes here');
+$notice = WPDeskWpNotice('Notice text goes here');
 
 // Is equivalent to:
 $notice = \WPDesk\Notice\Factory::notice('Notice text goes here');

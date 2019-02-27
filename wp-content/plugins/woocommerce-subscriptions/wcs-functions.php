@@ -155,7 +155,7 @@ function wcs_create_subscription( $args = array() ) {
 	$subscription_data['post_type']     = 'shop_subscription';
 	$subscription_data['post_status']   = 'wc-' . apply_filters( 'woocommerce_default_subscription_status', 'pending' );
 	$subscription_data['ping_status']   = 'closed';
-	$subscription_data['post_author']   = WC_Subscriptions::is_woocommerce_pre( '3.5' ) ? 1 : $args['customer_id'];
+	$subscription_data['post_author']   = 1;
 	$subscription_data['post_password'] = uniqid( 'order_' );
 	// translators: Order date parsed by strftime
 	$post_title_date = strftime( _x( '%b %d, %Y @ %I:%M %p', 'Used in subscription post title. "Subscription renewal order - <this>"', 'woocommerce-subscriptions' ) );
@@ -187,7 +187,7 @@ function wcs_create_subscription( $args = array() ) {
 	}
 
 	// Default order meta data.
-	update_post_meta( $subscription_id, '_order_key', 'wc_' . apply_filters( 'woocommerce_generate_order_key', uniqid( 'order_' ) ) );
+	update_post_meta( $subscription_id, '_order_key', wcs_generate_order_key() );
 	update_post_meta( $subscription_id, '_order_currency', $args['currency'] );
 	update_post_meta( $subscription_id, '_prices_include_tax', $args['prices_include_tax'] );
 	update_post_meta( $subscription_id, '_created_via', sanitize_text_field( $args['created_via'] ) );
@@ -779,4 +779,44 @@ function wcs_subscription_search( $term ) {
 	}
 
 	return $subscription_ids;
+}
+
+/**
+ * Set payment method meta data for a subscription or order.
+ *
+ * @since 2.4.3
+ * @param WC_Subscription|WC_Order $subscription The subscription or order to set the post payment meta on.
+ * @param array $payment_meta Associated array of the form: $database_table => array( 'meta_key' => array( 'value' => '' ) )
+ * @throws InvalidArgumentException
+ */
+function wcs_set_payment_meta( $subscription, $payment_meta ) {
+	if ( ! is_array( $payment_meta ) ) {
+		throw new InvalidArgumentException( __( 'Payment method meta must be an array.', 'woocommerce-subscriptions' ) );
+	}
+
+	foreach ( $payment_meta as $meta_table => $meta ) {
+		foreach ( $meta as $meta_key => $meta_data ) {
+			if ( isset( $meta_data['value'] ) ) {
+				switch ( $meta_table ) {
+					case 'user_meta':
+					case 'usermeta':
+						update_user_meta( $subscription->get_user_id(), $meta_key, $meta_data['value'] );
+						break;
+					case 'post_meta':
+					case 'postmeta':
+						if ( is_callable( array( $subscription, 'update_meta_data' ) ) ) {
+							$subscription->update_meta_data( $meta_key, $meta_data['value'] );
+						} else {
+							update_post_meta( wcs_get_objects_property( $subscription, 'id' ), $meta_key, $meta_data['value'] );
+						}
+						break;
+					case 'options':
+						update_option( $meta_key, $meta_data['value'] );
+						break;
+					default:
+						do_action( 'wcs_save_other_payment_meta', $subscription, $meta_table, $meta_key, $meta_data['value'] );
+				}
+			}
+		}
+	}
 }

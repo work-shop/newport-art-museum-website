@@ -1,36 +1,28 @@
 <?php
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+class Flexible_Checkout_Fields_Conditional_Logic implements \WPDesk\PluginBuilder\Plugin\HookablePluginDependant {
 
-class Flexible_Checkout_Fields_Conditional_Logic {
-
-	protected $plugin = null;
+	use \WPDesk\PluginBuilder\Plugin\PluginAccess;
 
 	/**
-	 * Flexible_Checkout_Fields_Conditional_Logic constructor.
-	 *
-	 * @param Flexible_Checkout_Fields_Pro_Plugin $plugin
+	 * Hooks.
 	 */
-	public function __construct( $plugin ) {
+	public function hooks() {
+		add_filter( 'flexible_checkout_fields_field_tabs', array( $this, 'flexible_checkout_fields_field_tabs' ), 9 );
 
-		$this->plugin = $plugin;
-				
-		add_filter( 'flexible_checkout_fields_field_tabs', array( $this, 'flexible_checkout_fields_field_tabs' ), 9 ); 
-		
 		add_action( 'flexible_checkout_fields_field_tabs_content', array( $this, 'flexible_checkout_fields_field_tabs_content'), 9, 4 );
-		
+
 		add_action( 'flexible_checkout_fields_field_tabs_content_js', array( $this, 'flexible_checkout_fields_field_tabs_content_js' ) );
-		
+
 		add_action( 'flexible_checkout_fields_java_script', array( $this, 'flexible_checkout_fields_java_script' ) );
-		
+
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
-		
+
 		add_filter( 'woocommerce_screen_ids', array ( $this, 'woocommerce_screen_ids' ) );
-		
+
 		add_filter( 'flexible_checkout_fields_condition', array( $this, 'flexible_checkout_fields_condition_in_checkout_page' ), 10, 2 );
-		
-		add_action( 'wp_ajax_flexible_checkout_fields_ajax', array( $this, 'wp_ajax_flexible_checkout_fields_ajax' ) );		
-		
+
+		add_action( 'wp_ajax_flexible_checkout_fields_ajax', array( $this, 'wp_ajax_flexible_checkout_fields_ajax' ) );
 	}
 	
 	public function woocommerce_screen_ids( $screen_ids ) {
@@ -46,8 +38,12 @@ class Flexible_Checkout_Fields_Conditional_Logic {
 		if ( $current_screen->id == 'woocommerce_page_inspire_checkout_fields_settings' ) {
 			wp_enqueue_script( 'select2' );
 			wp_enqueue_script( 'wc-enhanced-select' );
-
-			wp_enqueue_style( 'inspire_checkout_fields_pro', trailingslashit( $this->plugin->get_plugin_assets_url() ) . 'css/admin.css' );
+			wp_enqueue_style(
+				'inspire_checkout_fields_pro',
+				trailingslashit( $this->plugin->get_plugin_assets_url() ) . 'css/admin.css',
+				array(),
+				$this->plugin->get_script_version()
+			);
 
 		}
 	}
@@ -350,7 +346,6 @@ class Flexible_Checkout_Fields_Conditional_Logic {
 			}
 		}
 		echo json_encode( $data );
-		wp_die();
 	}
 	
 }

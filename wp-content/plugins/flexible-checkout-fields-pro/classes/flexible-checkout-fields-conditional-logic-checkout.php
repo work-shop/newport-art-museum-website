@@ -7,7 +7,10 @@ require_once 'flexible-checkout-fields-conditional-logic-filter.php';
 /**
  * Class Flexible_Checkout_Fields_Conditional_Logic_Checkout
  */
-class Flexible_Checkout_Fields_Conditional_Logic_Checkout extends Flexible_Checkout_Fields_Conditional_Logic_Filter {
+class Flexible_Checkout_Fields_Conditional_Logic_Checkout
+	extends Flexible_Checkout_Fields_Conditional_Logic_Filter
+	implements \WPDesk\PluginBuilder\Plugin\Hookable
+{
 
 	/**
 	 * Constants.

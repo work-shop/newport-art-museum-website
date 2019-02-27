@@ -16,6 +16,8 @@ class Notice
     const NOTICE_TYPE_SUCCESS = 'success';
     const NOTICE_TYPE_INFO = 'info';
 
+    const ADMIN_FOOTER_BASE_PRIORITY = 9999999;
+
     /**
      * Notice type.
      *
@@ -156,16 +158,40 @@ class Notice
     {
         if (!$this->actionAdded) {
             add_action('admin_notices', [$this, 'showNotice'], $this->priority);
+            add_action(
+                'admin_footer',
+                [$this, 'showNotice'],
+                self::ADMIN_FOOTER_BASE_PRIORITY + intval($this->priority)
+            );
             $this->actionAdded = true;
         }
     }
 
+    /**
+     * Remove action.
+     */
     protected function removeAction()
     {
         if ($this->actionAdded) {
             remove_action('admin_notices', [$this, 'showNotice'], $this->priority);
+            remove_action(
+                'admin_footer',
+                [$this, 'showNotice'],
+                self::ADMIN_FOOTER_BASE_PRIORITY + intval($this->priority)
+            );
             $this->actionAdded = false;
         }
+    }
+
+    /**
+     * Add attribute.
+     *
+     * @param string $name Name
+     * @param string $value Value.
+     */
+    public function addAttribute($name, $value)
+    {
+        $this->attributes[ $name ] = $value;
     }
 
     /**
@@ -221,6 +247,7 @@ class Notice
      */
     public function showNotice()
     {
+        $this->removeAction();
         $noticeFormat = '<div %1$s>%2$s</div>';
         if ($this->addParagraphToContent()) {
             $noticeFormat = '<div %1$s><p>%2$s</p></div>';

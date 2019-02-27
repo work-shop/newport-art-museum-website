@@ -288,6 +288,10 @@ foreach ( $plugin->sections as $section ) {
 														    $disabled = ' disabled';
 													    }
                                                     }
+
+													if( empty( $field['class'] ) ) {
+														$field['class'] = array( 'form-row' );
+                                                    }
 													?>
                                                     <div style="<?php echo $style; ?>">
                                                         <input type="hidden"
@@ -715,7 +719,7 @@ foreach ( $plugin->sections as $section ) {
                 html += '</div>';
                 html += '<div class="field-class">';
                 html += '<label for="class_' + field_slug + '"><?php _e( 'CSS Class', 'flexible-checkout-fields' ) ?></label>';
-                html += '<input class="field_class" type="text" id="class_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][class]" value="" data-qa-id="field-class" />';
+                html += '<input class="field_class" type="text" id="class_' + field_slug + '" name="inspire_checkout_fields[settings][' + field_section + '][' + field_slug + '][class]" value="form-row" data-qa-id="field-class" />';
                 html += '</div>';
 
                 html += '</div>';

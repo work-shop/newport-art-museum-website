@@ -6,4 +6,9 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'WPDesk\\View\\' => array($vendorDir . '/wpdesk/wp-view/src'),
+    'WPDesk\\PluginBuilder\\' => array($vendorDir . '/wpdesk/wp-builder/src'),
+    'WPDesk\\Notice\\' => array($vendorDir . '/wpdesk/wp-notice/src/WPDesk/Notice'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
+    'Composer\\Installers\\' => array($vendorDir . '/composer/installers/src/Composer/Installers'),
 );

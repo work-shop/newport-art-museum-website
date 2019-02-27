@@ -1,5 +1,5 @@
 [![pipeline status](https://gitlab.com/wpdesk/wp-notice/badges/master/pipeline.svg)](https://gitlab.com/wpdesk/wp-notice/pipelines) 
-[![coverage report](https://gitlab.com/wpdesk/wp-notice/badges/master/coverage.svg)](https://gitlab.com/wpdesk/wp-notice/commits/master) 
+[![coverage report](https://gitlab.com/wpdesk/wp-notice/badges/master/coverage.svg?job=integration+test+lastest+coverage)](https://gitlab.com/wpdesk/wp-notice/commits/master) 
 [![Latest Stable Version](https://poser.pugx.org/wpdesk/wp-notice/v/stable)](https://packagist.org/packages/wpdesk/wp-notice) 
 [![Total Downloads](https://poser.pugx.org/wpdesk/wp-notice/downloads)](https://packagist.org/packages/wpdesk/wp-notice) 
 [![Latest Unstable Version](https://poser.pugx.org/wpdesk/wp-notice/v/unstable)](https://packagist.org/packages/wpdesk/wp-notice) 
@@ -34,10 +34,10 @@ require_once 'vendor/autoload.php';
 
 ## Manual instalation
 
-If you do not wish to use Composer, you can download the latest release. Then, to use the Notices, include the init.php file.
+If you do not wish to use Composer, you can [download the latest release](https://gitlab.com/wpdesk/wp-notice/-/jobs/artifacts/master/download?job=library). Then, to use the Notices, include the init.php file.
 
 ```php
-require_once('/path/to/notice/src/init.php');
+require_once('/path/to/wp-desk/wp-notice/init.php');
 ```
 
 ## Getting Started
@@ -45,10 +45,10 @@ require_once('/path/to/notice/src/init.php');
 Simple usage looks like:
 
 ```php
-$notice = wpdesk_notice('Notice text goes here');
+$notice = wpdesk_wp_notice('Notice text goes here');
 
 // Is equivalent to:
-$notice = WPDeskNotice('Notice text goes here');
+$notice = WPDeskWpNotice('Notice text goes here');
 
 // Is equivalent to:
 $notice = \WPDesk\Notice\Factory::notice('Notice text goes here');

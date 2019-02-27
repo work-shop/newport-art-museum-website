@@ -1,10 +1,10 @@
 <?php
 
-if ( ! interface_exists( 'WPDesk_Translable' ) ) {
-	require_once dirname(__FILE__) . '/../Translable.php';
+if ( ! interface_exists( 'WPDesk_Translatable' ) ) {
+	require_once __DIR__ . '/../Translatable.php';
 }
 if ( ! class_exists( 'WPDesk_Buildable' ) ) {
-	require_once dirname(__FILE__) . '/../Buildable.php';
+	require_once __DIR__ . '/../Buildable.php';
 }
 if ( ! class_exists( 'WPDesk_Has_Plugin_Info' ) ) {
 	require_once 'Has_Plugin_Info.php';
@@ -15,7 +15,7 @@ if ( ! class_exists( 'WPDesk_Has_Plugin_Info' ) ) {
  *
  * have to be compatible with PHP 5.2.x
  */
-class WPDesk_Plugin_Info implements WPDesk_Translable, WPDesk_Buildable, WPDesk_Has_Plugin_Info {
+class WPDesk_Plugin_Info implements WPDesk_Translatable, WPDesk_Buildable, WPDesk_Has_Plugin_Info {
 	/** @var string */
 	private $plugin_file_name;
 

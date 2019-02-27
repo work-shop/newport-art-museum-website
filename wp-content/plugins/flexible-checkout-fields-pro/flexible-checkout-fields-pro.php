@@ -3,15 +3,15 @@
     Plugin Name: Flexible Checkout Fields PRO
     Plugin URI: https://www.wpdesk.net/products/flexible-checkout-fields-pro-woocommerce/
     Description: Extension to the free version. Adds new field types, custom sections and more.
-    Version: 1.6.10
+    Version: 1.9.0
     Author: WP Desk
     Author URI: https://www.wpdesk.net/
     Text Domain: flexible-checkout-fields-pro
     Domain Path: /lang/
-	Requires at least: 4.5
-    Tested up to: 5.0.0
+	Requires at least: 4.6
+    Tested up to: 5.1.0
     WC requires at least: 3.1.0
-    WC tested up to: 3.5.1
+    WC tested up to: 3.5.5
 
     Copyright 2018 WP Desk Ltd.
 
@@ -31,103 +31,55 @@
 
 */
 
-$plugin_version = '1.6.10';
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+} // Exit if accessed directly
+
+// Only PHP 5.2 compatible code
+if ( ! class_exists( 'WPDesk_Basic_Requirement_Checker' ) ) {
+	require_once dirname( __FILE__ ) . '/vendor/wpdesk/wp-basic-requirements/src/Basic_Requirement_Checker.php';
+}
+
+
+/* THESE TWO VARIABLES CAN BE CHANGED AUTOMATICALLY */
+$plugin_version           = '1.9.0';
+$plugin_release_timestamp = '2018-11-19';
+
+$plugin_name        = 'Flexible Checkout Fields PRO';
+$plugin_class_name  = 'Flexible_Checkout_Fields_Pro_Plugin';
+$plugin_text_domain = 'flexible-checkout-fields-pro';
+$product_id         = 'WooCommerce Flexible Checkout Fields';
+
 define( 'FLEXIBLE_CHECKOUT_FIELDS_PRO_VERSION', $plugin_version );
+define( $plugin_class_name, $plugin_version );
 
-
-$plugin_data = array(
-	'plugin' => plugin_basename( __FILE__ ),
-	'product_id' => 'WooCommerce Flexible Checkout Fields',
-	'version'    => FLEXIBLE_CHECKOUT_FIELDS_PRO_VERSION,
-	'config_uri' => admin_url( 'admin.php?page=inspire_checkout_fields_settings' )
+$requirements_checker = new WPDesk_Basic_Requirement_Checker(
+	__FILE__,
+	$plugin_name,
+	$plugin_text_domain,
+	'5.5',
+	'4.5'
 );
+$requirements_checker->add_plugin_require( 'woocommerce/woocommerce.php', 'Woocommerce' );
+$requirements_checker->add_plugin_require( 'flexible-checkout-fields/flexible-checkout-fields.php', 'Flexible Checkout Fields' );
 
-if ( ! defined( 'FCF_PRO_VERSION' ) ) {
-	define( 'FCF_PRO_VERSION', FLEXIBLE_CHECKOUT_FIELDS_PRO_VERSION );
-}
-
-require_once( plugin_basename( 'inc/wpdesk-woo27-functions.php' ) );
-
-require_once( plugin_basename( 'classes/wpdesk/class-plugin.php' ) );
-
-require_once( plugin_basename( 'classes/flexible-checkout-fields-pro-plugin.php' ) );
-
-
-if ( !function_exists( 'wpdesk_is_plugin_active' ) ) {
-	function wpdesk_is_plugin_active( $plugin_file ) {
-
-		$active_plugins = (array) get_option( 'active_plugins', array() );
-
-		if ( is_multisite() ) {
-			$active_plugins = array_merge( $active_plugins, get_site_option( 'active_sitewide_plugins', array() ) );
-		}
-
-		return in_array( $plugin_file, $active_plugins ) || array_key_exists( $plugin_file, $active_plugins );
-	}
-}
-
-if ( ! wpdesk_is_plugin_active( 'flexible-checkout-fields/flexible-checkout-fields.php' ) ) {
-
-	function flexible_checkout_fields_pro_flexible_checkout_fields_install( $api, $action, $args ) {
-		$download_url = 'http://downloads.wordpress.org/plugin/flexible-checkout-fields.latest-stable.zip';
-
-		if ( 'plugin_information' != $action ||
-				false !== $api ||
-				! isset( $args->slug ) ||
-				'wpdesk-helper' != $args->slug
-				) return $api;
-
-				$api = new stdClass();
-				$api->name = 'Flexible Checkout Fields';
-				$api->version = '1.6.10';
-				$api->download_link = esc_url( $download_url );
-				return $api;
+if ( $requirements_checker->are_requirements_met() ) {
+	if ( ! class_exists( 'WPDesk_Plugin_Info' ) ) {
+		require_once dirname( __FILE__ ) . '/vendor/wpdesk/wp-basic-requirements/src/Plugin/Plugin_Info.php';
 	}
 
-	add_filter( 'plugins_api', 'flexible_checkout_fields_pro_flexible_checkout_fields_install', 10, 3 );
+	$plugin_info = new WPDesk_Plugin_Info();
+	$plugin_info->set_plugin_file_name( plugin_basename( __FILE__ ) );
+	$plugin_info->set_plugin_dir( dirname( __FILE__ ) );
+	$plugin_info->set_class_name( $plugin_class_name );
+	$plugin_info->set_version( $plugin_version );
+	$plugin_info->set_product_id( $product_id );
+	$plugin_info->set_text_domain( $plugin_text_domain );
+	$plugin_info->set_release_date( new DateTime( $plugin_release_timestamp ) );
+	$plugin_info->set_plugin_url( plugins_url( dirname( plugin_basename( __FILE__ ) ) ) );
 
-	function flexible_checkout_fields_pro_notice() {
+	require_once dirname( __FILE__ ) . '/plugin-load.php';
 
-		if ( wpdesk_is_plugin_active( 'flexible-checkout-fields/flexible-checkout-fields.php' ) ) return;
-
-		$slug = 'flexible-checkout-fields';
-		$install_url = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=' . $slug ), 'install-plugin_' . $slug );
-		$activate_url = 'plugins.php?action=activate&plugin=' . urlencode( 'flexible-checkout-fields/flexible-checkout-fields.php' ) . '&plugin_status=all&paged=1&s&_wpnonce=' . urlencode( wp_create_nonce( 'activate-plugin_flexible-checkout-fields/flexible-checkout-fields.php' ) );
-
-		$message = sprintf( wp_kses( __( 'Flexible Checkout Fields PRO requires free Flexible Checkout Fields plugin. <a href="%s">Install Flexible Checkout Fields →</a>', 'flexible-checkout-fields-pro' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( $install_url ) );
-		$is_downloaded = false;
-		$plugins = array_keys( get_plugins() );
-		foreach ( $plugins as $plugin ) {
-			if ( strpos( $plugin, 'flexible-checkout-fields/flexible-checkout-fields.php' ) === 0 ) {
-				$is_downloaded = true;
-				$message = sprintf( wp_kses( __( 'Flexible Checkout Fields PRO requires activating Flexible Checkout Fields plugin. <a href="%s">Activate Flexible Checkout Fields →</a>', 'flexible-checkout-fields-pro' ), array(  'a' => array( 'href' => array() ) ) ), esc_url( admin_url( $activate_url ) ) );
-			}
-		}
-		echo '<div class="error fade"><p>' . $message . '</p></div>' . "\n";
-	}
-	add_action( 'admin_notices', 'flexible_checkout_fields_pro_notice' );
-}
-else {
-
-	function flexible_checkout_fields_pro_notice_free_version() {
-		if ( ! defined( 'FCF_VERSION' ) || version_compare( FCF_VERSION, '1.6', '<' ) ) {
-			$message = __( 'Flexible Checkout Fields PRO requires Flexible Checkout Fields plugin in version 1.6 or newer. Please update.', 'flexible-checkout-fields-pro' );
-			echo '<div class="error fade"><p>' . $message . '</p></div>' . "\n";
-		}
-	}
-	add_action( 'admin_notices', 'flexible_checkout_fields_pro_notice_free_version' );
-}
-
-$flexible_checkout_fields_pro_plugin_data = $plugin_data;
-function flexible_checkout_fields_pro() {
-	global $flexible_checkout_fields_pro;
-	global $flexible_checkout_fields_pro_plugin_data;
-	if ( !isset( $flexible_checkout_fields_pro ) ) {
-		$flexible_checkout_fields_pro = new Flexible_Checkout_Fields_PRO_Plugin( __FILE__, $flexible_checkout_fields_pro_plugin_data );
-	}
-	return $flexible_checkout_fields_pro;
-}
-
-if ( wpdesk_is_plugin_active( 'flexible-checkout-fields/flexible-checkout-fields.php' ) ) {
-	$_GLOBALS['flexible_checkout_fields_pro'] = flexible_checkout_fields_pro();
+} else {
+	$requirements_checker->disable_plugin_render_notice();
 }

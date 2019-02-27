@@ -13,7 +13,6 @@
     ],
     "require": {
         "php": ">=5.5",
-        "wpdesk/wp-basic-requirements": "^2.0",
 	    "wpdesk/wp-builder": "^1.0"
 	},
     "require-dev": {
@@ -26,7 +25,7 @@
     },
     "autoload": {
 		"psr-4": {"WPDesk\\Notice\\": "src/WPDesk/Notice/"},
-        "files": ["src/WPDesk/functions.php"]
+        "files": ["src/WPDesk/notice-functions.php"]
     },
     "autoload-dev": {
     },

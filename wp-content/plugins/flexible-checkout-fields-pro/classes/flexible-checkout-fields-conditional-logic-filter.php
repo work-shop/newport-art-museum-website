@@ -44,6 +44,26 @@ abstract class Flexible_Checkout_Fields_Conditional_Logic_Filter {
 	abstract protected function are_categories_meet( array $categories );
 
 	/**
+	 * Get field settings.
+	 *
+	 * @param string $field_name Field name.
+	 *
+	 * @return array|null
+	 */
+	protected function get_field_settings( $field_name ) {
+		$field_definition = null;
+		$fields           = $this->plugin->get_flexible_checkout_fields_plugin()->get_settings();
+		foreach ( $fields as $section ) {
+			foreach ( $section as $section_field_name => $field ) {
+				if ( $field_name === $section_field_name ) {
+					$field_definition = $field;
+				}
+			}
+		}
+		return $field_definition;
+	}
+
+	/**
 	 * Conditional logic rule match products.
 	 *
 	 * @param string|array $products Products IDs.
@@ -144,7 +164,7 @@ abstract class Flexible_Checkout_Fields_Conditional_Logic_Filter {
 	/**
 	 * Show field?
 	 *
-	 * @param array  $rules_match Rules match.
+	 * @param array $rules_match Rules match.
 	 * @param string $operator Operator.
 	 * @param string $action Action.
 	 *
@@ -166,7 +186,7 @@ abstract class Flexible_Checkout_Fields_Conditional_Logic_Filter {
 	/**
 	 * Show field - product and category logic rules.
 	 *
-	 * @param bool  $show_field Show field.
+	 * @param bool $show_field Show field.
 	 * @param array $field Field.
 	 *
 	 * @return bool
@@ -185,5 +205,4 @@ abstract class Flexible_Checkout_Fields_Conditional_Logic_Filter {
 		}
 		return $show_field;
 	}
-
 }

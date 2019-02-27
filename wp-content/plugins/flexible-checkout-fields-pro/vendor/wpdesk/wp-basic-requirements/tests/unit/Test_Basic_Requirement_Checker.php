@@ -155,22 +155,13 @@ class Test_Basic_Requirement_Checker extends PHPUnit\Framework\TestCase {
 			self::ALWAYS_VALID_WP_VERSION );
 
 		WP_Mock::expectActionAdded( WPDesk_Basic_Requirement_Checker::HOOK_ADMIN_NOTICES_ACTION,
-			[ $requirements, 'deactivate_action' ] );
-		WP_Mock::expectActionAdded( WPDesk_Basic_Requirement_Checker::HOOK_ADMIN_NOTICES_ACTION,
 			[ $requirements, 'render_notices_action' ] );
 
 		$this->assertFalse( $requirements->are_requirements_met() );
-		$requirements->disable_plugin_render_notice();
-
-		WP_Mock::wpFunction( 'deactivate_plugins' )
-		       ->once();
-
-		WP_Mock::wpFunction( 'plugin_basename' )
-		       ->once()
-		       ->andReturn( 'whatever' );
+		$requirements->disable_plugin();
+        $requirements->render_notices();
 
 		$this->expectOutputRegex( '/cannot run on PHP/' );
-		$requirements->deactivate_action();
 		$requirements->render_notices_action();
 	}
 }

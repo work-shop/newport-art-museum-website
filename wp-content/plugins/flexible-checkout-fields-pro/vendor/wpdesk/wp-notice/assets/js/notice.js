@@ -1,6 +1,5 @@
 jQuery( document ).on( 'click', '.notice-dismiss', function() {
     var notice_name = jQuery(this).closest('div.notice').data('notice-name');
-console.log(notice_name);
     if ('' !== notice_name) {
         jQuery.ajax({
             url: ajaxurl,

@@ -81,7 +81,13 @@ if ( ! class_exists( 'WPDesk_Logger_Factory' ) ) {
 		 */
 		public static function log_message_backtrace( $message, $level = WPDesk_Logger::DEBUG, array $backtrace ) {
 			$message .= ' Backtrace: ' . json_encode( $backtrace );
-			self::log_message( $message, $backtrace[ self::BACKTRACE_FILENAME_KEY ], $level );
+			if (isset($backtrace[ self::BACKTRACE_FILENAME_KEY ])) {
+				$filename = $backtrace[ self::BACKTRACE_FILENAME_KEY ];
+			} else {
+				$filename = 'unknown';
+			}
+
+			self::log_message( $message, $filename, $level );
 		}
 
 	}

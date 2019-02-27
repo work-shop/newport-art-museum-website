@@ -351,13 +351,16 @@ if ( ! class_exists( 'WPDesk_Update_API_Check' ) ) :
 			];
 
 			$response             = $this->plugin_information( $args );
-			$response->slug       = $this->slug;
-			$response->product_id = $this->product_id;
-			// If everything is okay return the $response
-			if ( isset( $response ) && is_object( $response ) && $response !== false ) {
-				return $response;
+			if ($response) {
+				$response->slug       = $this->slug;
+				$response->product_id = $this->product_id;
+				// If everything is okay return the $response
+				if ( isset( $response ) && is_object( $response ) && $response !== false ) {
+					return $response;
+				}
+			} else {
+				return false;
 			}
-
 		}
 
 		/**

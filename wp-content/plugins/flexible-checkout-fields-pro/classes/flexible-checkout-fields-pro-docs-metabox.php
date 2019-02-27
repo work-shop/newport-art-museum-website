@@ -7,7 +7,7 @@ class Flexible_Checkout_Fields_Pro_Docs_Metabox {
 	/**
 	 * Flexible_Checkout_Fields_Pro_Docs_Metabox constructor.
 	 *
-	 * @param Flexible_Checkout_Fields_Pro_Docs_Metabox $plugin
+	 * @param Flexible_Checkout_Fields_Pro_Plugin $plugin Plugin.
 	 */
 	public function __construct( $plugin ) {
 		$this->plugin = $plugin;

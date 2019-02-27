@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit7943dbd0017f2f34f3298880978c87ec
+class ComposerStaticInitb2c84e87f10ae4ca305907c6cac7a25c
 {
     public static $files = array (
         '0509b34a4bd7aebefeac629c9dc8a978' => __DIR__ . '/..' . '/wpdesk/wp-notice/src/WPDesk/notice-functions.php',
@@ -113,9 +113,9 @@ class ComposerStaticInit7943dbd0017f2f34f3298880978c87ec
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit7943dbd0017f2f34f3298880978c87ec::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit7943dbd0017f2f34f3298880978c87ec::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit7943dbd0017f2f34f3298880978c87ec::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitb2c84e87f10ae4ca305907c6cac7a25c::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitb2c84e87f10ae4ca305907c6cac7a25c::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitb2c84e87f10ae4ca305907c6cac7a25c::$classMap;
 
         }, null, ClassLoader::class);
     }

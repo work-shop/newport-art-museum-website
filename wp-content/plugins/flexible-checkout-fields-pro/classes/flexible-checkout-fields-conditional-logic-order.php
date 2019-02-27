@@ -7,7 +7,10 @@ require_once 'flexible-checkout-fields-conditional-logic-filter.php';
 /**
  * Class Flexible_Checkout_Fields_Conditional_Logic_Checkout
  */
-class Flexible_Checkout_Fields_Conditional_Logic_Order extends Flexible_Checkout_Fields_Conditional_Logic_Filter {
+class Flexible_Checkout_Fields_Conditional_Logic_Order
+	extends Flexible_Checkout_Fields_Conditional_Logic_Filter
+	implements \WPDesk\PluginBuilder\Plugin\Hookable
+{
 
 	/**
 	 * Constants.
@@ -102,6 +105,7 @@ class Flexible_Checkout_Fields_Conditional_Logic_Order extends Flexible_Checkout
 	public function is_in_email() {
 		return $this->in_email;
 	}
+
 	/**
 	 * Check that products are in cart/order.
 	 *
@@ -201,13 +205,13 @@ class Flexible_Checkout_Fields_Conditional_Logic_Order extends Flexible_Checkout
 	 * @return bool
 	 */
 	public function show_field_for_order_product_and_category_rules( $show_field, $field ) {
-		if ( ! $this->is_in_email() ) {
+		if ( ! $this->is_in_email() && ! $this->is_order_page() && ! $this->is_thank_you_page() ) {
 			return $show_field;
 		}
 		if ( ! isset( $this->order ) ) {
 			return $show_field;
 		}
-		return $show_field && $this->show_field_product_and_category_rules( $show_field, $field );
+		return $this->show_field_product_and_category_rules( $show_field, $field );
 	}
 
 	/**
@@ -218,11 +222,21 @@ class Flexible_Checkout_Fields_Conditional_Logic_Order extends Flexible_Checkout
 	 * @return int
 	 */
 	protected function conditional_logic_fields_rule_match( array $rule ) {
-		$rule_match  = 0;
-		$field_name  = $rule['field'];
-		$field_value = $this->order->get_meta( '_' . $field_name );
-		if ( $field_value === $rule['value'] ) {
-			$rule_match = 1;
+		$rule_match            = 0;
+		$rule_field_name       = $rule['field'];
+		$rule_field_definition = $this->get_field_settings( $rule_field_name );
+		$field_value           = $this->order->get_meta( '_' . $rule_field_name );
+		if ( is_array( $rule_field_definition )
+		     && isset( $rule_field_definition['type'] )
+		     && $rule_field_definition['type'] === 'inspirecheckbox'
+		) {
+			if ( '' !== $field_value ) {
+				$rule_match = 1;
+			}
+		} else {
+			if ( $field_value === $rule['value'] ) {
+				$rule_match = 1;
+			}
 		}
 		return $rule_match;
 	}

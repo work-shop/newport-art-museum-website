@@ -170,17 +170,17 @@
     },
     {
         "name": "wpdesk/wp-notice",
-        "version": "2.3",
-        "version_normalized": "2.3.0.0",
+        "version": "2.4",
+        "version_normalized": "2.4.0.0",
         "source": {
             "type": "git",
             "url": "https://gitlab.com/wpdesk/wp-notice.git",
-            "reference": "48aa5fae4a276fcf8ac71ef55f7729bfd983987d"
+            "reference": "49b651f53fa0a64295bdeaa2e427e8add7114a62"
         },
         "dist": {
             "type": "zip",
-            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-notice/repository/archive.zip?sha=48aa5fae4a276fcf8ac71ef55f7729bfd983987d",
-            "reference": "48aa5fae4a276fcf8ac71ef55f7729bfd983987d",
+            "url": "https://gitlab.com/api/v4/projects/wpdesk%2Fwp-notice/repository/archive.zip?sha=49b651f53fa0a64295bdeaa2e427e8add7114a62",
+            "reference": "49b651f53fa0a64295bdeaa2e427e8add7114a62",
             "shasum": ""
         },
         "require": {
@@ -195,7 +195,7 @@
             "wimg/php-compatibility": "^8",
             "wp-coding-standards/wpcs": "^0.14.1"
         },
-        "time": "2019-01-14T11:10:59+00:00",
+        "time": "2019-02-21T11:12:53+00:00",
         "type": "library",
         "installation-source": "dist",
         "autoload": {

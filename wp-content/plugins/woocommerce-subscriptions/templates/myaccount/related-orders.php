@@ -4,7 +4,7 @@
  *
  * @author   Prospress
  * @category WooCommerce Subscriptions/Templates
- * @version  2.0.0
+ * @version  2.5.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -29,7 +29,12 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 	<tbody>
 		<?php foreach ( $subscription_orders as $subscription_order ) {
-			$order      = wc_get_order( $subscription_order );
+			$order = wc_get_order( $subscription_order );
+
+			if ( ! $order ) {
+				continue;
+			}
+
 			$item_count = $order->get_item_count();
 			$order_date = wcs_get_datetime_utc_string( wcs_get_objects_property( $order, 'date_created' ) );
 
