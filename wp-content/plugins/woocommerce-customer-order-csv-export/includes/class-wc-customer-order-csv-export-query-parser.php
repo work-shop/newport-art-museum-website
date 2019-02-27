@@ -509,9 +509,19 @@ class WC_Customer_Order_CSV_Export_Query_Parser {
 	public static function parse_coupons_export_query( $query ) {
 
 		$query_args = array(
-			'fields'    => 'ids',
-			'post_type' => 'shop_coupon',
+			'fields'         => 'ids',
+			'post_type'      => 'shop_coupon',
+			'posts_per_page' => -1,
 		);
+
+		/**
+		 * Filters the query args used for getting coupons during a coupon export.
+		 *
+		 * @since 4.6.2
+		 *
+		 * @param array $query_args query args
+		 */
+		$query_args = apply_filters( 'wc_customer_order_csv_export_coupon_query_args', $query_args );
 
 		// get coupon IDs
 		$coupon_query = new WP_Query( $query_args );

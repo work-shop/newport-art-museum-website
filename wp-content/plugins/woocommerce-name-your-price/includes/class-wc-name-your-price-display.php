@@ -104,7 +104,7 @@ class WC_Name_Your_Price_Display {
 			'annual_price_factors' =>  WC_Name_Your_Price_Helpers::annual_price_factors()
 		);
 
-		wp_localize_script( 'woocommerce-nyp', 'woocommerce_nyp_params', $params );
+		wp_localize_script( 'woocommerce-nyp', 'woocommerce_nyp_params', apply_filters( 'nyp_script_params', $params ) );
 
 	}
 

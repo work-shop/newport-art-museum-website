@@ -1,7 +1,10 @@
 === WooCommerce Name Your Price ===
 
+2018.11.11 - version 2.9.3
+* Fix: [WC3.5] Name Your Price product filters were in the wrong place.
+
 2018.10.17 - version 2.9.2
-* Fix: Repackage to exclude .bak files that are causing errors for some.
+* Fix: Repackage to exclude .bak files that are causing errors in WP Engine.
 
 2018.10.15 - version 2.9.1
 * Fix: Launch plugin on plugins_loaded to reliable load for sub-site in Multisite networks

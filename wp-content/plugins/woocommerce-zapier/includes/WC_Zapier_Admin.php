@@ -15,10 +15,7 @@ class WC_Zapier_Admin {
 		new WC_Zapier_Admin_Pointers();
 		new WC_Zapier_Admin_Feed_UI();
 		new WC_Zapier_Admin_System_Status();
-		if ( class_exists( 'WC_Abstract_Privacy' ) ) {
-			// WC 3.4+ only
-			new WC_Zapier_Privacy();
-		}
+		new WC_Zapier_Privacy();
 
 	}
 

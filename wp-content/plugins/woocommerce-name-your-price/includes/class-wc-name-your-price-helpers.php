@@ -315,7 +315,7 @@ class WC_Name_Your_Price_Helpers {
 
 		$factors = self::annual_price_factors();
 
-		if( isset( $factors[$period] ) ) {
+		if( isset( $factors[$period] ) && $price ) {
 			$price = $factors[$period] * self::standardize_number( $price );
 		}
 

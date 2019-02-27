@@ -3,17 +3,17 @@
 Plugin Name: WooCommerce Zapier Integration
 Plugin URI: https://woocommerce.com/products/woocommerce-zapier/
 Description: Integrates WooCommerce with the <a href="https://www.zapier.com" target="_blank">Zapier</a> web automation service.
-Version: 1.7.4
+Version: 1.8.1
 Author: OM4
 Author URI: https://wczap.com/
 Text Domain: wc_zapier
 Woo: 243589:0782bdbe932c00f4978850268c6cfe40
 WC requires at least: 3.0.0
-WC tested up to: 3.4.2
+WC tested up to: 3.5.4
 */
 
 /*
-Copyright 2013-2018 OM4 (email: plugins@om4.com.au    web: https://om4.com.au/plugins/)
+Copyright 2013-2019 OM4 (email: plugins@om4.com.au    web: https://om4.com.au/plugins/)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -233,22 +233,11 @@ if ( is_woocommerce_active() ) {
 			public static function get_order_statuses() {
 				if ( is_null( self::$order_statuses ) ) {
 					self::$order_statuses = array();
-					if ( function_exists( 'wc_get_order_statuses' ) ) {
-						// WC 2.2+
-						$statuses = wc_get_order_statuses();
-						foreach ( $statuses as $status => $status_label ) {
-							// Use the order status without wc- internal prefix
-							$status = 'wc-' === substr( $status, 0, 3 ) ? substr( $status, 3 ) : $status;
-							self::$order_statuses[] = $status;
-						}
-					} else {
-						// WC 2.1 and earlier
-						$statuses = get_terms( 'shop_order_status', array( 'hide_empty' => 0, 'orderby' => 'id' ) );
-						if ( ! is_wp_error( $statuses ) ) {
-							foreach ( $statuses as $status ) {
-								self::$order_statuses[] = $status->slug;
-							}
-						}
+					$statuses = wc_get_order_statuses();
+					foreach ( $statuses as $status => $status_label ) {
+						// Use the order status without wc- internal prefix
+						$status = 'wc-' === substr( $status, 0, 3 ) ? substr( $status, 3 ) : $status;
+						self::$order_statuses[] = $status;
 					}
 				}
 				return self::$order_statuses;
@@ -381,6 +370,10 @@ if ( is_woocommerce_active() ) {
 			public static function decode( $value ) {
 				if ( is_array( $value ) ) {
 					return array_map( array( 'WC_Zapier', 'decode' ), $value );
+				} else if ( is_object( $value ) ) {
+					// TODO: Handle scenarios where an object is passed (Issue #125)
+					WC_Zapier()->log( "WARNING: WC_Zapier::decode() value is an object: " . print_r( $value, true ) );
+					return $value;
 				} else {
 					return html_entity_decode( $value, ENT_QUOTES, get_bloginfo( 'charset' ) );
 				}
@@ -433,22 +426,21 @@ if ( is_woocommerce_active() ) {
 			 *
 			 * If the plugin isn't active, then no logging occurs
 			 *
-			 * @param string $message
-			 * @param int|null $object_id Optional order ID or customer ID
-			 * @param string|null Object Name. Order or Customer
+			 * @param string $message Message to log.
+			 * @param int|null $object_id Optional order ID or customer ID.
+			 * @param string|null $object_name differentiate between Order & Customer.
 			 */
 			public function log( $message, $object_id = null, $object_name = 'Order' ) {
-				if ( function_exists( "WC_Zapier_Debugger" ) ) {
-					if ( !is_null( $object_id ) ) {
-						$message = "$object_name #$object_id: $message";
-					}
-
-					WC_Zapier_Debugger()->log_message( $message );
-				} else {
-					// Debugger plugin not active. Do nothing.
+				if ( !function_exists( "WC_Zapier_Debugger" ) ) {
+					return; // Debugger plugin not active. Do nothing.
 				}
-			}
 
+				if ( !is_null( $object_id ) ) {
+					$message = "$object_name #$object_id: $message";
+				}
+
+				WC_Zapier_Debugger()->log_message( $message );
+			}
 		}
 
 		/**

@@ -1,5 +1,12 @@
 *** WooCommerce Customer/Order CSV Export Changelog ***
 
+2019.01.22 - version 4.6.2
+ * Fix - Fix issue causing the download_permissions column to always be populated with 0
+ * Fix - Ensure greater than 10 coupons can be exported at a time
+ * Fix - Set individual_use column to yes/no to match CSV Import's format
+ * Fix - Fix an error exporting coupons which are restricted to or excluded from deleted products
+ * Misc - Add a notice on the Custom Formats tab that alerts the user if they are modifying a custom format that is not enabled
+
 2018.11.29 - version 4.6.1
  * Fix - Fix bug causing no results when more than one coupon matches a filter criteria.
 

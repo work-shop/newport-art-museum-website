@@ -178,19 +178,24 @@ class WC_Name_Your_Price_Admin {
 	public static function product_filters( $output ){
 		global $wp_query;
 
-		$pos = strpos ( $output, "</select>" );
+		$startpos = strpos ( $output, '<select name="product_type"' );
 
-		if ( $pos ) {
+		if( $startpos !== false ) {
+			
+			$endpos = strpos( $output, '</select>', $startpos );
+			
+			if( $endpos !== false ) {
 
-			$nyp_option = "<option value='name-your-price' ";
+				$current = isset( $wp_query->query['product_type'] ) ? $wp_query->query['product_type'] : false;
 
-				if ( isset( $wp_query->query['product_type'] ) )
-					$nyp_option .= selected( 'name-your-price', $wp_query->query['product_type'], false );
+				$nyp_option = sprintf( '<option value="name-your-price" %s > &#42; %s</option>',
+					selected( 'name-your-price', $current, false ),
+					__( 'Name Your Price', 'wc_name_your_price' )
+				);
 
-				$nyp_option .= "> &#42; " . __( 'Name Your Price', 'wc_name_your_price' ) . "</option>";
-
-			$output = substr_replace( $output, $nyp_option, $pos, 0);
-
+				$output = substr_replace( $output, $nyp_option, $endpos, 0 );
+			}
+			
 		}
 
 		return $output;

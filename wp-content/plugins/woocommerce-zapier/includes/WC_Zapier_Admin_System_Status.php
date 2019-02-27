@@ -11,13 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 class WC_Zapier_Admin_System_Status {
 
 	public function __construct() {
-		if ( class_exists( 'WC_REST_System_Status_Controller' ) ) {
-			// WC 3.0 and newer
-			add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'woocommerce_system_status_rows' ) );
-		} else {
-			// WC 2.6.x and older
-			add_filter( 'woocommerce_debug_posting', array( $this, 'woocommerce_system_status_rows' ) );
-		}
+		add_filter( 'woocommerce_system_status_environment_rows', array( $this, 'woocommerce_system_status_rows' ) );
 	}
 
 	public function woocommerce_system_status_rows( $posting ) {

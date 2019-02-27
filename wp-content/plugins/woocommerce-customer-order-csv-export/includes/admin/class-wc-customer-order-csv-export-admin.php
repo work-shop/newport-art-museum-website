@@ -354,6 +354,20 @@ class WC_Customer_Order_CSV_Export_Admin {
 			}
 		}
 
+		// Show message if the user is configuring a custom format that isn't enabled.
+		$current_tab     = empty( $_GET['tab'] ) ? '' : sanitize_title( $_GET['tab'] );
+		$current_section = empty( $_REQUEST['section'] ) ? 'orders' : sanitize_title( $_REQUEST['section'] );
+
+		if ( 'custom_formats' == $current_tab ) {
+
+			list( $message_id, $message ) = $this->get_custom_format_not_selected_message( $current_section );
+
+			if ( $message_id ) {
+
+				wc_customer_order_csv_export()->get_admin_notice_handler()->add_admin_notice( $message, $message_id, array( 'always_show_on_settings' => false, 'dismissible' => false, 'notice_class' => 'notice-warning' ) );
+			}
+		}
+
 		wc_customer_order_csv_export()->get_message_handler()->show_messages( array(
 			'capabilities' => array(
 				'manage_woocommerce_csv_exports',
@@ -486,6 +500,38 @@ class WC_Customer_Order_CSV_Export_Admin {
 		}
 
 		return $message;
+	}
+
+
+	/**
+	 * Returns a message if the user is configuring a custom format that isn't enabled.
+	 *
+	 * @since 4.6.2
+	 *
+	 * @param string $current_section the custom format section the user is editing
+	 * @return array|false message ID and message, or false on if message not required
+	 */
+	private function get_custom_format_not_selected_message( $current_section ) {
+
+		$section = sanitize_title($current_section);
+
+		if ( 'orders' === $section || 'customers' === $section || 'coupons' === $section ) {
+
+			$format_key            = 'wc_customer_order_csv_export_' . $section . '_format';
+			$current_export_format = get_option( $format_key, 'default' );
+
+			if ( 'custom' !== $current_export_format ) {
+
+				$message_id = 'wc_customer_order_csv_export_custom_format_not_selected_' . $section;
+
+				$export_section_url = admin_url( 'admin.php?page=wc_customer_order_csv_export&tab=settings&section=' . $section );
+
+				/* translators: %1$s - export section name, %2$s - opening <a> tag, %3$s - closing </a> tag */
+				$message = sprintf( esc_html__( 'To use this custom format, make sure the %2$s%1$s%3$s export format is set to "Custom".', 'woocommerce-customer-order-csv-export' ), ucfirst( $section ), '<a href="' . esc_url( $export_section_url ) . '">', '</a>' );
+			}
+		}
+
+		return isset( $message ) ? array( $message_id, $message ) : false;
 	}
 
 

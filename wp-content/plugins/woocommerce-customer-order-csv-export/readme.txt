@@ -2,7 +2,7 @@
 Author: skyverge
 Tags: woocommerce
 Requires at least: 4.4
-Tested up to: 4.9.8
+Tested up to: 5.0.3
 Requires PHP: 5.2
 
 Easily download customers & orders in CSV format and automatically export FTP or HTTP POST on a recurring schedule

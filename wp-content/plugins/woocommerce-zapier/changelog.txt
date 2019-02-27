@@ -1,5 +1,26 @@
 === WooCommerce Zapier Integration Changelog ===
 
+2019.02.08 - version 1.8.1
+* Full details: https://wczap.com/?p=1047
+* New: Compatibility with WooCommerce Subscriptions v2.5.0 (and backwards compatible with WooCommerce Subscriptions v2.3.x). #144
+* Fix: Improve support of older WooCommerce versions < 3.3.0 combined with specific newer WordPress versions. #145
+
+2019.02.04 - version 1.8.0
+* Full details: https://wczap.com/?p=1034
+* Change: When setting up Customer, Order or Subscription Zaps, send real Customer/Order/Subscription data from your store (rather than static data). This should make setting up Zaps much easier, as the Zap editor will show real fields and data from your store. #105
+* Change: Remove remaining support for WooCommerce 2.6.x. WooCommerce 3.0 or above is required. #132
+* Change: The "Subscription Created" trigger now tiggers for all cases (not just checkout and REST API subscription creations). #132
+* Change: Requires WordPress v4.6.0 or newer (no longer supports WordPress v4.5.x). #140
+* Change: Requires WooCommerce Subscriptions v2.3.0 or newer (no longer supports WooCommerce Subscriptions v2.2.x or 2.1.x). #136
+
+2018.11.21 - version 1.7.5
+* Full details: https://wczap.com/?p=1001
+* Fix: Avoid duplicate New Order triggers during subscription renewals. #128
+* Fix: Avoid Undefined Index notice when running via WP-CLI. #129
+* Change: Improved queueing during WP-Cron (ie for Subscription Renewals). #128
+* Fix: Avoid PHP Warning: html_entity_decode() expects parameter 1 to be string, object given. #125
+* Marked as compatible with WooCommerce 3.5.x.
+
 2018.07.24 - version 1.7.4
 * Full details: https://wczap.com/?p=999
 * Fix: Avoid a fatal error that was occurring when orders or subscriptions containing a deleted product were being sent to Zapier. In those cases cases, the line_items.categories, line_items.tags and line_items.type data fields will be empty. #121

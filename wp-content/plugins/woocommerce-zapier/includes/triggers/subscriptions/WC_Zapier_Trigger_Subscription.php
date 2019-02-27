@@ -18,20 +18,20 @@ abstract class WC_Zapier_Trigger_Subscription extends WC_Zapier_Trigger_Order {
 		$subscription = parent::get_sample_data();
 
 		// Add additional subscription-specific fields to the standard Order fields
-		$subscription['start_date']        = '2016-05-11T01:32:47+08:00';
-		$subscription['trial_end_date']    = '2016-06-10T09:34:17+08:00';
-		$subscription['next_payment_date'] = '2016-06-11T01:32:47+08:00';
-		$subscription['end_date ']         = '2016-06-10T09:34:17+08:00';
-		$subscription['last_payment_date'] = '2016-06-10T01:34:08+08:00';
+		$subscription['start_date']        = date('c', time() - 28 * DAY_IN_SECONDS);
+		$subscription['trial_end_date']    = date('c', time() - 21 * DAY_IN_SECONDS);
+		$subscription['next_payment_date'] = date('c', time() + 1 * DAY_IN_SECONDS );
+		$subscription['end_date ']         = date('c', time() + 1 * YEAR_IN_SECONDS );
+		$subscription['last_payment_date'] = date('c', time() - 1 * DAY_IN_SECONDS );
 		$subscription['billing_period']    = 'day';
 		$subscription['billing_interval']  = '1';
 
-		$subscription['completed_payment_count'] = '1';
+		$subscription['completed_payment_count'] = '20';
 		$subscription['failed_payment_count'] = '0';
 
 		$subscription['line_items'][0]['type'] = 'subscription';
 
-		$subscription['view_url'] = 'http://yourdomain.com/my-account/view-subscription/123';
+		$subscription['view_url'] = 'https://example.com/my-account/view-subscription/123';
 
 		return $subscription;
 	}
@@ -47,7 +47,7 @@ abstract class WC_Zapier_Trigger_Subscription extends WC_Zapier_Trigger_Order {
 	 */
 	public function __call( $action_name, array $arguments ) {
 		if ( isset( $arguments[0] ) && is_a( $arguments[0], 'WC_Subscription' ) ) {
-			$arguments[0] = is_callable( array( $arguments[0], 'get_id' ) ) ? $arguments[0]->get_id() : $arguments[0]->id;
+			$arguments[0] = $arguments[0]->get_id();
 		}
 		parent::__call( $action_name, $arguments );
 	}
@@ -55,66 +55,80 @@ abstract class WC_Zapier_Trigger_Subscription extends WC_Zapier_Trigger_Order {
 	public function assemble_data( $args, $action_name ) {
 
 		if ( $this->is_sample() ) {
-			// The webhook/trigger is being tested
-			return $this->get_sample_data();
 
-		} else {
-			// Using real live data
+			// The webhook/trigger is being tested.
+			// Send the store's most recent subscription, or if that doesn't exist then send the static hard-coded sample order data
 
-			if ( is_a( $args[0], 'WC_Subscription' ) ) {
-				// The first argument is the subscription object - unlikely due to the conversion to a subscription ID in WC_Zapier_Trigger_Subscription::__call() above
-				$this->wc_subscription = $args[0];
-			} else if ( is_numeric( $args[0] ) ) {
-				// The first argument is a subscription ID
-				$this->wc_subscription = wcs_get_subscription( absint( $args[0] ) );
-			} else {
-				WC_Zapier()->log( 'Unknown Subscription argument $args[0]: ' . var_dump( $args[0] ), null, 'Subscription' );
+			$subscriptions = wcs_get_subscriptions( array(
+				'subscriptions_per_page'   => 1,
+				'orderby' => 'start_date',
+				'order'   => 'DESC',
+			) );
+
+			if ( ! $subscriptions || empty( $subscriptions ) ) {
+				// No existing subscriptions found, so send static hard-coded order sample data
+				return $this->get_sample_data();
 			}
 
-			$new_status = '';
-			$previous_status = '';
-
-			if ( 'woocommerce_subscription_status_updated' == $action_name ) {
-				$new_status      = $args[1];
-				$previous_status = $args[2];
-			}
-
-			if ( empty( $new_status ) ) {
-				$new_status = $this->wc_subscription->get_status();
-			}
-
-			// Compile the subscription details/data that will be sent to Zapier
-
-			// WooCommerce Subscriptions are WooCommerce Orders, but with a few extra attributes.
-
-
-			// Retrieve the basic "order" information first
-			$orderargs    = array( is_callable( array( $this->wc_subscription, 'get_id' ) ) ? $this->wc_subscription->get_id() : $this->wc_subscription->id );
-			$subscription = parent::assemble_data( $orderargs, $action_name );
-
-			$subscription['status']          = $new_status;
-			$subscription['status_previous'] = $previous_status;
-
-
-			// Now add the Subscription-specific information
-			$subscription['start_date']        = WC_Zapier::format_date( is_callable( array( $this->wc_subscription, 'get_date_created' ) ) ? $this->wc_subscription->get_date_created() : $this->wc_subscription->start_date );
-			$subscription['trial_end_date']    = WC_Zapier::format_date( is_callable( array( $this->wc_subscription, 'get_date' ) ) ? $this->wc_subscription->get_date( 'trial_end_date' ) : $this->wc_subscription->trial_end_date );
-			$subscription['next_payment_date'] = WC_Zapier::format_date( is_callable( array( $this->wc_subscription, 'get_date' ) ) ? $this->wc_subscription->get_date( 'next_payment_date' ) : $this->wc_subscription->next_payment_date );
-			$subscription['end_date']          = WC_Zapier::format_date( is_callable( array( $this->wc_subscription, 'get_date' ) ) ? $this->wc_subscription->get_date( 'end_date' ) : $this->wc_subscription->end_date );
-			$subscription['last_payment_date'] = WC_Zapier::format_date( is_callable( array( $this->wc_subscription, 'get_date' ) ) ? $this->wc_subscription->get_date( 'last_order_date_paid' ) : $this->wc_subscription->last_payment_date );
-			$subscription['billing_period']    = is_callable( array( $this->wc_subscription, 'get_billing_period' ) ) ? $this->wc_subscription->get_billing_period() : $this->wc_subscription->billing_period;
-			$subscription['billing_interval']  = is_callable( array( $this->wc_subscription, 'get_billing_interval' ) ) ? $this->wc_subscription->get_billing_interval() : $this->wc_subscription->billing_interval;
-
-			$subscription['completed_payment_count'] = $this->wc_subscription->get_completed_payment_count();
-			// TODO: Add completed payment total?
-			$subscription['failed_payment_count'] = $this->wc_subscription->get_failed_payment_count();
-			// TODO: Add failed payment total?
-
-			$subscription['view_url'] = $this->wc_subscription->get_view_order_url();
-
-			return $subscription;
+			$args[0] = array_shift( $subscriptions );
 
 		}
+
+
+		if ( is_a( $args[0], 'WC_Subscription' ) ) {
+			// The first argument is the subscription object - unlikely due to the conversion to a subscription ID in WC_Zapier_Trigger_Subscription::__call() above
+			$this->wc_subscription = $args[0];
+		} else if ( is_numeric( $args[0] ) ) {
+			// The first argument is a subscription ID
+			$this->wc_subscription = wcs_get_subscription( absint( $args[0] ) );
+		} else {
+			WC_Zapier()->log( 'Unknown Subscription argument $args[0]: ' . var_dump( $args[0] ), null, 'Subscription' );
+		}
+
+		$new_status = '';
+		$previous_status = '';
+
+		if ( 'woocommerce_subscription_status_updated' == $action_name ) {
+			$new_status      = $args[1];
+			$previous_status = $args[2];
+		}
+
+		if ( empty( $new_status ) ) {
+			$new_status = $this->wc_subscription->get_status();
+		}
+
+		// Compile the subscription details/data that will be sent to Zapier
+
+		// WooCommerce Subscriptions are WooCommerce Orders, but with a few extra attributes.
+
+
+		// Retrieve the basic "order" information first
+		$orderargs    = array( $this->wc_subscription->get_id() );
+		$subscription = parent::assemble_data( $orderargs, $action_name );
+
+		$subscription['status']          = $new_status;
+		$subscription['status_previous'] = $previous_status;
+
+
+		// Now add the Subscription-specific information
+		$subscription['start_date']        = WC_Zapier::format_date( $this->wc_subscription->get_date_created() );
+		$subscription['trial_end_date']    = WC_Zapier::format_date( $this->wc_subscription->get_date( 'trial_end_date' ) );
+		$subscription['next_payment_date'] = WC_Zapier::format_date( $this->wc_subscription->get_date( 'next_payment_date' ) );
+		$subscription['end_date']          = WC_Zapier::format_date( $this->wc_subscription->get_date( 'end_date' ) );
+		$subscription['last_payment_date'] = WC_Zapier::format_date( $this->wc_subscription->get_date( 'last_order_date_paid' ) );
+		$subscription['billing_period']    = $this->wc_subscription->get_billing_period();
+		$subscription['billing_interval']  = $this->wc_subscription->get_billing_interval();
+
+		$subscription['completed_payment_count'] = $this->wc_subscription->get_completed_payment_count();
+		// TODO: Add completed payment total?
+		$subscription['failed_payment_count'] = $this->wc_subscription->get_failed_payment_count();
+		// TODO: Add failed payment total?
+
+		$subscription['view_url'] = $this->wc_subscription->get_view_order_url();
+
+		return $subscription;
+
+
 
 	}
 
@@ -136,7 +150,7 @@ abstract class WC_Zapier_Trigger_Subscription extends WC_Zapier_Trigger_Order {
 		// Add a private note to this order
 		$this->wc_subscription->add_order_note( $note );
 
-		WC_Zapier()->log( $note, is_callable( array( $this->wc_subscription, 'get_id' ) ) ? $this->wc_subscription->get_id() : $this->wc_subscription->id, 'Subscription' );
+		WC_Zapier()->log( $note, $this->wc_subscription->get_id(), 'Subscription' );
 
 	}
 

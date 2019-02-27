@@ -302,7 +302,7 @@ class WC_Customer_Order_CSV_Export_Generator {
 			$product_sku = 'unknown_product';
 
 			// Check if the product exists.
-			if ( is_object( $product ) ) {
+			if ( $product instanceof WC_Product ) {
 				$product_id  = $product->get_id();
 				$product_sku = $product->get_sku();
 			}
@@ -604,7 +604,8 @@ class WC_Customer_Order_CSV_Export_Generator {
 			$refunds[] = $is_json ? $refund_data : $this->pipe_delimit_item( $refund_data );
 		}
 
-		$download_permissions_granted = SV_WC_Order_Compatibility::get_meta( $order, '_download_permissions_granted' );
+		// grant download permissions if the order both permits and contains a downloadable item
+		$download_permissions_granted = ( $order->is_download_permitted() && $order->has_downloadable_item() );
 
 		if ( SV_WC_Plugin_Compatibility::is_wc_version_gte_3_0() ) {
 			$order_date = is_callable( array( $order->get_date_created(), 'date' ) ) ? $order->get_date_created()->date( 'Y-m-d H:i:s' ) : null;
@@ -1178,16 +1179,24 @@ class WC_Customer_Order_CSV_Export_Generator {
 		$products = array();
 
 		foreach ( $product_ids as $product_id ) {
-			$product    = wc_get_product( $product_id );
-			$products[] = $product->get_sku();
+
+			$product = wc_get_product( $product_id );
+
+			if ( $product instanceof WC_Product ) {
+				$products[] = $product->get_sku();
+			}
 		}
 
 		// create array of product SKUs excluded by this coupon
 		$excluded_products = array();
 
 		foreach ( $excluded_product_ids as $excluded_product_id ) {
-			$product             = wc_get_product( $excluded_product_id );
-			$excluded_products[] = $product->get_sku();
+
+			$product = wc_get_product( $excluded_product_id );
+
+			if ( $product instanceof WC_Product ) {
+				$excluded_products[] = $product->get_sku();
+			}
 		}
 
 		// create array of product category names allowed by this coupon
@@ -1231,7 +1240,7 @@ class WC_Customer_Order_CSV_Export_Generator {
 			'enable_free_shipping'       => $coupon->get_free_shipping() ? 'yes' : 'no',
 			'minimum_amount'             => wc_format_decimal( $coupon->get_minimum_amount() ),
 			'maximum_amount'             => wc_format_decimal( $coupon->get_maximum_amount() ),
-			'individual_use'             => $coupon->get_individual_use(),
+			'individual_use'             => $coupon->get_individual_use() ? 'yes' : 'no',
 			'exclude_sale_items'         => $coupon->get_exclude_sale_items() ? 'yes' : 'no',
 			'products'                   => implode( ', ', $products ),
 			'exclude_products'           => implode( ', ', $excluded_products ),

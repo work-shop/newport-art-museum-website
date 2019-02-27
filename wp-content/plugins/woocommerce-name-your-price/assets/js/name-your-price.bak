@@ -80,8 +80,10 @@ jQuery( document ).ready( function($) {
 				$nyp_input.val( woocommerce_nyp_format_price( form_price_num ) );
 			}
 
-			// Always add the price to the button as data for AJAX add to cart.
-			$submit.data( $nyp_input.attr('name'), woocommerce_nyp_format_price( form_price_num ) );
+			// Add the price to the button as data for AJAX add to cart.
+			if( $ajax_cart_button.length ) {
+				$ajax_cart_button.data( $nyp_input.attr('name'), woocommerce_nyp_format_price( form_price_num ) );
+			}
 
 			// If we've set an error, show message and prevent submit.
 			if ( error ){
@@ -119,6 +121,20 @@ jQuery( document ).ready( function($) {
 			}
 
 		} ); // End woocommerce-nyp-update handler.
+
+
+		/**
+		 * Name Your Price Validation Handler
+		 */
+		$( this ).on( 'woocommerce-nyp-validate', function() {
+
+
+		} ); // End woocommerce-nyp-validate handler.
+
+		// NYP validate on form submit to any nyp input.
+		$( this ).on( 'submit', function() { 
+			$cart.trigger( 'woocommerce-nyp-validate' );
+		} );
 
 		// NYP update on change to any nyp input.
 		$( this ).on( 'change', '.nyp-input, .nyp-period', function() { 

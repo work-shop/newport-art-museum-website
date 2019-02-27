@@ -40,16 +40,21 @@ class WC_Zapier_Trigger_New_Customer extends WC_Zapier_Trigger {
 		parent::__construct();
 	}
 
-
 	public function assemble_data( $args, $action_name ) {
 
-		$customer_id = null;
 		if ( $this->is_sample() ) {
-			// Use the currently logged in user's details for testing
-			$current_user = wp_get_current_user();
-			$customer_id = empty( $current_user ) ? 1 : $current_user->ID;
+			// The webhook/trigger is being tested.
+			// Send the store's most recent customer, or if that doesn't exist then send the currently logged in user's details.
+			$customers = get_users( 'role=customer&orderby=ID&order=DESC&number=1' );
+			if ( empty( $customers ) ) {
+				// Use the currently logged in user's details
+				$customer_id = wp_get_current_user()->ID;
+			} else {
+				// Use previous customer
+				$customer_id = $customers[0]->ID;
+			}
 		} else {
-			$customer_id = intval( $args[0] );
+			$customer_id = $args[0];
 		}
 
 		$customer_data = get_user_by( 'id', $customer_id );
@@ -114,10 +119,10 @@ class WC_Zapier_Trigger_New_Customer extends WC_Zapier_Trigger {
 		}
 
 		// State name conversions
-		if ( !empty( $customer['billing_state'] ) ) {
+		if ( !empty( $customer['billing_state'] ) && !empty( $customer['billing_country'] ) ) {
 			$customer['billing_state_name'] = WC()->countries->states[$customer['billing_country']][$customer['billing_state']];
 		}
-		if ( !empty( $customer['shipping_state'] ) ) {
+		if ( !empty( $customer['shipping_state'] ) && !empty( $customer['shipping_country'] ) ) {
 			$customer['shipping_state_name'] = WC()->countries->states[$customer['shipping_country']][$customer['shipping_state']];
 		}
 

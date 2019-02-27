@@ -15,7 +15,7 @@ class WC_Zapier_Subscriptions {
 	/**
 	 * The minimum WooCommerce Subscriptions version that this plugin supports.
 	 */
-	const MINIMUM_SUPPORTED_SUBSCRIPTIONS_VERSION = '2.1.0';
+	const MINIMUM_SUPPORTED_SUBSCRIPTIONS_VERSION = '2.3.0';
 
 	/**
 	 * Trigger keys that the subscriptions data should be added to.

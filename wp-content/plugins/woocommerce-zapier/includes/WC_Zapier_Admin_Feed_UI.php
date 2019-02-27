@@ -142,9 +142,8 @@ class WC_Zapier_Admin_Feed_UI {
 	public function metabox_output() {
 		global $post;
 
-		// We're going to use WooCommerce's settings/admin fields API
-		if ( ! function_exists( 'woocommerce_admin_fields' ) )
-			require_once( WC()->plugin_path() . '/admin/woocommerce-admin-settings.php' );
+		// We're going to use WooCommerce's settings/admin fields API (including the woocommerce_admin_fields() function)
+		require_once( WC()->plugin_path() . '/includes/admin/wc-admin-functions.php' );
 
 		wp_nonce_field( "{$this->prefix}feed_details", "{$this->prefix}feed_details_nonce", true, true );
 

@@ -475,19 +475,22 @@ abstract class WC_Zapier_Trigger {
 
 		} else if ( 0 === $pos ) {
 
-			if ( defined( 'DOING_CRON' ) ) {
+			if ( defined( 'DOING_CRON' ) || function_exists( '_get_cron_lock' ) ) {
 				WC_Zapier()->log( "This is a cron request" );
 			} else {
 				WC_Zapier()->log( "This isn't a cron request" );
-				if ( ! $this->send_asynchronously() ) {
-
-					// Sending synchronously (immediately)
-					WC_Zapier()->log( "Adding the task to the queue..." );
-					$result = WC_Zapier::$queue->add_to_queue( $this, $action_name, $arguments );
-					return true;
-				}
 			}
-			WC_Zapier()->log( "  url = $_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+
+			if ( ! $this->send_asynchronously() ) {
+				// Sending synchronously (immediately)
+				WC_Zapier()->log( "Adding the task to the queue..." );
+				$result = WC_Zapier::$queue->add_to_queue( $this, $action_name, $arguments );
+				return true;
+			}
+
+			if ( isset( $_SERVER['HTTP_HOST'] ) && isset( $_SERVER['REQUEST_URI'] ) ) {
+				WC_Zapier()->log( "  url = $_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]" );
+			}
 
 			$action_name_to_trigger = str_replace( 'zapier_triggered_', '', $action_name );
 
