@@ -17,7 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Bundle data stored as Custom Post Type. For use with the WC 2.7+ CRUD API.
  *
  * @class    WC_Product_Bundle_Data_Store_CPT
- * @version  5.7.0
+ * @version  5.8.0
  */
 class WC_Product_Bundle_Data_Store_CPT extends WC_Product_Data_Store_CPT {
 
@@ -269,11 +269,22 @@ class WC_Product_Bundle_Data_Store_CPT extends WC_Product_Data_Store_CPT {
 	 * @param  array  $bundle_ids
 	 * @return void
 	 */
-	public function reset_bundled_items_stock_status( $bundle_ids ) {
+	public function reset_bundled_items_stock_status( $bundle_ids = array() ) {
 
 		global $wpdb;
 
-		if ( ! empty( $bundle_ids ) ) {
+		if ( empty( $bundle_ids ) ) {
+
+			$wpdb->query( "
+				UPDATE {$wpdb->postmeta}
+				SET meta_value = 'unsynced'
+				WHERE meta_key = '_wc_pb_bundled_items_stock_status'
+			" );
+
+			WC_Cache_Helper::incr_cache_prefix( 'bundled_data_items' );
+
+		} else {
+
 			$wpdb->query( "
 				UPDATE {$wpdb->postmeta}
 				SET meta_value = 'unsynced'
@@ -283,6 +294,11 @@ class WC_Product_Bundle_Data_Store_CPT extends WC_Product_Data_Store_CPT {
 
 			foreach ( $bundle_ids as $bundle_id ) {
 				wp_cache_delete( $bundle_id, 'post_meta' );
+			}
+
+			foreach ( $bundle_ids as $bundle_id ) {
+				$cache_key = WC_Cache_Helper::get_cache_prefix( 'bundled_data_items' ) . $bundle_id;
+				wp_cache_delete( $cache_key, 'bundled_data_items' );
 			}
 		}
 	}

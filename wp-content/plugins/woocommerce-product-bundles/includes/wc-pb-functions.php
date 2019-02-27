@@ -271,48 +271,59 @@ function wc_pb_is_bundle_container_cart_item( $cart_item ) {
  */
 function wc_pb_get_bundled_order_item_container( $bundled_order_item, $order = false, $return_id = false ) {
 
-	$container = false;
+	$result = false;
 
 	if ( wc_pb_maybe_is_bundled_order_item( $bundled_order_item ) ) {
 
-		if ( false === $order ) {
-			if ( is_callable( array( $bundled_order_item, 'get_order' ) ) ) {
+		$container = WC_PB_Helpers::cache_get( 'order_item_container_' . $bundled_order_item->get_id() );
 
-				$order_id = $bundled_order_item->get_order_id();
-				$order    = WC_PB_Helpers::cache_get( 'order_' . $order_id );
+		if ( null === $container ) {
 
-				if ( null === $order ) {
-					$order = $bundled_order_item->get_order();
-					WC_PB_Helpers::cache_set( 'order_' . $order_id, $order );
+			if ( false === $order ) {
+				if ( is_callable( array( $bundled_order_item, 'get_order' ) ) ) {
+
+					$order_id = $bundled_order_item->get_order_id();
+					$order    = WC_PB_Helpers::cache_get( 'order_' . $order_id );
+
+					if ( null === $order ) {
+						$order = $bundled_order_item->get_order();
+						WC_PB_Helpers::cache_set( 'order_' . $order_id, $order );
+					}
+
+				} else {
+					$msg = 'get_order() is not callable on the supplied $order_item. No $order object given.';
+					_doing_it_wrong( __FUNCTION__ . '()', $msg, '5.3.0' );
 				}
+			}
 
-			} else {
-				$msg = 'get_order() is not callable on the supplied $order_item. No $order object given.';
-				_doing_it_wrong( __FUNCTION__ . '()', $msg, '5.3.0' );
+			$order_items = is_object( $order ) ? $order->get_items( 'line_item' ) : $order;
+
+			if ( ! empty( $order_items ) ) {
+				foreach ( $order_items as $order_item_id => $order_item ) {
+
+					$is_container = false;
+
+					if ( isset( $order_item[ 'bundle_cart_key' ] ) ) {
+						$is_container = $bundled_order_item[ 'bundled_by' ] === $order_item[ 'bundle_cart_key' ];
+					} else {
+						$is_container = isset( $order_item[ 'stamp' ] ) && $order_item[ 'stamp' ] === $bundled_order_item[ 'stamp' ] && ! isset( $order_item[ 'bundled_by' ] );
+					}
+
+					if ( $is_container ) {
+						WC_PB_Helpers::cache_set( 'order_item_container_' . $bundled_order_item->get_id(), $order_item );
+						$container = $order_item;
+						break;
+					}
+				}
 			}
 		}
 
-		$order_items = is_object( $order ) ? $order->get_items( 'line_item' ) : $order;
-
-		if ( ! empty( $order_items ) ) {
-			foreach ( $order_items as $order_item_id => $order_item ) {
-
-				$is_container = false;
-
-				if ( isset( $order_item[ 'bundle_cart_key' ] ) ) {
-					$is_container = $bundled_order_item[ 'bundled_by' ] === $order_item[ 'bundle_cart_key' ];
-				} else {
-					$is_container = isset( $order_item[ 'stamp' ] ) && $order_item[ 'stamp' ] === $bundled_order_item[ 'stamp' ] && ! isset( $order_item[ 'bundled_by' ] );
-				}
-
-				if ( $is_container ) {
-					$container = $return_id ? $order_item_id : $order_item;
-				}
-			}
+		if ( $container && is_callable( array( $container, 'get_id' ) ) ) {
+			$result = $return_id ? $container->get_id() : $container;
 		}
 	}
 
-	return $container;
+	return $result;
 }
 
 /**

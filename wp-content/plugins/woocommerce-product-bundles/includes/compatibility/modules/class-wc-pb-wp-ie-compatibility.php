@@ -147,7 +147,10 @@ class WC_PB_WP_IE_Compatibility {
 				" );
 			}
 
-			WC_PB_DB::delete_bundled_items_stock_meta();
+			WC_PB_DB::bulk_delete_bundled_item_stock_meta();
+
+			$data_store = WC_Data_Store::load( 'product-bundle' );
+			$data_store->reset_bundled_items_stock_status();
 		}
 	}
 }

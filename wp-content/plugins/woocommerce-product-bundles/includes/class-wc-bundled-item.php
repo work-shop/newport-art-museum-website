@@ -18,7 +18,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * The bunded item class is a product container that initializes and holds pricing, availability and variation/attribute-related data of a bundled product.
  *
  * @class    WC_Bundled_Item
- * @version  5.5.0
+ * @version  5.8.0
  */
 class WC_Bundled_Item {
 
@@ -524,7 +524,7 @@ class WC_Bundled_Item {
 	 *
 	 * @param  bool  $force
 	 */
-	private function sync_prices( $force = false ) {
+	protected function sync_prices( $force = false ) {
 
 		if ( $this->synced_prices && false === $force ) {
 			return false;
@@ -746,7 +746,7 @@ class WC_Bundled_Item {
 		}
 
 		$discount           = $this->get_discount();
-		$bundled_item_price = empty( $discount ) ? $price : ( empty( $regular_price ) ? $regular_price : round( ( double ) $regular_price * ( 100 - $discount ) / 100, wc_get_price_decimals() ) );
+		$bundled_item_price = empty( $discount ) ? $price : ( empty( $regular_price ) ? $regular_price : round( ( double ) $regular_price * ( 100 - $discount ) / 100, WC_PB_Product_Prices::get_discounted_price_precision() ) );
 
 		/**
 		 * 'woocommerce_bundled_item_raw_price' raw price filter.
@@ -1198,6 +1198,43 @@ class WC_Bundled_Item {
 	/**
 	 * Returns the variation attributes array if this product is variable.
 	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string  $variation_attribute_name
+	 * @return array
+	 */
+	public function is_product_variation_attribute_configurable( $variation_attribute_name ) {
+
+		$configurable_variation_attributes = $this->get_product_variation_attributes( true );
+
+		return isset( $configurable_variation_attributes[ $variation_attribute_name ] );
+	}
+
+	/**
+	 * Returns the variation attributes array if this product is variable.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string  $variation_attribute_name
+	 * @return array
+	 */
+	public function display_product_variation_attribute_dropdown( $variation_attribute_name ) {
+
+		$display_dropdown = $this->is_product_variation_attribute_configurable( $variation_attribute_name );
+
+		/**
+		 * 'woocommerce_force_show_bundled_variation_attribute_option_dropdown' filter.
+		 *
+		 * @param  boolean  $force_show
+		 * @param  array    $args
+		 */
+		return $display_dropdown ? $display_dropdown : apply_filters( 'woocommerce_force_show_bundled_variation_attribute_option_dropdown', false, $variation_attribute_name, $this );
+	}
+
+	/**
+	 * Returns the (configurable) variation attributes array if this product is variable.
+	 *
+	 * @param  bool  $return_configurable
 	 * @return array
 	 */
 	public function get_product_variation_attributes( $return_configurable = false ) {
@@ -1420,7 +1457,9 @@ class WC_Bundled_Item {
 		$children = array();
 
 		if ( $this->exists() ) {
+
 			$children = $this->product->get_children();
+
 			if ( ! empty( $children ) ) {
 				$children = $this->filter_children( $children, $this->product );
 			}
@@ -1480,34 +1519,30 @@ class WC_Bundled_Item {
 		}
 
 		// Add price data.
-		WC_PB_Product_Prices::extend_price_display_precision();
-		$price_incl_tax                                  = wc_get_price_including_tax( $bundled_variation, array( 'qty' => 1, 'price' => 1000 ) );
-		$price_excl_tax                                  = wc_get_price_excluding_tax( $bundled_variation, array( 'qty' => 1, 'price' => 1000 ) );
-		WC_PB_Product_Prices::reset_price_display_precision();
 
-		$variation_data[ 'price' ]                       = $bundled_variation->get_price();
-		$variation_data[ 'regular_price' ]               = $bundled_variation->get_regular_price();
+		$variation_data[ 'price' ]         = $bundled_variation->get_price();
+		$variation_data[ 'regular_price' ] = $bundled_variation->get_regular_price();
 
-		$variation_data[ 'price_tax' ]                   = $price_incl_tax / $price_excl_tax;
+		$variation_data[ 'price_tax' ] = WC_PB_Product_Prices::get_tax_ratios( $bundled_variation );
 
-		$variation_data[ 'regular_recurring_price' ]     = '';
-		$variation_data[ 'recurring_price' ]             = '';
+		$variation_data[ 'regular_recurring_price' ] = '';
+		$variation_data[ 'recurring_price' ]         = '';
 
-		$variation_data[ 'recurring_html' ]              = '';
-		$variation_data[ 'recurring_key' ]               = '';
+		$variation_data[ 'recurring_html' ] = '';
+		$variation_data[ 'recurring_key' ]  = '';
 
 		if ( 'variable-subscription' === $bundled_product->get_type() ) {
 
 			$variation_data[ 'regular_recurring_price' ] = $variation_data[ 'regular_price' ];
 			$variation_data[ 'recurring_price' ]         = $variation_data[ 'price' ];
 
-			$signup_fee                                  = WC_Subscriptions_Product::get_sign_up_fee( $bundled_variation );
+			$signup_fee = WC_Subscriptions_Product::get_sign_up_fee( $bundled_variation );
 
-			$variation_data[ 'regular_price' ]           = $this->get_up_front_subscription_price( $variation_data[ 'regular_price' ], $signup_fee, $bundled_variation );
-			$variation_data[ 'price' ]                   = $this->get_up_front_subscription_price( $variation_data[ 'price' ], $signup_fee, $bundled_variation );
+			$variation_data[ 'regular_price' ] = $this->get_up_front_subscription_price( $variation_data[ 'regular_price' ], $signup_fee, $bundled_variation );
+			$variation_data[ 'price' ]         = $this->get_up_front_subscription_price( $variation_data[ 'price' ], $signup_fee, $bundled_variation );
 
-			$variation_data[ 'recurring_html' ]          = WC_PB_Product_Prices::get_recurring_price_html_component( $bundled_variation );
-			$variation_data[ 'recurring_key' ]           = str_replace( '_synced', '', WC_Subscriptions_Cart::get_recurring_cart_key( array( 'data' => $bundled_variation ), ' ' ) );
+			$variation_data[ 'recurring_html' ] = WC_PB_Product_Prices::get_recurring_price_html_component( $bundled_variation );
+			$variation_data[ 'recurring_key' ]  = str_replace( '_synced', '', WC_Subscriptions_Cart::get_recurring_cart_key( array( 'data' => $bundled_variation ), ' ' ) );
 		}
 
 		$quantity     = $this->get_quantity();
@@ -1519,15 +1554,33 @@ class WC_Bundled_Item {
 
 		// Modify availability data.
 		$variation_data[ 'availability_html' ] = $this->get_availability_html( $bundled_variation );
-		$variation_data[ 'min_qty' ]           = $quantity;
-		$variation_data[ 'max_qty' ]           = $quantity_max;
+
+		$variation_data[ 'min_qty' ] = $quantity;
+		$variation_data[ 'max_qty' ] = $quantity_max;
 
 		if ( $variation_data[ 'min_qty' ] !== $variation_data[ 'max_qty' ] ) {
 			$variation_data[ 'is_sold_individually' ] = false;
 		}
 
+		// Add flag for 3-p code.
 		$variation_data[ 'is_bundled' ] = true;
 
+		// Modify variation images as we don't want the single-product sizes here.
+		$variation_thumbnail_size = $this->get_bundled_item_thumbnail_size();
+
+		if ( ! in_array( $variation_thumbnail_size, array( 'single', 'shop_single', 'woocommerce_single' ) ) ) {
+
+			if ( $variation_data[ 'image' ][ 'src' ] ) {
+
+				$src = wp_get_attachment_image_src( $variation_data[ 'image_id' ], $variation_thumbnail_size );
+
+				$variation_data[ 'image' ][ 'src' ]    = $src[0];
+				$variation_data[ 'image' ][ 'src_w' ]  = $src[1];
+				$variation_data[ 'image' ][ 'src_h' ]  = $src[2];
+				$variation_data[ 'image' ][ 'srcset' ] = function_exists( 'wp_get_attachment_image_srcset' ) ? wp_get_attachment_image_srcset( $variation_data[ 'image_id' ], $variation_thumbnail_size ) : false;
+				$variation_data[ 'image' ][ 'sizes' ]  = function_exists( 'wp_get_attachment_image_sizes' ) ? wp_get_attachment_image_sizes( $variation_data[ 'image_id' ], $variation_thumbnail_size ) : false;
+			}
+		}
 		return $variation_data;
 	}
 
@@ -1678,7 +1731,7 @@ class WC_Bundled_Item {
 
 		if ( $deprecated ) {
 			_deprecated_argument( __METHOD__ . '()', '5.5.0', 'Invalid argument: #3.' );
-			if ( is_a( $deprecated, 'WC_Product' ) ) {
+			if ( $deprecated instanceof WC_Product ) {
 				$args[ 'product' ] = $deprecated;
 			}
 		}
@@ -1807,9 +1860,19 @@ class WC_Bundled_Item {
 		 */
 		$checked = apply_filters( 'woocommerce_bundled_item_is_optional_checked', false, $this );
 
+		/**
+		 * 'woocommerce_product_bundle_field_prefix' filter.
+		 *
+		 * Used to post unique bundle data when posting multiple bundle configurations that could include the same bundle multiple times.
+		 *
+		 * @param  string  $prefix
+		 * @param  mixed   $product_id
+		 */
+		$posted_field_prefix = apply_filters( 'woocommerce_product_bundle_field_prefix', '', $this->get_bundle_id() );
+
 		// When posting bundled item data, set the checked status accordingly.
-		if ( isset( $_REQUEST[ apply_filters( 'woocommerce_product_bundle_field_prefix', '', $this->get_bundle_id() ) . 'bundle_quantity_' . $this->get_id() ] ) ) {
-			if ( isset( $_REQUEST[ apply_filters( 'woocommerce_product_bundle_field_prefix', '', $this->get_bundle_id() ) . 'bundle_selected_optional_' . $this->get_id() ] ) ) {
+		if ( isset( $_REQUEST[ $posted_field_prefix . 'bundle_quantity_' . $this->get_id() ] ) ) {
+			if ( isset( $_REQUEST[ $posted_field_prefix . 'bundle_selected_optional_' . $this->get_id() ] ) ) {
 				$checked = true;
 			} else {
 				$checked = false;
@@ -1833,9 +1896,9 @@ class WC_Bundled_Item {
 	 *
 	 * @return string
 	 */
-	public function get_classes() {
+	public function get_classes( $implode = true ) {
 
-		$classes = array();
+		$classes = array( 'bundled_product', 'bundled_product_summary', 'product' );
 
 		if ( $this->get_quantity( 'min' ) !== $this->get_quantity( 'max' ) && $this->is_in_stock() ) {
 			$classes[] = 'has_qty_input';
@@ -1853,7 +1916,15 @@ class WC_Bundled_Item {
 			$classes[] = 'bundled_item_optional';
 		}
 
-		return implode( ' ', apply_filters( 'woocommerce_bundled_item_classes', $classes, $this ) );
+		/**
+		 * 'woocommerce_bundled_item_classes' filter.
+		 *
+		 * @param  array            $classes
+		 * @param  WC_Bundled_Item  $this
+		 */
+		$classes = apply_filters( 'woocommerce_bundled_item_classes', $classes, $this );
+
+		return $implode ? implode( ' ', $classes ) : $classes;
 	}
 
 	/**
@@ -1913,6 +1984,7 @@ class WC_Bundled_Item {
 		}
 
 		$quantity_min = max( 1, $this->get_quantity() );
+		$stock_format = get_option( 'woocommerce_stock_format' );
 
 		if ( ! $this->is_in_stock() || ( $product->is_type( 'variation' ) && ! $product->has_enough_stock( $quantity_min ) ) ) {
 
@@ -1923,8 +1995,8 @@ class WC_Bundled_Item {
 				$availability_class .= ' insufficient-stock';
 				$availability_text   = __( 'Insufficient stock', 'woocommerce-product-bundles' );
 
-				if ( false === $product->is_type( 'variable' ) ) {
-					$stock_left = $product->get_stock_quantity();
+				if ( 'no_amount' !== $stock_format && false === $product->is_type( 'variable' ) ) {
+					$stock_left         = $product->get_stock_quantity();
 					$availability_text .= ' ' . sprintf( __( '(only %s left in stock)', 'woocommerce-product-bundles' ), $stock_left );
 				}
 
@@ -1937,21 +2009,22 @@ class WC_Bundled_Item {
 			$availability_class = 'available-on-backorder';
 			$availability_text  = __( 'Available on backorder', 'woocommerce' );
 
-			if ( false === $product->is_type( 'variable' ) && $product->is_in_stock() ) {
-				$stock_left = $product->get_stock_quantity();
+			if ( 'no_amount' !== $stock_format && false === $product->is_type( 'variable' ) && $product->is_in_stock() ) {
+				$stock_left         = $product->get_stock_quantity();
 				$availability_text .= ' ' . sprintf( __( '(only %s left in stock)', 'woocommerce-product-bundles' ), $stock_left );
 			}
 
 		} else {
 
-			$stock_format           = get_option( 'woocommerce_stock_format' );
 			$stock_notify_threshold = get_option( 'woocommerce_notify_low_stock_amount' );
 			$filter_stock_display   = 'no_amount' !== $stock_format && $product->managing_stock() && $product->get_stock_quantity() < $quantity_min;
 
 			if ( $filter_stock_display ) {
+
 				if ( '' === $stock_format ) {
 					add_filter( 'option_woocommerce_stock_format', array( $this, 'filter_stock_format' ) );
 				}
+
 				if ( $stock_notify_threshold ) {
 					add_filter( 'option_woocommerce_notify_low_stock_amount', array( $this, 'filter_notify_low_stock_amount' ) );
 				}
@@ -1962,9 +2035,11 @@ class WC_Bundled_Item {
 			$availability_text  = isset( $availability[ 'availability' ] ) ? $availability[ 'availability' ] : '';
 
 			if ( $filter_stock_display ) {
+
 				if ( '' === $stock_format ) {
 					remove_filter( 'option_woocommerce_stock_format', array( $this, 'filter_stock_format' ) );
 				}
+
 				if ( $stock_notify_threshold ) {
 					remove_filter( 'option_woocommerce_notify_low_stock_amount', array( $this, 'filter_notify_low_stock_amount' ) );
 				}
@@ -2061,6 +2136,7 @@ class WC_Bundled_Item {
 					} elseif ( WC_Subscriptions_Synchroniser::is_product_prorated( $product ) ) {
 
 						switch ( WC_Subscriptions_Product::get_period( $product ) ) {
+
 							case 'week' :
 								$days_in_cycle = 7 * WC_Subscriptions_Product::get_interval( $product );
 								break;
@@ -2074,6 +2150,9 @@ class WC_Bundled_Item {
 
 						$days_until_next_payment = ceil( ( $next_payment_date - gmdate( 'U' ) ) / ( 60 * 60 * 24 ) );
 						$price                   = (double) $sign_up_fee + $days_until_next_payment * ( (double) $recurring_price / $days_in_cycle );
+
+					} elseif ( method_exists( 'WC_Subscriptions_Synchroniser', 'is_payment_upfront' ) && WC_Subscriptions_Synchroniser::is_payment_upfront( $product ) ) {
+						$price = (double) $price + (double) $recurring_price;
 					}
 
 				} else {
@@ -2156,6 +2235,17 @@ class WC_Bundled_Item {
 		}
 
 		return $output;
+	}
+
+	/**
+	 * Get image size.
+	 *
+	 * @since  5.7.3
+	 *
+	 * @return string
+	 */
+	public function get_bundled_item_thumbnail_size() {
+		return apply_filters( 'bundled_product_large_thumbnail_size', WC_PB_Core_Compatibility::is_wc_version_gte( '3.3' ) ? 'woocommerce_thumbnail' : 'shop_catalog', $this );
 	}
 
 	/*

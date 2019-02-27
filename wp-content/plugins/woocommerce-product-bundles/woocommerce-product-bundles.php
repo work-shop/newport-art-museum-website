@@ -1,11 +1,11 @@
 <?php
 /*
 * Plugin Name: WooCommerce Product Bundles
-* Plugin URI: http://woocommerce.com/products/product-bundles/
+* Plugin URI: https://woocommerce.com/products/product-bundles/
 * Description: Offer product bundles and assembled products in your WooCommerce store.
-* Version: 5.7.1
+* Version: 5.9.1
 * Author: SomewhereWarm
-* Author URI: http://somewherewarm.gr/
+* Author URI: https://somewherewarm.gr/
 *
 * Woo: 18716:fbca839929aaddc78797a5b511c14da9
 *
@@ -13,12 +13,12 @@
 * Domain Path: /languages/
 *
 * Requires at least: 4.4
-* Tested up to: 4.9
+* Tested up to: 5.0
 *
 * WC requires at least: 3.0
-* WC tested up to: 3.2
+* WC tested up to: 3.5
 *
-* Copyright: © 2017 SomewhereWarm SMPC.
+* Copyright: © 2017-2019 SomewhereWarm SMPC.
 * License: GNU General Public License v3.0
 * License URI: http://www.gnu.org/licenses/gpl-3.0.html
 */
@@ -31,7 +31,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /*
  * Required functions.
  */
-if ( ! function_exists( 'woothemes_queue_update' ) ) {
+if ( ! function_exists( 'woothemes_queue_update' ) || ! function_exists( 'is_woocommerce_active' ) ) {
 	require_once( 'woo-includes/woo-functions.php' );
 }
 
@@ -51,11 +51,11 @@ if ( ! is_woocommerce_active() ) {
  * Main plugin class.
  *
  * @class    WC_Bundles
- * @version  5.7.1
+ * @version  5.9.1
  */
 class WC_Bundles {
 
-	public $version  = '5.7.1';
+	public $version  = '5.9.1';
 	public $required = '3.0.0';
 
 	/**
@@ -113,7 +113,7 @@ class WC_Bundles {
 	 * @return mixed
 	 */
 	public function __get( $key ) {
-		if ( in_array( $key, array( 'compatibility', 'cart', 'order', 'display' ) ) ) {
+		if ( in_array( $key, array( 'compatibility', 'modules', 'cart', 'order', 'display' ) ) ) {
 			$classname = 'WC_PB_' . ucfirst( $key );
 			return call_user_func( array( $classname, 'instance' ) );
 		}
@@ -147,12 +147,33 @@ class WC_Bundles {
 	}
 
 	/**
+	 * Plugin version getter.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  boolean  $base
+	 * @param  string   $version
+	 * @return string
+	 */
+	public function plugin_version( $base = false, $version = '' ) {
+
+		$version = $version ? $version : $this->version;
+
+		if ( $base ) {
+			$version_parts = explode( '-', $version );
+			$version       = sizeof( $version_parts ) === 2 ? $version_parts[ 0 ] : $version;
+		}
+
+		return $version;
+	}
+
+	/**
 	 * Fire in the hole!
 	 */
 	public function initialize_plugin() {
 
 		// WC version sanity check.
-		if ( version_compare( WC()->version, $this->required ) < 0 ) {
+		if ( function_exists( 'WC' ) && version_compare( WC()->version, $this->required ) < 0 ) {
 			$notice = sprintf( __( 'WooCommerce Product Bundles requires at least WooCommerce <strong>%s</strong>.', 'woocommerce-product-bundles' ), $this->required );
 			require_once( 'includes/admin/class-wc-pb-admin-notices.php' );
 			WC_PB_Admin_Notices::add_notice( $notice, 'error' );
@@ -163,9 +184,16 @@ class WC_Bundles {
 		$this->includes();
 
 		WC_PB_Compatibility::instance();
+		WC_PB_Modules::instance();
+
 		WC_PB_Cart::instance();
+		$this->modules->load_components( 'cart' );
+
 		WC_PB_Order::instance();
+		$this->modules->load_components( 'order' );
+
 		WC_PB_Display::instance();
+		$this->modules->load_components( 'display' );
 
 		// Load translations hook.
 		add_action( 'init', array( $this, 'load_translation' ) );
@@ -233,6 +261,9 @@ class WC_Bundles {
 		// Extensions compatibility functions and hooks.
 		require_once( 'includes/compatibility/class-wc-pb-compatibility.php' );
 
+		// Modules.
+		require_once( 'includes/modules/class-wc-pb-modules.php' );
+
 		// Data classes.
 		require_once( 'includes/data/class-wc-pb-data.php' );
 
@@ -261,11 +292,17 @@ class WC_Bundles {
 		// Stock mgr class.
 		require_once( 'includes/class-wc-pb-stock-manager.php' );
 
-		// Cart-related bundle functions and hooks.
+		// Cart-related functions and hooks.
 		require_once( 'includes/class-wc-pb-cart.php' );
 
-		// Order-related bundle functions and hooks.
+		// Order-related functions and hooks.
 		require_once( 'includes/class-wc-pb-order.php' );
+
+		// Order-again functions and hooks.
+		require_once( 'includes/class-wc-pb-order-again.php' );
+
+		// Coupon-related functions and hooks.
+		require_once( 'includes/class-wc-pb-coupon.php' );
 
 		// Front-end filters and templates.
 		require_once( 'includes/class-wc-pb-display.php' );

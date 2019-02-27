@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Product Bundle order-related functions and filters.
  *
  * @class    WC_PB_Order
- * @version  5.7.1
+ * @version  5.9.1
  */
 class WC_PB_Order {
 
@@ -92,6 +92,7 @@ class WC_PB_Order {
 		// Filter admin dashboard item count and classes.
 		if ( is_admin() ) {
 			add_filter( 'woocommerce_admin_html_order_item_class', array( $this, 'html_order_item_class' ), 10, 3 );
+			add_filter( 'woocommerce_admin_html_order_preview_item_class', array( $this, 'html_order_item_class' ), 10, 3 );
 		}
 
 		// Modify product while completing payment - @see 'get_processing_order_item_product()' and 'container_item_needs_processing()'.
@@ -104,6 +105,51 @@ class WC_PB_Order {
 	| API functions.
 	|--------------------------------------------------------------------------
 	*/
+
+	/**
+	 * Reads the configuration array stored on a container order item and modifies it based on the actual state of the bundle.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  WC_Order_Item  $order_item
+	 * @param  WC_Order       $order
+	 * @return array
+	 */
+	public static function get_current_bundle_configuration( $order_item, $order ) {
+
+		if ( ! wc_pb_is_bundle_container_order_item( $order_item ) ) {
+			return false;
+		}
+
+		$configuration       = $order_item->get_meta( '_stamp', true );
+		$bundled_order_items = wc_pb_get_bundled_order_items( $order_item, $order );
+
+		/*
+		 * There's no chance something might have been added to the stored configuration.
+		 * However, admins may have deleted items or modified their quantities.
+		 */
+		foreach ( $configuration as $bundled_item_id => $bundled_item_configuration ) {
+
+			$bundled_order_item_qty = false;
+
+			foreach ( $bundled_order_items as $bundled_order_item ) {
+				if ( absint( $bundled_item_id ) === absint( $bundled_order_item->get_meta( '_bundled_item_id', true ) ) ) {
+					$bundled_order_item_qty = $bundled_order_item->get_quantity();
+					break;
+				}
+			}
+
+			if ( ! $bundled_order_item_qty ) {
+				unset( $configuration[ $bundled_item_id ] );
+				continue;
+			}
+
+			// Normalize with the quantity of the parent.
+			$configuration[ $bundled_item_id ][ 'quantity' ] = $bundled_order_item_qty / $order_item->get_quantity();
+		}
+
+		return $configuration;
+	}
 
 	/**
 	 * Validates a bundle configuration and adds all associated line items to an order. Relies on specifying a bundle configuration array with all necessary data.
@@ -294,6 +340,7 @@ class WC_PB_Order {
 				$container_order_item->add_meta_data( '_stamp', $configuration, true );
 				$container_order_item->add_meta_data( '_bundled_items', $bundled_order_item_hashes, true );
 				$container_order_item->add_meta_data( '_bundle_cart_key', $container_item_hash, true );
+				$container_order_item->add_meta_data( '_bundle_group_mode', $bundle->get_group_mode(), true );
 
 				if ( $bundle->needs_shipping() ) {
 					$container_order_item->add_meta_data( '_bundle_weight', (double) $bundle->get_weight( 'edit' ) + $bundled_weight, true );
@@ -356,161 +403,174 @@ class WC_PB_Order {
 				/*
 				 * Add the totals of "packaged" items to the container totals and create a container "Contents" meta field to provide a description of the included products.
 				 */
-				$product = wc_get_product( $item->get_product_id() );
 
-				if ( $product && $product->needs_shipping() && $child_items = wc_pb_get_bundled_order_items( $item, $items ) ) {
+				$product   = wc_get_product( $item->get_product_id() );
+				$aggregate = true;
 
-					if ( ! empty( $child_items ) ) {
+				if ( ! $product ) {
+					$aggregate = false;
+				}
 
-						// Aggregate contents.
-						$contents = array();
+				if ( $product && ! $product->needs_shipping() && ! WC_PB()->compatibility->is_composited_order_item( $item, $items ) ) {
+					$aggregate = false;
+				}
 
-						// Aggregate prices.
-						$bundle_totals = array(
-							'subtotal'     => $item->get_subtotal(),
-							'total'        => $item->get_total(),
-							'subtotal_tax' => $item->get_subtotal_tax(),
-							'total_tax'    => $item->get_total_tax(),
-							'taxes'        => $item->get_taxes()
+				// Get all items physically assembled in this container.
+				$assembled_items = $this->get_assembled_items( $item, $items );
+
+				if ( empty( $assembled_items ) ) {
+					$aggregate = false;
+				}
+
+				if ( $aggregate ) {
+
+					// Aggregate contents.
+					$contents = array();
+
+					// Aggregate prices.
+					$bundle_totals = array(
+						'subtotal'     => $item->get_subtotal(),
+						'total'        => $item->get_total(),
+						'subtotal_tax' => $item->get_subtotal_tax(),
+						'total_tax'    => $item->get_total_tax(),
+						'taxes'        => $item->get_taxes()
+					);
+
+					foreach ( $assembled_items as $child_item_id => $child_item ) {
+
+						$child_item_id      = $child_item->get_id();
+						$child_variation_id = $child_item->get_variation_id();
+						$child_product_id   = $child_item->get_product_id();
+						$child_id           = $child_variation_id ? $child_variation_id : $child_product_id;
+						$child              = WC_PB_Helpers::cache_get( 'order_item_product_' . $child_item_id );
+
+						if ( null === $child ) {
+							$child = wc_get_product( $child_id );
+							WC_PB_Helpers::cache_set( 'order_item_product_' . $child_item_id, $child );
+						}
+
+						if ( ! $child || ! $child->needs_shipping() ) {
+							continue;
+						}
+
+						/*
+						 * Add item into a new container "Contents" meta.
+						 */
+
+						$meta_data       = WC_PB_Core_Compatibility::is_wc_version_gte( '3.1' ) ? $child_item->get_formatted_meta_data( '_', true ) : $child_item->get_formatted_meta_data();
+						$meta_desc_array = array();
+
+						if ( ! empty( $meta_data ) ) {
+							foreach ( $meta_data as $meta_id => $meta ) {
+								$meta_desc_array[] = array(
+									'key'   => wp_kses_post( $meta->display_key ),
+									'value' => wp_kses_post( trim( strip_tags( $meta->display_value ) ) )
+								);
+							}
+						}
+
+						$meta_desc_array[] = array(
+							'key'   => _x( 'Qty', 'bundled order item qty meta key', 'woocommerce-product-bundles' ),
+							'value' => $child_item->get_quantity()
 						);
 
-						foreach ( $child_items as $child_item_id => $child_item ) {
-
-							// If the child is "packaged" in its parent...
-							if ( 'no' === $child_item->get_meta( '_bundled_item_needs_shipping', true ) ) {
-
-								$child_item_id      = $child_item->get_id();
-								$child_variation_id = $child_item->get_variation_id();
-								$child_product_id   = $child_item->get_product_id();
-								$child_id           = $child_variation_id ? $child_variation_id : $child_product_id;
-								$child              = WC_PB_Helpers::cache_get( 'order_item_product_' . $child_item_id );
-
-								if ( null === $child ) {
-									$child = wc_get_product( $child_id );
-									WC_PB_Helpers::cache_set( 'order_item_product_' . $child_item_id, $child );
-								}
-
-								if ( ! $child || ! $child->needs_shipping() ) {
-									continue;
-								}
-
-								/*
-								 * Add item into a new container "Contents" meta.
-								 */
-
-								$sku = $child->get_sku();
-
-								if ( ! $sku ) {
-									$sku = '#' . $child_id;
-								}
-
-								$meta_data       = WC_PB_Core_Compatibility::is_wc_version_gte( '3.1' ) ? $child_item->get_formatted_meta_data( '_', true ) : $child_item->get_formatted_meta_data();
-								$meta_desc_array = array();
-
-								if ( ! empty( $meta_data ) ) {
-									foreach ( $meta_data as $meta_id => $meta ) {
-										$meta_desc_array[] = array(
-											'key'   => wp_kses_post( $meta->display_key ),
-											'value' => wp_kses_post( trim( strip_tags( $meta->display_value ) ) )
-										);
-									}
-								}
-
-								$meta_desc_array[] = array(
-									'key'   => _x( 'Qty', 'bundled order item qty meta key', 'woocommerce-product-bundles' ),
-									'value' => $child_item->get_quantity()
-								);
-
-								$meta_desc_array[] = array(
-									'key'   => _x( 'SKU', 'bundled order item SKU meta key', 'woocommerce-product-bundles' ),
-									'value' => $sku
-								);
-
-								foreach ( $meta_desc_array as $meta_desc_array_key => $meta_desc_array_value ) {
-									$meta_desc_array[ $meta_desc_array_key ][ 'description' ] = $meta_desc_array_value[ 'key' ] . ' - ' . $meta_desc_array_value [ 'value' ];
-								}
-
-								$child_hidden  = 'yes' === $child_item->get_meta( '_bundled_item_hidden', true );
-								$child_visible = false === $child_hidden || WC_PB()->compatibility->is_pip();
-
-								if ( $child_visible ) {
-									$contents[] = array(
-										'title'       => apply_filters( 'woocommerce_bundled_order_item_meta_title', $child->get_title(), $meta_desc_array, $child_item, $item, $order ),
-										'description' => apply_filters( 'woocommerce_bundled_order_item_meta_description', implode( ', ', wp_list_pluck( $meta_desc_array, 'description' ) ), $meta_desc_array, $child_item, $item, $order )
-									);
-								}
-
-								/*
-								 * Add item totals to the container totals.
-								 */
-
-								$bundle_totals[ 'subtotal' ]     += $child_item->get_subtotal();
-								$bundle_totals[ 'total' ]        += $child_item->get_total();
-								$bundle_totals[ 'subtotal_tax' ] += $child_item->get_subtotal_tax();
-								$bundle_totals[ 'total_tax' ]    += $child_item->get_total_tax();
-
-								$child_item_tax_data = $child_item->get_taxes();
-
-								$bundle_totals[ 'taxes' ][ 'total' ]    = array_merge( $bundle_totals[ 'taxes' ][ 'total' ], $child_item_tax_data[ 'total' ] );
-								$bundle_totals[ 'taxes' ][ 'subtotal' ] = array_merge( $bundle_totals[ 'taxes' ][ 'subtotal' ], $child_item_tax_data[ 'subtotal' ] );
-							}
+						if ( $sku = $child->get_sku() ) {
+							$meta_desc_array[] = array(
+								'key'   => _x( 'SKU', 'bundled order item SKU meta key', 'woocommerce-product-bundles' ),
+								'value' => $sku
+							);
 						}
 
-						// Build list of meta to set, with 'id' props intact.
-						$item_meta_data_to_set = array();
+						foreach ( $meta_desc_array as $meta_desc_array_key => $meta_desc_array_value ) {
+							$meta_desc_array[ $meta_desc_array_key ][ 'description' ] = $meta_desc_array_value[ 'key' ] . ' - ' . $meta_desc_array_value[ 'value' ];
+						}
 
+						$child_hidden  = 'yes' === $child_item->get_meta( '_bundled_item_hidden', true );
+						$child_visible = false === $child_hidden || WC_PB()->compatibility->is_pip();
+
+						if ( $child_visible ) {
+
+							if ( $overridden_child_title = $child_item->get_meta( '_bundled_item_title', true ) ) {
+								$child_title = $overridden_child_title;
+							} else {
+								$child_title = $child->get_title();
+							}
+
+							$contents[] = array(
+								'title'       => apply_filters( 'woocommerce_bundled_order_item_meta_title', $child_title, $meta_desc_array, $child_item, $item, $order ),
+								'description' => apply_filters( 'woocommerce_bundled_order_item_meta_description', implode( ', ', wp_list_pluck( $meta_desc_array, 'description' ) ), $meta_desc_array, $child_item, $item, $order )
+							);
+						}
+
+						/*
+						 * Add item totals to the container totals.
+						 */
+
+						$bundle_totals[ 'subtotal' ]     += $child_item->get_subtotal();
+						$bundle_totals[ 'total' ]        += $child_item->get_total();
+						$bundle_totals[ 'subtotal_tax' ] += $child_item->get_subtotal_tax();
+						$bundle_totals[ 'total_tax' ]    += $child_item->get_total_tax();
+
+						$child_item_tax_data = $child_item->get_taxes();
+
+						$bundle_totals[ 'taxes' ][ 'total' ]    = array_merge( $bundle_totals[ 'taxes' ][ 'total' ], $child_item_tax_data[ 'total' ] );
+						$bundle_totals[ 'taxes' ][ 'subtotal' ] = array_merge( $bundle_totals[ 'taxes' ][ 'subtotal' ], $child_item_tax_data[ 'subtotal' ] );
+					}
+
+					// Build list of meta to set, with 'id' props intact.
+					$item_meta_data_to_set = array();
+
+					foreach ( $item->get_meta_data() as $item_meta ) {
+						if ( isset( $item_meta->key, $item_meta->value, $item_meta->id ) ) {
+							$item_meta_data_to_set[] = array(
+								'key'   => $item_meta->key,
+								'value' => $item_meta->value,
+								'id'    => $item_meta->id
+							);
+						}
+					}
+
+					// Create a clone to ensure item totals will not be modified permanently.
+					$cloned_item = clone $item;
+
+					// Delete meta without 'id' prop.
+					$cloned_item_meta_data = $cloned_item->get_meta_data();
+
+					foreach ( $cloned_item_meta_data as $cloned_item_meta ) {
+						$cloned_item->delete_meta_data( $cloned_item_meta->key );
+					}
+
+					// Copy back meta with 'id' prop intact.
+					$cloned_item->set_meta_data( $item_meta_data_to_set );
+
+					// Replace original with clone.
+					$item = $cloned_item;
+
+					// Find highest 'id'.
+					$max_id = 1;
+					foreach ( $item->get_meta_data() as $item_meta ) {
+						if ( isset( $item_meta->id ) ) {
+							if ( $item_meta->id >= $max_id ) {
+								$max_id = $item_meta->id;
+							}
+						}
+					}
+
+					$item->set_props( $bundle_totals );
+
+					// Create a meta field with product details for each bundled item.
+					if ( ! empty( $contents ) ) {
+						$added_keys = array();
+						// Create a meta field for each bundled item.
+						foreach ( $contents as $contained ) {
+							$item->add_meta_data( $contained[ 'title' ], $contained[ 'description' ] );
+							$added_keys[] = $contained[ 'title' ];
+						}
+						// Ensure meta objects have an 'id' prop so they can be picked up by 'get_formatted_meta_data'.
 						foreach ( $item->get_meta_data() as $item_meta ) {
-							if ( isset( $item_meta->key, $item_meta->value, $item_meta->id ) ) {
-								$item_meta_data_to_set[] = array(
-									'key'   => $item_meta->key,
-									'value' => $item_meta->value,
-									'id'    => $item_meta->id
-								);
-							}
-						}
-
-						// Create a clone to ensure item totals will not be modified permanently.
-						$cloned_item = clone $item;
-
-						// Delete meta without 'id' prop.
-						$cloned_item_meta_data = $cloned_item->get_meta_data();
-
-						foreach ( $cloned_item_meta_data as $cloned_item_meta ) {
-							$cloned_item->delete_meta_data( $cloned_item_meta->key );
-						}
-
-						// Copy back meta with 'id' prop intact.
-						$cloned_item->set_meta_data( $item_meta_data_to_set );
-
-						// Replace original with clone.
-						$item = $cloned_item;
-
-						// Find highest 'id'.
-						$max_id = 1;
-						foreach ( $item->get_meta_data() as $item_meta ) {
-							if ( isset( $item_meta->id ) ) {
-								if ( $item_meta->id >= $max_id ) {
-									$max_id = $item_meta->id;
-								}
-							}
-						}
-
-						$item->set_props( $bundle_totals );
-
-						// Create a meta field with product details for each bundled item.
-						if ( ! empty( $contents ) ) {
-							$added_keys = array();
-							// Create a meta field for each bundled item.
-							foreach ( $contents as $contained ) {
-								$item->add_meta_data( $contained[ 'title' ], $contained[ 'description' ] );
-								$added_keys[] = $contained[ 'title' ];
-							}
-							// Ensure meta objects have an 'id' prop so they can be picked up by 'get_formatted_meta_data'.
-							foreach ( $item->get_meta_data() as $item_meta ) {
-								if ( in_array( $item_meta->key, $added_keys ) && ! isset( $item_meta->id ) ) {
-									$item_meta->id = $max_id + 1;
-									$max_id++;
-								}
+							if ( in_array( $item_meta->key, $added_keys ) && ! isset( $item_meta->id ) ) {
+								$item_meta->id = $max_id + 1;
+								$max_id++;
 							}
 						}
 					}
@@ -624,49 +684,21 @@ class WC_PB_Order {
 					$product->set_weight( $bundle_weight );
 				}
 
-				// Override SKU with kit/bundle SKU if needed.
-				$child_items         = wc_pb_get_bundled_order_items( $item, $order );
-				$packaged_products   = array();
-				$packaged_quantities = array();
-
-				// Find items shipped in the container:
-				foreach ( $child_items as $child_item ) {
-
-					if ( 'no' === $child_item->get_meta( '_bundled_item_needs_shipping', true ) ) {
-
-						$child_item_id      = $child_item->get_id();
-						$child_variation_id = $child_item->get_variation_id();
-						$child_product_id   = $child_item->get_product_id();
-						$child_id           = $child_variation_id ? $child_variation_id : $child_product_id;
-						$child_product      = WC_PB_Helpers::cache_get( 'order_item_product_' . $child_item_id );
-
-						if ( null === $child_product ) {
-							$child_product = wc_get_product( $child_id );
-							WC_PB_Helpers::cache_set( 'order_item_product_' . $child_item_id, $child_product );
-						}
-
-						if ( ! $child_product || ! $child_product->needs_shipping() ) {
-							continue;
-						}
-
-						$packaged_products[]              = $child_product;
-						$packaged_quantities[ $child_id ] = $child_item->get_quantity();
-					}
-				}
-
-				$sku = $product->get_sku( 'edit' );
+				$assembled_items = $this->get_assembled_items( $item, $order );
+				$sku             = $product->get_sku( 'edit' );
 
 				/**
 				 * Allows you to construct a dynamic SKU for the product bundle depending on its contents.
 				 *
+				 * @since  5.8.0
+				 *
 				 * @param  string             $sku
 				 * @param  WC_Product_Bundle  $bundle
 				 * @param  WC_Order_Item      $item
+				 * @param  array              $assembled_items
 				 * @param  WC_Order           $order
-				 * @param  array              $packaged_products_list
-				 * @param  array              $packaged_product_quantities
 				 */
-				$new_sku = apply_filters( 'woocommerce_bundle_sku_from_order_item', $sku, $product, $item, $order, $packaged_products, $packaged_quantities );
+				$new_sku = apply_filters( 'woocommerce_bundle_container_order_item_sku', $sku, $product, $item, $assembled_items, $order );
 
 				if ( $sku !== $new_sku ) {
 					$product->set_sku( $new_sku );
@@ -699,6 +731,56 @@ class WC_PB_Order {
 		self::$override_order_items_filter = $override_order_items_filter;
 
 		return $product;
+	}
+
+	/**
+	 * Returns a list of products/quantities physically assembled in a parent order item.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  WC_Order_Item_Product  $item
+	 * @param  WC_Order               $order
+	 * @return array
+	 */
+	public function get_assembled_items( $item, $order ) {
+
+		$assembled_items = WC_PB_Helpers::cache_get( 'assembled_order_items_' . $item->get_id() );
+
+		if ( null !== $assembled_items ) {
+			return $assembled_items;
+		}
+
+		// Override SKU with kit/bundle SKU if needed.
+		$child_items     = wc_pb_get_bundled_order_items( $item, $order );
+		$assembled_items = array();
+
+		// Find items shipped in the container:
+		foreach ( $child_items as $child_item ) {
+
+			if ( 'no' === $child_item->get_meta( '_bundled_item_needs_shipping', true ) ) {
+
+				$child_item_id      = $child_item->get_id();
+				$child_variation_id = $child_item->get_variation_id();
+				$child_product_id   = $child_item->get_product_id();
+				$child_id           = $child_variation_id ? $child_variation_id : $child_product_id;
+				$child_product      = WC_PB_Helpers::cache_get( 'order_item_product_' . $child_item_id );
+
+				if ( null === $child_product ) {
+					$child_product = wc_get_product( $child_id );
+					WC_PB_Helpers::cache_set( 'order_item_product_' . $child_item_id, $child_product );
+				}
+
+				if ( ! $child_product || ! $child_product->needs_shipping() ) {
+					continue;
+				}
+
+				$assembled_items[] = $child_item;
+			}
+		}
+
+		WC_PB_Helpers::cache_set( 'assembled_order_items_' . $item->get_id(), $assembled_items );
+
+		return $assembled_items;
 	}
 
 	/**
@@ -808,8 +890,18 @@ class WC_PB_Order {
 	 */
 	public function html_order_item_class( $class, $item, $order ) {
 
-		if ( wc_pb_get_bundled_order_item_container( $item, $order ) ) {
+		if ( $bundle_container_item = wc_pb_get_bundled_order_item_container( $item, $order ) ) {
+
 			$class .= ' bundled_item';
+
+			$bundled_item_ids = wc_pb_get_bundled_order_items( $bundle_container_item, $order, true );
+
+			if ( end( $bundled_item_ids ) === $item->get_id() ) {
+				$class .= ' last';
+			}
+
+		} else if ( wc_pb_is_bundle_container_order_item( $item ) ) {
+			$class .= ' bundle_item';
 		}
 
 		return $class;
@@ -857,7 +949,49 @@ class WC_PB_Order {
 	 */
 	public function add_order_item_meta( $order_item, $cart_item_key, $cart_item ) {
 
-		if ( wc_pb_is_bundled_cart_item( $cart_item ) ) {
+		if ( wc_pb_is_bundle_container_cart_item( $cart_item ) ) {
+
+			if ( isset( $cart_item[ 'bundled_items' ] ) ) {
+				$order_item->add_meta_data( '_bundled_items', $cart_item[ 'bundled_items' ], true );
+			}
+
+			$order_item->add_meta_data( '_bundle_group_mode', $cart_item[ 'data' ]->get_group_mode(), true );
+
+			if ( isset( $cart_item[ 'stamp' ] ) ) {
+				$order_item->add_meta_data( '_stamp', $cart_item[ 'stamp' ], true );
+			}
+
+			$order_item->add_meta_data( '_bundle_cart_key', $cart_item_key, true );
+
+			/*
+			 * Store shipping data.
+			 */
+
+			$needs_shipping = $cart_item[ 'data' ]->needs_shipping() ? 'yes' : 'no';
+
+			// If it's a physical container item, grab its aggregate weight from the package data.
+			if ( 'yes' === $needs_shipping ) {
+
+				$packaged_item_values = false;
+
+				foreach ( WC()->cart->get_shipping_packages() as $package ) {
+					if ( isset( $package[ 'contents' ][ $cart_item_key ] ) ) {
+						$packaged_item_values = $package[ 'contents' ][ $cart_item_key ];
+						break;
+					}
+				}
+
+				if ( ! empty( $packaged_item_values ) ) {
+					$bundled_weight = $packaged_item_values[ 'data' ]->get_weight( 'edit' );
+					$order_item->add_meta_data( '_bundle_weight', $bundled_weight, true );
+				}
+
+			// If it's a virtual container item, look at its children to see if any of them needs processing.
+			} elseif ( false === $this->bundled_items_need_processing( $cart_item ) ) {
+				$order_item->add_meta_data( '_bundled_items_need_processing', 'no', true );
+			}
+
+		} elseif ( wc_pb_is_bundled_cart_item( $cart_item ) ) {
 
 			$order_item->add_meta_data( '_bundled_by', $cart_item[ 'bundled_by' ], true );
 			$order_item->add_meta_data( '_bundled_item_id', $cart_item[ 'bundled_item_id' ], true );
@@ -888,61 +1022,24 @@ class WC_PB_Order {
 				}
 			}
 
-			if ( isset( $cart_item[ 'stamp' ][ $bundled_item_id ][ 'title' ] ) ) {
-				$title = $cart_item[ 'stamp' ][ $bundled_item_id ][ 'title' ];
-				$order_item->add_meta_data( '_bundled_item_title', $title, true );
-			}
-		}
+			if ( isset( $cart_item[ 'stamp' ] ) ) {
 
-		if ( wc_pb_is_bundle_container_cart_item( $cart_item ) ) {
+				if ( isset( $cart_item[ 'stamp' ][ $bundled_item_id ][ 'title' ] ) ) {
+					$title = $cart_item[ 'stamp' ][ $bundled_item_id ][ 'title' ];
+					$order_item->add_meta_data( '_bundled_item_title', $title, true );
+				}
 
-			if ( isset( $cart_item[ 'bundled_items' ] ) ) {
-				$order_item->add_meta_data( '_bundled_items', $cart_item[ 'bundled_items' ], true );
+				$order_item->add_meta_data( '_stamp', $cart_item[ 'stamp' ], true );
 			}
 
-			$order_item->add_meta_data( '_bundle_group_mode', $cart_item[ 'data' ]->get_group_mode(), true );
-		}
-
-		if ( isset( $cart_item[ 'stamp' ] ) ) {
-
-			$order_item->add_meta_data( '_stamp', $cart_item[ 'stamp' ], true );
 			$order_item->add_meta_data( '_bundle_cart_key', $cart_item_key, true );
 
 			/*
-			 * Store shipping data - useful when exporting order content.
+			 * Store shipping data.
 			 */
 
-			$needs_shipping = $cart_item[ 'data' ]->needs_shipping() ? 'yes' : 'no';
-
-			// If it's a physical child item, add a meta fild to indicate whether it is shipped individually.
-			if ( wc_pb_is_bundled_cart_item( $cart_item ) ) {
-
-				$order_item->add_meta_data( '_bundled_item_needs_shipping', $needs_shipping, true );
-
-			} elseif ( wc_pb_is_bundle_container_cart_item( $cart_item ) ) {
-
-				// If it's a physical container item, grab its aggregate weight from the package data.
-				if ( 'yes' === $needs_shipping ) {
-
-					$packaged_item_values = false;
-
-					foreach ( WC()->cart->get_shipping_packages() as $package ) {
-						if ( isset( $package[ 'contents' ][ $cart_item_key ] ) ) {
-							$packaged_item_values = $package[ 'contents' ][ $cart_item_key ];
-							break;
-						}
-					}
-
-					if ( ! empty( $packaged_item_values ) ) {
-						$bundled_weight = $packaged_item_values[ 'data' ]->get_weight( 'edit' );
-						$order_item->add_meta_data( '_bundle_weight', $bundled_weight, true );
-					}
-
-				// If it's a virtual container item, look at its children to see if any of them needs processing.
-				} elseif ( false === $this->bundled_items_need_processing( $cart_item ) ) {
-					$order_item->add_meta_data( '_bundled_items_need_processing', 'no', true );
-				}
-			}
+			// If it's a physical child item, add a meta field to indicate whether it is shipped individually.
+			$order_item->add_meta_data( '_bundled_item_needs_shipping', $cart_item[ 'data' ]->needs_shipping() ? 'yes' : 'no', true );
 		}
 	}
 

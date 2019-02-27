@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WooCommerce core Product Importer support.
  *
  * @class    WC_PB_Product_Import
- * @version  5.6.2
+ * @version  5.8.1
  */
 class WC_PB_Product_Import {
 
@@ -49,6 +49,7 @@ class WC_PB_Product_Import {
 		$options[ 'wc_pb_group_mode' ]                = __( 'Bundle Group Mode', 'woocommerce-product-bundles' );
 		$options[ 'wc_pb_editable_in_cart' ]          = __( 'Bundle Cart Editing', 'woocommerce-product-bundles' );
 		$options[ 'wc_pb_sold_individually_context' ] = __( 'Bundle Sold Individually', 'woocommerce-product-bundles' );
+		$options[ 'wc_pb_add_to_cart_form_location' ] = __( 'Bundle Form Location', 'woocommerce-product-bundles' );
 
 		return $options;
 	}
@@ -66,6 +67,7 @@ class WC_PB_Product_Import {
 		$columns[ __( 'Bundle Group Mode', 'woocommerce-product-bundles' ) ]            = 'wc_pb_group_mode';
 		$columns[ __( 'Bundle Cart Editing', 'woocommerce-product-bundles' ) ]          = 'wc_pb_editable_in_cart';
 		$columns[ __( 'Bundle Sold Individually', 'woocommerce-product-bundles' ) ]     = 'wc_pb_sold_individually_context';
+		$columns[ __( 'Bundle Form Location', 'woocommerce-product-bundles' ) ]         = 'wc_pb_add_to_cart_form_location';
 
 		// Always add English mappings.
 		$columns[ 'Bundled Items (JSON-encoded)' ] = 'wc_pb_bundled_items';
@@ -73,6 +75,7 @@ class WC_PB_Product_Import {
 		$columns[ 'Bundle Group Mode' ]            = 'wc_pb_group_mode';
 		$columns[ 'Bundle Cart Editing' ]          = 'wc_pb_editable_in_cart';
 		$columns[ 'Bundle Sold Individually' ]     = 'wc_pb_sold_individually_context';
+		$columns[ 'Bundle Form Location' ]         = 'wc_pb_add_to_cart_form_location';
 
 		return $columns;
 	}
@@ -117,7 +120,7 @@ class WC_PB_Product_Import {
 	 */
 	public static function set_bundle_props( $product, $data ) {
 
-		if ( is_a( $product, 'WC_Product' ) && $product->is_type( 'bundle' ) ) {
+		if ( ( $product instanceof WC_Product ) && $product->is_type( 'bundle' ) ) {
 
 			$props = array();
 
@@ -139,6 +142,10 @@ class WC_PB_Product_Import {
 
 			if ( isset( $data[ 'wc_pb_sold_individually_context' ] ) ) {
 				$props[ 'sold_individually_context' ] = strval( $data[ 'wc_pb_sold_individually_context' ] );
+			}
+
+			if ( isset( $data[ 'wc_pb_add_to_cart_form_location' ] ) ) {
+				$props[ 'add_to_cart_form_location' ] = strval( $data[ 'wc_pb_add_to_cart_form_location' ] );
 			}
 
 			if ( ! empty( $props ) ) {

@@ -71,17 +71,17 @@ $class_short_description = get_field('short_description');
                             <?php if( get_field('class_pricing_1') ): ?>
                                 <!-- <div class="nam-dash"></div> -->
                                 <h4 class="class-pricing-1 bold">
-                                    <?php the_field('class_pricing_1'); ?>  
+                                    <?php the_field('class_pricing_1'); ?>
                                 </h4>
                             <?php endif; ?>
                             <?php if( get_field('class_pricing_2') ): ?>
                                 <h4 class="class-pricing-2 bold">
-                                    <?php the_field('class_pricing_2'); ?>  
+                                    <?php the_field('class_pricing_2'); ?>
                                 </h4>
                             <?php endif; ?>
                             <?php if( get_field('class_pricing_3') ): ?>
                                 <h4 class="class-pricing-3 bold">
-                                    <?php the_field('class_pricing_3'); ?>  
+                                    <?php the_field('class_pricing_3'); ?>
                                 </h4>
                             <?php endif; ?>
                         </h4>

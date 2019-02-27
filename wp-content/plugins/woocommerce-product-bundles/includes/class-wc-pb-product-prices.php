@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Price functions and hooks.
  *
  * @class    WC_PB_Product_Prices
- * @version  5.5.0
+ * @version  5.7.8
  */
 class WC_PB_Product_Prices {
 
@@ -26,6 +26,30 @@ class WC_PB_Product_Prices {
 	 * @var WC_Bundled_Item
 	 */
 	public static $bundled_item;
+
+	/**
+	 * Returns the incl/excl tax coefficients for calculating prices incl/excl tax on the client side.
+	 *
+	 * @since  5.7.6
+	 *
+	 * @param  WC_Product  $product
+	 * @return array
+	 */
+	public static function get_tax_ratios( $product ) {
+
+		WC_PB_Product_Prices::extend_price_display_precision();
+
+		$ref_price      = 1000.0;
+		$ref_price_incl = wc_get_price_including_tax( $product, array( 'qty' => 1, 'price' => $ref_price ) );
+		$ref_price_excl = wc_get_price_excluding_tax( $product, array( 'qty' => 1, 'price' => $ref_price ) );
+
+		WC_PB_Product_Prices::reset_price_display_precision();
+
+		return array(
+			'incl' => $ref_price_incl / $ref_price,
+			'excl' => $ref_price_excl / $ref_price
+		);
+	}
 
 	/**
 	 * Filters the 'woocommerce_price_num_decimals' option to use the internal WC rounding precision.
@@ -69,9 +93,9 @@ class WC_PB_Product_Prices {
 				$calc = 'excl' === get_option( 'woocommerce_tax_display_shop' ) ? 'excl_tax' : 'incl_tax';
 			}
 
-			if ( 'incl_tax' === $calc && 'yes' === get_option( 'woocommerce_calc_taxes' ) && 'yes' !== get_option( 'woocommerce_prices_include_tax' ) ) {
+			if ( 'incl_tax' === $calc ) {
 				$price = wc_get_price_including_tax( $product, array( 'qty' => $qty, 'price' => $price ) );
-			} elseif ( 'excl_tax' === $calc && 'yes' === get_option( 'woocommerce_calc_taxes' ) && 'yes' === get_option( 'woocommerce_prices_include_tax' ) ) {
+			} elseif ( 'excl_tax' === $calc ) {
 				$price = wc_get_price_excluding_tax( $product, array( 'qty' => $qty, 'price' => $price ) );
 			} else {
 				$price = $price * $qty;
@@ -79,6 +103,17 @@ class WC_PB_Product_Prices {
 		}
 
 		return $price;
+	}
+
+	/**
+	 * Discounted bundled item price precision. Defaults to the price display precision, a.k.a. wc_get_price_decimals.
+	 *
+	 * @since  5.7.8
+	 *
+	 * @return int
+	 */
+	public static function get_discounted_price_precision() {
+		return apply_filters( 'woocommerce_bundled_item_discounted_price_precision', wc_get_price_decimals() );
 	}
 
 	/**
@@ -93,7 +128,7 @@ class WC_PB_Product_Prices {
 		$discounted_price = $price;
 
 		if ( ! empty( $price ) && ! empty( $discount ) ) {
-			$discounted_price = round( ( double ) $price * ( 100 - $discount ) / 100, wc_get_price_decimals() );
+			$discounted_price = round( ( double ) $price * ( 100 - $discount ) / 100, self::get_discounted_price_precision() );
 		}
 
 		return $discounted_price;
@@ -268,7 +303,7 @@ class WC_PB_Product_Prices {
 					} else {
 						$regular_price = $price;
 					}
-					$price                   = empty( $discount ) ? $price : round( ( double ) $regular_price * ( 100 - $discount ) / 100, wc_get_price_decimals() );
+					$price                   = empty( $discount ) ? $price : round( ( double ) $regular_price * ( 100 - $discount ) / 100, self::get_discounted_price_precision() );
 					$prices[ $variation_id ] = apply_filters( 'woocommerce_bundled_variation_price', $price, $variation_id, $discount, $bundled_item );
 				} else {
 					$prices[ $variation_id ] = 0;

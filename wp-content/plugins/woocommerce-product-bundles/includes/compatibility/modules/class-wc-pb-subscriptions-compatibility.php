@@ -41,7 +41,7 @@ class WC_PB_Subscriptions_Compatibility {
 	 * This is carried on to the ordering-again logic, in which case bundled cart items are specifically prevented from ending up in the cart - @see 'WC_PB_Cart::woo_bundles_validation()'.
 	 *
 	 * WC Subs fakes some of the core re-ordering logic to populate the cart with subscription order items when paying for an initial order that is pending payment, or when paying for a pending/failed renewal order.
-	 * However, due to https://github.com/Prospress/woocommerce-subscriptions/issues/1362, 'WC_PB_Cart::woo_bundles_validation()' does not run to prevent bundled cart items from being added to the cart when paying for initial orders that include the container bundle.
+	 * However, due to https://github.com/Prospress/woocommerce-subscriptions/issues/1362, 'WC_PB_Cart::validate_add_to_cart()' does not run to prevent bundled cart items from being added to the cart when paying for initial orders that include the container bundle.
 	 * This hook fixes that shortcoming.
 	 *
 	 * Note that this "cleaning up" should not be done for renewal orders, since these do not include the container item.

@@ -34,9 +34,9 @@ class WC_PB_CLI_Update {
 
 		$wpdb->hide_errors();
 
-		require_once( WC_PB_ABSPATH . '/includes/class-wc-pb-install.php' );
-		require_once( WC_PB_ABSPATH . '/includes/admin/class-wc-pb-admin-notices.php' );
-		require_once( WC_PB_ABSPATH . '/includes/wc-pb-update-functions.php' );
+		require_once( WC_PB_ABSPATH . 'includes/class-wc-pb-install.php' );
+		require_once( WC_PB_ABSPATH . 'includes/admin/class-wc-pb-admin-notices.php' );
+		require_once( WC_PB_ABSPATH . 'includes/wc-pb-update-functions.php' );
 
 		$current_db_version = get_option( 'woocommerce_product_bundles_db_version', null );
 		$update_count       = 0;

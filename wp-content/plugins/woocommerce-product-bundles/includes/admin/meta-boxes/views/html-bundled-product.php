@@ -11,18 +11,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-?><div class="wc-bundled-item wc-metabox <?php echo $toggle; ?>" rel="<?php echo $loop; ?>">
+?><div class="wc-bundled-item wc-metabox <?php echo $toggle; ?> <?php echo $stock_status; ?>" rel="<?php echo $loop; ?>">
 	<h3>
-		<strong class="item-title"><?php echo $title; ?></strong>
+		<span class="bundled-item-product-id">#<span class="bundled-product-id"><?php echo $product_id; ?></span></span>
+		<span class="bundled-item-title-inner"><strong class="item-title"><?php echo $title; ?></strong></span>
 		<?php
-			echo '' !== $item_availability ? '<span class="item-availability">' . $item_availability . '</span>' : '';
+			echo ( false !== $item_id && 'in_stock' !== $stock_status ) ? sprintf( '<div class="tips bundled-item-status bundled-item-status--%s" data-tip="%s"></div>', $stock_status, $stock_status_label ) : '';
 		?>
 		<div class="handle">
 			<?php
-				echo false !== $item_id ? ( '<small class="item-id" title="' . __( 'Bundled item ID', 'woocommerce-product-bundles' ) . '">' . sprintf( _x( 'ID: %s', 'bundled product identifier', 'woocommerce-product-bundles' ), $item_id ) . '</small>' ) : '';
+				echo $sku ? ( '<small class="item-sku">' . sprintf( _x( 'SKU: %s', 'bundled product sku', 'woocommerce-product-bundles' ), $sku ) . '</small>' ) : '';
 			?>
+			<div class="handle-item toggle-item" aria-label="<?php _e( 'Click to toggle', 'woocommerce' ); ?>"></div>
+			<div class="handle-item sort-item" aria-label="<?php esc_attr_e( 'Drag and drop to set order', 'woocommerce-product-bundles' ); ?>"></div>
 			<a href="#" class="remove_row delete"><?php echo __( 'Remove', 'woocommerce' ); ?></a>
-			<div class="handlediv" title="<?php echo __( 'Click to toggle', 'woocommerce' ); ?>"></div>
 		</div>
 	</h3>
 	<div class="item-data wc-metabox-content">

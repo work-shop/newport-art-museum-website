@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Add hooks to the edit posts view for the 'product' post type.
  *
  * @class    WC_PB_Admin_Post_Types
- * @version  5.5.0
+ * @version  5.9.0
  */
 class WC_PB_Admin_Post_Types {
 
@@ -41,27 +41,14 @@ class WC_PB_Admin_Post_Types {
 		if ( 'bundle' === $product->get_type() ) {
 			if ( $product->is_parent_in_stock() && $product->contains( 'out_of_stock_strict' ) ) {
 
-				$stock_status             = '<mark class="outofstock insufficient_stock">' . __( 'Insufficient stock', 'woocommerce-product-bundles' ) . '</mark>';
-				$insufficient_stock_items = array();
+				ob_start();
 
-				foreach ( $product->get_bundled_items() as $bundled_item ) {
-					if ( false === $bundled_item->is_in_stock() ) {
-						$edit_link                  = get_edit_post_link( $bundled_item->get_product_id() );
-						$title                      = $bundled_item->product->get_title();
-						$insufficient_stock_items[] = '<a class="item" href="' . esc_url( $edit_link ) . '">' . esc_html( $title ) . '</a>';
-					}
-				}
+				?><mark class="outofstock insufficient_stock"><?php _e( 'Insufficient stock', 'woocommerce-product-bundles' ); ?></mark>
+				<div class="row-actions">
+					<span class="view"><a href="<?php echo admin_url( 'admin.php?page=wc-reports&tab=stock&report=insufficient_stock&bundle_id=' . $product->get_id() ) ?>" rel="bookmark" aria-label="<?php _e( 'View Report', 'woocommerce-product-bundles' ); ?>"><?php _e( 'View Report', 'woocommerce-product-bundles' ); ?></a></span>
+				</div><?php
 
-				$item_list = array();
-
-				if ( ! empty( $insufficient_stock_items ) ) {
-
-					foreach ( $insufficient_stock_items as $item ) {
-						$item_list[] = '<li>' . $item . '</li>';
-					}
-
-					$stock_status .= ' ' . '<a href="#" class="show_insufficient_stock_items closed" title="' . esc_attr ( __( 'View details', 'woocommerce-product-bundles' ) ) . '"></a>' . '<div class="insufficient_stock_items" style="display:none;"><ul>' . implode( '', $item_list ) . '</ul></div>';
-				}
+				$stock_status = ob_get_clean();
 			}
 		}
 

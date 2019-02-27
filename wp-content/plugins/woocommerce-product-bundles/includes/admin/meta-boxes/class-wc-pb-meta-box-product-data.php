@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Product meta-box data for the 'Bundle' type.
  *
  * @class    WC_PB_Meta_Box_Product_Data
- * @version  5.7.0
+ * @version  5.9.0
  */
 class WC_PB_Meta_Box_Product_Data {
 
@@ -45,57 +45,14 @@ class WC_PB_Meta_Box_Product_Data {
 
 		// Advanced bundled product admin config options.
 		add_action( 'woocommerce_bundled_product_admin_advanced_html', array( __CLASS__, 'bundled_product_admin_advanced_html' ), 10, 4 );
+		add_action( 'woocommerce_bundled_product_admin_advanced_html', array( __CLASS__, 'bundled_product_admin_advanced_item_id_html' ), 100, 4 );
 
 		// Bundle tab settings.
-		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'bundled_products_admin_config_layout' ), 10 );
-		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'bundled_products_admin_config_group_mode' ), 10 );
-		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'bundled_products_admin_config_edit_in_cart' ), 10 );
-		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'bundled_products_admin_config_contents' ), 20 );
+		add_action( 'woocommerce_bundled_products_admin_config', array( __CLASS__, 'bundled_products_admin_config' ), 10 );
+		add_action( 'woocommerce_bundled_products_admin_contents', array( __CLASS__, 'bundled_products_admin_contents' ), 20 );
 
 		// Extended "Sold Individually" option.
 		add_action( 'woocommerce_product_options_sold_individually', array( __CLASS__, 'sold_individually_option' ) );
-
-		// "Form location" option.
-		add_action( 'woocommerce_product_options_advanced', array( __CLASS__, 'form_location_option' ) );
-	}
-
-	/**
-	 * Displays the "Form location" option.
-	 *
-	 * @return void
-	 */
-	public static function form_location_option() {
-
-		global $product_bundle_object;
-
-		$options  = WC_Product_Bundle::get_add_to_cart_form_location_options();
-		$help_tip = '';
-		$loop     = 0;
-
-		foreach ( $options as $option_key => $option ) {
-
-			$help_tip .= '<strong>' . $option[ 'title' ] . '</strong> &ndash; ' . $option[ 'description' ];
-
-			if ( $loop < sizeof( $options ) - 1 ) {
-				$help_tip .= '</br></br>';
-			}
-
-			$loop++;
-		}
-
-		echo '<div class="options_group show_if_bundle">';
-
-		woocommerce_wp_select( array(
-			'id'            => '_wc_pb_add_to_cart_form_location',
-			'wrapper_class' => 'show_if_bundle',
-			'label'         => __( 'Form location', 'woocommerce-product-bundles' ),
-			'options'       => array_combine( array_keys( $options ), wp_list_pluck( $options, 'title' ) ),
-			'value'         => $product_bundle_object->get_add_to_cart_form_location( 'edit' ),
-			'description'   => $help_tip,
-			'desc_tip'      => 'true'
-		) );
-
-		echo '</div>';
 	}
 
 	/**
@@ -175,14 +132,27 @@ class WC_PB_Meta_Box_Product_Data {
 		global $product_bundle_object;
 
 		?><div id="bundled_product_data" class="panel woocommerce_options_panel wc_gte_30">
-			<?php
-			/**
-			 * 'woocommerce_bundled_products_admin_config' action.
-			 *
-			 * @param  WC_Product_Bundle  $product_bundle_object
-			 */
-			do_action( 'woocommerce_bundled_products_admin_config', $product_bundle_object );
-			?>
+			<div class="options_group_general">
+				<?php
+				/**
+				 * 'woocommerce_bundled_products_admin_config' action.
+				 *
+				 * @param  WC_Product_Bundle  $product_bundle_object
+				 */
+				do_action( 'woocommerce_bundled_products_admin_config', $product_bundle_object );
+				?>
+			</div>
+			<div class="options_group_contents">
+				<?php
+				/**
+				 * 'woocommerce_bundled_products_admin_contents' action.
+				 *
+				 * @since  5.8.0
+				 * @param  WC_Product_Bundle  $product_bundle_object
+				 */
+				do_action( 'woocommerce_bundled_products_admin_contents', $product_bundle_object );
+				?>
+			</div>
 		</div><?php
 	}
 
@@ -239,7 +209,7 @@ class WC_PB_Meta_Box_Product_Data {
 			}
 
 			/*
-			 * Group mode option.
+			 * Item grouping option.
 			 */
 
 			$group_mode_pre = $product->get_group_mode( 'edit' );
@@ -322,7 +292,7 @@ class WC_PB_Meta_Box_Product_Data {
 
 				$product->set_group_mode( $group_mode_pre );
 
-				$group_mode_options         = WC_Product_Bundle::get_group_mode_options();
+				$group_mode_options         = WC_Product_Bundle::get_group_mode_options( true );
 				$group_modes_without_parent = array();
 
 				foreach ( $group_mode_options as $group_mode_key => $group_mode_title ) {
@@ -333,8 +303,11 @@ class WC_PB_Meta_Box_Product_Data {
 
 				$group_modes_without_parent_msg = sprintf( _n( '%s is only applicable to <a href="https://docs.woocommerce.com/document/bundles/bundles-configuration/#shipping" target="_blank">unassembled</a> bundles.', '%s are only applicable to <a href="https://docs.woocommerce.com/document/bundles/bundles-configuration/#shipping" target="_blank">unassembled</a> bundles.', sizeof( $group_modes_without_parent ), 'woocommerce-product-bundles' ), WC_PB_Helpers::format_list_of_items( $group_modes_without_parent ) );
 
-				self::add_admin_error( sprintf( __( 'Invalid <strong>Group mode</strong> selected. %s To make this bundle an <strong>unassembled</strong> one: <ol><li>Under <strong>Product Data</strong>, enable the <strong>Virtual</strong> option.</li><li>Go to the <strong>General</strong> tab and ensure that <strong>Regular Price</strong> and <strong>Sale Price</strong> are empty.</li><li>Go to the <strong>Bundled Products</strong> tab and enable <strong>Shipped Individually</strong> under the <strong>Basic Settings</strong> of each bundled item.</li></ol>', 'woocommerce-product-bundles' ), $group_modes_without_parent_msg ) );
+				self::add_admin_error( sprintf( __( 'The chosen <strong>Item Grouping</strong> option is invalid. %s To make this bundle an <strong>unassembled</strong> one: <ol><li>Under <strong>Product Data</strong>, enable the <strong>Virtual</strong> option.</li><li>Go to the <strong>General</strong> tab and ensure that <strong>Regular Price</strong> and <strong>Sale Price</strong> are empty.</li><li>Go to the <strong>Bundled Products</strong> tab and enable <strong>Shipped Individually</strong> under the <strong>Basic Settings</strong> of each bundled item.</li></ol>', 'woocommerce-product-bundles' ), $group_modes_without_parent_msg ) );
 			}
+
+			// Clear dismissible welcome notice.
+			WC_PB_Admin_Notices::remove_dismissible_notice( 'welcome' );
 		}
 	}
 
@@ -384,14 +357,14 @@ class WC_PB_Meta_Box_Product_Data {
 					continue;
 				}
 
-				$product_type  = $product->get_type();
-				$product_title = $product->get_title();
-				$is_sub        = in_array( $product_type, array( 'subscription', 'variable-subscription' ) );
+				$product_type    = $product->get_type();
+				$product_title   = $product->get_title();
+				$is_subscription = in_array( $product_type, array( 'subscription', 'variable-subscription' ) );
 
 				if ( in_array( $product_type, array( 'simple', 'variable', 'subscription', 'variable-subscription' ) ) && ( $post_id != $product_id ) && ! isset( $sold_individually_notices[ $product_id ] ) ) {
 
 					// Bundling subscription products requires Subs v2.0+.
-					if ( $is_sub ) {
+					if ( $is_subscription ) {
 						if ( ! class_exists( 'WC_Subscriptions' ) || version_compare( WC_Subscriptions::$version, '2.0.0', '<' ) ) {
 							self::add_admin_error( sprintf( __( '<strong>%s</strong> was not saved. WooCommerce Subscriptions version 2.0 or higher is required in order to bundle Subscription products.', 'woocommerce-product-bundles' ), $product_title ) );
 							continue;
@@ -458,7 +431,7 @@ class WC_PB_Meta_Box_Product_Data {
 					}
 
 					// Save item shipping scheme.
-					if ( isset( $data[ 'shipped_individually' ] ) ) {
+					if ( isset( $data[ 'shipped_individually' ] ) || $product->is_virtual() || $is_subscription ) {
 						$item_data[ 'shipped_individually' ] = 'yes';
 					} else {
 						$item_data[ 'shipped_individually' ] = 'no';
@@ -710,6 +683,7 @@ class WC_PB_Meta_Box_Product_Data {
 	public static function bundled_product_admin_config_html( $loop, $product_id, $item_data, $post_id ) {
 
 		$bundled_product = isset( $item_data[ 'bundled_item' ] ) ? $item_data[ 'bundled_item' ]->product : wc_get_product( $product_id );
+		$is_subscription = $bundled_product->is_type( array( 'subscription', 'variable-subscription' ) );
 
 		if ( in_array( $bundled_product->get_type(), array( 'variable', 'variable-subscription' ) ) ) {
 
@@ -844,7 +818,7 @@ class WC_PB_Meta_Box_Product_Data {
 		$is_optional             = isset( $item_data[ 'optional' ] ) ? $item_data[ 'optional' ] : '';
 
 		// When adding a subscription-type product for the first time, enable "Priced Individually" by default.
-		if ( did_action( 'wp_ajax_woocommerce_add_bundled_product' ) && $bundled_product->is_type( array( 'subscription', 'variable-subscription' ) ) && ! isset( $item_data[ 'priced_individually' ] ) ) {
+		if ( did_action( 'wp_ajax_woocommerce_add_bundled_product' ) && $is_subscription && ! isset( $item_data[ 'priced_individually' ] ) ) {
 			$is_priced_individually = 'yes';
 		}
 
@@ -858,7 +832,7 @@ class WC_PB_Meta_Box_Product_Data {
 
 		<div class="quantity_min">
 			<div class="form-field">
-				<label><?php echo __( 'Quantity Min', 'woocommerce' ); ?></label>
+				<label><?php echo __( 'Quantity Min', 'woocommerce-product-bundles' ); ?></label>
 				<input type="number" class="item_quantity" size="6" name="bundle_data[<?php echo $loop; ?>][quantity_min]" value="<?php echo $item_quantity; ?>" step="any" min="0" />
 				<?php echo wc_help_tip( __( 'The minimum/default quantity of this bundled product.', 'woocommerce-product-bundles' ) ); ?>
 			</div>
@@ -872,25 +846,29 @@ class WC_PB_Meta_Box_Product_Data {
 			</div>
 		</div>
 
-		<div class="shipped_individually">
-			<div class="form-field">
-				<label><?php echo __( 'Shipped Individually', 'woocommerce' ); ?></label>
-				<input type="checkbox" class="checkbox"<?php echo ( 'yes' === $is_shipped_individually ? ' checked="checked"' : '' ); ?> name="bundle_data[<?php echo $loop; ?>][shipped_individually]" <?php echo ( 'yes' === $is_shipped_individually ? 'value="1"' : '' ); ?>/>
-				<?php echo wc_help_tip( __( 'Check this option if this bundled item is shipped separately from the bundle.', 'woocommerce-product-bundles' ) ); ?>
+		<?php if ( $bundled_product->needs_shipping() && ! $is_subscription ) : ?>
+
+			<div class="shipped_individually">
+				<div class="form-field">
+					<label><?php echo __( 'Shipped Individually', 'woocommerce-product-bundles' ); ?></label>
+					<input type="checkbox" class="checkbox"<?php echo ( 'yes' === $is_shipped_individually ? ' checked="checked"' : '' ); ?> name="bundle_data[<?php echo $loop; ?>][shipped_individually]" <?php echo ( 'yes' === $is_shipped_individually ? 'value="1"' : '' ); ?>/>
+					<?php echo wc_help_tip( __( 'Check this option if this bundled item is shipped separately from the bundle.', 'woocommerce-product-bundles' ) ); ?>
+				</div>
 			</div>
-		</div>
+
+		<?php endif; ?>
 
 		<div class="priced_individually">
 			<div class="form-field">
-				<label><?php echo __( 'Priced Individually', 'woocommerce' ); ?></label>
+				<label><?php echo __( 'Priced Individually', 'woocommerce-product-bundles' ); ?></label>
 				<input type="checkbox" class="checkbox"<?php echo ( 'yes' === $is_priced_individually ? ' checked="checked"' : '' ); ?> name="bundle_data[<?php echo $loop; ?>][priced_individually]" <?php echo ( 'yes' === $is_priced_individually ? 'value="1"' : '' ); ?>/>
 				<?php echo wc_help_tip( __( 'Check this option to have the price of this bundled item added to the base price of the bundle.', 'woocommerce-product-bundles' ) ); ?>
 			</div>
 		</div>
 
 		<div class="discount" <?php echo 'yes' === $is_priced_individually ? '' : 'style="display:none;"'; ?>>
-			<div class="form-field form-field-sub">
-				<label><?php echo __( 'Discount %', 'woocommerce' ); ?></label>
+			<div class="form-field">
+				<label><?php echo __( 'Discount %', 'woocommerce-product-bundles' ); ?></label>
 				<input type="text" class="input-text item_discount wc_input_decimal" size="5" name="bundle_data[<?php echo $loop; ?>][discount]" value="<?php echo $item_discount; ?>" />
 				<?php echo wc_help_tip( __( 'Discount applied to the regular price of this bundled product when Priced Individually is checked. If a Discount is applied to a bundled product which has a sale price defined, the sale price will be overridden.', 'woocommerce-product-bundles' ) ); ?>
 			</div>
@@ -943,7 +921,6 @@ class WC_PB_Meta_Box_Product_Data {
 				</div>
 			</div>
 		</div>
-
 		<div class="price_visibility" <?php echo $is_priced_individually ? '' : 'style="display:none;"'; ?>>
 			<div class="form-field">
 				<label for="price_visibility"><?php _e( 'Price Visibility', 'woocommerce-product-bundles' ); ?></label>
@@ -964,15 +941,6 @@ class WC_PB_Meta_Box_Product_Data {
 				</div>
 			</div>
 		</div>
-
-		<div class="hide_thumbnail">
-			<div class="form-field">
-				<label for="hide_thumbnail"><?php echo __( 'Hide Thumbnail', 'woocommerce-product-bundles' ) ?></label>
-				<input type="checkbox" class="checkbox"<?php echo ( 'yes' === $hide_thumbnail ? ' checked="checked"' : '' ); ?> name="bundle_data[<?php echo $loop; ?>][hide_thumbnail]" <?php echo ( 'yes' === $hide_thumbnail ? 'value="1"' : '' ); ?>/>
-				<?php echo wc_help_tip( __( 'Check this option to hide the thumbnail image of this bundled product.', 'woocommerce-product-bundles' ) ); ?>
-			</div>
-		</div>
-
 		<div class="override_title">
 			<div class="form-field override_title">
 				<label for="override_title"><?php echo __( 'Override Title', 'woocommerce-product-bundles' ) ?></label>
@@ -980,7 +948,6 @@ class WC_PB_Meta_Box_Product_Data {
 				<?php echo wc_help_tip( __( 'Check this option to override the default product title.', 'woocommerce-product-bundles' ) ); ?>
 			</div>
 		</div>
-
 		<div class="custom_title">
 			<div class="form-field item_title"><?php
 
@@ -989,7 +956,6 @@ class WC_PB_Meta_Box_Product_Data {
 				?><textarea name="bundle_data[<?php echo $loop; ?>][title]" placeholder="" rows="2" cols="20"><?php echo esc_textarea( $title ); ?></textarea>
 			</div>
 		</div>
-
 		<div class="override_description">
 			<div class="form-field">
 				<label for="override_description"><?php echo __( 'Override Short Description', 'woocommerce-product-bundles' ) ?></label>
@@ -997,7 +963,6 @@ class WC_PB_Meta_Box_Product_Data {
 				<?php echo wc_help_tip( __( 'Check this option to override the default short product description.', 'woocommerce-product-bundles' ) ); ?>
 			</div>
 		</div>
-
 		<div class="custom_description">
 			<div class="form-field item_description"><?php
 
@@ -1005,7 +970,50 @@ class WC_PB_Meta_Box_Product_Data {
 
 				?><textarea name="bundle_data[<?php echo $loop; ?>][description]" placeholder="" rows="2" cols="20"><?php echo esc_textarea( $description ); ?></textarea>
 			</div>
+		</div>
+		<div class="hide_thumbnail">
+			<div class="form-field">
+				<label for="hide_thumbnail"><?php echo __( 'Hide Thumbnail', 'woocommerce-product-bundles' ) ?></label>
+				<input type="checkbox" class="checkbox"<?php echo ( 'yes' === $hide_thumbnail ? ' checked="checked"' : '' ); ?> name="bundle_data[<?php echo $loop; ?>][hide_thumbnail]" <?php echo ( 'yes' === $hide_thumbnail ? 'value="1"' : '' ); ?>/>
+				<?php echo wc_help_tip( __( 'Check this option to hide the thumbnail image of this bundled product.', 'woocommerce-product-bundles' ) ); ?>
+			</div>
 		</div><?php
+	}
+
+	/**
+	 * Add bundled item id in "Advanced" tab content.
+	 *
+	 * @since  5.9.0
+	 *
+	 * @param  int    $loop
+	 * @param  int    $product_id
+	 * @param  array  $item_data
+	 * @param  int    $post_id
+	 * @return void
+	 */
+	public static function bundled_product_admin_advanced_item_id_html( $loop, $product_id, $item_data, $post_id ) {
+
+		if ( ! empty( $item_data[ 'bundled_item' ] ) ) {
+
+			?><span class="item-id">
+				<?php echo sprintf( _x( 'Item ID: %s', 'bundled product id', 'woocommerce-product-bundles' ), $item_data[ 'bundled_item' ]->get_id() ); ?>
+			</span><?php
+		}
+	}
+
+	/**
+	 * Render top-level options on 'woocommerce_bundled_products_admin_config'.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  WC_Product_Bundle  $product_bundle_object
+	 */
+	public static function bundled_products_admin_config( $product_bundle_object ) {
+
+		self::bundled_products_admin_config_layout( $product_bundle_object );
+		self::bundled_products_admin_config_form_location( $product_bundle_object );
+		self::bundled_products_admin_config_group_mode( $product_bundle_object );
+		self::bundled_products_admin_config_edit_in_cart( $product_bundle_object );
 	}
 
 	/**
@@ -1015,83 +1023,105 @@ class WC_PB_Meta_Box_Product_Data {
 	 */
 	public static function bundled_products_admin_config_layout( $product_bundle_object ) {
 
-		/*
-		 * Layout options.
-		 */
-
-		?><div class="options_group"><?php
-			woocommerce_wp_select( array(
-				'id'            => '_wc_pb_layout_style',
-				'wrapper_class' => 'bundled_product_data_field',
-				'value'         => $product_bundle_object->get_layout( 'edit' ),
-				'label'         => __( 'Layout', 'woocommerce-product-bundles' ),
-				'description'   => __( 'Select the <strong>Tabular</strong> option to have the thumbnails, descriptions and quantities of bundled products arranged in a table. Recommended for displaying multiple bundled products with configurable quantities.', 'woocommerce-product-bundles' ),
-				'desc_tip'      => true,
-				'options'       => WC_Product_Bundle::get_layout_options()
-			) );
-		?></div><?php
-
+		woocommerce_wp_select( array(
+			'id'            => '_wc_pb_layout_style',
+			'wrapper_class' => 'bundled_product_data_field',
+			'value'         => $product_bundle_object->get_layout( 'edit' ),
+			'label'         => __( 'Layout', 'woocommerce-product-bundles' ),
+			'description'   => __( 'Select the <strong>Tabular</strong> option to have the thumbnails, descriptions and quantities of bundled products arranged in a table. Recommended for displaying multiple bundled products with configurable quantities.', 'woocommerce-product-bundles' ),
+			'desc_tip'      => true,
+			'options'       => WC_Product_Bundle::get_layout_options()
+		) );
 	}
 
 	/**
-	 * Render "Group mode" option on 'woocommerce_bundled_products_admin_config'.
+	 * Displays the "Form Location" option.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  WC_Product_Bundle  $product_bundle_object
+	 */
+	public static function bundled_products_admin_config_form_location( $product_bundle_object ) {
+
+		$options  = WC_Product_Bundle::get_add_to_cart_form_location_options();
+		$help_tip = '';
+		$loop     = 0;
+
+		foreach ( $options as $option_key => $option ) {
+
+			$help_tip .= '<strong>' . $option[ 'title' ] . '</strong> &ndash; ' . $option[ 'description' ];
+
+			if ( $loop < sizeof( $options ) - 1 ) {
+				$help_tip .= '</br></br>';
+			}
+
+			$loop++;
+		}
+
+		woocommerce_wp_select( array(
+			'id'            => '_wc_pb_add_to_cart_form_location',
+			'wrapper_class' => 'bundled_product_data_field',
+			'label'         => __( 'Form Location', 'woocommerce-product-bundles' ),
+			'options'       => array_combine( array_keys( $options ), wp_list_pluck( $options, 'title' ) ),
+			'value'         => $product_bundle_object->get_add_to_cart_form_location( 'edit' ),
+			'description'   => $help_tip,
+			'desc_tip'      => 'true'
+		) );
+	}
+
+	/**
+	 * Render "Item grouping" option on 'woocommerce_bundled_products_admin_config'.
 	 *
 	 * @param  WC_Product_Bundle  $product_bundle_object
 	 */
 	public static function bundled_products_admin_config_group_mode( $product_bundle_object ) {
 
-		?><div class="options_group"><?php
+		$group_mode_options = WC_Product_Bundle::get_group_mode_options( true );
 
-			$group_mode_options = WC_Product_Bundle::get_group_mode_options();
+		$group_modes_without_parent = array();
 
-			$group_modes_without_parent = array();
-
-			foreach ( $group_mode_options as $group_mode_key => $group_mode_title ) {
-				if ( false === WC_Product_Bundle::group_mode_has( $group_mode_key, 'parent_item' ) ) {
-					$group_modes_without_parent[] = '<strong>' . $group_mode_title . '</strong>';
-				}
+		foreach ( $group_mode_options as $group_mode_key => $group_mode_title ) {
+			if ( false === WC_Product_Bundle::group_mode_has( $group_mode_key, 'parent_item' ) ) {
+				$group_modes_without_parent[] = '<strong>' . $group_mode_title . '</strong>';
 			}
+		}
 
-			woocommerce_wp_select( array(
-				'id'            => '_wc_pb_group_mode',
-				'wrapper_class' => 'bundle_group_mode bundled_product_data_field',
-				'value'         => $product_bundle_object->get_group_mode( 'edit' ),
-				'label'         => __( 'Group mode', 'woocommerce-product-bundles' ),
-				'description'   => __( 'Modifies the <strong>visibility</strong> and <strong>indentation</strong> of parent/child line items in cart/order templates.', 'woocommerce-product-bundles' ),
-				'options'       => $group_mode_options,
-				'desc_tip'      => true
-			) );
-
-		?></div><?php
+		woocommerce_wp_select( array(
+			'id'            => '_wc_pb_group_mode',
+			'wrapper_class' => 'bundle_group_mode bundled_product_data_field',
+			'value'         => $product_bundle_object->get_group_mode( 'edit' ),
+			'label'         => __( 'Item Grouping', 'woocommerce-product-bundles' ),
+			'description'   => __( 'Controls the grouping of parent/child line items in cart/order templates.', 'woocommerce-product-bundles' ),
+			'options'       => $group_mode_options,
+			'desc_tip'      => true
+		) );
 	}
 
 	/**
-	 * Render "Edit in cart" option on 'woocommerce_bundled_products_admin_config'.
+	 * Render "Edit in Cart" option on 'woocommerce_bundled_products_admin_config'.
 	 *
 	 * @param  WC_Product_Bundle  $product_bundle_object
 	 */
 	public static function bundled_products_admin_config_edit_in_cart( $product_bundle_object ) {
 
-		?><div class="options_group bundle_edit_in_cart"><?php
-
-			woocommerce_wp_checkbox( array(
-				'id'            => '_wc_pb_edit_in_cart',
-				'wrapper_class' => 'bundled_product_data_field',
-				'label'         => __( 'Edit in cart', 'woocommerce-product-bundles' ),
-				'value'         => $product_bundle_object->get_editable_in_cart( 'edit' ) ? 'yes' : 'no',
-				'description'   => __( 'Enable this option to allow changing the configuration of this bundle in the cart. Applicable to bundles with configurable attributes and/or quantities.', 'woocommerce-product-bundles' ),
-				'desc_tip'      => true
-			) );
-
-		?></div><?php
+		woocommerce_wp_checkbox( array(
+			'id'            => '_wc_pb_edit_in_cart',
+			'wrapper_class' => 'bundled_product_data_field',
+			'label'         => __( 'Edit in Cart', 'woocommerce-product-bundles' ),
+			'value'         => $product_bundle_object->get_editable_in_cart( 'edit' ) ? 'yes' : 'no',
+			'description'   => __( 'Enable this option to allow changing the configuration of this bundle in the cart. Applicable to bundles with configurable attributes and/or quantities.', 'woocommerce-product-bundles' ),
+			'desc_tip'      => true
+		) );
 	}
 
 	/**
 	 * Render bundled product settings on 'woocommerce_bundled_products_admin_config'.
 	 *
+	 * @since  5.8.0
+	 *
 	 * @param  WC_Product_Bundle  $product_bundle_object
 	 */
-	public static function bundled_products_admin_config_contents( $product_bundle_object ) {
+	public static function bundled_products_admin_contents( $product_bundle_object ) {
 
 		$post_id = $product_bundle_object->get_id();
 
@@ -1103,12 +1133,12 @@ class WC_PB_Meta_Box_Product_Data {
 		$tabs          = self::get_bundled_product_tabs();
 		$toggle        = 'closed';
 
-		?><div class="options_group wc-metaboxes-wrapper wc-bundle-metaboxes-wrapper">
+		?><div class="hr-section hr-section-components"><?php echo __( 'Bundled Products', 'woocommerce-composite-products' ); ?></div>
+		<div class="wc-metaboxes-wrapper wc-bundle-metaboxes-wrapper <?php echo empty( $bundled_items ) ? 'wc-bundle-metaboxes-wrapper--boarding' : ''; ?>">
 
 			<div id="wc-bundle-metaboxes-wrapper-inner">
 
 				<p class="toolbar">
-					<span class="disabler"></span>
 					<a href="#" class="close_all"><?php _e( 'Close all', 'woocommerce' ); ?></a>
 					<a href="#" class="expand_all"><?php _e( 'Expand all', 'woocommerce' ); ?></a>
 				</p>
@@ -1125,34 +1155,77 @@ class WC_PB_Meta_Box_Product_Data {
 							$item_data                   = $item->get_data();
 							$item_data[ 'bundled_item' ] = $item;
 
-							if ( false === $item->is_in_stock() ) {
-								if ( $item->product->is_in_stock() ) {
-									$item_availability = '<mark class="outofstock insufficient_stock">' . __( 'Insufficient stock', 'woocommerce-product-bundles' ) . '</mark>';
-								} else {
-									$item_availability = '<mark class="outofstock">' . __( 'Out of stock', 'woocommerce' ) . '</mark>';
+							$product_id         = $item->get_product_id();
+							$title              = $item->product->get_title();
+							$sku                = $item->product->get_sku();
+							$stock_status       = $item->get_stock_status();
+							$stock_status_label = '';
+
+							if ( 'out_of_stock' === $stock_status ) {
+
+								$stock_status_label = __( 'Out of stock', 'woocommerce' );
+
+								if ( $item->get_product()->is_in_stock() ) {
+									$stock_status       = 'insufficient_stock';
+									$stock_status_label = __( 'Insufficient stock', 'woocommerce-product-bundles' );
 								}
+
+							} elseif ( 'in_stock' === $stock_status && WC_PB_Core_Compatibility::is_wc_version_gte( '3.5' ) ) {
+
+								if ( '' !== $item->get_max_stock() && $item->get_max_stock() <= wc_get_low_stock_amount( $item->get_product() ) ) {
+									$stock_status       = 'low_stock';
+									$stock_status_label = __( 'Low stock', 'woocommerce-product-bundles' );
+								}
+
+							} elseif ( 'on_backorder' === $stock_status ) {
+								$stock_status_label = __( 'On backorder', 'woocommerce' );
 							}
 
-							$product_id = $item->get_product_id();
-							$title      = $item->product->get_title();
-							$sku        = $item->product->get_sku();
-							$title      = WC_PB_Helpers::format_product_title( $title, $sku, '', true );
-							$title      = sprintf( _x( '#%1$s: %2$s', 'bundled product admin title', 'woocommerce-product-bundles' ), $product_id, $title );
-
-							include( 'views/html-bundled-product-admin.php' );
+							include( 'views/html-bundled-product.php' );
 
 							$loop++;
 						}
+
+					} else {
+
+						?><div class="wc-bundled-items__boarding">
+							<div class="wc-bundled-items__boarding__message">
+								<h3><?php _e( 'Bundled Products', 'woocommerce-product-bundles' ); ?></h3>
+								<p><?php _e( 'You have not added any products to this bundle.', 'woocommerce-product-bundles' ); ?>
+								<br/><?php _e( 'Add some now?', 'woocommerce-product-bundles' ); ?>
+								</p>
+							</div>
+						</div><?php
 					}
+
 				?></div>
 			</div>
-		</div>
-		<div class="add_bundled_product form-field">
-			<span class="add_prompt"></span>
-			<select class="wc-product-search" id="bundled_product" style="width: 250px;" name="bundled_product" data-placeholder="<?php _e( 'Add a bundled product&hellip;', 'woocommerce-product-bundles' ); ?>" data-action="woocommerce_json_search_products" multiple="multiple" data-limit="500">
-				<option></option>
-			</select>
-			<?php echo wc_help_tip( __( 'Search for a product and add it to this bundle by clicking its name in the results list.', 'woocommerce-product-bundles' ) ); ?>
+			<div class="add_bundled_product form-field">
+				<?php
+				/**
+				 * 'woocommerce_bundled_item_legacy_add_input' filter.
+				 *
+				 * Filter to include the legacy select2 input instead of the new expanding button.
+				 *
+				 */
+				if ( apply_filters( 'woocommerce_bundled_item_legacy_add_input', false ) ) { ?>
+
+					<select class="wc-product-search" id="bundled_product" style="width: 250px;" name="bundled_product" data-placeholder="<?php _e( 'Add a bundled product&hellip;', 'woocommerce-product-bundles' ); ?>" data-action="woocommerce_json_search_products" multiple="multiple" data-limit="500">
+						<option></option>
+					</select>
+
+				<?php } else { ?>
+
+					<div class="sw-expanding-button sw-expanding-button--large">
+						<span class="sw-title"><?php echo _x( 'Add Product', 'new bundled product button', 'woocommerce-product-bundles' ); ?></span>
+						<select class="wc-product-search" id="bundled_product" name="bundled_product" data-placeholder="<?php _e( 'Search for a product&hellip;', 'woocommerce-product-bundles' ); ?>" data-action="woocommerce_json_search_products" multiple="multiple" data-limit="500">
+							<option></option>
+						</select>
+					</div>
+
+				<?php } ?>
+
+			</div>
 		</div><?php
 	}
 
@@ -1208,6 +1281,12 @@ class WC_PB_Meta_Box_Product_Data {
 	| Deprecated methods.
 	|--------------------------------------------------------------------------
 	*/
+
+	public static function form_location_option( $product_bundle_object ) {
+		_deprecated_function( __METHOD__ . '()', '5.8.0', __CLASS__ . '::bundled_products_admin_config_form_location()' );
+		global $product_bundle_object;
+		return self::bundled_products_admin_config_form_location( $product_bundle_object );
+	}
 
 	public static function build_bundle_config( $post_id, $posted_bundle_data ) {
 		_deprecated_function( __METHOD__ . '()', '4.11.7', __CLASS__ . '::process_posted_bundle_data()' );

@@ -8,7 +8,7 @@
  * We try to do this as little as possible, but it does happen.
  * When this occurs the version of the template file will be bumped and the readme will list any important changes.
  *
- * @version 5.0.2
+ * @version 5.8.0
  */
 
 // Exit if accessed directly.
@@ -21,7 +21,7 @@ if ( $hide_input ) {
 	?><div class="quantity <?php echo 'tabular' !== $layout ? 'quantity_hidden' : ''; ?>">
 		<input class="qty bundled_qty" type="hidden" name="<?php echo $input_name; ?>" value="<?php echo $quantity_min; ?>" /><?php
 
-		if ( 'tabular' === $layout ) {
+		if ( 'tabular' === $layout && ( $quantity_min > 0 || $bundled_item->is_in_stock() ) ) {
 			echo $quantity_min;
 		}
 

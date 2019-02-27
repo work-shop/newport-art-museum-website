@@ -12,10 +12,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-
 if ( ! class_exists( 'WC_Report_Stock' ) ) {
-	$wc_reports_path = untrailingslashit( plugin_dir_path( WC_PLUGIN_FILE ) ) . '/includes/admin/reports/';
-	require_once( $wc_reports_path . 'class-wc-report-stock.php' );
+	require_once( WC_ABSPATH . 'includes/admin/reports/class-wc-report-stock.php' );
 }
 
 /**
@@ -23,7 +21,7 @@ if ( ! class_exists( 'WC_Report_Stock' ) ) {
  *
  * Handles reporting of bundles with an "Insufficient stock" status.
  *
- * @version  5.5.0
+ * @version  5.9.0
  */
 class WC_PB_Report_Insufficient_Stock extends WC_Report_Stock {
 
@@ -95,6 +93,7 @@ class WC_PB_Report_Insufficient_Stock extends WC_Report_Stock {
 		 */
 		$insufficient_stock_results = WC_PB_DB::query_bundled_items( array(
 			'return'          => 'all',
+			'bundle_id'       => ! empty( $_GET[ 'bundle_id' ] ) ? absint( $_GET[ 'bundle_id' ] ) : 0,
 			'order_by'        => array( 'bundle_id' => 'ASC', 'menu_order' => 'ASC' ),
 			'meta_query'      => array(
 				array(

@@ -8,7 +8,7 @@
  * We try to do this as little as possible, but it does happen.
  * When this occurs the version of the template file will be bumped and the readme will list any important changes.
  *
- * @version 5.5.0
+ * @version 5.9.1
  */
 
 // Exit if accessed directly.
@@ -46,7 +46,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				 *
 				 * @hooked wc_pb_template_add_to_cart_button - 10
 				 */
-				do_action( 'woocommerce_bundles_add_to_cart_button' );
+				do_action( 'woocommerce_bundles_add_to_cart_button', $product );
 
 			?></div>
 			<input type="hidden" name="add-to-cart" value="<?php echo $product_id; ?>" />

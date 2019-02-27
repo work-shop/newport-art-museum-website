@@ -1,9 +1,5 @@
 /* jshint -W069 */
 /* jshint -W041 */
-/* global wc_bundle_params */
-/* global wc_composite_params */
-/* global wc_cp_get_variation_data */
-/* global woocommerce_params */
 
 /*-----------------------------------------------------------------*/
 /*  Global script variable.                                        */
@@ -170,7 +166,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 		this.$bundle_quantity         = this.$bundle_button.find( 'input.qty' );
 
 		this.$addons_totals           = this.$bundle_data.find( '#product-addons-total' );
-
+		this.$custom_price_addons     = false;
 		this.show_addons_totals       = false;
 
 		this.bundled_items            = {};
@@ -325,12 +321,15 @@ jQuery.fn.wc_get_bundle_script = function() {
 			if ( this.has_addons() ) {
 
 				// Totals visible?
-				if ( 1 == this.$addons_totals.data( 'show-grand-total' ) || ( this.is_composited() && this.composite_data.component.show_addons_totals ) ) {
+				if ( 1 == this.$addons_totals.data( 'show-sub-total' ) || ( this.is_composited() && this.composite_data.component.show_addons_totals ) ) {
 					// Ensure addons ajax is not triggered at all, as we calculate tax on the client side.
-					this.$addons_totals.data( 'show-grand-total', 0 );
+					this.$addons_totals.data( 'show-sub-total', 0 );
 					this.$bundle_price.after( this.$addons_totals );
 					this.show_addons_totals = true;
 				}
+
+				// Custom price addons must be handled separately under Add-Ons v2 - see 'get_custom_price_addons_raw_price'.
+				this.$custom_price_addons = this.$bundle_data.find( '.addon-custom-price' );
 
 			} else {
 				this.$addons_totals = false;
@@ -490,7 +489,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 				var price_data       = $.extend( true, {}, bundle.price_data ),
 					qty              = component.get_selected_quantity(),
-					addons_raw_price = bundle.has_addons() ? bundle.$addons_totals.data( 'addons-raw-price' ) : 0;
+					addons_raw_price = bundle.has_addons() ? bundle.get_addons_raw_price() : 0;
 
 				if ( addons_raw_price > 0 ) {
 					// Recalculate price html with add-ons price and qty embedded.
@@ -522,7 +521,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 					}
 				} );
 
-				if ( component.is_static() ) {
+				if ( bundle.group_mode_supports( 'component_multiselect' ) ) {
 					if ( bundled_products_count === 0 ) {
 						formatted_title = wc_composite_params.i18n_no_selection;
 					} else {
@@ -555,7 +554,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 					}
 				} );
 
-				if ( bundled_products_count !== 0 && ! component.is_static() ) {
+				if ( bundled_products_count !== 0 && false === bundle.group_mode_supports( 'component_multiselect' ) ) {
 
 					var selected_bundled_products = this.cp_get_formatted_contents( component );
 
@@ -586,7 +585,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 				if ( bundled_item.$bundled_item_cart.data( 'quantity' ) > 0 ) {
 
 					var formatted_item_title    = bundled_item.$bundled_item_cart.data( 'title' ),
-						item_quantity           = parseInt( bundled_item.$bundled_item_cart.data( 'quantity' ) * bundle_qty ),
+						item_quantity           = parseInt( bundled_item.$bundled_item_cart.data( 'quantity' ) * bundle_qty, 10 ),
 						item_meta               = wc_cp_get_variation_data( bundled_item.$bundled_item_cart.find( '.variations' ) ),
 						formatted_item_quantity = item_quantity > 1 ? '<strong>' + wc_composite_params.i18n_qty_string.replace( '%s', item_quantity ) + '</strong>' : '',
 						formatted_item_meta     = '';
@@ -606,7 +605,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 					formatted_item_title = wc_composite_params.i18n_title_string.replace( '%t', formatted_item_title ).replace( '%q', formatted_item_quantity ).replace( '%p', '' );
 
-					formatted_titles.push(  formatted_item_title );
+					formatted_titles.push( formatted_item_title );
 				}
 			} );
 
@@ -707,6 +706,19 @@ jQuery.fn.wc_get_bundle_script = function() {
 						event.preventDefault();
 						window.alert( wc_bundle_params.i18n_validation_alert );
 					}
+				} )
+
+				.on( 'woocommerce-product-bundle-update-totals', function( event, force, _bundle ) {
+
+					var target_bundle = typeof( _bundle ) === 'undefined' ? bundle : _bundle;
+
+					force = typeof( force ) === 'undefined' ? false : force;
+
+					if ( force ) {
+						target_bundle.dirty_subtotals = true;
+					}
+
+					target_bundle.update_totals();
 				} );
 		};
 
@@ -740,12 +752,15 @@ jQuery.fn.wc_get_bundle_script = function() {
 						min    = parseFloat( $input.attr( 'min' ) ),
 						max    = parseFloat( $input.attr( 'max' ) );
 
-					if ( e.type === 'change' && min >= 0 && ( parseFloat( $input.val() ) < min || isNaN( parseFloat( $input.val() ) ) ) ) {
-						$input.val( min );
-					}
+					if ( wc_bundle_params.force_min_max_qty_input === 'yes' ) {
 
-					if ( e.type === 'change' && max > 0 && parseFloat( $input.val() ) > max ) {
-						$input.val( max );
+						if ( e.type === 'change' && min >= 0 && ( parseFloat( $input.val() ) < min || isNaN( parseFloat( $input.val() ) ) ) ) {
+							$input.val( min );
+						}
+
+						if ( e.type === 'change' && max > 0 && parseFloat( $input.val() ) > max ) {
+							$input.val( max );
+						}
 					}
 
 					bundled_item.update_selection_title();
@@ -793,7 +808,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 					bundle.price_data[ 'prices' ][ bundled_item.bundled_item_id ]                   = Number( variation.price );
 					bundle.price_data[ 'regular_prices' ][ bundled_item.bundled_item_id ]           = Number( variation.regular_price );
 
-					bundle.price_data[ 'prices_tax' ][ bundled_item.bundled_item_id ]               = Number( variation.price_tax );
+					bundle.price_data[ 'prices_tax' ][ bundled_item.bundled_item_id ]               = variation.price_tax;
 
 					// Put variation recurring component data in price table.
 					bundle.price_data[ 'recurring_prices' ][ bundled_item.bundled_item_id ]         = Number( variation.recurring_price );
@@ -837,6 +852,19 @@ jQuery.fn.wc_get_bundle_script = function() {
 					event.stopPropagation();
 				} )
 
+				.on( 'woocommerce_variation_has_changed', function( event ) {
+
+					if ( bundled_item.$reset_bundled_variations ) {
+						if ( bundled_item.variation_id ) {
+							bundled_item.$reset_bundled_variations.slideDown( 200 );
+						} else {
+							bundled_item.$reset_bundled_variations.slideUp( 200 );
+						}
+					}
+
+					event.stopPropagation();
+				} )
+
 				.on( 'woocommerce_variation_select_change', function( event ) {
 
 					bundled_item.variation_id = '';
@@ -875,11 +903,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 					 */
 					.on( 'updated_addons', function( event ) {
 
-						var addons_price = bundled_item.$addons_totals.data( 'addons-raw-price' );
-
-						if ( ! addons_price ) {
-							addons_price = 0;
-						}
+						var addons_price = bundle.get_addons_raw_price( bundled_item );
 
 						if ( bundle.price_data.addons_prices[ bundled_item.bundled_item_id ] !== addons_price ) {
 							bundle.price_data.addons_prices[ bundled_item.bundled_item_id ] = addons_price;
@@ -889,20 +913,17 @@ jQuery.fn.wc_get_bundle_script = function() {
 						if ( bundled_item.show_addons_totals ) {
 
 							var qty           = bundled_item.get_quantity(),
-								tax_ratio     = Number( bundle.price_data.prices_tax[ bundled_item.bundled_item_id ] ),
-								addons_totals = bundle.get_taxed_totals( addons_price, addons_price, tax_ratio, qty );
+								tax_ratios    = bundle.price_data.prices_tax[ bundled_item.bundled_item_id ],
+								addons_totals = bundle.get_taxed_totals( addons_price, addons_price, tax_ratios, qty );
 
 							if ( addons_totals.price > 0 ) {
 
 								var price              = Number( bundle.price_data.prices[ bundled_item.bundled_item_id ] ),
 									total              = price + Number( addons_price ),
-									totals             = bundle.get_taxed_totals( total, total, tax_ratio, qty ),
+									totals             = bundle.get_taxed_totals( total, total, tax_ratios, qty ),
 									price_html         = wc_pb_price_format( totals.price ),
 									price_html_suffix  = bundle.get_formatted_price_suffix( bundle.price_data, totals ),
-									addons_totals_html = '';
-
-								addons_totals_html  = '<dl class="product-addon-totals"><dt>' + woocommerce_addons_params.i18n_addon_total + '</dt><dd><strong><span class="amount">' + wc_pb_price_format( addons_totals.price ) + '</span></strong></dd>';
-								addons_totals_html += '<dt>' + wc_bundle_params.i18n_subtotal + '</dt><dd><strong>' + price_html + price_html_suffix + '</strong></dd></dl>';
+									addons_totals_html = '<span class="price">' + '<span class="subtotal">' + wc_bundle_params.i18n_subtotal + '</span>' + price_html + price_html_suffix + '</span>';
 
 								bundled_item.$addons_totals.html( addons_totals_html );
 
@@ -943,7 +964,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 		 */
 		this.get_quantity = function() {
 			var qty = bundle.$bundle_quantity.length > 0 ? bundle.$bundle_quantity.val() : 1;
-			return isNaN( qty ) ? 1 : parseInt( qty );
+			return isNaN( qty ) ? 1 : parseInt( qty, 10 );
 		};
 
 		/**
@@ -1164,7 +1185,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 				// Set quantity based on optional flag.
 				if ( bundled_item.is_selected() && item_quantity > 0 ) {
-					bundle.price_data[ 'quantities' ][ bundled_item_id ] = parseInt( item_quantity );
+					bundle.price_data[ 'quantities' ][ bundled_item_id ] = parseInt( item_quantity, 10 );
 				}
 
 				// Store quantity for easy access by 3rd parties.
@@ -1174,14 +1195,12 @@ jQuery.fn.wc_get_bundle_script = function() {
 				if ( ( bundled_item.get_product_type() === 'variable' || bundled_item.get_product_type() === 'variable-subscription' ) && bundled_item.get_variation_id() === '' ) {
 					bundle.price_data[ 'prices' ][ bundled_item_id ]         = 0.0;
 					bundle.price_data[ 'regular_prices' ][ bundled_item_id ] = 0.0;
-					bundle.price_data[ 'prices_tax' ][ bundled_item_id ]     = 0.0;
+					bundle.price_data[ 'prices_tax' ][ bundled_item_id ]     = false;
 				}
 
 				// Cast amounts.
 				bundle.price_data[ 'prices' ][ bundled_item_id ]                   = Number( bundle.price_data[ 'prices' ][ bundled_item_id ] );
 				bundle.price_data[ 'regular_prices' ][ bundled_item_id ]           = Number( bundle.price_data[ 'regular_prices' ][ bundled_item_id ] );
-
-				bundle.price_data[ 'prices_tax' ][ bundled_item_id ]               = Number( bundle.price_data[ 'prices_tax' ][ bundled_item_id ] );
 
 				bundle.price_data[ 'addons_prices' ][ bundled_item_id ]            = Number( bundle.price_data[ 'addons_prices' ][ bundled_item_id ] );
 
@@ -1207,35 +1226,30 @@ jQuery.fn.wc_get_bundle_script = function() {
 		/**
 		 * Calculates totals by applying tax ratios to raw prices.
 		 */
-		this.get_taxed_totals = function( price, regular_price, tax_ratio, qty ) {
+		this.get_taxed_totals = function( price, regular_price, tax_ratios, qty ) {
 
 			qty = typeof( qty ) === 'undefined' ? 1 : qty;
 
-			var totals = {
-				price:          qty * price,
-				regular_price:  qty * regular_price,
-				price_incl_tax: qty * price,
-				price_excl_tax: qty * price
-			};
+			var tax_ratio_incl = tax_ratios && typeof( tax_ratios.incl ) !== 'undefined' ? Number( tax_ratios.incl ) : false,
+				tax_ratio_excl = tax_ratios && typeof( tax_ratios.excl ) !== 'undefined' ? Number( tax_ratios.excl ) : false,
+				totals         = {
+					price:          qty * price,
+					regular_price:  qty * regular_price,
+					price_incl_tax: qty * price,
+					price_excl_tax: qty * price
+				};
 
-			if ( tax_ratio > 0 ) {
+			if ( tax_ratio_incl && tax_ratio_excl ) {
 
-				if ( wc_bundle_params.prices_include_tax === 'yes' ) {
-					totals.price_excl_tax = wc_pb_number_round( totals.price / tax_ratio );
-				} else {
-					totals.price_incl_tax = wc_pb_number_round( totals.price * tax_ratio );
-				}
+				totals.price_incl_tax = wc_pb_number_round( totals.price * tax_ratio_incl );
+				totals.price_excl_tax = wc_pb_number_round( totals.price * tax_ratio_excl );
 
 				if ( wc_bundle_params.tax_display_shop === 'incl' ) {
-					totals.price = totals.price_incl_tax;
-					if ( wc_bundle_params.prices_include_tax !== 'yes' ) {
-						totals.regular_price = wc_pb_number_round( totals.regular_price * tax_ratio );
-					}
+					totals.price         = totals.price_incl_tax;
+					totals.regular_price = wc_pb_number_round( totals.regular_price * tax_ratio_incl );
 				} else {
-					totals.price = totals.price_excl_tax;
-					if ( wc_bundle_params.prices_include_tax === 'yes' ) {
-						totals.regular_price = wc_pb_number_round( totals.regular_price / tax_ratio );
-					}
+					totals.price         = totals.price_excl_tax;
+					totals.regular_price = wc_pb_number_round( totals.regular_price * tax_ratio_excl );
 				}
 			}
 
@@ -1249,17 +1263,17 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 			var price_data = typeof( price_data_array ) === 'undefined' ? bundle.price_data : price_data_array;
 
-			qty          = typeof( qty ) === 'undefined' ? 1 : parseInt( qty );
+			qty          = typeof( qty ) === 'undefined' ? 1 : parseInt( qty, 10 );
 			triggered_by = typeof( triggered_by ) === 'undefined' ? false : triggered_by;
 
 			// Base.
 			if ( false === triggered_by ) {
 
-				var base_price           = Number( price_data[ 'base_price' ] ),
-					base_regular_price   = Number( price_data[ 'base_regular_price' ] ),
-					base_price_tax_ratio = Number( price_data[ 'base_price_tax' ] );
+				var base_price            = Number( price_data[ 'base_price' ] ),
+					base_regular_price    = Number( price_data[ 'base_regular_price' ] ),
+					base_price_tax_ratios = price_data[ 'base_price_tax' ];
 
-				price_data[ 'base_price_totals' ] = price_data[ 'base_price_subtotals' ] = this.get_taxed_totals( base_price, base_regular_price, base_price_tax_ratio, qty );
+				price_data[ 'base_price_totals' ] = price_data[ 'base_price_subtotals' ] = this.get_taxed_totals( base_price, base_regular_price, base_price_tax_ratios, qty );
 			}
 
 			// Items.
@@ -1271,7 +1285,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 				var product_qty             = bundled_item.is_sold_individually() && price_data[ 'quantities' ][ bundled_item.bundled_item_id ] > 0 ? 1 : price_data[ 'quantities' ][ bundled_item.bundled_item_id ] * qty,
 					product_id              = bundled_item.get_product_type() === 'variable' ? bundled_item.get_variation_id() : bundled_item.get_product_id(),
-					tax_ratio               = price_data[ 'prices_tax' ][ bundled_item.bundled_item_id ],
+					tax_ratios              = price_data[ 'prices_tax' ][ bundled_item.bundled_item_id ],
 					regular_price           = price_data[ 'regular_prices' ][ bundled_item.bundled_item_id ] + price_data[ 'addons_prices' ][ bundled_item.bundled_item_id ],
 					price                   = price_data[ 'prices' ][ bundled_item.bundled_item_id ] + price_data[ 'addons_prices' ][ bundled_item.bundled_item_id ],
 					regular_recurring_price = price_data[ 'regular_recurring_prices' ][ bundled_item.bundled_item_id ] + price_data[ 'addons_prices' ][ bundled_item.bundled_item_id ],
@@ -1294,11 +1308,11 @@ jQuery.fn.wc_get_bundle_script = function() {
 					if ( product_id > 0 && product_qty > 0 ) {
 
 						if ( price > 0 || regular_price > 0 ) {
-							totals = bundle.get_taxed_totals( price, regular_price, tax_ratio, product_qty );
+							totals = bundle.get_taxed_totals( price, regular_price, tax_ratios, product_qty );
 						}
 
 						if ( recurring_price > 0 || regular_recurring_price > 0 ) {
-							recurring_totals = bundle.get_taxed_totals( recurring_price, regular_recurring_price, tax_ratio, product_qty );
+							recurring_totals = bundle.get_taxed_totals( recurring_price, regular_recurring_price, tax_ratios, product_qty );
 						}
 					}
 
@@ -1466,15 +1480,6 @@ jQuery.fn.wc_get_bundle_script = function() {
 				price_data[ 'recurring_subtotals' ] = recurring_subtotals;
 				price_data[ 'recurring_totals' ]    = recurring_totals;
 
-				// Store raw total.
-				price_data[ 'total_raw' ] = totals.price;
-
-				if ( wc_bundle_params.tax_display_shop === 'incl' && wc_bundle_params.prices_include_tax === 'no' ) {
-					price_data[ 'total_raw' ] = totals.price_excl_tax;
-				} else if ( wc_bundle_params.tax_display_shop === 'excl' && wc_bundle_params.prices_include_tax === 'yes' ) {
-					price_data[ 'total_raw' ] = totals.price_incl_tax;
-				}
-
 				if ( typeof( price_data_array ) === 'undefined' ) {
 					this.updated_totals();
 				}
@@ -1500,23 +1505,38 @@ jQuery.fn.wc_get_bundle_script = function() {
 		 */
 		this.get_price_html = function( price_data_array ) {
 
-			var price_data = typeof( price_data_array ) === 'undefined' ? bundle.price_data : price_data_array,
-				tag        = 'p';
+			var price_data    = typeof( price_data_array ) === 'undefined' ? bundle.price_data : price_data_array,
+				recalc_totals = false,
+				qty           = bundle.is_composited() ? bundle.composite_data.component.get_selected_quantity() : 1,
+				tag           = 'p';
+
+			if ( bundle.has_addons() ) {
+
+				price_data    = $.extend( true, {}, price_data );
+				recalc_totals = true;
+
+				var addons_raw_price = bundle.get_addons_raw_price();
+
+				if ( addons_raw_price > 0 ) {
+					// Recalculate price html with add-ons price embedded in base price.
+					price_data.base_price         = Number( price_data.base_price ) + Number( addons_raw_price );
+					price_data.base_regular_price = Number( price_data.base_regular_price ) + Number( addons_raw_price );
+				}
+			}
 
 			if ( bundle.is_composited() ) {
+				tag           = 'span';
+				recalc_totals = true;
+			}
 
-				var	bundle_qty = bundle.composite_data.component.get_selected_quantity();
-
-				tag = 'span';
-
+			if ( recalc_totals ) {
 				// Recalculate price html with qty embedded.
-				price_data = bundle.calculate_subtotals( false, price_data, bundle_qty );
+				price_data = bundle.calculate_subtotals( false, price_data, qty );
 				price_data = bundle.calculate_totals( price_data );
 			}
 
 			var	bundle_price_html = '',
-				show_total_string = ( price_data[ 'total_raw' ] !== price_data[ 'raw_bundle_price_min' ] || price_data[ 'raw_bundle_price_min' ] !== price_data[ 'raw_bundle_price_max' ] ) && false === bundle.get_bundled_subscriptions() && false === bundle.is_composited(),
-				total_string      = show_total_string ? '<span class="total">' + wc_bundle_params.i18n_total + '</span>' : '';
+				total_string      = wc_bundle_params.i18n_total && ! bundle.is_composited() ? '<span class="total">' + wc_bundle_params.i18n_total + '</span>' : '';
 
 			// Non-recurring price html data.
 			var formatted_price         = price_data[ 'totals' ].price === 0.0 && price_data[ 'show_free_string' ] === 'yes' ? wc_bundle_params.i18n_free : wc_pb_price_format( price_data[ 'totals' ].price ),
@@ -1577,28 +1597,17 @@ jQuery.fn.wc_get_bundle_script = function() {
 			var show_price = false;
 
 			if ( false === bundle.get_bundled_subscriptions() ) {
-				show_price = bundle.price_data[ 'total_raw' ] !== bundle.price_data[ 'raw_bundle_price_min' ] || bundle.price_data[ 'raw_bundle_price_min' ] !== bundle.price_data[ 'raw_bundle_price_max' ];
+				show_price = bundle.price_data[ 'totals' ].price !== wc_pb_number_round( bundle.price_data[ 'raw_bundle_price_min' ] ) || bundle.price_data[ 'raw_bundle_price_min' ] !== bundle.price_data[ 'raw_bundle_price_max' ];
 			} else {
 				$.each( bundle.bundled_items, function( index, bundled_item ) {
-					if ( bundled_item.is_subscription( 'variable' ) && bundle.price_data[ 'recurring_prices' ][ bundled_item.bundled_item_id ] > 0 ) {
-						show_price = true;
-						return false;
-					} else if ( bundled_item.is_optional() ) {
-						show_price = true;
-						return false;
+					if ( bundle.price_data[ 'recurring_prices' ][ bundled_item.bundled_item_id ] > 0 ) {
+						if ( bundled_item.is_subscription( 'variable' ) || bundled_item.is_optional() || false === bundled_item.$self.find( '.quantity' ).hasClass( 'quantity_hidden' ) ) {
+							show_price = true;
+							return false;
+						}
 					}
 				} );
 			}
-
-			return show_price;
-		};
-
-		/**
-		 * Refreshes the bundle price string in the UI.
-		 */
-		this.updated_totals_task = function() {
-
-			var show_price = bundle.show_price_html();
 
 			if ( bundle.is_composited() ) {
 
@@ -1611,9 +1620,21 @@ jQuery.fn.wc_get_bundle_script = function() {
 				if ( show_price ) {
 					if ( false === this.composite_data.component.is_selected_product_price_visible() ) {
 						show_price = false;
+					} else if ( false === bundle.composite_data.composite.api.is_component_priced_individually( this.composite_data.component.step_id ) ) {
+						show_price = false;
 					}
 				}
 			}
+
+			return show_price;
+		};
+
+		/**
+		 * Refreshes the bundle price string in the UI.
+		 */
+		this.updated_totals_task = function() {
+
+			var show_price = bundle.show_price_html();
 
 			if ( bundle.passes_validation() && show_price ) {
 
@@ -1637,72 +1658,129 @@ jQuery.fn.wc_get_bundle_script = function() {
 				bundle.$bundle_price.slideUp( 200 );
 			}
 
-			// Addons compatibility.
-			if ( bundle.has_addons() ) {
-				bundle.update_addons_totals();
-			}
-
 			bundle.$bundle_data.triggerHandler( 'woocommerce-product-bundle-updated-totals', [ bundle ] );
 		};
 
 		this.updated_addons_handler = function( event ) {
 
-			bundle.update_addons_totals();
+ 			bundle.updated_totals_task();
+
+ 			if ( bundle.is_composited() ) {
+ 				bundle.composite_data.component.component_selection_model.update_selected_addons();
+ 			}
+
 			event.stopPropagation();
-		};
-
-		/**
-		 * Render add-ons totals here to prevent Add-Ons from firing an Ajax request and showing incorrect totals.
-		 */
-		this.update_addons_totals = function() {
-
-			if ( bundle.show_addons_totals ) {
-
-				if ( bundle.passes_validation() ) {
-
-					var price_data            = $.extend( true, {}, bundle.price_data ),
-						qty                   = bundle.get_quantity(),
-						tax_ratio             = Number( price_data.base_price_tax ),
-						addons_raw_price      = bundle.$addons_totals.data( 'addons-raw-price' );
-
-					if ( addons_raw_price > 0 ) {
-
-						var addons_prices      = bundle.get_taxed_totals( addons_raw_price, addons_raw_price, tax_ratio, qty ),
-							price_html         = '',
-							price_html_suffix  = '',
-							addons_totals_html = '';
-
-						// Recalculate price html with add-ons price embedded in base price.
-						price_data.base_price = Number( price_data.base_price ) + Number( addons_raw_price );
-
-						price_data = bundle.calculate_subtotals( false, price_data, qty );
-						price_data = bundle.calculate_totals( price_data );
-
-						// Done!
-						price_html        = wc_pb_price_format( price_data.totals.price );
-						price_html_suffix = bundle.get_formatted_price_suffix( price_data );
-
-						addons_totals_html  = '<dl class="product-addon-totals"><dt>' + woocommerce_addons_params.i18n_addon_total + '</dt><dd><strong><span class="amount">' + wc_pb_price_format( addons_prices.price ) + '</span></strong></dd>';
-						addons_totals_html += '<dt>' + woocommerce_addons_params.i18n_grand_total + '</dt><dd><strong>' + price_html + price_html_suffix + '</strong></dd></dl>';
-
-						bundle.$addons_totals.html( addons_totals_html );
-
-					} else {
-						bundle.$addons_totals.empty();
-					}
-
-				} else {
-					bundle.$addons_totals.empty();
-				}
-			}
-
-			if ( bundle.is_composited() ) {
-				bundle.composite_data.component.component_selection_model.update_selected_addons();
-			}
 		};
 
 		this.has_addons = function() {
 			return this.$addons_totals && this.$addons_totals.length > 0;
+		};
+
+		this.has_custom_price_addons = function() {
+			return this.$custom_price_addons && this.$custom_price_addons.length > 0;
+		};
+
+		this.get_addons_raw_price = function( bundled_item ) {
+
+			var is_bundled_item  = typeof( bundled_item ) !== 'undefined',
+				obj              = is_bundled_item ? bundled_item : this,
+				qty              = is_bundled_item ? bundled_item.get_quantity() : 1,
+				tax_ratios       = is_bundled_item ? bundle.price_data.prices_tax[ bundled_item.bundled_item_id ] : bundle.price_data.base_price_tax,
+				addons_raw_price = 0.0;
+
+			if ( ! obj.has_addons() ) {
+				return 0;
+			}
+
+			if ( ! qty ) {
+				return 0;
+			}
+
+			if ( bundle.is_composited() ) {
+				qty = bundle.composite_data.component.get_selected_quantity();
+			}
+
+			if ( wc_bundle_params.pao_version_gte_30 ) {
+
+				var addons = obj.$addons_totals.data( 'price_data' );
+
+				$.each( addons, function( i, addon ) {
+
+					if ( addon.is_custom_price ) {
+
+						var tax_ratio_incl = tax_ratios && typeof( tax_ratios.incl ) !== 'undefined' ? Number( tax_ratios.incl ) : false,
+							tax_ratio_excl = tax_ratios && typeof( tax_ratios.excl ) !== 'undefined' ? Number( tax_ratios.excl ) : false;
+
+						if ( 'incl' === wc_bundle_params.tax_display_shop && 'no' === wc_bundle_params.prices_include_tax ) {
+							addons_raw_price += addon.cost_raw / ( tax_ratio_incl ? tax_ratio_incl : 1 );
+						} else if ( 'excl' === wc_bundle_params.tax_display_shop && 'yes' === wc_bundle_params.prices_include_tax ) {
+							addons_raw_price += addon.cost_raw / ( tax_ratio_excl ? tax_ratio_excl : 1 );
+						} else {
+							addons_raw_price += addon.cost_raw;
+						}
+
+						addons_raw_price = addons_raw_price / qty;
+
+					} else {
+
+						if ( 'quantity_based' === addon.price_type ) {
+							addons_raw_price += addon.cost_raw_pu;
+						} else if ( 'flat_fee' === addon.price_type ) {
+							addons_raw_price += addon.cost_raw / qty;
+						} else if ( 'percentage_based' === addon.price_type ) {
+							var raw_price = is_bundled_item ? bundle.price_data.prices[ bundled_item.bundled_item_id ] : bundle.price_data.base_price;
+							addons_raw_price += addon.cost_raw_pct * raw_price;
+						}
+					}
+
+				} );
+
+			} else {
+
+				addons_raw_price = obj.$addons_totals.data( 'addons-raw-price' );
+
+				if ( ! addons_raw_price ) {
+					addons_raw_price = 0;
+				}
+
+				var custom_price_addons_raw_price = is_bundled_item ? bundle.get_custom_price_addons_raw_price( bundled_item ) : bundle.get_custom_price_addons_raw_price();
+
+				addons_raw_price += custom_price_addons_raw_price;
+			}
+
+			return addons_raw_price;
+		};
+
+		this.get_custom_price_addons_raw_price = function( bundled_item ) {
+
+			var raw_price       = 0.0,
+				is_bundled_item = typeof( bundled_item ) !== 'undefined',
+				obj             = is_bundled_item ? bundled_item : this,
+				tax_ratios      = is_bundled_item ? bundle.price_data.prices_tax[ bundled_item.bundled_item_id ] : bundle.price_data.base_price_tax;
+
+			if ( obj.has_custom_price_addons() ) {
+
+				obj.$custom_price_addons.each( function() {
+
+					var $addon          = $( this ),
+						addon_raw_price = $addon.val() || 0,
+						tax_ratio_incl  = tax_ratios && typeof( tax_ratios.incl ) !== 'undefined' ? Number( tax_ratios.incl ) : false,
+						tax_ratio_excl  = tax_ratios && typeof( tax_ratios.excl ) !== 'undefined' ? Number( tax_ratios.excl ) : false;
+
+					addon_raw_price = Math.abs( parseFloat( accounting.unformat( addon_raw_price, wc_bundle_params.currency_format_decimal_sep ), 10 ) );
+
+					if ( 'incl' === wc_bundle_params.tax_display_shop && 'no' === wc_bundle_params.prices_include_tax ) {
+						raw_price += addon_raw_price / ( tax_ratio_incl ? tax_ratio_incl : 1 );
+					} else if ( 'excl' === wc_bundle_params.tax_display_shop && 'yes' === wc_bundle_params.prices_include_tax ) {
+						raw_price += addon_raw_price / ( tax_ratio_excl ? tax_ratio_excl : 1 );
+					} else {
+						raw_price += addon_raw_price;
+					}
+
+				} );
+			}
+
+			return raw_price;
 		};
 
 		/**
@@ -1802,6 +1880,13 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 			return true;
 		};
+
+		/**
+		 * Check group mode feature support.
+		 */
+		this.group_mode_supports = function( $feature ) {
+			return $.inArray( $feature, this.price_data[ 'group_mode_features' ] ) > -1;
+		};
 	}
 
 	/**
@@ -1819,10 +1904,13 @@ jQuery.fn.wc_get_bundle_script = function() {
 			this.$bundled_item_qty              = $bundled_item.find( 'input.bundled_qty' );
 
 			this.$addons_totals                 = $bundled_item.find( '#product-addons-total' );
+			this.$custom_price_addons           = false;
 			this.$nyp                           = $bundled_item.find( '.nyp' );
 
 			this.$attribute_select              = false;
 			this.$attribute_select_config       = false;
+
+			this.$reset_bundled_variations      = false;
 
 			this.show_addons_totals             = false;
 
@@ -1852,12 +1940,16 @@ jQuery.fn.wc_get_bundle_script = function() {
 		this.initialize_addons = function() {
 
 			if ( this.has_addons() ) {
+
 				// Totals visible?
-				if ( 1 == this.$addons_totals.data( 'show-grand-total' ) ) {
+				if ( 1 == this.$addons_totals.data( 'show-sub-total' ) ) {
 					// Ensure addons ajax is not triggered at all, as we calculate tax on the client side.
-					this.$addons_totals.data( 'show-grand-total', 0 );
+					this.$addons_totals.data( 'show-sub-total', 0 );
 					this.show_addons_totals = true;
 				}
+
+				// Custom price addons must be handled separately under Add-Ons v2 - see 'get_custom_price_addons_raw_price'.
+				this.$custom_price_addons = this.$bundled_item_cart.find( '.addon-custom-price' );
 
 			} else {
 				this.$addons_totals = false;
@@ -1892,7 +1984,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 		this.get_quantity = function() {
 			var qty = this.$bundled_item_qty.val();
-			return isNaN( qty ) ? 0 : parseInt( qty );
+			return isNaN( qty ) ? 0 : parseInt( qty, 10 );
 		};
 
 		this.is_optional = function() {
@@ -1935,18 +2027,25 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 			if ( ( this.product_type === 'variable' || this.product_type === 'variable-subscription' ) && ! this.$bundled_item_cart.hasClass( 'variations_form' ) ) {
 
+				// Variations reset wrapper.
+				this.$reset_bundled_variations = this.$bundled_item_cart.find( '.reset_bundled_variations' );
+
+				if ( this.$reset_bundled_variations.length === 0 ) {
+					this.$reset_bundled_variations = false;
+				}
+
 				// Initialize variations script.
 				this.$bundled_item_cart.addClass( 'variations_form' ).wc_variation_form();
 
 				// Set cached selects.
-				this.$attribute_select        = this.$bundled_item_cart.find( '.variations .attribute-options select' );
+				this.$attribute_select        = this.$bundled_item_cart.find( '.variations .attribute_options select' );
 				this.$attribute_select_config = this.$attribute_select.filter( function() {
 					return false === $( this ).parent().hasClass( 'bundled_variation_attribute_options_wrapper' );
 				} );
 
 				// Trigger change event.
-				if ( false !== this.$attribute_select_config ) {
-					this.$attribute_select_config.first().change();
+				if ( this.$attribute_select.length > 0 ) {
+					this.$attribute_select.first().change();
 				}
 			}
 
@@ -1973,7 +2072,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 				return false;
 			}
 
-			var bundled_item_qty_val = parseInt( this.get_quantity() );
+			var bundled_item_qty_val = parseInt( this.get_quantity(), 10 );
 
 			if ( isNaN( bundled_item_qty_val ) ) {
 				return false;
@@ -1982,7 +2081,7 @@ jQuery.fn.wc_get_bundle_script = function() {
 			reset = typeof( reset ) === 'undefined' ? false : reset;
 
 			if ( reset ) {
-				bundled_item_qty_val = parseInt( this.$bundled_item_qty.attr( 'min' ) );
+				bundled_item_qty_val = parseInt( this.$bundled_item_qty.attr( 'min' ), 10 );
 			}
 
 			var selection_title           = this.bundled_item_title,
@@ -2010,6 +2109,10 @@ jQuery.fn.wc_get_bundle_script = function() {
 
 		this.has_addons = function() {
 			return this.$addons_totals && this.$addons_totals.length > 0;
+		};
+
+		this.has_custom_price_addons = function() {
+			return this.$custom_price_addons && this.$custom_price_addons.length > 0;
 		};
 
 		this.is_nyp = function() {

@@ -7,6 +7,7 @@ jQuery( function($) {
 
 		var self = this;
 
+		this.$element                        = $el;
 		this.$content                        = $el.find( 'div.item-data' );
 		this.$discount                       = this.$content.find( '.discount' );
 		this.$visibility                     = this.$content.find( '.item_visibility' );
@@ -135,9 +136,10 @@ jQuery( function($) {
 		this.initialize();
 	}
 
-	var $edit_in_cart                 = $( '.bundle_edit_in_cart' ),
+	var $edit_in_cart                 = $( 'p._wc_pb_edit_in_cart_field' ),
 		$group_mode_select            = $( 'select#_wc_pb_group_mode' ),
 		$bundled_products_panel       = $( '#bundled_product_data' ),
+		$bundled_products_wrapper     = $bundled_products_panel.find( '.wc-metaboxes-wrapper' ),
 		$bundled_products_toolbar     = $bundled_products_panel.find( '.toolbar' ),
 		$bundled_products_container   = $( '.wc-bundled-items' ),
 		$bundled_products             = $( '.wc-bundled-item', $bundled_products_container ),
@@ -209,6 +211,10 @@ jQuery( function($) {
 	init_event_handlers();
 
 	init_bundled_products();
+
+	init_nux();
+
+	init_expanding_button();
 
 	function init_event_handlers() {
 
@@ -288,6 +294,36 @@ jQuery( function($) {
 
 			} );
 
+		$bundled_products_wrapper
+
+			// Expand all.
+			.on( 'click', '.expand_all', function() {
+
+				if ( $( this ).hasClass( 'disabled' ) ) {
+					return false;
+				}
+
+				$.each( bundled_product_objects, function( index, bundled_product_object ) {
+					bundled_product_object.$element.addClass( 'open' ).removeClass( 'closed' );
+				} );
+
+				return false;
+			} )
+
+			// Close all.
+			.on( 'click', '.close_all', function() {
+
+				if ( $( this ).hasClass( 'disabled' ) ) {
+					return false;
+				}
+
+				$.each( bundled_product_objects, function( index, bundled_product_object ) {
+					bundled_product_object.$element.addClass( 'closed' ).removeClass( 'open' );
+				} );
+
+				return false;
+			} );
+
 		$bundled_products_panel
 
 			// Update menu order and toolbar states.
@@ -301,6 +337,11 @@ jQuery( function($) {
 
 				update_toolbar_state();
 
+			} )
+
+			// Remove onboarding elements when adding bundled product.
+			.one( 'wc-bundles-added-bundled-product', function() {
+				$bundled_products_wrapper.removeClass( 'wc-bundle-metaboxes-wrapper--boarding' );
 			} );
 
 		$bundled_products_container
@@ -434,7 +475,7 @@ jQuery( function($) {
 			items: '.wc-bundled-item',
 			cursor: 'move',
 			axis: 'y',
-			handle: 'h3',
+			handle: '.sort-item',
 			scrollSensitivity: 40,
 			forcePlaceholderSize: true,
 			helper: 'clone',
@@ -453,13 +494,61 @@ jQuery( function($) {
 		update_toolbar_state();
 	}
 
+	function init_nux() {
+
+		if ( 'yes' === wc_bundles_admin_params.is_first_bundle ) {
+			$( 'select#product-type' ).val( 'bundle' ).change().focus();
+			setTimeout( function() {
+				$( '.bundled_products_tab a' ).trigger( 'click' );
+			}, 500 );
+		}
+	}
+
 	function update_toolbar_state() {
 
 		if ( $bundled_products.length > 0 ) {
+			$bundled_products_wrapper.removeClass( 'no-items' );
 			$bundled_products_toolbar.removeClass( 'disabled' );
 		} else {
+			$bundled_products_wrapper.addClass( 'no-items' );
 			$bundled_products_toolbar.addClass( 'disabled' );
 		}
+	}
+
+	function init_expanding_button() {
+
+		var focus_timer,
+			$button = $bundled_products_panel.find( '.sw-expanding-button' ),
+			$body   = $( document.body );
+
+		$button.on( 'click', function( e ) {
+
+			e.stopPropagation();
+
+			clearTimeout( focus_timer );
+
+			var $this  = $( this ),
+				$input = $this.find( '.select2-search__field' );
+
+			$this.addClass( 'sw-expanding-button--open' );
+
+			focus_timer = setTimeout( function() {
+				$input.focus();
+			}, 700 );
+
+			$bundled_product_search.one( 'change', function() {
+				$this.removeClass( 'sw-expanding-button--open' );
+			} );
+
+		} );
+
+		$body.on( 'click', '.select2-container', function( e ) {
+			e.stopPropagation();
+		} );
+
+		$body.on( 'click', function() {
+			$button.removeClass( 'sw-expanding-button--open' );
+		} );
 	}
 
 } );

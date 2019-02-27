@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Product Addons Compatibility.
  *
- * @version  5.6.0
+ * @version  5.8.0
  */
 class WC_PB_Addons_Compatibility {
 
@@ -102,6 +102,10 @@ class WC_PB_Addons_Compatibility {
 		global $Product_Addon_Display, $product;
 
 		if ( ! empty( $Product_Addon_Display ) ) {
+
+			if ( doing_action( 'wp_ajax_woocommerce_configure_bundle_order_item' ) ) {
+				return;
+			}
 
 			if ( $item->get_product()->is_type( 'variable' ) && doing_action( 'woocommerce_bundled_product_add_to_cart' ) ) {
 				return;

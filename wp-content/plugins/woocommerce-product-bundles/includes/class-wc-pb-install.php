@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Handles installation and updating tasks.
  *
  * @class    WC_PB_Install
- * @version  5.3.0
+ * @version  5.9.0
  */
 class WC_PB_Install {
 
@@ -108,7 +108,7 @@ class WC_PB_Install {
 	 * @return boolean
 	 */
 	private static function must_install() {
-		return self::$current_version !== WC_PB()->version;
+		return version_compare( self::$current_version, WC_PB()->plugin_version(), '<' );
 	}
 
 	/**
@@ -116,10 +116,16 @@ class WC_PB_Install {
 	 *
 	 * @since  5.5.0
 	 *
+	 * @param  boolean  $check_installing
 	 * @return boolean
 	 */
-	private static function can_install() {
-		return false === get_transient( 'wc_pb_installing' ) && ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' ) && current_user_can( 'manage_woocommerce' );
+	private static function can_install( $check_installing = true ) {
+
+		if ( $check_installing && get_transient( 'wc_pb_installing' ) ) {
+			return false;
+		}
+
+		return ( ! defined( 'DOING_AJAX' ) || ! DOING_AJAX ) && ! defined( 'IFRAME_REQUEST' ) && current_user_can( 'manage_woocommerce' );
 	}
 
 	/**
@@ -151,10 +157,11 @@ class WC_PB_Install {
 	 *
 	 * @since  5.5.0
 	 *
+	 * @param  boolean  $check_installing
 	 * @return boolean
 	 */
-	private static function can_update() {
-		return self::can_install() && self::$current_version === WC_PB()->version;
+	private static function can_update( $check_installing = true ) {
+		return self::can_install( $check_installing ) && version_compare( self::$current_db_version, WC_PB()->plugin_version( true ), '<' );
 	}
 
 	/**
@@ -201,25 +208,37 @@ class WC_PB_Install {
 			wp_insert_term( 'bundle', 'product_type' );
 		}
 
+		if ( ! class_exists( 'WC_PB_Admin_Notices' ) ) {
+			require_once( WC_PB_ABSPATH . 'includes/admin/class-wc-pb-admin-notices.php' );
+		}
+
+		if ( is_null( self::$current_version ) ) {
+			// Add dismissible welcome notice.
+			WC_PB_Admin_Notices::add_maintenance_notice( 'welcome' );
+		}
+
 		// Update plugin version - once set, 'maybe_install' will not call 'install' again.
 		self::update_version();
 
-		// Plugin data exists - queue upgrade tasks.
-		if ( $bundle_term_exists && self::must_update() ) {
-			// Add 'update' notice and save early -- saving on the 'shutdown' action will fail if a chained request arrives before the 'shutdown' hook fires.
-			WC_PB_Admin_Notices::add_maintenance_notice( 'update' );
-			WC_PB_Admin_Notices::save_notices();
+		// Queue upgrade tasks.
+		if ( self::can_update( false ) ) {
 
-			if ( self::auto_update_enabled() ) {
-				self::update();
+			if ( $bundle_term_exists && self::must_update() ) {
+				// Add 'update' notice and save early -- saving on the 'shutdown' action will fail if a chained request arrives before the 'shutdown' hook fires.
+				WC_PB_Admin_Notices::add_maintenance_notice( 'update' );
+				WC_PB_Admin_Notices::save_notices();
+
+				if ( self::auto_update_enabled() ) {
+					self::update();
+				} else {
+					delete_transient( 'wc_pb_installing' );
+					delete_option( 'wc_pb_update_init' );
+				}
+
+			// Nothing found - this is a new install :)
 			} else {
-				delete_transient( 'wc_pb_installing' );
-				delete_option( 'wc_pb_update_init' );
+				self::update_db_version();
 			}
-
-		// Nothing found - this is a new install :)
-		} else {
-			self::update_db_version();
 		}
 	}
 
@@ -232,6 +251,7 @@ class WC_PB_Install {
 	 */
 	private static function create_tables() {
 		global $wpdb;
+		$wpdb->hide_errors();
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 		dbDelta( self::get_schema() );
 	}
@@ -281,7 +301,7 @@ CREATE TABLE {$wpdb->prefix}woocommerce_bundled_itemmeta (
 	 */
 	private static function update_version() {
 		delete_option( 'woocommerce_product_bundles_version' );
-		add_option( 'woocommerce_product_bundles_version', WC_PB()->version );
+		add_option( 'woocommerce_product_bundles_version', WC_PB()->plugin_version() );
 	}
 
 	/**
@@ -441,11 +461,10 @@ CREATE TABLE {$wpdb->prefix}woocommerce_bundled_itemmeta (
 	 */
 	public static function update_db_version( $version = null ) {
 
-		$version = is_null( $version ) ? WC_PB()->version : $version;
+		$version = is_null( $version ) ? WC_PB()->plugin_version() : $version;
 
 		// Remove suffixes.
-		$version_parts = explode( '-', $version );
-		$version       = sizeof( $version_parts ) === 2 ? $version_parts[ 0 ] : $version;
+		$version = WC_PB()->plugin_version( true, $version );
 
 		delete_option( 'woocommerce_product_bundles_db_version' );
 		add_option( 'woocommerce_product_bundles_db_version', $version );

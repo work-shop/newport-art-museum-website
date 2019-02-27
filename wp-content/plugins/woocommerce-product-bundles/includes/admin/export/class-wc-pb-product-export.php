@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * WooCommerce core Product Exporter support.
  *
  * @class    WC_PB_Product_Export
- * @version  5.5.0
+ * @version  5.8.1
  */
 class WC_PB_Product_Export {
 
@@ -35,6 +35,7 @@ class WC_PB_Product_Export {
 		add_filter( 'woocommerce_product_export_product_column_wc_pb_group_mode', array( __CLASS__, 'export_group_mode' ), 10, 2 );
 		add_filter( 'woocommerce_product_export_product_column_wc_pb_editable_in_cart', array( __CLASS__, 'export_editable_in_cart' ), 10, 2 );
 		add_filter( 'woocommerce_product_export_product_column_wc_pb_sold_individually_context', array( __CLASS__, 'export_sold_individually_context' ), 10, 2 );
+		add_filter( 'woocommerce_product_export_product_column_wc_pb_add_to_cart_form_location', array( __CLASS__, 'export_add_to_cart_form_location' ), 10, 2 );
 	}
 
 	/**
@@ -50,6 +51,7 @@ class WC_PB_Product_Export {
 		$columns[ 'wc_pb_group_mode' ]                = __( 'Bundle Group Mode', 'woocommerce-product-bundles' );
 		$columns[ 'wc_pb_editable_in_cart' ]          = __( 'Bundle Cart Editing', 'woocommerce-product-bundles' );
 		$columns[ 'wc_pb_sold_individually_context' ] = __( 'Bundle Sold Individually', 'woocommerce-product-bundles' );
+		$columns[ 'wc_pb_add_to_cart_form_location' ] = __( 'Bundle Form Location', 'woocommerce-product-bundles' );
 
 		return $columns;
 	}
@@ -160,6 +162,24 @@ class WC_PB_Product_Export {
 
 		if ( $product->is_type( 'bundle' ) ) {
 			$value = $product->get_sold_individually_context( 'edit' );
+		}
+
+		return $value;
+	}
+
+	/**
+	 * "Bundle Form Location" column content.
+	 *
+	 * @since  5.8.1
+	 *
+	 * @param  mixed       $value
+	 * @param  WC_Product  $product
+	 * @return mixed       $value
+	 */
+	public static function export_add_to_cart_form_location( $value, $product ) {
+
+		if ( $product->is_type( 'bundle' ) ) {
+			$value = $product->get_add_to_cart_form_location( 'edit' );
 		}
 
 		return $value;

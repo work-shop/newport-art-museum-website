@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Print Invoices & Packing Lists Integration.
  *
- * @version  5.5.5
+ * @version  5.9.1
  */
 class WC_PB_PIP_Compatibility {
 
@@ -43,7 +43,7 @@ class WC_PB_PIP_Compatibility {
 		add_action( 'wc_pip_after_body', array( __CLASS__, 'after_body' ), 10, 4 );
 
 		// Filter items count.
-		add_filter( 'wc_pip_order_items_count', array( __CLASS__, 'items_count' ), 10 );
+		add_filter( 'wc_pip_order_items_count', array( __CLASS__, 'items_count' ), 1000 );
 
 		// Temporarily add order item data to array.
 		add_filter( 'wc_pip_document_table_row_item_data', array( __CLASS__, 'row_item_data' ), 10, 5 );
@@ -53,6 +53,9 @@ class WC_PB_PIP_Compatibility {
 
 		// Add 'bundled-product' class to pip row classes.
 		add_filter( 'wc_pip_document_table_product_class', array( __CLASS__, 'bundled_item_class' ), 10, 4 );
+
+		// Filter PIP item titles.
+		add_filter( 'wc_pip_order_item_name', array( __CLASS__, 'bundled_item_name' ), 10, 6 );
 
 		// Add assembly info to bundled item meta.
 		add_action( 'wc_pip_order_item_meta_end', array( __CLASS__, 'add_assembled_order_item_meta' ), 10, 2 );
@@ -141,8 +144,6 @@ class WC_PB_PIP_Compatibility {
 
 	/**
 	 * Recounts items excluding bundle containers.
-	 * We can't control the visibility of bundle containers in 'hide_item' because we depend on their existence in 'table_rows'.
-	 * If they don't exist, we can't gather their children together.
 	 *
 	 * @param  int  $count
 	 * @return int
@@ -202,16 +203,30 @@ class WC_PB_PIP_Compatibility {
 
 					if ( isset( $row_item[ 'wc_pb_item_data' ] ) && isset( $row_item[ 'wc_pb_item_data' ][ 'bundled_items' ] ) ) {
 
-						$show_parent = true;
-						$group_mode  = $row_item[ 'wc_pb_item_data' ][ 'bundle_group_mode' ];
-						$group_mode  = $group_mode ? $group_mode : 'parent';
+						$show_parent    = true;
+						$virtual_parent = false;
+						$group_mode     = $row_item[ 'wc_pb_item_data' ][ 'bundle_group_mode' ];
+						$group_mode     = $group_mode ? $group_mode : 'parent';
+
+						// Virtual parent items should be hidden in packing lists when the corresponding PIP option is active.
+						if ( self::$document && 'packing-list' === self::$document->type ) {
+							if ( 'yes' === $row_item[ 'wc_pb_item_data' ][ 'wc_pb_container_item_virtual' ] ) {
+								$virtual_parent = true;
+							}
+						}
 
 						// By default, nothing should be hidden in invoices, but here's an exception.
-						if ( false === WC_Product_Bundle::group_mode_has( $group_mode, 'parent_item' ) ) {
+						if ( false === WC_Product_Bundle::group_mode_has( $group_mode, 'parent_item' ) || WC_Product_Bundle::group_mode_has( $group_mode, 'component_multiselect' )  ) {
 							$show_parent = false;
 						}
 
 						if ( $show_parent )	{
+
+							if ( $virtual_parent ) {
+								$row_item[ 'quantity' ] = str_replace( 'class="quantity', 'class="quantity virtual-container', $row_item[ 'quantity' ] );
+								$row_item[ 'weight' ] = str_replace( 'class="weight', 'class="weight virtual-container', $row_item[ 'weight' ] );
+							}
+
 							$sorted_rows[] = $row_item;
 						}
 
@@ -236,6 +251,11 @@ class WC_PB_PIP_Compatibility {
 										}
 
 										if ( $is_child ) {
+
+											if ( ! $show_parent ) {
+												$row_item_inner[ 'product' ] = str_replace( 'bundled-product ', '', $row_item_inner[ 'product' ] );
+											}
+
 											$sorted_rows[] = $row_item_inner;
 										}
 									}
@@ -275,6 +295,36 @@ class WC_PB_PIP_Compatibility {
 	}
 
 	/**
+	 * Add component title to order item title.
+	 *
+	 * @since  5.9.1
+	 *
+	 * @param  string         $product_name
+	 * @param  WC_Order_Item  $order_item
+	 * @param  boolean        $is_visible
+	 * @param  string         $type
+	 * @param  WC_Product     $product
+	 * @param  WC_Order       $order
+	 * @return string
+	 */
+	public static function bundled_item_name( $product_name, $order_item, $is_visible, $type, $product, $order ) {
+
+		if ( wc_pb_is_bundled_order_item( $order_item, $order ) ) {
+
+			if ( $overridden_title = $order_item->get_meta( '_bundled_item_title', true ) ) {
+
+				$product_name = $overridden_title;
+
+				if ( $is_visible ) {
+					$product_name = sprintf( '<a href="%1$s" target="_blank">%2$s</a>', get_permalink( $product->get_id() ), $product_name );
+				}
+			}
+		}
+
+		return $product_name;
+	}
+
+	/**
 	 * Add 'bundled-product' class to pip row classes.
 	 *
 	 * @param  array       $classes
@@ -310,13 +360,12 @@ class WC_PB_PIP_Compatibility {
 
 		if ( self::$document && 'pick-list' === self::$document->type ) {
 
-			if ( wc_pb_is_bundled_order_item( $item ) ) {
+			if ( $parent_item = wc_pb_get_bundled_order_item_container( $item ) ) {
 
 				// Is it an assembled item?
 				if ( 'no' === $item->get_meta( '_bundled_item_needs_shipping', true ) ) {
 
-					$flat        = false;
-					$parent_item = wc_pb_get_bundled_order_item_container( $item );
+					$flat = false;
 
 					if ( has_filter( 'wc_pip_document_table_row_item_meta_flat' ) ) {
 						$product = $item->get_product();
@@ -336,7 +385,7 @@ class WC_PB_PIP_Compatibility {
 	}
 
 	/**
-	 * Ensure bundle container line items are always displayed.
+	 * Ensure bundle container line items are always displayed, otherwise we will not be able to collect their children in 'table_rows'.
 	 *
 	 * @param  boolean     $hide
 	 * @param  WC_Product  $product
@@ -346,15 +395,19 @@ class WC_PB_PIP_Compatibility {
 	 */
 	public static function hide_item( $hide, $product, $order_item, $order ) {
 
-		if ( self::$recounting_items && wc_pb_is_bundle_container_order_item( $order_item ) ) {
+		if ( wc_pb_is_bundle_container_order_item( $order_item ) ) {
 
-			$group_mode = $order_item->get_meta( '_bundle_group_mode', true );
-			$group_mode = $group_mode ? $group_mode : 'parent';
+			$product = wc_get_product( $order_item->get_product_id() );
 
-			if ( WC_Product_Bundle::group_mode_has( $group_mode, 'parent_item' ) ) {
-				$hide = false;
-			} else {
-				$hide = true;
+			if ( ! $product->needs_shipping() ) {
+
+				if ( self::$recounting_items ) {
+					$hide = true;
+				} else {
+					$hide = false;
+				}
+
+				$order_item->add_meta_data( '_wc_pb_container_item_virtual', 'yes', true );
 			}
 
 		} elseif ( wc_pb_is_bundled_order_item( $order_item, $order ) ) {
@@ -397,6 +450,12 @@ class WC_PB_PIP_Compatibility {
 	 */
 	public static function add_styles() {
 		?>
+		.quantity .virtual-container, .weight .virtual-container {
+			display: none;
+		}
+		.quantity .assembled, .weight .assembled {
+			display: none;
+		}
 		.product .bundled-product {
 			padding-left: 2.5em;
 		}

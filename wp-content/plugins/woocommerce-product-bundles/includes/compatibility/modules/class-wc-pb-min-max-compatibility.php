@@ -142,7 +142,7 @@ class WC_PB_Min_Max_Compatibility {
 
 				if ( isset( $data[ 'group_of' ] ) ) {
 					$group_of_qty = $data[ 'group_of' ];
-				} elseif ( is_a( $product, 'WC_Product' ) ) {
+				} elseif ( $product instanceof WC_Product ) {
 					$group_of_qty = absint( $product->get_meta( 'group_of_quantity', true ) );
 				}
 

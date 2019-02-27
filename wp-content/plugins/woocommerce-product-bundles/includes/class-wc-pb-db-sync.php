@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Hooks for DB lifecycle management of products, bundles, bundled items and their meta.
  *
  * @class    WC_PB_DB_Sync
- * @version  5.7.1
+ * @version  5.8.0
  */
 class WC_PB_DB_Sync {
 
@@ -31,6 +31,12 @@ class WC_PB_DB_Sync {
 	 * @var boolean
 	 */
 	private static $sync_needed = false;
+
+	/**
+	 * Enable pre-syncing?
+	 * @var int
+	 */
+	private static $bundled_product_stock_pre_sync = true;
 
 	/**
 	 * Setup Admin class.
@@ -59,6 +65,9 @@ class WC_PB_DB_Sync {
 			// Delete bundled item stock meta when stock status changes.
 			add_action( 'woocommerce_product_set_stock_status', array( __CLASS__, 'product_stock_status_changed' ), 100, 3 );
 			add_action( 'woocommerce_variation_set_stock_status', array( __CLASS__, 'product_stock_status_changed' ), 100, 3 );
+
+			// Set stock update pre-syncing flag.
+			add_action( 'woocommerce_init', array( __CLASS__, 'set_bundled_product_stock_pre_sync' ), 10 );
 
 			if ( ! defined( 'WC_PB_DEBUG_STOCK_PARENT_SYNC' ) ) {
 
@@ -192,9 +201,7 @@ class WC_PB_DB_Sync {
 			$product = wc_get_product( $product_id );
 		}
 
-		$bundled_product_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
-
-		self::reset_bundled_items_stock_status( $bundled_product_id );
+		self::bundled_product_stock_changed( $product );
 	}
 
 	/**
@@ -204,26 +211,221 @@ class WC_PB_DB_Sync {
 	 * @return void
 	 */
 	public static function product_stock_changed( $product ) {
-
-		$bundled_product_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
-
-		self::reset_bundled_items_stock_status( $bundled_product_id );
+		self::bundled_product_stock_changed( $product );
 	}
 
 	/**
-	 * Delete bundled items stock meta when product stock (status) changes.
+	 * Set stock update pre-syncing flag.
 	 *
-	 * @param  int  $product_id
+	 * @since  5.8.0
+	 *
 	 * @return void
 	 */
-	public static function reset_bundled_items_stock_status( $product_id ) {
-		global $wpdb;
+	public static function set_bundled_product_stock_pre_sync() {
+		self::$bundled_product_stock_pre_sync = apply_filters( 'woocommerce_bundled_product_stock_pre_sync', true );
+	}
 
-		$map = wc_pb_get_bundled_product_map( $product_id, false );
+	/**
+	 * Trigger bundled items stock meta refresh when product stock (status) changes.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  mixed  $product
+	 * @return void
+	 */
+	public static function bundled_product_stock_changed( $product ) {
 
-		if ( ! empty( $map ) ) {
-			self::schedule_sync();
-			WC_PB_DB::delete_bundled_items_stock_meta( $map );
+		if ( false === ( $product instanceof WC_Product ) ) {
+			$product = wc_get_product( absint( $product ) );
+		}
+
+		if ( ! $product ) {
+			return;
+		}
+
+		$product_id = $product->is_type( 'variation' ) ? $product->get_parent_id() : $product->get_id();
+
+		$bundled_item_query_results = WC_PB_DB::query_bundled_items( array(
+			'product_id' => $product_id,
+			'meta_query' => array(
+				array(
+					'key'  => 'quantity_min',
+					'type' => 'NUMERIC'
+				)
+			)
+		) );
+
+		// Not a bundled product?
+		if ( empty( $bundled_item_query_results ) ) {
+			return;
+		}
+
+		$bundled_item_ids_to_reset = array();
+		$bundled_item_min_qty      = array_map( 'absint', wp_list_pluck( $bundled_item_query_results, 'meta_value' ) );
+		$bundled_item_ids          = array_map( 'absint', wp_list_pluck( $bundled_item_query_results, 'bundled_item_id' ) );
+		$bundle_ids                = array_map( 'absint', wp_list_pluck( $bundled_item_query_results, 'bundle_id' ) );
+
+		$pre_sync_item = false;
+
+		// Pre-sync only simple or subscription products.
+		if ( $product->is_type( array( 'simple', 'subscription' ) ) ) {
+			// Check if pre-syncing is disabled.
+			if ( self::$bundled_product_stock_pre_sync ) {
+				$pre_sync_item = true;
+			}
+		}
+
+		if ( $pre_sync_item ) {
+
+			$stock_meta_map = array();
+			$stock_status   = '';
+			$max_stock      = '';
+
+			$bundled_item_ids_count = count( $bundled_item_ids );
+			$backorders_allowed     = $product->backorders_allowed();
+
+			// All bundled items out of stock.
+			if ( false === $product->is_in_stock() ) {
+
+				$stock_status = 'out_of_stock';
+				$max_stock    = 0;
+
+				$data = array(
+					'stock_status' => $stock_status,
+					'max_stock'    => $max_stock
+				);
+
+				$stock_meta_map = array_combine( $bundled_item_ids, array_fill( 0, $bundled_item_ids_count, $data ) );
+
+			// All bundled items on backorder.
+			} elseif ( $product->is_on_backorder( 1 ) ) {
+
+				$stock_status = 'on_backorder';
+				$max_stock    = '';
+
+				$data = array(
+					'stock_status' => $stock_status,
+					'max_stock'    => $max_stock
+				);
+
+				$stock_meta_map = array_combine( $bundled_item_ids, array_fill( 0, $bundled_item_ids_count, $data ) );
+
+			// All bundled items have infinite stock.
+			} elseif ( false === $product->managing_stock() ) {
+
+				$stock_status = 'in_stock';
+				$max_stock    = '';
+
+				$data = array(
+					'stock_status' => $stock_status,
+					'max_stock'    => $max_stock
+				);
+
+				$stock_meta_map = array_combine( $bundled_item_ids, array_fill( 0, $bundled_item_ids_count, $data ) );
+
+			// Must work with each item individually.
+			} else {
+
+				$stock_quantity = $product->get_stock_quantity();
+				$stock_quantity = ! is_null( $stock_quantity ) ? $stock_quantity : '';
+
+				// The product is in stock and stock is being managed: Compare with the min item quantity.
+				foreach ( $bundled_item_ids as $bundled_item_index => $bundled_item_id ) {
+
+					if ( '' === $stock_quantity || $stock_quantity >= max( 1, absint( $bundled_item_min_qty[ $bundled_item_index ] ) ) ) {
+
+						$stock_status = 'in_stock';
+						$max_stock    = $backorders_allowed ? '' : $stock_quantity;
+
+					} elseif ( $backorders_allowed ) {
+
+						$stock_status = 'on_backorder';
+						$max_stock    = '';
+
+					} else {
+
+						$stock_status = 'out_of_stock';
+						$max_stock    = '' !== $stock_quantity ? $stock_quantity : 0;
+					}
+
+					$data = array(
+						'stock_status' => $stock_status,
+						'max_stock'    => $max_stock
+					);
+
+					$stock_meta_map[ $bundled_item_id ] = $data;
+				}
+			}
+
+			// Bulk updates.
+			self::update_bundled_items_stock_status_meta( $stock_meta_map );
+			self::update_bundled_items_max_stock_meta( $stock_meta_map );
+
+		} else {
+
+			// Delete 'stock_status' and 'max_stock' meta.
+			WC_PB_DB::bulk_delete_bundled_item_stock_meta( $bundled_item_ids );
+		}
+
+		// Reset 'bundled_items_stock_status' on parent bundles.
+		$data_store = WC_Data_Store::load( 'product-bundle' );
+		$data_store->reset_bundled_items_stock_status( $bundle_ids );
+
+		// Schedule sync task.
+		self::schedule_sync();
+	}
+
+	/**
+	 * Bulk update bundled item 'stock_status' meta.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  array  $stock_meta_map
+	 * @return void
+	 */
+	private static function update_bundled_items_stock_status_meta( $stock_meta_map ) {
+
+		$stock_status_formatted = array();
+
+		foreach ( $stock_meta_map as $item_id => $data ) {
+
+			if ( ! isset( $stock_status_formatted[ $data[ 'stock_status' ] ] ) ) {
+				$stock_status_formatted[ $data[ 'stock_status' ] ] = array();
+			}
+
+			$stock_status_formatted[ $data[ 'stock_status' ] ][] = $item_id;
+		}
+
+		foreach ( $stock_status_formatted as $meta_value => $bundled_item_ids ) {
+			WC_PB_DB::bulk_update_bundled_item_meta( $bundled_item_ids, 'stock_status', $meta_value );
+		}
+	}
+
+	/**
+	 * Bulk update bundled item 'max_stock' meta.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  array  $stock_meta_map
+	 * @return void
+	 */
+	private static function update_bundled_items_max_stock_meta( $stock_meta_map ) {
+
+		$max_stoke_formatted = array();
+
+		foreach ( $stock_meta_map as $item_id => $data ) {
+
+			$meta_value = '' === $data[ 'max_stock' ] ? 'inf' : $data[ 'max_stock' ];
+
+			if ( ! isset( $stock_status_formatted[ $meta_value ] ) ) {
+				$stock_status_formatted[ $meta_value ] = array();
+			}
+
+			$stock_status_formatted[ $data[ 'max_stock' ] ][] = $item_id;
+		}
+
+		foreach ( $stock_status_formatted as $meta_value => $bundled_item_ids ) {
+			WC_PB_DB::bulk_update_bundled_item_meta( $bundled_item_ids, 'max_stock', 'inf' === $meta_value ? '' : $meta_value );
 		}
 	}
 
@@ -310,6 +512,11 @@ class WC_PB_DB_Sync {
 	|--------------------------------------------------------------------------
 	*/
 
+	public static function reset_bundled_items_stock_status( $product_id ) {
+		_deprecated_function( __METHOD__ . '()', '5.8.0', __CLASS__ . '::bundled_product_stock_changed()' );
+		return self::bundled_product_stock_changed( $product_id );
+	}
+
 	public static function delete_reserved_price_post_meta( $post_id ) {
 		_deprecated_function( __METHOD__ . '()', '5.5.0' );
 
@@ -320,10 +527,12 @@ class WC_PB_DB_Sync {
 			delete_post_meta( $post_id, '_wc_sw_max_regular_price' );
 		}
 	}
+
 	public static function delete_bundled_items_stock_cache( $product_id ) {
-		_deprecated_function( __METHOD__ . '()', '5.5.0', __CLASS__ . '::reset_bundled_items_stock_status()' );
-		return self::reset_bundled_items_stock_status( $product_id );
+		_deprecated_function( __METHOD__ . '()', '5.5.0', __CLASS__ . '::bundled_product_stock_changed()' );
+		return self::bundled_product_stock_changed( $product_id );
 	}
+
 	public static function delete_bundle_transients( $post_id ) {
 		_deprecated_function( __METHOD__ . '()', '5.5.0' );
 		if ( $post_id > 0 ) {
@@ -331,7 +540,7 @@ class WC_PB_DB_Sync {
 			 * Delete associated bundled items stock cache when clearing product transients.
 			 * Workaround for https://github.com/somewherewarm/woocommerce-product-bundles/issues/22 .
 			 */
-			self::reset_bundled_items_stock_status( $post_id );
+			self::bundled_product_stock_changed( $post_id );
 		}
 	}
 }

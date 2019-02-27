@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Functions for WC core back-compatibility.
  *
  * @class    WC_PB_Core_Compatibility
- * @version  5.5.0
+ * @version  5.7.7
  */
 class WC_PB_Core_Compatibility {
 
@@ -413,6 +413,24 @@ class WC_PB_Core_Compatibility {
 	 */
 	public static function wc_get_formatted_variation( $variation, $flat ) {
 		return wc_get_formatted_variation( $variation, $flat );
+	}
+
+	/**
+	 * Back-compat wrapper for 'wc_get_cart_remove_url'.
+	 *
+	 * @since  5.7.7
+	 *
+	 * @param  string  $cart_item_key
+	 * @return string
+	 */
+	public static function wc_get_cart_remove_url( $cart_item_key ) {
+		if ( self::is_wc_version_gte( '3.3' ) ) {
+			$url = wc_get_cart_remove_url( $cart_item_key );
+		} else {
+			$url = WC()->cart->get_remove_url( $cart_item_key );
+		}
+
+		return $url;
 	}
 
 	/**

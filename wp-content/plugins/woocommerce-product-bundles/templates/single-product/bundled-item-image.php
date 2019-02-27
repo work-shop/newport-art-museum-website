@@ -8,7 +8,7 @@
  * We try to do this as little as possible, but it does happen.
  * When this occurs the version of the template file will be bumped and the readme will list any important changes.
  *
- * @version 5.2.0
+ * @version 5.7.3
  */
 
 // Exit if accessed directly.
@@ -24,8 +24,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 		$image_title   = esc_attr( get_the_title( $image_post_id ) );
 		$image_data    = wp_get_attachment_image_src( $image_post_id, 'full' );
 		$image_link    = $image_data[ 0 ];
-		$image         = get_the_post_thumbnail( $product_id, apply_filters( 'bundled_product_large_thumbnail_size', 'shop_catalog' ), array(
+		$image         = get_the_post_thumbnail( $product_id, $image_size, array(
 			'title'                   => $image_title,
+			'data-caption'            => get_post_field( 'post_excerpt', $image_post_id ),
 			'data-large_image'        => $image_link,
 			'data-large_image_width'  => $image_data[ 1 ],
 			'data-large_image_height' => $image_data[ 2 ],

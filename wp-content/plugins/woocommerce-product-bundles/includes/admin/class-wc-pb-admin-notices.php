@@ -16,22 +16,42 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Admin notices handling.
  *
  * @class    WC_PB_Admin_Notices
- * @version  5.0.0
+ * @version  5.9.1
  */
 class WC_PB_Admin_Notices {
 
-	public static $meta_box_notices    = array();
-	public static $admin_notices       = array();
+	/**
+	 * Notices presisting on the next request.
+	 * @var array
+	 */
+	public static $meta_box_notices = array();
+
+	/**
+	 * Notices displayed on the current request.
+	 * @var array
+	 */
+	public static $admin_notices = array();
+
+	/**
+	 * Maintenance notices displayed on every request until cleared.
+	 * @var array
+	 */
 	public static $maintenance_notices = array();
+
+	/**
+	 * Dismissible notices displayed on the current request.
+	 * @var array
+	 */
+	public static $dismissed_notices = array();
 
 	/**
 	 * Array of maintenance notice types - name => callback.
 	 * @var array
 	 */
 	private static $maintenance_notice_types = array(
-		'update' => 'update_notice'
+		'update'  => 'update_notice',
+		'welcome' => 'welcome_notice'
 	);
-
 
 	/**
 	 * Constructor.
@@ -40,14 +60,15 @@ class WC_PB_Admin_Notices {
 
 		self::$maintenance_notices = get_option( 'wc_pb_maintenance_notices', array() );
 
+		self::$dismissed_notices = get_user_meta( get_current_user_id(), 'wc_pb_dismissed_notices', true );
+		self::$dismissed_notices = empty( self::$dismissed_notices ) ? array() : self::$dismissed_notices;
+
 		// Show meta box notices.
 		add_action( 'admin_notices', array( __CLASS__, 'output_notices' ) );
 		// Save meta box notices.
 		add_action( 'shutdown', array( __CLASS__, 'save_notices' ), 100 );
 		// Show maintenance notices.
 		add_action( 'admin_print_styles', array( __CLASS__, 'hook_maintenance_notices' ) );
-		// Act upon clicking on a 'dismiss notice' link.
-		add_action( 'wp_loaded', array( __CLASS__, 'dismiss_notice_handler' ) );
 	}
 
 	/**
@@ -81,15 +102,35 @@ class WC_PB_Admin_Notices {
 	}
 
 	/**
+	 * Checks if a maintenance notice is visible.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string  $notice_name
+	 * @return boolean
+	 */
+	public static function is_maintenance_notice_visible( $notice_name ) {
+		return in_array( $notice_name, self::$maintenance_notices );
+	}
+
+	/**
+	 * Checks if a dismissible notice has been dismissed in the past.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string  $notice_name
+	 * @return boolean
+	 */
+	public static function is_dismissible_notice_dismissed( $notice_name ) {
+		return in_array( $notice_name, self::$dismissed_notices );
+	}
+
+	/**
 	 * Save errors to an option.
 	 */
 	public static function save_notices() {
-
-		delete_option( 'wc_pb_meta_box_notices' );
-		delete_option( 'wc_pb_maintenance_notices' );
-
-		add_option( 'wc_pb_meta_box_notices', self::$meta_box_notices );
-		add_option( 'wc_pb_maintenance_notices', self::$maintenance_notices );
+		update_option( 'wc_pb_meta_box_notices', self::$meta_box_notices );
+		update_option( 'wc_pb_maintenance_notices', self::$maintenance_notices );
 	}
 
 	/**
@@ -97,26 +138,42 @@ class WC_PB_Admin_Notices {
 	 */
 	public static function output_notices() {
 
-		$saved_notices = maybe_unserialize( get_option( 'wc_pb_meta_box_notices', array() ) );
+		$saved_notices = get_option( 'wc_pb_meta_box_notices', array() );
 		$notices       = $saved_notices + self::$admin_notices;
 
 		if ( ! empty( $notices ) ) {
 
 			foreach ( $notices as $notice ) {
 
-				$dismiss_class = $notice[ 'dismiss_class' ] ? $notice[ 'dismiss_class' ] . ' is-persistent' : 'is-dismissible';
-
-				echo '<div class="wc_pb_notice notice-' . $notice[ 'type' ] . ' notice ' . $dismiss_class . '">';
+				$notice_classes = array( 'wc_pb_notice', 'notice', 'notice-' . $notice[ 'type' ] );
+				$dismiss_attr   = $notice[ 'dismiss_class' ] ? 'data-dismiss_class="' . $notice[ 'dismiss_class' ] . '"' : '';
 
 				if ( $notice[ 'dismiss_class' ] ) {
-					$dismiss_url = esc_url( wp_nonce_url( add_query_arg( 'dismiss_wc_pb_notice', $notice[ 'dismiss_class' ] ), 'wc_pb_dismiss_notice_nonce', '_wc_pb_admin_nonce' ) );
-					echo '<a class="wc-pb-dismiss-notice notice-dismiss" href="' . $dismiss_url . '">' . __( 'Dismiss', 'woocommerce' ) . '</a>';
+					$notice_classes[] = $notice[ 'dismiss_class' ];
+					$notice_classes[] = 'is-dismissible';
 				}
 
-				echo '<p>' . wp_kses_post( $notice[ 'content' ] ) . '</p>';
+				echo '<div class="' . implode( ' ', $notice_classes ) . '"' . $dismiss_attr . '>';
+				echo wpautop( wp_kses_post( $notice[ 'content' ] ) );
 				echo '</div>';
 			}
 
+			wc_enqueue_js( "
+				jQuery( function( $ ) {
+					jQuery( '.wc_pb_notice .notice-dismiss' ).on( 'click', function() {
+
+						var data = {
+							action: 'woocommerce_dismiss_bundle_notice',
+							notice: jQuery( this ).parent().data( 'dismiss_class' ),
+							security: '" . wp_create_nonce( 'wc_pb_dismiss_notice_nonce' ) . "'
+						};
+
+						jQuery.post( '" . WC()->ajax_url() . "', data );
+					} );
+				} );
+			" );
+
+			// Clear.
 			delete_option( 'wc_pb_meta_box_notices' );
 		}
 	}
@@ -130,25 +187,76 @@ class WC_PB_Admin_Notices {
 			return;
 		}
 
-		foreach ( self::$maintenance_notice_types as $type => $callback ) {
-			if ( in_array( $type, self::$maintenance_notices ) ) {
+		foreach ( self::$maintenance_notice_types as $notice_name => $callback ) {
+			if ( self::is_maintenance_notice_visible( $notice_name ) ) {
 				call_user_func( array( __CLASS__, $callback ) );
 			}
 		}
 	}
 
 	/**
+	 * Add a dimissible notice/error.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string   $text
+	 * @param  mixed    $args
+	 */
+	public static function add_dismissible_notice( $text, $args ) {
+		if ( ! isset( $args[ 'dismiss_class' ] ) || ! self::is_dismissible_notice_dismissed( $args[ 'dismiss_class' ] ) ) {
+			self::add_notice( $text, $args );
+		}
+	}
+
+	/**
+	 * Remove a dismissible notice.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string  $notice_name
+	 */
+	public static function remove_dismissible_notice( $notice_name ) {
+
+		// Remove if not already removed.
+		if ( ! self::is_dismissible_notice_dismissed( $notice_name ) ) {
+			self::$dismissed_notices = array_merge( self::$dismissed_notices, array( $notice_name ) );
+			update_user_meta( get_current_user_id(), 'wc_pb_dismissed_notices', self::$dismissed_notices );
+			return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * Add a maintenance notice to be displayed.
+	 *
+	 * @param  string  $notice_name
 	 */
 	public static function add_maintenance_notice( $notice_name ) {
-		self::$maintenance_notices = array_unique( array_merge( self::$maintenance_notices, array( $notice_name ) ) );
+
+		// Add if not already there.
+		if ( ! self::is_maintenance_notice_visible( $notice_name ) ) {
+			self::$maintenance_notices = array_merge( self::$maintenance_notices, array( $notice_name ) );
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
 	 * Remove a maintenance notice.
+	 *
+	 * @param  string  $notice_name
 	 */
 	public static function remove_maintenance_notice( $notice_name ) {
-		self::$maintenance_notices = array_diff( self::$maintenance_notices, array( $notice_name ) );
+
+		// Remove if there.
+		if ( self::is_maintenance_notice_visible( $notice_name ) ) {
+			self::$maintenance_notices = array_diff( self::$maintenance_notices, array( $notice_name ) );
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -188,14 +296,47 @@ class WC_PB_Admin_Notices {
 
 			if ( $status ) {
 				$notice = '<strong>' . __( 'WooCommerce Product Bundles Data Update', 'woocommerce-product-bundles' ) . '</strong> &#8211; ' . $status;
-				self::add_notice( $notice, 'info' );
+				self::add_notice( $notice, 'native' );
 			}
 
 		// Show persistent notice to indicate that the update process is complete.
 		} else {
 			$notice = __( 'WooCommerce Product Bundles data update complete.', 'woocommerce-product-bundles' );
-			self::add_notice( $notice, array( 'type' => 'info', 'dismiss_class' => 'update' ) );
+			self::add_notice( $notice, array( 'type' => 'native', 'dismiss_class' => 'update' ) );
 		}
+	}
+
+	/**
+	 * Add 'welcome' notice.
+	 *
+	 * @since  5.9.0
+	 */
+	public static function welcome_notice() {
+
+		$screen          = get_current_screen();
+		$screen_id       = $screen ? $screen->id : '';
+		$show_on_screens = array(
+			'dashboard',
+			'plugins',
+		);
+
+		// Onboarding notices should only show on the main dashboard, and on the plugins screen.
+		if ( ! in_array( $screen_id, $show_on_screens, true ) ) {
+			return;
+		}
+
+		ob_start();
+
+		?>
+		<div class="sw-welcome-icon"></div>
+		<h2 class="sw-welcome-title"><?php esc_attr_e( 'Ready to bundle some products?', 'woocommerce-product-bundles' ); ?></h2>
+		<p class="sw-welcome-text"><?php esc_attr_e( 'Thank you for installing WooCommerce Product Bundles.', 'woocommerce-product-bundles' ); ?><br/><?php esc_attr_e( 'Let\'s get started by creating your first bundle!', 'woocommerce-product-bundles' ); ?></p>
+		<a href="<?php echo admin_url( 'post-new.php?post_type=product&wc_pb_first_bundle=1' ); ?>" class="sw-welcome-button button-primary"><?php esc_attr_e( 'Let\'s go!', 'woocommerce-product-bundles' ); ?></a>
+		<?php
+
+		$notice = ob_get_clean();
+
+		self::add_dismissible_notice( $notice, array( 'type' => 'native', 'dismiss_class' => 'welcome' ) );
 	}
 
 	/**
@@ -242,14 +383,39 @@ class WC_PB_Admin_Notices {
 	 * @return string
 	 */
 	private static function get_failed_update_prompt() {
+
 		$support_url    = esc_url( WC_PB_SUPPORT_URL );
 		$support_link   = '<a href="' . $support_url . '">' . __( 'get in touch with us', 'woocommerce-product-bundles' ) . '</a>';
 		$support_prompt = '<br/><em>' . sprintf( __( 'If this message persists, please restore your database from a backup, or %s.', 'woocommerce-product-bundles' ), $support_link ) . '</em>';
+
 		return $support_prompt;
 	}
 
 	/**
+	 * Dismisses a notice.
+	 *
+	 * @since  5.8.0
+	 *
+	 * @param  string  $notice
+	 */
+	public static function dismiss_notice( $notice ) {
+		if ( isset( self::$maintenance_notice_types[ $notice ] ) ) {
+			return self::remove_maintenance_notice( $notice );
+		} else {
+			return self::remove_dismissible_notice( $notice );
+		}
+	}
+
+	/*
+	|--------------------------------------------------------------------------
+	| Deprecated.
+	|--------------------------------------------------------------------------
+	*/
+
+	/**
 	 * Act upon clicking on a 'dismiss notice' link.
+	 *
+	 * @deprecated  3.14.0
 	 */
 	public static function dismiss_notice_handler() {
 		if ( isset( $_GET[ 'dismiss_wc_pb_notice' ] ) && isset( $_GET[ '_wc_pb_admin_nonce' ] ) ) {
@@ -262,7 +428,8 @@ class WC_PB_Admin_Notices {
 			}
 
 			$notice = sanitize_text_field( $_GET[ 'dismiss_wc_pb_notice' ] );
-			self::remove_maintenance_notice( $notice );
+
+			self::dismiss_notice( $notice );
 		}
 	}
 }

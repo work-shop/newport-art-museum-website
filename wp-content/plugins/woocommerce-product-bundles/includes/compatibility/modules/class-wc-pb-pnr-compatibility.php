@@ -98,7 +98,7 @@ class WC_PB_PnR_Compatibility {
 					} elseif ( isset( $item[ 'bundled_item_id' ] ) ) {
 						$bundled_item_id                  = $item[ 'bundled_item_id' ];
 						$bundled_item                     = $bundle->get_bundled_item( $bundled_item_id );
-						$bundled_item_priced_individually = is_a( $bundled_item, 'WC_Bundled_Item' ) ? $bundled_item->is_priced_individually() : false;
+						$bundled_item_priced_individually = ( $bundled_item instanceof WC_Bundled_Item ) ? $bundled_item->is_priced_individually() : false;
 					}
 				}
 

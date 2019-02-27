@@ -12,9 +12,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/*--------------------------------------------------------*/
-/*  Product Bundles single product template functions     */
-/*--------------------------------------------------------*/
+/*
+|--------------------------------------------------------------------------
+| Single-product.
+|--------------------------------------------------------------------------
+*/
 
 /**
  * Add-to-cart template for Product Bundles. Handles the 'Form location > After summary' case.
@@ -34,7 +36,6 @@ function wc_pb_template_add_to_cart_after_summary() {
 		}
 	}
 }
-
 
 /**
  * Add-to-cart template for Product Bundles.
@@ -56,6 +57,14 @@ function wc_pb_template_add_to_cart() {
 
 	$bundled_items = $product->get_bundled_items();
 	$form_classes  = array( 'layout_' . $product->get_layout(), 'group_mode_' . $product->get_group_mode() );
+
+	if ( ! $product->is_in_stock() ) {
+		$form_classes[] = 'bundle_out_of_stock';
+	}
+
+	if ( $product->contains( 'out_of_stock' ) ) {
+		$form_classes[] = 'bundle_insufficient_stock';
+	}
 
 	if ( ! empty( $bundled_items ) ) {
 		wc_get_template( 'single-product/add-to-cart/bundle.php', array(
@@ -89,13 +98,17 @@ function wc_pb_template_add_to_cart_wrap( $product ) {
 /**
  * Add-to-cart button and quantity input.
  */
-function wc_pb_template_add_to_cart_button() {
+function wc_pb_template_add_to_cart_button( $bundle = false ) {
 
 	if ( isset( $_GET[ 'update-bundle' ] ) ) {
 		$updating_cart_key = wc_clean( $_GET[ 'update-bundle' ] );
 		if ( isset( WC()->cart->cart_contents[ $updating_cart_key ] ) ) {
 			echo '<input type="hidden" name="update-bundle" value="' . $updating_cart_key . '" />';
 		}
+	}
+
+	if ( $bundle && ! $bundle->is_in_stock() ) {
+		return;
 	}
 
 	wc_get_template( 'single-product/add-to-cart/bundle-quantity-input.php', array(), false, WC_PB()->plugin_path() . '/templates/' );
@@ -149,13 +162,14 @@ function wc_pb_template_bundled_item_thumbnail( $bundled_item, $bundle ) {
 			 * @param  array            $classes
 			 * @param  WC_Bundled_Item  $bundled_item
 			 */
-			$gallery_classes = apply_filters( 'woocommerce_bundled_product_gallery_classes', array( 'bundled_product_images' ), $bundled_item );
+			$gallery_classes = apply_filters( 'woocommerce_bundled_product_gallery_classes', array( 'bundled_product_images', 'images' ), $bundled_item );
 
 			wc_get_template( 'single-product/bundled-item-image.php', array(
 				'post_id'         => $product_id,
 				'product_id'      => $product_id,
 				'bundled_item'    => $bundled_item,
 				'gallery_classes' => $gallery_classes,
+				'image_size'      => $bundled_item->get_bundled_item_thumbnail_size(),
 				'image_rel'       => current_theme_supports( 'wc-product-gallery-lightbox' ) ? 'photoSwipe' : 'prettyPhoto',
 			), false, WC_PB()->plugin_path() . '/templates/' );
 		}
@@ -189,16 +203,29 @@ function wc_pb_template_bundled_item_details_wrapper_open( $bundled_item, $bundl
 
 	$layout = $bundle->get_layout();
 
+	if ( ! in_array( $layout, array( 'default', 'tabular', 'grid' ) ) ) {
+		return;
+	}
+
 	if ( 'default' === $layout ) {
 		$el = 'div';
 	} elseif ( 'tabular' === $layout ) {
 		$el = 'tr';
+	} elseif ( 'grid' === $layout ) {
+		$el = 'li';
 	}
 
-	$classes = $bundled_item->get_classes();
+	$classes = $bundled_item->get_classes( false );
 	$style   = $bundled_item->is_visible() ? '' : ' style="display:none;"';
 
-	echo '<' . $el . ' class="bundled_product bundled_product_summary product ' . $classes . '"' . $style . ' >';
+	if ( 'grid' === $layout && $bundled_item->is_visible() ) {
+		// Get class of item in the grid.
+		$classes[] = WC_PB()->display->get_grid_layout_class( $bundled_item );
+		// Increment counter.
+		WC_PB()->display->incr_grid_layout_pos( $bundled_item );
+	}
+
+	echo '<' . $el . ' class="' . implode( ' ' , $classes ) . '"' . $style . ' >';
 }
 
 /**
@@ -247,7 +274,7 @@ function wc_pb_template_default_bundled_item_qty( $bundled_item ) {
 	$bundle = $bundled_item->get_bundle();
 	$layout = $bundle->get_layout();
 
-	if ( 'default' === $layout ) {
+	if ( in_array( $layout, array( 'default', 'grid' ) ) ) {
 
 		/** Documented in 'WC_PB_Cart::get_posted_bundle_configuration'. */
 		$bundle_fields_prefix = apply_filters( 'woocommerce_product_bundle_field_prefix', '', $bundle->get_id() );
@@ -280,10 +307,16 @@ function wc_pb_template_bundled_item_details_wrapper_close( $bundled_item, $bund
 
 	$layout = $bundle->get_layout();
 
+	if ( ! in_array( $layout, array( 'default', 'tabular', 'grid' ) ) ) {
+		return;
+	}
+
 	if ( 'default' === $layout ) {
 		$el = 'div';
 	} elseif ( 'tabular' === $layout ) {
 		$el = 'tr';
+	} elseif ( 'grid' === $layout ) {
+		$el = 'li';
 	}
 
 	echo '</' . $el . '>';
@@ -397,7 +430,10 @@ function wc_pb_template_bundled_item_product_details( $bundled_item, $bundle ) {
 					'bundled_product_attributes'          => $variation_attributes,
 					'bundled_product_variations'          => $variations,
 					'bundled_product_selected_attributes' => $selected_variation_attributes,
-					'custom_product_data'                 => apply_filters( 'woocommerce_bundled_product_custom_data', array(), $bundled_item )
+					'custom_product_data'                 => apply_filters( 'woocommerce_bundled_product_custom_data', array(
+						'bundle_id'       => $bundle_id,
+						'bundled_item_id' => $bundled_item->get_id()
+					), $bundled_item )
 				), false, WC_PB()->plugin_path() . '/templates/' );
 			}
 		}
@@ -458,6 +494,13 @@ function wc_pb_template_before_bundled_items( $bundle ) {
 				<th class="bundled_item_col bundled_item_qty_head"><?php _e( 'Quantity', 'woocommerce-product-bundles' ); ?></th>
 			</thead>
 			<tbody><?php
+
+	} elseif ( 'grid' === $layout ) {
+
+		// Reset grid counter.
+		WC_PB()->display->reset_grid_layout_pos();
+
+		echo '<ul class="products bundled_products columns-' . esc_attr( WC_PB()->display->get_grid_layout_columns( $bundle ) ) . '">';
 	}
 }
 
@@ -472,6 +515,8 @@ function wc_pb_template_after_bundled_items( $bundle ) {
 
 	if ( 'tabular' === $layout ) {
 		echo '</tbody></table>';
+	} elseif ( 'grid' === $layout ) {
+		echo '</ul>';
 	}
 }
 
@@ -497,9 +542,22 @@ function wc_pb_template_bundled_item_attributes( $product ) {
 					continue;
 				}
 
-				$bundled_product = $bundled_item->product;
+				$bundled_product        = $bundled_item->product;
+				$display_physical_props = $bundled_item->is_shipped_individually() && apply_filters( 'wc_product_enable_dimensions_display', $bundled_product->has_weight() || $bundled_product->has_dimensions() );
 
-				if ( $bundled_product->has_attributes() ) {
+				/**
+				 * 'woocommerce_bundle_show_bundled_product_physical_props' filter.
+				 * Whether to display the bundled item's physical props.
+				 *
+				 * @since  5.8.0
+				 *
+				 * @param  boolean             $display_physical_props
+				 * @param  WC_Product_Bundles  $product
+				 * @param  WC_Bundled_Item     $bundled_item
+				 */
+				$display_physical_props = apply_filters( 'woocommerce_bundle_show_bundled_product_physical_props', $display_physical_props, $product, $bundled_item );
+
+				if ( $bundled_product->has_attributes() || $display_physical_props ) {
 
 					// Filter bundled item attributes based on active variation filters.
 					add_filter( 'woocommerce_attribute', array( $bundled_item, 'filter_bundled_item_attribute' ), 10, 3 );
@@ -508,7 +566,7 @@ function wc_pb_template_bundled_item_attributes( $product ) {
 						'title'              => $bundled_item->get_title(),
 						'product'            => $bundled_product,
 						'attributes'         => array_filter( $bundled_product->get_attributes(), 'wc_attributes_array_filter_visible' ),
-						'display_dimensions' => $bundled_item->is_shipped_individually() && apply_filters( 'wc_product_enable_dimensions_display', $product->has_weight() || $product->has_dimensions() )
+						'display_dimensions' => $display_physical_props
 					), false, WC_PB()->plugin_path() . '/templates/' );
 
 					remove_filter( 'woocommerce_attribute', array( $bundled_item, 'filter_bundled_item_attribute' ), 10, 3 );
@@ -539,11 +597,10 @@ function wc_pb_template_bundled_variation_attribute_options( $args ) {
 	$bundle_fields_prefix = apply_filters( 'woocommerce_product_bundle_field_prefix', '', $bundled_item->get_bundle_id() );
 
 	// The currently selected attribute option.
-	$selected_option = isset( $_REQUEST[ $bundle_fields_prefix . 'bundle_attribute_' . sanitize_title( $variation_attribute_name ) . '_' . $bundled_item->get_id() ] ) ? wc_clean( stripslashes( urldecode( $_REQUEST[ $bundle_fields_prefix . 'bundle_attribute_' . sanitize_title( $variation_attribute_name ) . '_' . $bundled_item->get_id() ] ) ) ) : $bundled_item->get_selected_product_variation_attribute( $variation_attribute_name );
+	$selected_option = isset( $_REQUEST[ $bundle_fields_prefix . 'bundle_attribute_' . sanitize_title( $variation_attribute_name ) . '_' . $bundled_item->get_id() ] ) ? wc_clean( wp_unslash( $_REQUEST[ $bundle_fields_prefix . 'bundle_attribute_' . sanitize_title( $variation_attribute_name ) . '_' . $bundled_item->get_id() ] ) ) : $bundled_item->get_selected_product_variation_attribute( $variation_attribute_name );
 
 	$variation_attributes              = $bundled_item->get_product_variation_attributes();
 	$configurable_variation_attributes = $bundled_item->get_product_variation_attributes( true );
-	$show_dropdown                     = isset( $configurable_variation_attributes[ $variation_attribute_name ] );
 	$html                              = '';
 
 	// Fill required args.
@@ -551,18 +608,8 @@ function wc_pb_template_bundled_variation_attribute_options( $args ) {
 	$args[ 'name' ]     = $bundle_fields_prefix . 'bundle_attribute_' . sanitize_title( $variation_attribute_name ) . '_' . $bundled_item->get_id();
 	$args[ 'product' ]  = $bundled_item->product;
 
-	if ( false === $show_dropdown ) {
-		/**
-		 * 'woocommerce_force_show_bundled_dropdown_variation_attribute_options' filter.
-		 *
-		 * @param  boolean  $force_show
-		 * @param  array    $args
-		 */
-		$show_dropdown = apply_filters( 'woocommerce_force_show_bundled_dropdown_variation_attribute_options', false, $args );
-	}
-
 	// Render everything.
-	if ( false === $show_dropdown ) {
+	if ( ! $bundled_item->display_product_variation_attribute_dropdown( $variation_attribute_name ) ) {
 
 		$variation_attribute_value = '';
 
@@ -624,7 +671,7 @@ function wc_pb_template_bundled_variation_attribute_options( $args ) {
 		$variation_attribute_keys = array_keys( $variation_attributes );
 		// ...and add the reset-variations link.
 		if ( end( $variation_attribute_keys ) === $variation_attribute_name ) {
-			$html .= apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . __( 'Clear', 'woocommerce' ) . '</a>' );
+			$html .= wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<div class="reset_bundled_variations"><a class="reset_variations" href="#">' . esc_html__( 'Clear', 'woocommerce' ) . '</a></div>' ) );
 		}
 	}
 

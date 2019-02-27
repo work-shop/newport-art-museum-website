@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Handles compatibility with other WC extensions.
  *
  * @class    WC_PB_Compatibility
- * @version  5.6.0
+ * @version  5.9.0
  */
 class WC_PB_Compatibility {
 
@@ -84,11 +84,11 @@ class WC_PB_Compatibility {
 
 		// Define dependencies.
 		$this->required = array(
-			'cp'     => '3.12',
-			'addons' => '2.9',
-			'minmax' => '1.3',
-			'topatc' => '1.0',
-			'bd'     => '1.0'
+			'cp'     => '3.14.0',
+			'addons' => '2.9.1',
+			'minmax' => '1.3.3',
+			'topatc' => '1.0.3',
+			'bd'     => '1.0.5',
 		);
 
 		// Initialize.
@@ -134,9 +134,14 @@ class WC_PB_Compatibility {
 	 */
 	protected function unload_modules() {
 
-		// Tabular Layout mini-extension was merged into Bundles.
+		// Tabular Layout mini-extension was merged into PB.
 		if ( class_exists( 'WC_PB_Tabular_Layout' ) ) {
 			remove_action( 'plugins_loaded', array( 'WC_PB_Tabular_Layout', 'load_plugin' ), 10 );
+		}
+
+		// Bundle-Sells mini-extension was merged into PB.
+		if ( class_exists( 'WC_PB_Bundle_Sells' ) ) {
+			remove_action( 'plugins_loaded', array( 'WC_PB_Bundle_Sells', 'load_plugin' ), 10 );
 		}
 	}
 
@@ -147,76 +152,95 @@ class WC_PB_Compatibility {
 	 */
 	public function module_includes() {
 
+		$module_paths = array();
+
 		// Addons support.
 		if ( class_exists( 'WC_Product_Addons' ) && defined( 'WC_PRODUCT_ADDONS_VERSION' ) && version_compare( WC_PRODUCT_ADDONS_VERSION, $this->required[ 'addons' ] ) >= 0 ) {
-			require_once( 'modules/class-wc-pb-addons-compatibility.php' );
+			$module_paths[ 'product_addons' ] = 'modules/class-wc-pb-addons-compatibility.php';
 		}
 
 		// NYP support.
 		if ( function_exists( 'WC_Name_Your_Price' ) ) {
-			require_once( 'modules/class-wc-pb-nyp-compatibility.php' );
+			$module_paths[ 'name_your_price' ] = 'modules/class-wc-pb-nyp-compatibility.php';
 		}
 
 		// Points and Rewards support.
 		if ( class_exists( 'WC_Points_Rewards_Product' ) ) {
-			require_once( 'modules/class-wc-pb-pnr-compatibility.php' );
+			$module_paths[ 'points_rewards_products' ] = 'modules/class-wc-pb-pnr-compatibility.php';
 		}
 
 		// Pre-orders support.
 		if ( class_exists( 'WC_Pre_Orders' ) ) {
-			require_once( 'modules/class-wc-pb-po-compatibility.php' );
+			$module_paths[ 'pre_orders' ] = 'modules/class-wc-pb-po-compatibility.php';
 		}
 
 		// Composite Products support.
-		if ( class_exists( 'WC_Composite_Products' ) && function_exists( 'WC_CP' ) && version_compare( WC_CP()->version, $this->required[ 'cp' ] ) >= 0 ) {
-			require_once( 'modules/class-wc-pb-cp-compatibility.php' );
+		if ( class_exists( 'WC_Composite_Products' ) && function_exists( 'WC_CP' ) && version_compare( str_replace( '-dev', '', WC_CP()->version ), $this->required[ 'cp' ] ) >= 0 ) {
+			$module_paths[ 'composite_products' ] = 'modules/class-wc-pb-cp-compatibility.php';
 		}
 
 		// One Page Checkout support.
 		if ( function_exists( 'is_wcopc_checkout' ) ) {
-			require_once( 'modules/class-wc-pb-opc-compatibility.php' );
+			$module_paths[ 'one_page_checkout' ] = 'modules/class-wc-pb-opc-compatibility.php';
 		}
 
 		// Cost of Goods support.
 		if ( class_exists( 'WC_COG' ) ) {
-			require_once( 'modules/class-wc-pb-cog-compatibility.php' );
+			$module_paths[ 'cost_of_goods' ] = 'modules/class-wc-pb-cog-compatibility.php';
 		}
 
 		// QuickView support.
 		if ( class_exists( 'WC_Quick_View' ) ) {
-			require_once( 'modules/class-wc-pb-qv-compatibility.php' );
+			$module_paths[ 'quickview' ] = 'modules/class-wc-pb-qv-compatibility.php';
 		}
 
 		// PIP support.
 		if ( class_exists( 'WC_PIP' ) ) {
-			require_once( 'modules/class-wc-pb-pip-compatibility.php' );
+			$module_paths[ 'pip' ] = 'modules/class-wc-pb-pip-compatibility.php';
 		}
 
 		// Subscriptions fixes.
 		if ( class_exists( 'WC_Subscriptions' ) ) {
-			require_once( 'modules/class-wc-pb-subscriptions-compatibility.php' );
+			$module_paths[ 'subscriptions' ] = 'modules/class-wc-pb-subscriptions-compatibility.php';
 		}
 
 		// Min Max Quantities integration.
 		if ( class_exists( 'WC_Min_Max_Quantities' ) ) {
-			require_once( 'modules/class-wc-pb-min-max-compatibility.php' );
+			$module_paths[ 'min_max_quantities' ] = 'modules/class-wc-pb-min-max-compatibility.php';
 		}
 
 		// WP Import/Export support.
-		require_once( 'modules/class-wc-pb-wp-ie-compatibility.php' );
+		$module_paths[ 'wp_import_export' ] = 'modules/class-wc-pb-wp-ie-compatibility.php';
 
 		// WooCommerce Give Products support.
 		if ( class_exists( 'WC_Give_Products' ) ) {
-			require_once( 'modules/class-wc-pb-give-products-compatibility.php' );
+			$module_paths[ 'give_products' ] = 'modules/class-wc-pb-give-products-compatibility.php';
 		}
 
 		// Shipwire integration.
 		if ( class_exists( 'WC_Shipwire' ) ) {
-			require_once( 'modules/class-wc-pb-shipwire-compatibility.php' );
+			$module_paths[ 'shipwire' ] = 'modules/class-wc-pb-shipwire-compatibility.php';
 		}
 
 		// Shipstation integration.
-		require_once( 'modules/class-wc-pb-shipstation-compatibility.php' );
+		$module_paths[ 'shipstation' ] = 'modules/class-wc-pb-shipstation-compatibility.php';
+
+		// Storefront compatibility.
+		$module_paths[ 'storefront' ] = 'modules/class-wc-pb-sf-compatibility.php';
+
+		/**
+		 * 'woocommerce_bundles_compatibility_modules' filter.
+		 *
+		 * Use this to filter the required compatibility modules.
+		 *
+		 * @since  5.7.6
+		 * @param  array $module_paths
+		 */
+		$module_paths = apply_filters( 'woocommerce_bundles_compatibility_modules', $module_paths );
+
+		foreach ( $module_paths as $name => $path ) {
+			require_once( $path );
+		}
 	}
 
 	/**
@@ -231,36 +255,46 @@ class WC_PB_Compatibility {
 		// CP version check.
 		if ( ! empty( $woocommerce_composite_products ) ) {
 			$required_version = $this->required[ 'cp' ];
-			if ( version_compare( $woocommerce_composite_products->version, $required_version ) < 0 ) {
-				$extension = 'WooCommerce Composite Products';
-				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by Product Bundles. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
-				WC_PB_Admin_Notices::add_notice( $notice, 'warning' );
+			if ( version_compare( str_replace( '-dev', '', $woocommerce_composite_products->version ), $required_version ) < 0 ) {
+				$extension = 'Composite Products';
+				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>Product Bundles</strong>. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
+				WC_PB_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'cp_lt_' . $required_version, 'type' => 'native' ) );
 			}
 		}
 
 		// Addons version check.
 		if ( class_exists( 'WC_Product_Addons' ) ) {
+
 			$required_version = $this->required[ 'addons' ];
+
 			if ( ! defined( 'WC_PRODUCT_ADDONS_VERSION' ) || version_compare( WC_PRODUCT_ADDONS_VERSION, $required_version ) < 0 ) {
-				$extension = 'WooCommerce Product Add-ons';
-				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by Product Bundles. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
-				WC_PB_Admin_Notices::add_notice( $notice, 'warning' );
+
+				$extension = 'Product Add-ons';
+				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>Product Bundles</strong>. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
+
+				WC_PB_Admin_Notices::add_dismissible_notice( $notice, array( 'dismiss_class' => 'addons_lt_' . $required_version, 'type' => 'native' ) );
 			}
 		}
 
 		// Tabular layout mini-extension check.
 		if ( class_exists( 'WC_PB_Tabular_Layout' ) ) {
-			$notice = sprintf( __( 'The <strong>WooCommerce Product Bundles - Tabular Layout</strong> mini-extension is now part of <strong>WooCommerce Product Bundles</strong>. Please deactivate and remove the <strong>WooCommerce Product Bundles - Tabular Layout</strong> plugin.', 'woocommerce-product-bundles' ) );
-			WC_PB_Admin_Notices::add_notice( $notice, 'warning' );
+			$notice = sprintf( __( 'The <strong>Tabular Layout</strong> mini-extension has been rolled into <strong>Product Bundles</strong>. Please deactivate and remove the <strong>Product Bundles - Tabular Layout</strong> feature plugin.', 'woocommerce-product-bundles' ) );
+			WC_PB_Admin_Notices::add_notice( $notice, 'native' );
+		}
+
+		// Bundle-Sells mini-extension version check.
+		if ( class_exists( 'WC_PB_Bundle_Sells' ) ) {
+			$notice = sprintf( __( 'The <strong>Bundle-Sells</strong> mini-extension has been rolled into <strong>Product Bundles</strong>. Please deactivate and remove the <strong>Product Bundles - Bundle-Sells</strong> feature plugin.', 'woocommerce-product-bundles' ) );
+			WC_PB_Admin_Notices::add_notice( $notice, 'native' );
 		}
 
 		// Min/Max Items mini-extension version check.
 		if ( class_exists( 'WC_PB_Min_Max_Items' ) ) {
 			$required_version = $this->required[ 'minmax' ];
 			if ( version_compare( WC_PB_Min_Max_Items::$version, $required_version ) < 0 ) {
-				$extension = 'WooCommerce Product Bundles - Min/Max Items';
-				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by Product Bundles. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
-				WC_PB_Admin_Notices::add_notice( $notice, 'warning' );
+				$extension = 'Product Bundles - Min/Max Items';
+				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>Product Bundles</strong>. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
+				WC_PB_Admin_Notices::add_notice( $notice, 'native' );
 			}
 		}
 
@@ -268,9 +302,9 @@ class WC_PB_Compatibility {
 		if ( class_exists( 'WC_PB_Top_Add_To_Cart' ) ) {
 			$required_version = $this->required[ 'topatc' ];
 			if ( version_compare( WC_PB_Top_Add_To_Cart::$version, $required_version ) < 0 ) {
-				$extension = 'WooCommerce Product Bundles - Top Add to Cart Button';
-				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by Product Bundles. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
-				WC_PB_Admin_Notices::add_notice( $notice, 'warning' );
+				$extension = 'Product Bundles - Top Add to Cart Button';
+				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>Product Bundles</strong>. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
+				WC_PB_Admin_Notices::add_notice( $notice, 'native' );
 			}
 		}
 
@@ -278,9 +312,9 @@ class WC_PB_Compatibility {
 		if ( class_exists( 'WC_PB_Bulk_Discounts' ) ) {
 			$required_version = $this->required[ 'bd' ];
 			if ( version_compare( WC_PB_Bulk_Discounts::$version, $required_version ) < 0 ) {
-				$extension = 'WooCommerce Product Bundles - Bulk Discounts';
-				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by Product Bundles. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
-				WC_PB_Admin_Notices::add_notice( $notice, 'warning' );
+				$extension = 'Product Bundles - Bulk Discounts';
+				$notice    = sprintf( __( 'The installed version of <strong>%1$s</strong> is not supported by <strong>Product Bundles</strong>. Please update <strong>%1$s</strong> to version <strong>%2$s</strong> or higher.', 'woocommerce-product-bundles' ), $extension, $required_version );
+				WC_PB_Admin_Notices::add_notice( $notice, 'native' );
 			}
 		}
 	}
@@ -319,16 +353,16 @@ class WC_PB_Compatibility {
 	/**
 	 * Tells if a product is a subscription, provided that Subs is installed.
 	 *
-	 * @param  mixed  $product_id
+	 * @param  mixed  $product
 	 * @return boolean
 	 */
-	public function is_subscription( $product_id ) {
+	public function is_subscription( $product ) {
 
 		if ( ! class_exists( 'WC_Subscriptions' ) ) {
 			return false;
 		}
 
-		return WC_Subscriptions_Product::is_subscription( $product_id );
+		return WC_Subscriptions_Product::is_subscription( $product );
 	}
 
 	/**
