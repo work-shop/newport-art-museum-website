@@ -22,11 +22,14 @@
 					<?php endforeach; ?>
 					<?php if( $links_additional ): ?>
 						<?php foreach( $links_additional as $link): ?>
-							<li>
-								<a href="<?php echo $link['link']['url']; ?>/" target="<?php echo $link['link']['target']; ?>" class="page-nav-link">
-									<?php echo $link['link']['title']; ?>
-								</a>
-							</li>
+                            <?php if ( !empty( $link['link'] ) ) : ?>
+    							<li>
+                                    <?php //var_dump( $link ); ?>
+    								<a href="<?php echo $link['link']['url']; ?>/" target="<?php echo $link['link']['target']; ?>" class="page-nav-link">
+                                    	<?php echo $link['link']['title']; ?>
+    								</a>
+    							</li>
+                            <?php endif; ?>
 						<?php endforeach; ?>
 					<?php endif; ?>
 					<?php if( $GLOBALS['tree_slug'] === 'my_account' && is_user_logged_in() && $GLOBALS['page_nav']  ): ?>
@@ -34,7 +37,7 @@
 							<a href="<?php echo wp_logout_url('/my-account') ?>" class="page-nav-link">
 								Logout
 							</a>
-						</li>	
+						</li>
 					<?php endif; ?>
 				</ul>
 			</div>
