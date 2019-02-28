@@ -33,7 +33,7 @@
 	//event ticket levels field
 	.acf-field-5bef141d974bd{
 		display: none;
-	}	
+	}
 }
 
 
@@ -71,12 +71,12 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 	}
 
 	.nam-user-created-subscription {
-		background-color: lighten($brand,47%); 
+		background-color: lighten($brand,47%);
 		font-weight: bold;
 	}
 
 	.nam-imported-subscription {
-		background-color: lighten($success,5%); 
+		background-color: lighten($success,5%);
 		font-weight: bold;
 	}
 
@@ -85,4 +85,16 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 //hide shadowing product field
 #acf-group_5b687de110f1e{
 	display: none;
+}
+
+.order-loading-icon {
+
+    display: inline;
+
+    width:2em;
+    height:2em;
+
+    vertical-align: middle;
+    margin-top:-4px;
+
 }

@@ -25,31 +25,43 @@ import { ecommerceHelpers } from './ecommerce-helpers.js';
 import { members } from './members.js';
 import { livereload } from './livereload-client.js';
 import { submitEventForm } from './event-add-to-cart.js';
+import { adminOrderLinks } from './admin-order-links.js';
 
 
 livereload();
 
-loading(config.loading);
-viewportLabel(config.viewportLabel);
-linksNewtab(config.linksNewtab);
-dropdowns(config.dropdowns);
-nav(config.stickyNav);
-jumpLinks(config.jumpLinks);
-modals(config.modals);
-scrollSpy(config.scrollSpy);
-menuToggle(config.menuToggle);
-slickSlideshows(config.slickSlideshows);
-collection();
-jqueryAccordian();
-accordian();
-ecommerceHelpers();
-museumStatus();
-menuOverflow();
-submitEventForm();
-members();
+if ( $('body').hasClass('wp-admin') ) {
 
-if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') || $('body').hasClass('page-id-74') ){
-	filter();
+    adminOrderLinks();
+
+} else {
+
+    loading(config.loading);
+    viewportLabel(config.viewportLabel);
+    linksNewtab(config.linksNewtab);
+    dropdowns(config.dropdowns);
+    nav(config.stickyNav);
+    jumpLinks(config.jumpLinks);
+    modals(config.modals);
+    scrollSpy(config.scrollSpy);
+    menuToggle(config.menuToggle);
+    slickSlideshows(config.slickSlideshows);
+    collection();
+    jqueryAccordian();
+    accordian();
+    ecommerceHelpers();
+    museumStatus();
+    menuOverflow();
+    submitEventForm();
+    members();
+
+    if( $('body').hasClass('post-type-archive-events') || $('body').hasClass('page-id-78') || $('body').hasClass('page-id-74') ){
+    	filter();
+    }
+
 }
+
+
+
 
 //console.log('main.js loaded, with gulp!');
