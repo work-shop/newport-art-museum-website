@@ -87,14 +87,20 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 	display: none;
 }
 
-.order-loading-icon {
-
+.order-admin-icon {
     display: inline;
-
-    width:2em;
-    height:2em;
-
     vertical-align: middle;
     margin-top:-4px;
+}
 
+.order-loading-icon {
+    width:2em;
+    height:2em;
+}
+
+.order-failed-icon {
+    width:1em;
+    height:1em;
+    margin-right: .75em;
+    margin-left: .55em;
 }
