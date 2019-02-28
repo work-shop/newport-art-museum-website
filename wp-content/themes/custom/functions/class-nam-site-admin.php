@@ -13,6 +13,8 @@ class NAM_Site_Admin {
         add_action('tiny_mce_before_init', array($this, 'format_TinyMCE') );
         add_action('wp_dashboard_setup', array($this, 'remove_admin_bar_items'));
 
+        add_action('rest_api_init', array( $this, 'register_get_cpt_for_product_id' ));
+
         add_filter( 'get_user_metadata', array( $this, 'pages_per_page_wpse_23503'), 10, 4 );
 
         add_action( 'admin_enqueue_scripts', array( $this, 'register_customer_list_scripts' ) );
@@ -53,6 +55,15 @@ class NAM_Site_Admin {
     		wp_register_script( 'wpcl-script-shortcode', home_url() . '/wp-content/plugins/wc-product-customer-list-premium/admin/assets/shortcode.js', true, '1.0' );
 
         }
+
+        $main_js = '/bundles/bundle.js';
+
+        $compiled_resources_dir = get_template_directory();
+        $compiled_resources_uri = get_template_directory_uri();
+
+        $main_js_ver = filemtime( $compiled_resources_dir . $main_js ); // version suffixes for cache-busting.
+
+        wp_enqueue_script('admin-js', $compiled_resources_uri . $main_js, array(), $main_js_ver, true);
     }
 
 
@@ -193,6 +204,69 @@ class NAM_Site_Admin {
         $in['toolbar3'] = '';
         $in['toolbar4'] = '';
         return $in;
+    }
+
+    /**
+     * Register a custom rest endpoint that handles
+     * a request for a parent CPT given the id of
+     * its shadowing product.
+     */
+    public function register_get_cpt_for_product_id() {
+        register_rest_route('nam/v1', 'parent/(?P<id>\d+)', array(
+            'methods' => 'GET',
+            'callback' => array( $this, 'get_cpt_for_product_id' ),
+            'args' => array(
+                'id' => array(
+                    'validate_callback' => function( $param, $request, $key ) {
+                        return is_numeric( $param );
+                    },
+                    'sanitize_callback' => 'absint'
+                )
+            )
+        ));
+    }
+
+    /**
+     *
+     *
+     */
+    public function get_cpt_for_product_id( $request ) {
+
+        $requested_id = $request->get_param('id');
+        $maybe_parent = NAM_Shadowed_Post_Type::get_parent_posts_for_all_post_types( $requested_id );
+
+        if ( empty( $maybe_parent ) ) {
+
+            return array(
+                'success' => FALSE,
+                'warning' => FALSE,
+                'message' => 'No parent Custom Post Types found for this ID: ' . $requested_id . '.',
+                'product_id' => $requested_id
+            );
+
+        } else if ( count( $maybe_parent ) == 1 ) {
+
+            return array(
+                'success' => TRUE,
+                'warning' => FALSE,
+                'parent_id' => $maybe_parent[0],
+                'product_id' => $requested_id,
+                'message' => ''
+            );
+
+        } else {
+
+            return array(
+                'success' => TRUE,
+                'warning' => TRUE,
+                'parent_id' => $maybe_parent[0],
+                'other_ids' => array_slice( $maybe_parent, 1 ),
+                'product_id' => $requested_id,
+                'message' => 'Multiple parent Custom Post Types were found for ID ' . $requested_id . '. This could indicate a data integrity error for this product.'
+            );
+
+        }
+
     }
 
 }

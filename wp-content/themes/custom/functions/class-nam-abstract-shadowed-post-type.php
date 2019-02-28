@@ -813,6 +813,30 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 		return array_map(function ($p) {return $p->ID;}, $parents);
 	}
 
+    /**
+	 * For a given shadowing product, get the parent custom post
+	 * for the id. Essentially a reverse lookup on the shadowing product.
+     * This version of the function searches all post-types, rather than
+     * restricting to a single type.
+	 *
+	 * @param int $product_id the id of the product to look up.
+	 * @param Array<int> an array of post ids.
+	 */
+	public static function get_parent_posts_for_all_post_types($product_id) {
+		$parents = get_posts(array(
+			'post_type' => array('events', 'classes', 'membership-tiers', 'donation-tiers', 'fees'),
+			'meta_query' => array(
+				array(
+					'key' => 'managed_field_related_post', // name of custom field
+					'value' => '"' . $product_id . '"', // matches exactly "123", not just 123. This prevents a match for "1234"
+					'compare' => 'LIKE',
+				),
+			),
+		));
+
+		return array_map(function ($p) {return $p->ID;}, $parents);
+	}
+
 	/**
 	 * This routine sets all the required product taxonomy terms for reporting
 	 * purposes.
