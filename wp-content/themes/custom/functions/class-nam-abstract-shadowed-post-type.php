@@ -824,7 +824,7 @@ abstract class NAM_Shadowed_Post_Type extends NAM_Custom_Post_Type {
 	 */
 	public static function get_parent_posts_for_all_post_types($product_id) {
 		$parents = get_posts(array(
-			'post_type' => array('events', 'classes', 'membership-tiers', 'donation-tiers', 'fees'),
+			'post_type' => array('events', 'classes', 'membership-tier', 'donation-tiers', 'fees'),
 			'meta_query' => array(
 				array(
 					'key' => 'managed_field_related_post', // name of custom field
