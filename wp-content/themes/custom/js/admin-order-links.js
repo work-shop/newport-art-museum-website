@@ -45,7 +45,8 @@ function adminOrderLinks() {
                     } else {
 
                         console.error( data.message );
-                        icon.removeClass('order-loading-icon').addClass('order-failed-icon').attr('src', '/wp-content/themes/custom/images/close.png' );
+                        icon.remove();
+                        //icon.removeClass('order-loading-icon').addClass('order-failed-icon').attr('src', '/wp-content/themes/custom/images/close.png' );
 
                     }
 
