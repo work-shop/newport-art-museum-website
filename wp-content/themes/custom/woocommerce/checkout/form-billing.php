@@ -29,59 +29,64 @@ if ( ! defined( 'ABSPATH' ) ) {
 	<h3><?php _e( 'Billing &amp; Shipping', 'woocommerce' ); ?></h3>
 
 	<?php else : ?>
-		<?php global $woocommerce; ?>
-		<?php $nam_cart_total = $woocommerce->cart->get_cart_total(); ?>
-		<?php if($nam_cart_total > 0): ?>
-			<h3>Billing Details</h3>
-			<?php else: ?>
-			<h3>Contact Details</h3>
+		
+		<h3>Billing Address</h3>
+		
+		<?php if(false) : ?>
+			<?php global $woocommerce; ?>
+			<?php $nam_cart_total = $woocommerce->cart->get_cart_total(); ?>
+			<?php if($nam_cart_total > 0): ?>
+				<h3>Billing Address</h3>
+				<?php else: ?>
+					<h3>Contact Details</h3>
+				<?php endif; ?>
+			<?php endif; ?>
+
 		<?php endif; ?>
 
-	<?php endif; ?>
+		<?php do_action( 'woocommerce_before_checkout_billing_form', $checkout ); ?>
 
-	<?php do_action( 'woocommerce_before_checkout_billing_form', $checkout ); ?>
+		<div class="woocommerce-billing-fields__field-wrapper">
+			<?php
+			$fields = $checkout->get_checkout_fields( 'billing' );
 
-	<div class="woocommerce-billing-fields__field-wrapper">
-		<?php
-		$fields = $checkout->get_checkout_fields( 'billing' );
-
-		foreach ( $fields as $key => $field ) {
-			if ( isset( $field['country_field'], $fields[ $field['country_field'] ] ) ) {
-				$field['country'] = $checkout->get_value( $field['country_field'] );
+			foreach ( $fields as $key => $field ) {
+				if ( isset( $field['country_field'], $fields[ $field['country_field'] ] ) ) {
+					$field['country'] = $checkout->get_value( $field['country_field'] );
+				}
+				woocommerce_form_field( $key, $field, $checkout->get_value( $key ) );
 			}
-			woocommerce_form_field( $key, $field, $checkout->get_value( $key ) );
-		}
-		?>
-	</div>
-
-	<?php do_action( 'woocommerce_after_checkout_billing_form', $checkout ); ?>
-</div>
-
-<?php if ( ! is_user_logged_in() && $checkout->is_registration_enabled() ) : ?>
-<div class="woocommerce-account-fields">
-	<?php if ( ! $checkout->is_registration_required() ) : ?>
-
-		<p class="form-row form-row-wide create-account">
-			<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
-				<input class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" id="createaccount" <?php checked( ( true === $checkout->get_value( 'createaccount' ) || ( true === apply_filters( 'woocommerce_create_account_default_checked', false ) ) ), true ) ?> type="checkbox" name="createaccount" value="1" /> <span><?php _e( 'Create an account?', 'woocommerce' ); ?></span>
-			</label>
-		</p>
-
-	<?php endif; ?>
-
-	<?php do_action( 'woocommerce_before_checkout_registration_form', $checkout ); ?>
-
-	<?php if ( $checkout->get_checkout_fields( 'account' ) ) : ?>
-
-		<div class="create-account">
-			<?php foreach ( $checkout->get_checkout_fields( 'account' ) as $key => $field ) : ?>
-				<?php woocommerce_form_field( $key, $field, $checkout->get_value( $key ) ); ?>
-			<?php endforeach; ?>
-			<div class="clear"></div>
+			?>
 		</div>
 
-	<?php endif; ?>
+		<?php do_action( 'woocommerce_after_checkout_billing_form', $checkout ); ?>
+	</div>
 
-	<?php do_action( 'woocommerce_after_checkout_registration_form', $checkout ); ?>
-</div>
+	<?php if ( ! is_user_logged_in() && $checkout->is_registration_enabled() ) : ?>
+	<div class="woocommerce-account-fields">
+		<?php if ( ! $checkout->is_registration_required() ) : ?>
+
+			<p class="form-row form-row-wide create-account">
+				<label class="woocommerce-form__label woocommerce-form__label-for-checkbox checkbox">
+					<input class="woocommerce-form__input woocommerce-form__input-checkbox input-checkbox" id="createaccount" <?php checked( ( true === $checkout->get_value( 'createaccount' ) || ( true === apply_filters( 'woocommerce_create_account_default_checked', false ) ) ), true ) ?> type="checkbox" name="createaccount" value="1" /> <span><?php _e( 'Create an account?', 'woocommerce' ); ?></span>
+				</label>
+			</p>
+
+		<?php endif; ?>
+
+		<?php do_action( 'woocommerce_before_checkout_registration_form', $checkout ); ?>
+
+		<?php if ( $checkout->get_checkout_fields( 'account' ) ) : ?>
+
+			<div class="create-account">
+				<?php foreach ( $checkout->get_checkout_fields( 'account' ) as $key => $field ) : ?>
+					<?php woocommerce_form_field( $key, $field, $checkout->get_value( $key ) ); ?>
+				<?php endforeach; ?>
+				<div class="clear"></div>
+			</div>
+
+		<?php endif; ?>
+
+		<?php do_action( 'woocommerce_after_checkout_registration_form', $checkout ); ?>
+	</div>
 <?php endif; ?>
