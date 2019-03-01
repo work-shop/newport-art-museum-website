@@ -53,7 +53,7 @@
     											</h5>
     										</div>
     										<?php else: ?>
-    											<div class="accordion-link membership-link-button">
+    											<div class="accordion-link membership-link-button d-flex">
     												<a href="<?php echo $add_to_cart_url; ?>" class="">
     													Purchase New Membership
     												</a>
