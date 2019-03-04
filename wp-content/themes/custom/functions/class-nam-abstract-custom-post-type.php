@@ -239,14 +239,14 @@ abstract class NAM_Custom_Post_Type {
 
                     $customfields = '_order_student_first_name,_order_student_last_name,_order_email_contact,_order_birthdate,_order_primary_phone_number,_order_primary_phone_type,' . '_order_secondary_phone_number,_order_secondary_phone_type,_order_preferred_pronoun';
 
+                    $customfieldsCamps = ',_order_age_at_start_of_camp,_order_t_shirt_size,_order_guardian_1_name,_order_guardian_1_email,_order_guardian_1_phone,_order_guardian_1_alternate_phone,_order_guardian_2_name,_order_guardian_2_email,_order_guardian_2_phone,_order_guardian_2_alternate_phone,_order_check_parents,_order_emergency_contact_1_name,_order_emergency_contact_1_phone,_order_emergency_contact_1_relationship,_order_emergency_contact_2_name,_order_emergency_contact_2_phone,_order_emergency_contact_2_,_order_pickup_authorization_1,_order_pickup_authorization_2,_order_pickup_authorization_3,_order_authorized_pickup_1_name,_order_authorized_pickup_1_phone,_order_authorized_pickup_1_relationship,_order_authorized_pickup_2_name,_order_authorized_pickup_2_phone,_order_authorized_pickup_2_relationship,_order_allergies__if_any,_order_my_child_carries_an_epipen,_order_physician_name,_order_insurance_provider,_order_policy_number,_order_subscriber_number,_order_release_1,_order_release_2,_order_no_photos,_order_request_for_accommodations';
 
-                    $customfieldsCamps = ',_order_camp_student_allergies';
-
+                    //check if this is categorized with 'camps', if so, add custom camps fields
                     $terms = wp_get_post_terms( $product_id, 'product_cat' );
                     foreach ( $terms as $term ) $categories[] = $term->slug;
                     if ( in_array( 'classes-camps', $categories ) ) :
                       $customfields = $customfields . $customfieldsCamps;
-                    endif;
+                  endif;
 
 
                     /**

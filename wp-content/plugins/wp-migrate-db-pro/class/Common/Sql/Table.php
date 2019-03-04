@@ -340,8 +340,6 @@ class Table {
 
 		$preserved_sitemeta_options = $preserved_options;
 
-		$this->form_data = $this->form_data->parse_migration_form_data( $state_data['form_data'] );
-
 		if ( false === empty( $form_data['keep_active_plugins'] ) ) {
 			$preserved_options[]          = 'active_plugins';
 			$preserved_sitemeta_options[] = 'active_sitewide_plugins';
@@ -520,8 +518,6 @@ class Table {
 
 		$state_data = $state_data = $this->migration_state_manager->set_post_data();
 
-		// Setup form data
-		$this->form_data->setup_form_data();
 		$form_data = $this->form_data->getFormData();
 
 		$temp_prefix       = ( isset( $state_data['temp_prefix'] ) ? $state_data['temp_prefix'] : $this->props->temp_prefix );
