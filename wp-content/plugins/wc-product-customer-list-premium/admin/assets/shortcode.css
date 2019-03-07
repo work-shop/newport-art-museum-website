@@ -1,8 +1,8 @@
 #customer-bought .inside {
-	margin-top: 8px;
+    margin-top: 8px;
 }
 .wpcl-shortcode#list-table {
-	border-collapse: collapse;
+    border-collapse: collapse;
     
 }
 .wpcl table thead th {
@@ -25,40 +25,69 @@ thead th strong {
     border: 0;
 }
 .wpcl tr:nth-child(even) {
-	background-color:#f9f9f9;
+    background-color:#f9f9f9;
 }
 .wpcl tr:nth-child(odd) {
-	background-color:#fff;
+    background-color:#fff;
 }
 .wpcl-shortcode#list-table tr, .wpcl-shortcode#list-table td {
-	border: 1px solid #dfdfdf;
-	text-align: left;
-	padding: 0;
+    border-right: 1px solid #dfdfdf;
+    border-top: 0;
+    text-align: left;
+    border-bottom: 1px solid #dfdfdf;
 }
+
+.wpcl-shortcode#list-table td:last-child {
+    border-right-width: 0;
+}
+
+.wpcl-shortcode#list-table td:first-child {
+    border-left-width: 0;
+}
+
 .wpcl-shortcode#list-table thead th, .wpcl .dataTables_wrapper.no-footer .dataTables_scrollBody, .wpcl table.dataTable thead th, .wpcl table.dataTable thead td {
-	border-bottom: 0;
+    border-bottom: 0;
     border-top: 0;
     white-space: nowrap;
+    border-bottom: 0px;
+    border-collapse: collapse;
 }
 
 .wpcl-shortcode#list-table thead th {
-    padding: 8px;
-        border: 1px solid #dfdfdf;
+    margin: 8px;
+        
 }
+
+.wpcl table.dataTable thead th {
+    border-right: 1px solid #dfdfdf;
+    padding: 10px 10px;
+    text-align: left;
+}
+
+.wpcl table.dataTable thead th:last-child {
+    border-right-width: 0;
+}
+
+.wpcl .dataTables_scroll {
+    border: 1px solid #dfdfdf ;
+}
+
 .wpcl .wpcl-shortcode#list-table p {
-	margin: 8px;
+    margin: 8px 16px;
 }
+
+
 .wpcl .counter {
-	background-color: #f1f1f1;
+    background-color: #f1f1f1;
 }
 .wpcl .counter p {
-	text-align: center;
-	margin: 8px 0;
+    text-align: center;
+    margin: 8px 0;
 }
 .wpcl .total {
-	text-align: right;
-	float: right;
-	margin-top: 15px;
+    text-align: right;
+    float: right;
+    margin-top: 15px;
 }
 
 .wpcl #list-table_filter {
@@ -81,7 +110,7 @@ thead th strong {
     background: #f7f7f7;
     box-shadow: 0 1px 0 #ccc;
     vertical-align: top;
-	
+    
     display: inline-block;
     text-decoration: none;
     font-size: 13px;
@@ -125,7 +154,7 @@ thead th strong {
     margin-top: 10px;
 }
 .wpcl .button.button-second {
-	margin-right:3px;
+    margin-right:3px;
 }
 
 /* Datatables */
@@ -160,7 +189,7 @@ thead th strong {
     margin-bottom: 0.5em;
 }
 .wpcl .dataTables_empty {
-	padding: 8px !important;
+    padding: 8px !important;
 }
 
 .wpcl table.dataTable tbody>tr.selected, .wpcl table.dataTable tbody>tr>.selected {

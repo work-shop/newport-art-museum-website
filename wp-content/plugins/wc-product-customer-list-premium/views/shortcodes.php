@@ -90,6 +90,8 @@ function wpcl_shortcode($atts) {
 
 
 	// Attributes in var
+    $partial_refunds = 'true'; // NOTE: Nic: added this as a toggle for partial refunds.
+
 	$post_id = $atts['product'];
 	$table_title = $atts['table_title'];
 	$order_status = $atts['order_status'];
@@ -280,6 +282,9 @@ function wpcl_shortcode($atts) {
 	// Get selected columns from the options page
 	$product = WC()->product_factory->get_product( $post_id );
 	$columns = array();
+
+    if($partial_refunds == 'true') { $columns[] = 'Refunded'; } // NOTE: Nic: Added this to capture refund header.
+
 	if($order_number == 'true' ) { $columns[] = __('Order', 'wc-product-customer-list'); }
 	if($order_date == 'true' ) { $columns[] = __('Date', 'wc-product-customer-list'); }
 	if($billing_first_name == 'true' ) { $columns[] = __('Billing First name', 'wc-product-customer-list'); }
@@ -384,7 +389,7 @@ function wpcl_shortcode($atts) {
 		$productcount = array();
 		?>
 		<div class="wpcl">
-			<table id="list-table" style="width:100%" class="wpcl-shortcode">
+			<table id="list-table" style="width:100%" class="wpcl-shortcode table table-striped table-bordered">
 				<thead <?php if($show_titles == 'false') { echo 'style="display: none"'; } ?>>
 					<tr>
 						<?php foreach($columns as $column) { ?>
@@ -406,10 +411,19 @@ function wpcl_shortcode($atts) {
 
 						// Get quantity
 						$refunded_qty = 0;
+                        $refunded_amt = 0; // NOTE: Nic: added this, to track total amount refunded.
 						$items = $order->get_items();
+
+                        // NOTE:  Nic: Can't use post->ID, as it refers to the parent, not the product.
+                        // NOTE:  Nic: Resolve that here, using the Field Key for `managed_field_related_post`.
+                        $shadow_product = get_field('field_5b687e3ad7e8e', $post->ID );
+                        $shadow_product_id = $shadow_product[0]->ID;
+
 						foreach ($items as $item_id => $item) {
-							if($item['product_id'] == $post->ID) {
+							if($item['product_id'] == $shadow_product_id) {
 								$refunded_qty += $order->get_qty_refunded_for_item($item_id);
+                                // NOTE: Nic: added this, to track total amount refunded.
+                                $refunded_amt += $order->get_total_refunded_for_item($item_id);
 							}
 						}
 						$quantity = wc_get_order_item_meta( $sale->order_item_id, '_qty', true );
@@ -422,133 +436,142 @@ function wpcl_shortcode($atts) {
 						} else {
 							?>
 							<tr>
+
+                                <?php // NOTE: Begin: Nic: added this to render partially refunded state. ?>
+                                <?php if($partial_refunds == 'true') { ?>
+                                <td>
+                                    <?php if ( $refunded_qty != 0 ) : echo 'Refunded $' . $refunded_amt; endif; ?>
+                                </td>
+                                <?php } ?>
+                                <?php // NOTE: End: Nic: added this to render partially refunded state. ?>
+
 								<?php if($order_number == 'true') { ?>
 								<td>
-									<p><?php echo '<a href="' . admin_url( 'post.php' ) . '?post=' . $sale->order_id . '&action=edit" target="_blank">' . $sale->order_id . '</a>'; ?></p>
+									<?php echo '<a href="' . admin_url( 'post.php' ) . '?post=' . $sale->order_id . '&action=edit" target="_blank">' . $sale->order_id . '</a>'; ?>
 								</td>
 								<?php } ?>
 								<?php if($order_date == 'true') { ?>
 								<td>
-									<p><?php echo date_format($order->get_date_created(), 'Y-m-d'); ?></p>
+									<?php echo date_format($order->get_date_created(), 'Y-m-d'); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_first_name == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_first_name(); ?></p>
+									<?php echo $order->get_billing_first_name(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_last_name == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_last_name(); ?></p>
+									<?php echo $order->get_billing_last_name(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_company == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_company(); ?></p>
+									<?php echo $order->get_billing_company(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_email == 'true') { ?>
 								<td>
-									<p><?php echo '<a href="mailto:' . $order->get_billing_email() . '">' . $order->get_billing_email() . '</a>'; ?></p>
+									<?php echo '<a href="mailto:' . $order->get_billing_email() . '">' . $order->get_billing_email() . '</a>'; ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_phone == 'true') { ?>
 								<td>
-									<p><?php echo '<a href="tel:' . $order->get_billing_phone() . '">' . $order->get_billing_phone() . '</a>'; ?></p>
+									<?php echo '<a href="tel:' . $order->get_billing_phone() . '">' . $order->get_billing_phone() . '</a>'; ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_address_1 == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_address_1(); ?></p>
+									<?php echo $order->get_billing_address_1(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_address_2 == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_address_2(); ?></p>
+									<?php echo $order->get_billing_address_2(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_city == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_city(); ?></p>
+									<?php echo $order->get_billing_city(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_state == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_state(); ?></p>
+									<?php echo $order->get_billing_state(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_postalcode == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_postcode(); ?></p>
+									<?php echo $order->get_billing_postcode(); ?>
 								</td>
 								<?php } ?>
 								<?php if($billing_country == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_billing_country(); ?></p>
+									<?php echo $order->get_billing_country(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_first_name == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_first_name(); ?></p>
+									<?php echo $order->get_shipping_first_name(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_last_name == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_last_name(); ?></p>
+									<?php echo $order->get_shipping_last_name(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_company == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_company(); ?></p>
+									<?php echo $order->get_shipping_company(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_address_1 == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_address_1(); ?></p>
+									<?php echo $order->get_shipping_address_1(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_address_2 == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_address_2(); ?></p>
+									<?php echo $order->get_shipping_address_2(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_city == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_city(); ?></p>
+									<?php echo $order->get_shipping_city(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_state == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_state(); ?></p>
+									<?php echo $order->get_shipping_state(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_postalcode == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_postcode(); ?></p>
+									<?php echo $order->get_shipping_postcode(); ?>
 								</td>
 								<?php } ?>
 								<?php if($shipping_country == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_country(); ?></p>
+									<?php echo $order->get_shipping_country(); ?>
 								</td>
 								<?php } ?>
 								<?php if($customer_message == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_customer_note(); ?></p>
+									<?php echo $order->get_customer_note(); ?>
 								</td>
 								<?php } ?>
 								<?php if($customer_id == 'true') { ?>
 								<td>
-									<p><?php
+									<?php
 										if($order->get_customer_id()) {
 											echo '<a href="' . get_admin_url() . 'user-edit.php?user_id=' . $order->get_customer_id() . '" target="_blank">' . $order->get_customer_id() . '</a>';
 										}
-									?></p>
+									?>
 								</td>
 								<?php } ?>
 								<?php if($customer_username == 'true') { ?>
 								<td>
-									<p><?php
+									<?php
 										$customerid = $order->get_customer_id();
 										if($customerid) {
 											$user_info = get_userdata($customerid);
@@ -558,45 +581,45 @@ function wpcl_shortcode($atts) {
 												echo $user_info->user_login;
 											}
 										}
-									?></p>
+									?>
 								</td>
 								<?php } ?>
 								<?php if($customer_display_name == 'true') { ?>
 								<td>
-									<p><?php
+									<?php
 										$customerid = $order->get_customer_id();
 										if($customerid) {
 											$user_info = get_userdata($customerid);
 											echo $user_info->display_name;
 										}
-									?></p>
+									?>
 								</td>
 								<?php } ?>
 								<?php if($order_status_column == 'true') { ?>
 								<td>
-									<p>
+									
 									<?php
 										$status = wc_get_order_status_name($order->get_status());
 										echo $status;
-									?></p>
+									?>
 								</td>
 								<?php } ?>
 								<?php if($order_payment == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_payment_method_title(); ?></p>
+									<?php echo $order->get_payment_method_title(); ?>
 								</td>
 								<?php } ?>
 								<?php if($order_shipping == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_shipping_method() ; ?></p>
+									<?php echo $order->get_shipping_method() ; ?>
 								</td>
 								<?php } ?>
 								<?php if($order_coupon == 'true') { ?>
 								<td>
-									<p><?php
+									<?php
 										$coupons = $order->get_used_coupons();
 										echo implode(', ',$coupons);
-									?></p>
+									?>
 								</td>
 								<?php } ?>
 
@@ -606,7 +629,7 @@ function wpcl_shortcode($atts) {
 								?>
 
 								<td>
-									<p>
+									
 										<?php
                                             if ( $variation ) {
                                                 echo '<strong>' . $variation->get_description() . '</strong><br />';
@@ -615,24 +638,24 @@ function wpcl_shortcode($atts) {
                                             }
 
 										?>
-									</p>
+									
 								</td>
 								<?php }  ?>
 								<?php if($order_total == 'true') { ?>
 								<td>
-									<p><?php echo $order->get_formatted_order_total(); ?></p>
+									<?php echo $order->get_formatted_order_total(); ?>
 								</td>
 								<?php } ?>
 								<?php if($order_qty == 'true') {
 										$productcount[] = $quantity;
 								?>
 								<td>
-									<p><?php echo $quantity; ?></p>
+									<?php echo $quantity; ?>
 								</td>
 								<?php } ?>
 								<?php if($order_qty_total_column == 'true') { ?>
 								<td>
-									<p><?php echo get_post_meta($post_id,'total_sales', true);  ?></p>
+									<?php echo get_post_meta($post_id,'total_sales', true);  ?>
 								</td>
 								<?php } ?>
 								<?php
@@ -645,7 +668,7 @@ function wpcl_shortcode($atts) {
 									if(isset($atts['custom_fields'])) {
 										$custom_fields = explode(',', $atts['custom_fields']);
 										foreach($custom_fields as $custom_field) {
-											echo '<td><p>' . get_post_meta( $sale->order_id, $custom_field, true ) . '</p></td>';
+											echo '<td>' . get_post_meta( $sale->order_id, $custom_field, true ) . '</td>';
 										}
 									}
 
