@@ -366,6 +366,151 @@ function wpcl_shortcode($atts) {
                         $columns[] = 'Preferred Pronoun';
                         break;
 
+                    case '_order_age_at_start_of_camp':
+                        $columns[] = 'Age at Start';
+                        break;
+
+                    case '_order_t_shirt_size':
+                        $columns[] = 'T Shirt Size';
+                        break;
+
+                    case '_order_guardian_1_name':
+                        $columns[] = 'Guardian 1 Name';
+                        break;
+
+                    case '_order_guardian_1_phone':
+                        $columns[] = 'Guardian 1 Phone';
+                        break;
+
+                    case '_order_guardian_1_email':
+                        $columns[] = 'Guardian 1 Email';
+                        break;
+
+                    case '_order_guardian_1_alternate_phone':
+                        $columns[] = 'Guardian 1 Alt Phone';
+                        break;
+
+                    case '_order_guardian_2_name':
+                        $columns[] = 'Guardian 2 Name';
+                        break;
+
+                    case '_order_guardian_2_phone':
+                        $columns[] = 'Guardian 2 Phone';
+                        break;
+
+                    case '_order_guardian_2_email':
+                        $columns[] = 'Guardian 2 Email';
+                        break;
+
+                    case '_order_guardian_2_alternate_phone':
+                        $columns[] = 'Guardian 2 Alt Phone';
+                        break;
+
+                    case '_order_check_parents':
+                        $columns[] = 'Guardians are only emergency contacts';
+                        break;
+
+                    case '_order_emergency_contact_1_name':
+                        $columns[] = 'Emergency Contact 1 Name';
+                        break;
+
+                    case '_order_emergency_contact_1_phone':
+                        $columns[] = 'Emergency Contact 1 Phone';
+                        break;
+
+                    case '_order_emergency_contact_1_relationship':
+                        $columns[] = 'Emergency Contact 1 Relationship';
+                        break;
+
+                    case '_order_emergency_contact_2_name':
+                        $columns[] = 'Emergency Contact 2 Name';
+                        break;
+
+                    case '_order_emergency_contact_2_phone':
+                        $columns[] = 'Emergency Contact 2 Phone';
+                        break;
+
+                    case '_order_emergency_contact_2_':
+                        $columns[] = 'Emergency Contact 2 Relationship';
+                        break;
+
+                    case '_order_pickup_authorization_1':
+                        $columns[] = 'Only guardians may pickup';
+                        break;
+
+                    case '_order_pickup_authorization_2':
+                        $columns[] = 'Authorize Addtl. Pickups';
+                        break;
+
+                    case '_order_pickup_authorization_3':
+                        $columns[] = 'Child may sign out';
+                        break;
+
+                    case '_order_authorized_pickup_1_name':
+                        $columns[] = 'Pickup 1 Name';
+                        break;
+
+                    case '_order_authorized_pickup_1_phone':
+                        $columns[] = 'Pickup 1 Phone';
+                        break;
+
+                    case '_order_authorized_pickup_1_relationship':
+                        $columns[] = 'Pickup 1 Relationship';
+                        break;
+
+                    case '_order_authorized_pickup_2_name':
+                        $columns[] = 'Pickup 2 Name';
+                        break;
+
+                    case '_order_authorized_pickup_2_phone':
+                        $columns[] = 'Pickup 2 Phone';
+                        break;
+
+                    case '_order_authorized_pickup_2_relationship':
+                        $columns[] = 'Pickup 2 Relationship';
+                        break;
+
+                    case '_order_allergies__if_any':
+                        $columns[] = 'Allergies';
+                        break;
+
+                    case '_order_my_child_carries_an_epipen':
+                        $columns[] = 'Epi Pen?';
+                        break;
+
+                    case '_order_physician_name':
+                        $columns[] = 'Physician Name';
+                        break;
+
+                    case '_order_insurance_provider':
+                        $columns[] = 'Insurance Provider';
+                        break;
+
+                    case '_order_policy_number':
+                        $columns[] = 'Policy Number';
+                        break;
+
+                    case '_order_subscriber_number':
+                        $columns[] = 'Subscriber #';
+                        break;
+
+                    case '_order_release_1':
+                        $columns[] = 'Emergency Release';
+                        break;
+
+                    case '_order_release_2':
+                        $columns[] = 'Marketing Release';
+                        break;
+
+                    case '_order_no_photos':
+                        $columns[] = 'No Photos?';
+                        break;
+
+                    case '_order_request_for_accommodations':
+                        $columns[] = 'Requests';
+                        break;                                                
+
+
                     default:
                         $columns[] = $custom_field;
                         break;
