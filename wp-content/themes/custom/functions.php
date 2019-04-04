@@ -109,7 +109,7 @@ function add_bcc_to_certain_emails( $headers, $object ) {
 	}
 	return $headers;
 }
-add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
+//add_filter( 'woocommerce_email_headers', 'add_bcc_to_certain_emails', 10, 2 );
 
 
 //hide the 'product has been added to your cart notice'
