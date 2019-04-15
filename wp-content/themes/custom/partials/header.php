@@ -63,25 +63,45 @@
 
 	<?php wp_head(); ?>
 
-</head>
+	<!-- Facebook Pixel Code -->
+	<script>
+		!function(f,b,e,v,n,t,s)
+		{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+			n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+			if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+			n.queue=[];t=b.createElement(e);t.async=!0;
+			t.src=v;s=b.getElementsByTagName(e)[0];
+			s.parentNode.insertBefore(t,s)}(window,document,'script',
+				'https://connect.facebook.net/en_US/fbevents.js');
+			fbq('init', '1201212850080371'); 
+			fbq('track', 'PageView');
+		</script>
+		<noscript>
+			<img height="1" width="1" 
+			src="https://www.facebook.com/tr?id=1201212850080371&ev=PageView
+			&noscript=1"/>
+		</noscript>
+		<!-- End Facebook Pixel Code -->
 
-<?php get_template_part('partials/setup_slug'); ?>
-<?php
-$sitewide_alert_on = get_field('show_sitewide_alert', 'option');
-if( $sitewide_alert_on === true ):
-	if( !isset($_COOKIE['nam_show_sitewide_alert_2']) || $_COOKIE['nam_show_sitewide_alert_2'] === false ):
-		$sitewide_alert_class = 'sitewide-alert-on';
-		$show_sitewide_alert = true;
+	</head>
+
+	<?php get_template_part('partials/setup_slug'); ?>
+	<?php
+	$sitewide_alert_on = get_field('show_sitewide_alert', 'option');
+	if( $sitewide_alert_on === true ):
+		if( !isset($_COOKIE['nam_show_sitewide_alert_2']) || $_COOKIE['nam_show_sitewide_alert_2'] === false ):
+			$sitewide_alert_class = 'sitewide-alert-on';
+			$show_sitewide_alert = true;
+		endif;
 	endif;
-endif;
-?>
+	?>
 
-<body <?php body_class( ' loading before-scroll modal-off menu-closed dropdown-off ' . $sitewide_alert_class . ' ' ); ?>>
+	<body <?php body_class( ' loading before-scroll modal-off menu-closed dropdown-off ' . $sitewide_alert_class . ' ' ); ?>>
 
-	<?php if( $show_sitewide_alert ): get_template_part('partials/sitewide_alert'); endif; ?>
-	<?php get_template_part('partials/nav'); ?>
-	<?php get_template_part('partials/menus'); ?>
+		<?php if( $show_sitewide_alert ): get_template_part('partials/sitewide_alert'); endif; ?>
+		<?php get_template_part('partials/nav'); ?>
+		<?php get_template_part('partials/menus'); ?>
 
-	<main id="content">
-		
-		<?php // get_template_part('partials/notices'); ?>
+		<main id="content">
+			
+			<?php // get_template_part('partials/notices'); ?>
