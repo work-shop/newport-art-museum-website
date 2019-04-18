@@ -7,7 +7,7 @@ $is_events = get_post_type(get_the_ID()) == 'events';
 
 
 // NOTE: This is the number of tickets that the membership discount applies to.
-//$membership_discount_multiplier = NAM_Membership::get_membership_discount_multiplier();
+$membership_discount_multiplier = NAM_Membership::get_membership_discount_multiplier();
 //do_action('woocommerce_before_add_to_cart_form');
 
 ?>
