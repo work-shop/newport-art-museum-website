@@ -35,10 +35,11 @@
 			<?php get_template_part('partials/menus_links' ); ?>
 		</div>
 		<div class="menu-dropdown-graphic menu-dropdown-graphic-cards menu-dropdown-graphic-cards-two">
+			<?php $heading = get_field('exhibitions_menu_heading', 'option'); ?>
 			<div class="container-fluid contrainer-fluid-stretch">
 				<div class="row menu-dropdown-cards-upper">
 					<div class="col-md-6">
-						<h3 class="serif menu-dropdown-graphic-heading">Now on view</h3>
+						<h3 class="serif menu-dropdown-graphic-heading"><?php echo $heading; ?></h3>
 					</div>
 					<div class="col-md-6">
 						<div class="menu-dropdown-graphic-link righted">
@@ -114,7 +115,8 @@
 					<div class="container-fluid contrainer-fluid-stretch">
 						<div class="row menu-dropdown-cards-upper">
 							<div class="col-md-6">
-								<h3 class="serif menu-dropdown-graphic-heading">Upcoming Events</h3>
+								<?php $heading = get_field('events_menu_heading', 'option'); ?>
+								<h3 class="serif menu-dropdown-graphic-heading"><?php echo $heading; ?></h3>
 							</div>
 							<div class="col-md-6">
 								<div class="menu-dropdown-graphic-link righted">
@@ -174,7 +176,8 @@
 				<div class="container-fluid contrainer-fluid-stretch">
 					<div class="row menu-dropdown-cards-upper">
 						<div class="col-md-6">
-							<h3 class="serif menu-dropdown-graphic-heading">Upcoming Classes</h3>
+							<?php $heading = get_field('education_menu_heading', 'option'); ?>
+							<h3 class="serif menu-dropdown-graphic-heading"><?php echo $heading; ?></h3>
 						</div>
 						<div class="col-md-6">
 							<div class="menu-dropdown-graphic-link righted">
