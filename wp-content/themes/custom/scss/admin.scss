@@ -1,8 +1,13 @@
 @import "definitions/variables";
 
-//hide background flexible content option from singles
+//hide background and other flexible content option from singles
 .post-type-events, .post-type-news, .post-type-exhibitions, .post-type-classes{
 	.acf-fc-popup a[data-layout="background"] {
+		display: none;
+	}
+
+	//rich text with sidebar type
+	.acf-fc-popup a[data-layout="rich_text_with_sidebar"] {
 		display: none;
 	}
 
@@ -88,19 +93,19 @@ th.manage-column.column-taxonomy-events-categories,th.manage-column.column-taxon
 }
 
 .order-admin-icon {
-    display: inline;
-    vertical-align: middle;
-    margin-top:-4px;
+	display: inline;
+	vertical-align: middle;
+	margin-top:-4px;
 }
 
 .order-loading-icon {
-    width:2em;
-    height:2em;
+	width:2em;
+	height:2em;
 }
 
 .order-failed-icon {
-    width:1em;
-    height:1em;
-    margin-right: .75em;
-    margin-left: .55em;
+	width:1em;
+	height:1em;
+	margin-right: .75em;
+	margin-left: .55em;
 }
