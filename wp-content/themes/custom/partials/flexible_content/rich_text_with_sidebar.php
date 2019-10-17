@@ -25,24 +25,32 @@ $sidebar_button = $fc_row['sidebar_button'];
 				</div>
 			</div>
 			<div class="col-xl-4 col-lg-3 col-md-3 col-sm-12 fc-rich-text-with-sidebar-sidebar">
-				<?php if($sidebar_heading){ ?>
-					<h3 class="fc-sidebar-heading">
-						<?php echo $sidebar_heading; ?>
-					</h3>
-				<?php } ?>
-				<?php if($sidebar_text){ ?>
-					<p class="fc-sidebar-text mt1">
-						<?php echo $sidebar_text; ?>
-					</p>
-				<?php } ?>
-				<?php if( $sidebar_button ): ?>
-					<div class="link-container">
-						<a href="<?php echo $sidebar_button['url']; ?>" target="<?php echo $sidebar_button['target']; ?>" class="button">
-							<?php echo $sidebar_button['title']; ?>
-						</a>
-					</div>	
-				<?php endif; ?>
-			</div>
+				<?php if( get_field('page_sidebar_heading') || get_field('page_sidebar_text') ): ?>
+				<div class="sidebar">
+					<div class="sidebar-inner">
+						<div class="fc-sidebar-content sidebar-content sidebar-box">
+							<?php if($sidebar_heading){ ?>
+								<h4 class="bold sidebar-heading">
+									<?php echo $sidebar_heading; ?>
+								</h4>
+							<?php endif; ?>
+							<?php if($sidebar_text){ ?>
+								<h4 class="sidebar-text">
+									<?php echo $sidebar_text; ?>
+								</h4>
+							<?php endif; ?>
+						</div>
+					</div>
+				</div>
+			<?php endif; ?>
+			<?php if( $sidebar_button ): ?>
+				<div class="link-container">
+					<a href="<?php echo $sidebar_button['url']; ?>" target="<?php echo $sidebar_button['target']; ?>" class="button">
+						<?php echo $sidebar_button['title']; ?>
+					</a>
+				</div>	
+			<?php endif; ?>
 		</div>
 	</div>
+</div>
 </section>
