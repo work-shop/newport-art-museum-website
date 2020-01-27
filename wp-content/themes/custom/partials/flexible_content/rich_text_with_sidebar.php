@@ -25,32 +25,30 @@ $sidebar_button = $fc_row['sidebar_button'];
 				</div>
 			</div>
 			<div class="col-xl-4 col-lg-3 col-md-3 col-sm-12 fc-rich-text-with-sidebar-sidebar">
-				<?php if( get_field('page_sidebar_heading') || get_field('page_sidebar_text') ): ?>
-				<div class="sidebar">
-					<div class="sidebar-inner">
-						<div class="fc-sidebar-content sidebar-content sidebar-box">
-							<?php if($sidebar_heading){ ?>
-								<h4 class="bold sidebar-heading">
-									<?php echo $sidebar_heading; ?>
-								</h4>
-							<?php endif; ?>
-							<?php if($sidebar_text){ ?>
-								<h4 class="sidebar-text">
-									<?php echo $sidebar_text; ?>
-								</h4>
-							<?php endif; ?>
+				<?php if( $sidebar_heading || $sidebar_text ): ?>
+					<div class="sidebar">
+						<div class="sidebar-inner">
+							<div class="fc-sidebar-content sidebar-content sidebar-box">
+								<?php if($sidebar_heading): ?>
+									<h4 class="bold sidebar-heading">
+										<?php echo $sidebar_heading; ?>
+									</h4>
+								<?php endif; ?>
+								<?php if($sidebar_text): ?>
+									<h4 class="sidebar-text">
+										<?php echo $sidebar_text; ?>
+									</h4>
+								<?php endif; ?>
+							</div>
 						</div>
 					</div>
-				</div>
-			<?php endif; ?>
-			<?php if( $sidebar_button ): ?>
-				<div class="link-container">
-					<a href="<?php echo $sidebar_button['url']; ?>" target="<?php echo $sidebar_button['target']; ?>" class="button">
+				<?php endif; ?>
+				<?php if( $sidebar_button ): ?>
+					<a href="<?php echo $sidebar_button['url']; ?>" target="<?php echo $sidebar_button['target']; ?>" class="button button-full">
 						<?php echo $sidebar_button['title']; ?>
 					</a>
-				</div>	
-			<?php endif; ?>
+				<?php endif; ?>
+			</div>
 		</div>
 	</div>
-</div>
 </section>

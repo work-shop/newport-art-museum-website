@@ -50,7 +50,7 @@
 	<meta name="twitter:card" value="<?php echo $social_description; ?>">
 
 	<!-- typekit for freightdisp pro -->
-	<link rel="stylesheet" href="https://use.typekit.net/reg3qbo.css">
+	<link rel="stylesheet" href="https://use.typekit.net/wuy3eog.css">
 
 	<link rel="icon" type="image/png" sizes="16x16" href="<?php bloginfo('template_directory'); ?>/images/favicon-16x16.png">
 	<link rel="icon" type="image/png" sizes="32x32" href="<?php bloginfo('template_directory'); ?>/images/favicon-32x32.png">
